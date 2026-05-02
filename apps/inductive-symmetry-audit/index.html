@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inductive Symmetry Audit</title>
+    <meta
+      name="description"
+      content="An interactive diagnostic for cherry-picked inductive reasoning in Christian apologetics."
+    >
+    <link rel="stylesheet" href="../../styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Apologetics Audit Lab home">
+        <span class="brand-mark" aria-hidden="true">A</span>
+        <span>
+          <strong>Apologetics Audit Lab</strong>
+          <small>Inductive Symmetry Audit</small>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="../../">Hub</a>
+        <a href="#stances">Stances</a>
+        <a href="#audit">Audit</a>
+        <a href="#results">Results</a>
+      </nav>
+    </header>
+
+    <main class="app-shell">
+      <section class="app-header">
+        <div class="app-title">
+          <p class="eyebrow">First audit</p>
+          <h1>Inductive Symmetry Audit</h1>
+          <p>
+            Test whether an apologetic conclusion relies on an inductive pattern that is
+            treated as forceful only when it points toward theism.
+          </p>
+        </div>
+        <aside class="source-note">
+          <strong>Diagnostic, not verdict.</strong>
+          The score measures residual asymmetry after proposed differentiators are counted.
+          It does not prove whether the underlying religious conclusion is true or false.
+        </aside>
+        <details class="annotation app-wide">
+          <summary>How to use this audit</summary>
+          <p>
+            Start with the apologetic argument exactly as you would normally present it.
+            The app then compares the inductive permission you grant to that argument with
+            the permission you grant to nearby patterns that push against the same conclusion.
+          </p>
+          <p>
+            The point is not to force identical conclusions. The point is to make every
+            asymmetry pay rent by naming a real evidential difference.
+          </p>
+        </details>
+      </section>
+
+      <section class="stance-board" id="stances" aria-labelledby="stances-title">
+        <div class="stance-score">
+          <p class="app-step">Live tension</p>
+          <strong id="stance-score-value">0</strong>
+          <span id="stance-score-label">Low</span>
+        </div>
+
+        <div class="stance-anchor">
+          <p class="app-step">Accepted anchor</p>
+          <h2 id="stances-title">Current stance map</h2>
+          <p id="stance-anchor-rule"></p>
+          <div class="stance-meta">
+            <span id="stance-mode"></span>
+            <span id="stance-force"></span>
+          </div>
+        </div>
+
+        <div class="stance-grid" id="stance-grid" aria-label="Parallel induction stances"></div>
+        <details class="annotation stance-help">
+          <summary>Reading the stance map</summary>
+          <p>
+            The left score is the total tension created by the current settings. Each tile
+            shows whether a parallel induction is accepted, weakened, or rejected, and how
+            much tension that stance creates relative to the accepted anchor rule.
+          </p>
+        </details>
+      </section>
+
+      <section class="audit-grid" id="audit">
+        <form class="audit-panel sticky" id="audit-form">
+          <div class="panel-title">
+            <div>
+              <p class="app-step">Input</p>
+              <h2>Argument profile</h2>
+              <p>Choose a pattern, then adjust the claim and evidential pressure.</p>
+            </div>
+          </div>
+          <details class="annotation">
+            <summary>Setting the anchor</summary>
+            <p>
+              The anchor is the inductive assertion the apologetic argument wants to count
+              as strong. Raising the force slider means you are asking that rule to do more
+              evidential work, so rejected parallels will create more tension.
+            </p>
+          </details>
+
+          <div class="field-group">
+            <label for="pattern-select">Apologetic pattern</label>
+            <select id="pattern-select" name="pattern"></select>
+          </div>
+
+          <div class="field-group">
+            <label for="claim-input">Claim being defended</label>
+            <textarea id="claim-input" name="claim"></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="evidence-input">Evidence being emphasized</label>
+            <textarea id="evidence-input" name="evidence"></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="rule-input">Accepted inductive rule</label>
+            <textarea id="rule-input" name="rule"></textarea>
+          </div>
+
+          <div class="field-group">
+            <span class="parallel-label">Defense mode</span>
+            <div class="segmented three" id="mode-options"></div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-top">
+              <label for="preferred-force">Force assigned to accepted rule</label>
+              <span class="range-value" id="preferred-force-value">8</span>
+            </div>
+            <input id="preferred-force" type="range" min="1" max="10" step="1" value="8">
+          </div>
+
+          <div class="audit-actions">
+            <button class="primary" type="button" id="reset-pattern">Reset pattern</button>
+            <button class="ghost" type="button" id="copy-report">Copy report</button>
+          </div>
+        </form>
+
+        <div class="parallel-list" id="parallel-list" aria-live="polite"></div>
+      </section>
+
+      <section class="section" id="results" aria-labelledby="results-title">
+        <div class="audit-grid">
+          <div class="result-panel">
+            <div class="scoreboard">
+              <div class="score-ring" id="score-ring" style="--score: 0%; --score-color: var(--green);">
+                <div class="score-ring-inner">
+                  <span>Risk</span>
+                  <strong id="score-value">0</strong>
+                </div>
+              </div>
+              <div class="score-copy">
+                <p class="app-step">Result</p>
+                <h2 id="results-title">Symmetry status</h2>
+                <p id="score-summary"></p>
+              </div>
+            </div>
+            <details class="annotation">
+              <summary>Interpreting the score</summary>
+              <p>
+                The score measures leftover asymmetry after your differentiators are counted.
+                It is a pressure reading, not a truth verdict. A high score means the favored
+                induction is being allowed to count more than similar rejected inductions.
+              </p>
+            </details>
+
+            <div class="mini-bars" id="mini-bars"></div>
+
+            <ul class="flag-list" id="flag-list"></ul>
+          </div>
+
+          <div class="result-panel">
+            <div class="panel-title">
+              <div>
+                <p class="app-step">Repair</p>
+                <h2>Proportionate conclusion</h2>
+                <p>Weaker claims usually survive the audit better than doctrinally loaded ones.</p>
+              </div>
+            </div>
+            <details class="annotation">
+              <summary>Using the repair panel</summary>
+              <p>
+                Repairs preserve what the evidence can reasonably support while removing
+                unsupported specificity, scope drift, or modal inflation. A repaired claim
+                may be less dramatic, but it is usually harder to accuse of cherry-picking.
+              </p>
+            </details>
+
+            <div class="repair-list" id="repair-list"></div>
+            <textarea class="export-box" id="export-box" readonly></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

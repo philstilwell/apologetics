@@ -1,0 +1,438 @@
+{
+  "defenseModes": [
+    {
+      "id": "inductive",
+      "label": "Inductive",
+      "riskModifier": 0,
+      "note": "The rule is defended from observed regularity, so parallel regularities deserve comparable treatment."
+    },
+    {
+      "id": "abductive",
+      "label": "Abductive",
+      "riskModifier": 4,
+      "note": "Best-explanation claims still owe rival-hypothesis comparison and specificity accounting."
+    },
+    {
+      "id": "modal",
+      "label": "Modal",
+      "riskModifier": 9,
+      "note": "Observed invariance has been promoted toward necessity; the bridge premise needs independent support."
+    },
+    {
+      "id": "metaphysical",
+      "label": "Metaphysical",
+      "riskModifier": 7,
+      "note": "The argument has shifted from observation to substantive metaphysics; ordinary induction no longer carries the full burden."
+    },
+    {
+      "id": "analytic",
+      "label": "Analytic",
+      "riskModifier": 5,
+      "note": "If the rule is definitional, it may not license a substantive conclusion without an added bridge premise."
+    },
+    {
+      "id": "rhetorical",
+      "label": "Rhetorical",
+      "riskModifier": 11,
+      "note": "Rhetorical obviousness is not a substitute for scope, projectibility, and defeater checks."
+    }
+  ],
+  "differentiatorTypes": [
+    {
+      "id": "none",
+      "label": "None supplied",
+      "allowance": 0,
+      "warning": "The parallel is being discounted without a visible differentiator."
+    },
+    {
+      "id": "independent",
+      "label": "Independent support",
+      "allowance": 0.72,
+      "warning": "This can justify asymmetry if the support really changes an evidential variable."
+    },
+    {
+      "id": "scope",
+      "label": "Scope distinction",
+      "allowance": 0.42,
+      "warning": "A scope distinction helps only if the target domain is not being used selectively."
+    },
+    {
+      "id": "quality",
+      "label": "Evidence quality",
+      "allowance": 0.5,
+      "warning": "Quality differences matter when reliability, specificity, or replicability genuinely differ."
+    },
+    {
+      "id": "defeater",
+      "label": "Defeater supplied",
+      "allowance": 0.56,
+      "warning": "A defeater helps when it undercuts the parallel without also undercutting the preferred rule."
+    },
+    {
+      "id": "assertion",
+      "label": "Mere assertion",
+      "allowance": 0.12,
+      "warning": "A stated exception is not yet an evidentially relevant difference."
+    },
+    {
+      "id": "circular",
+      "label": "Circular",
+      "allowance": 0.04,
+      "warning": "The differentiator appears to restate the preferred conclusion."
+    },
+    {
+      "id": "modal-smuggling",
+      "label": "Modal smuggling",
+      "allowance": 0.02,
+      "warning": "An observed regularity is being treated as necessity without a bridge premise."
+    },
+    {
+      "id": "specificity",
+      "label": "Specificity inflation",
+      "allowance": 0.08,
+      "warning": "The claim has gained doctrinal content beyond what the original evidence supports."
+    }
+  ],
+  "patterns": [
+    {
+      "id": "causal-beginning",
+      "title": "Cosmological cause",
+      "claim": "The universe began to exist; therefore, it had a cause, and that cause is God.",
+      "evidence": "In ordinary experience, things that begin to exist or events that occur have causal antecedents.",
+      "rule": "Whatever begins to exist has a cause.",
+      "defaultForce": 8,
+      "repair": [
+        "The universe raises questions about ultimate explanation.",
+        "Observed beginnings within the universe are commonly explained by prior physical conditions.",
+        "A theistic cause requires additional bridge premises beyond the causal regularity itself."
+      ],
+      "parallels": [
+        {
+          "id": "spacetime-causes",
+          "title": "Known causes occur within spacetime",
+          "observation": "All clear causal relations we observe occur within temporal and physical domains.",
+          "implication": "A spacetime-external cause does not inherit support from ordinary causal cases without a bridge.",
+          "scope": "Causation",
+          "variable": "Scope",
+          "similarity": 0.92,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "brain-mind",
+          "title": "Known minds depend on physical brains",
+          "observation": "Mental states reliably vary with brain states, injury, development, chemistry, and sleep.",
+          "implication": "A disembodied divine mind runs against the same kind of observed regularity.",
+          "scope": "Consciousness",
+          "variable": "Evidence",
+          "similarity": 0.86,
+          "defaultTreatment": "weaken"
+        },
+        {
+          "id": "embodied-creators",
+          "title": "Known creators are embodied agents",
+          "observation": "Every observed creator uses physical capacities, materials, tools, and temporal processes.",
+          "implication": "A nonphysical creator outside the universe is not parallel to observed creators.",
+          "scope": "Agency",
+          "variable": "Reference class",
+          "similarity": 0.82,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "ex-nihilo",
+          "title": "No observed creation from nothing",
+          "observation": "Observed production transforms prior materials or energy rather than generating being from absolute nothing.",
+          "implication": "Creation ex nihilo is not supported by ordinary creation analogies.",
+          "scope": "Creation",
+          "variable": "Projectibility",
+          "similarity": 0.78,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "uncaused-exception",
+          "title": "Observed entities are causally embedded",
+          "observation": "Observed entities arise within networks of prior conditions, constraints, and dependencies.",
+          "implication": "Stopping the causal demand at a preferred deity requires a principled exception.",
+          "scope": "Recursion",
+          "variable": "Defeater",
+          "similarity": 0.74,
+          "defaultTreatment": "reject"
+        }
+      ]
+    },
+    {
+      "id": "design-complexity",
+      "title": "Design from complexity",
+      "claim": "Complex order in life or the cosmos is best explained by an intelligent designer.",
+      "evidence": "Human artifacts with complex specified arrangement often result from intelligent activity.",
+      "rule": "Complex specified arrangements are best explained by design.",
+      "defaultForce": 8,
+      "repair": [
+        "Some complex arrangements invite explanation.",
+        "Design is one candidate only where the reference class resembles known design cases.",
+        "A supernatural designer requires added evidence for agency, embodiment, ability, and identity."
+      ],
+      "parallels": [
+        {
+          "id": "designers-evolved",
+          "title": "Known designers are products of natural processes",
+          "observation": "Every observed designer has a biological, developmental, and cultural history.",
+          "implication": "An unevolved designer is unlike the designers used in the analogy.",
+          "scope": "Design",
+          "variable": "Reference class",
+          "similarity": 0.9,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "natural-order",
+          "title": "Natural processes produce order",
+          "observation": "Self-organization, selection, gravity, chemistry, and feedback processes generate structured outcomes.",
+          "implication": "Order alone does not select design over natural mechanisms.",
+          "scope": "Order",
+          "variable": "Rival hypotheses",
+          "similarity": 0.84,
+          "defaultTreatment": "weaken"
+        },
+        {
+          "id": "physical-designers",
+          "title": "Observed design uses physical media",
+          "observation": "Designers communicate plans and manipulate materials through physical channels.",
+          "implication": "A nonphysical designer acting without media needs a supported mechanism or bridge.",
+          "scope": "Agency",
+          "variable": "Scope",
+          "similarity": 0.8,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "specific-designer",
+          "title": "Design evidence underspecifies identity",
+          "observation": "Evidence for generic design does not identify a specific religion, scripture, incarnation, or doctrine.",
+          "implication": "Moving from designer to Christian theism adds a specificity burden.",
+          "scope": "Specificity",
+          "variable": "Complexity burden",
+          "similarity": 0.77,
+          "defaultTreatment": "reject"
+        }
+      ]
+    },
+    {
+      "id": "consciousness",
+      "title": "Argument from consciousness",
+      "claim": "Human consciousness is best explained by a divine mind or nonphysical mental reality.",
+      "evidence": "Consciousness seems difficult to reduce fully to impersonal matter.",
+      "rule": "Mind is better explained by mind than by nonmind.",
+      "defaultForce": 7,
+      "repair": [
+        "Consciousness remains philosophically difficult.",
+        "The difficulty does not by itself establish a disembodied divine mind.",
+        "Any mental explanation must still answer why observed minds track physical brains so tightly."
+      ],
+      "parallels": [
+        {
+          "id": "brain-dependence",
+          "title": "Mental life tracks brain activity",
+          "observation": "Perception, memory, agency, mood, and personality shift with brain conditions.",
+          "implication": "The strongest observed pattern connects minds to physical systems.",
+          "scope": "Mind",
+          "variable": "Evidence",
+          "similarity": 0.93,
+          "defaultTreatment": "weaken"
+        },
+        {
+          "id": "developmental-consciousness",
+          "title": "Consciousness develops over time",
+          "observation": "Human consciousness emerges through biological development rather than appearing fully formed.",
+          "implication": "Eternal uncreated consciousness lacks support from observed mental emergence.",
+          "scope": "Mind",
+          "variable": "Projectibility",
+          "similarity": 0.79,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "intentionality-biological",
+          "title": "Desire and will are biologically entangled",
+          "observation": "Intentions and motivations are connected to needs, emotions, and neurochemical states.",
+          "implication": "Attributing will to an immaterial being imports agency beyond the observed pattern.",
+          "scope": "Agency",
+          "variable": "Specificity burden",
+          "similarity": 0.76,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "timeless-mind",
+          "title": "Minds appear temporally structured",
+          "observation": "Thinking, intending, responding, and knowing appear to involve sequence or change.",
+          "implication": "A timeless mind needs an account of cognition without temporal process.",
+          "scope": "Time",
+          "variable": "Scope",
+          "similarity": 0.72,
+          "defaultTreatment": "reject"
+        }
+      ]
+    },
+    {
+      "id": "revelation-testimony",
+      "title": "Revelation and testimony",
+      "claim": "Religious testimony and sacred texts provide strong evidence for Christian revelation.",
+      "evidence": "Testimony can preserve real events, teachings, and experiences across communities.",
+      "rule": "Sincere testimony from a tradition can justify belief in the reported revelation.",
+      "defaultForce": 7,
+      "repair": [
+        "Testimony can be evidence when source quality is strong.",
+        "Religious testimony must be weighed against rival testimony, transmission limits, and defeaters.",
+        "A specific revelation requires more than sincerity or community preservation."
+      ],
+      "parallels": [
+        {
+          "id": "rival-testimony",
+          "title": "Rival traditions also have testimony",
+          "observation": "Competing religions preserve sincere testimony for incompatible revelations and miracles.",
+          "implication": "Sincerity and tradition alone cannot uniquely privilege Christian claims.",
+          "scope": "Testimony",
+          "variable": "Rival hypotheses",
+          "similarity": 0.9,
+          "defaultTreatment": "weaken"
+        },
+        {
+          "id": "subjective-experience",
+          "title": "Divine experiences are psychologically variable",
+          "observation": "Religious experiences vary by culture, expectation, practice, and prior belief.",
+          "implication": "Experience reports require psychological and cultural rival explanations.",
+          "scope": "Experience",
+          "variable": "Defeater",
+          "similarity": 0.82,
+          "defaultTreatment": "weaken"
+        },
+        {
+          "id": "communication-media",
+          "title": "Communication uses physical media",
+          "observation": "Communication occurs through bodies, sound, writing, gesture, images, or other physical channels.",
+          "implication": "Revelation from an immaterial deity needs a credible transmission account.",
+          "scope": "Communication",
+          "variable": "Scope",
+          "similarity": 0.74,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "textual-defeaters",
+          "title": "Sacred texts carry human marks",
+          "observation": "Texts show redaction, genre, cultural framing, tension, and historical limitations.",
+          "implication": "Human authorship remains a live rival hypothesis.",
+          "scope": "Texts",
+          "variable": "Evidence quality",
+          "similarity": 0.7,
+          "defaultTreatment": "weaken"
+        }
+      ]
+    },
+    {
+      "id": "miracles",
+      "title": "Miracle reports",
+      "claim": "Miracle reports provide evidence that God intervenes in the world.",
+      "evidence": "Some reported events appear unusual, striking, or difficult to explain naturalistically.",
+      "rule": "Anomalous reports can indicate supernatural intervention.",
+      "defaultForce": 7,
+      "repair": [
+        "An anomaly can justify further investigation.",
+        "A miracle conclusion requires strong source quality, rival exclusion, and cross-tradition consistency.",
+        "The theological identity of the cause requires evidence beyond the anomaly."
+      ],
+      "parallels": [
+        {
+          "id": "miracle-inconsistency",
+          "title": "Miracle claims conflict across traditions",
+          "observation": "Many incompatible religions report miracles supporting incompatible doctrines.",
+          "implication": "Miracle testimony does not automatically identify a single theological system.",
+          "scope": "Miracles",
+          "variable": "Rival hypotheses",
+          "similarity": 0.89,
+          "defaultTreatment": "weaken"
+        },
+        {
+          "id": "law-regularity",
+          "title": "Physical regularities remain stable",
+          "observation": "The world is overwhelmingly modeled by stable physical regularities rather than visible supernatural interruption.",
+          "implication": "Intervention claims carry a heavy evidence-quality burden.",
+          "scope": "Nature",
+          "variable": "Evidence quality",
+          "similarity": 0.82,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "anecdotal-evidence",
+          "title": "Miracle reports are often anecdotal",
+          "observation": "Many reports lack controlled observation, independent replication, and robust documentation.",
+          "implication": "Low evidence quality should reduce confidence even when the report is sincere.",
+          "scope": "Testimony",
+          "variable": "Evidence quality",
+          "similarity": 0.78,
+          "defaultTreatment": "weaken"
+        },
+        {
+          "id": "psychological-rivals",
+          "title": "Psychology explains many experiences",
+          "observation": "Expectation, memory, stress, group pressure, and attribution biases shape extraordinary reports.",
+          "implication": "Psychological rivals must be compared before supernatural inference is licensed.",
+          "scope": "Experience",
+          "variable": "Defeater",
+          "similarity": 0.73,
+          "defaultTreatment": "weaken"
+        }
+      ]
+    },
+    {
+      "id": "moral-argument",
+      "title": "Moral argument",
+      "claim": "Objective morality requires God as its foundation.",
+      "evidence": "Humans experience moral obligations as serious, binding, and not merely preferential.",
+      "rule": "Binding moral obligation is best explained by a divine moral source.",
+      "defaultForce": 7,
+      "repair": [
+        "Moral experience is real evidence about human cognition and social life.",
+        "A divine source is one hypothesis, not an automatic entailment.",
+        "The argument must account for moral diversity, disagreement, and the content of alleged divine commands."
+      ],
+      "parallels": [
+        {
+          "id": "moral-diversity",
+          "title": "Moral codes vary and evolve",
+          "observation": "Moral norms differ across cultures and change with social conditions, knowledge, and power.",
+          "implication": "Moral experience may reflect human social construction and revision.",
+          "scope": "Morality",
+          "variable": "Rival hypotheses",
+          "similarity": 0.84,
+          "defaultTreatment": "weaken"
+        },
+        {
+          "id": "divine-command-defeater",
+          "title": "Sacred commands can conflict with moral judgment",
+          "observation": "Some scriptural commands appear morally troubling under ordinary human moral assessment.",
+          "implication": "A divine-source theory can inherit defeaters from the content it must defend.",
+          "scope": "Morality",
+          "variable": "Defeater",
+          "similarity": 0.8,
+          "defaultTreatment": "reject"
+        },
+        {
+          "id": "social-minds",
+          "title": "Moral cognition tracks social minds",
+          "observation": "Empathy, reciprocity, punishment, cooperation, and status all shape moral judgment.",
+          "implication": "Human moral cognition has strong natural and social explanations.",
+          "scope": "Mind",
+          "variable": "Evidence",
+          "similarity": 0.75,
+          "defaultTreatment": "weaken"
+        },
+        {
+          "id": "specific-god-gap",
+          "title": "Moral grounding underspecifies Christianity",
+          "observation": "Even if morality had a transcendent ground, that would not identify a triune Christian God.",
+          "implication": "Moving from moral realism to Christian theism adds a specificity burden.",
+          "scope": "Specificity",
+          "variable": "Complexity burden",
+          "similarity": 0.72,
+          "defaultTreatment": "reject"
+        }
+      ]
+    }
+  ]
+}
