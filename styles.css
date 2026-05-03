@@ -819,7 +819,14 @@ button.ghost {
 }
 
 .parallel-card h3.claim-text {
-  font-size: 1.08rem;
+  font-size: 1.22rem;
+  line-height: 1.2;
+}
+
+#stance-anchor-rule.claim-text,
+.stance-anchor .claim-text {
+  font-size: 1.16rem;
+  line-height: 1.2;
 }
 
 .stance-card-title.claim-text {
