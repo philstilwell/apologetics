@@ -231,7 +231,7 @@ function setPattern(patternId) {
   els.patternSelect.value = pattern.id;
   els.claim.value = pattern.claim;
   els.evidence.value = pattern.evidence;
-  els.rule.value = formatClaim(pattern.rule);
+  els.rule.value = formatClaim(pattern.rule, 1);
   els.preferredForce.value = String(pattern.defaultForce);
   els.preferredForceValue.textContent = String(pattern.defaultForce);
 
@@ -256,7 +256,9 @@ function setPattern(patternId) {
 }
 
 function renderParallels() {
-  els.parallelList.innerHTML = state.pattern.parallels.map(renderParallelCard).join("");
+  els.parallelList.innerHTML = state.pattern.parallels
+    .map((parallel, index) => renderParallelCard(parallel, index + 2))
+    .join("");
 
   state.pattern.parallels.forEach((parallel) => {
     const card = document.querySelector(`[data-parallel-id="${parallel.id}"]`);
@@ -281,7 +283,7 @@ function renderParallels() {
   });
 }
 
-function renderParallelCard(parallel) {
+function renderParallelCard(parallel, stanceNumber) {
   const response = state.responses.get(parallel.id);
   const treatmentOptions = ["accept", "weaken", "reject"]
     .map(
@@ -315,7 +317,7 @@ function renderParallelCard(parallel) {
       <header class="parallel-compact-head">
         <div>
           <p class="app-step">Parallel induction</p>
-          <h3 class="claim-text">${escapeHtml(formatClaim(parallel.title))}</h3>
+          <h3 class="claim-text">${escapeHtml(formatClaim(parallel.title, stanceNumber))}</h3>
         </div>
         <div class="parallel-head-meta">
           <span class="similarity-pill">${Math.round(parallel.similarity * 100)}% similar</span>
@@ -396,7 +398,7 @@ function renderResults() {
     .map(
       (item) => `
         <div class="mini-bar">
-          <span class="claim-text">${escapeHtml(formatClaim(item.title))}</span>
+          <span class="claim-text">${escapeHtml(formatClaim(item.title, item.stanceNumber))}</span>
           <span class="mini-bar-track">
             <span class="mini-bar-fill" style="width: ${item.risk}%; --score-color: ${scoreColor};"></span>
           </span>
@@ -454,7 +456,7 @@ function renderStanceBoard(assessment, scoreColor) {
   els.stanceScoreValue.textContent = String(assessment.score);
   els.stanceScoreLabel.textContent = getScoreLabel(assessment.score);
   els.stanceScoreValue.style.color = scoreColor;
-  els.stanceAnchorRule.textContent = formatClaim(els.rule.value.trim() || assessment.pattern.rule);
+  els.stanceAnchorRule.textContent = formatClaim(els.rule.value.trim() || assessment.pattern.rule, 1);
   els.stanceMode.textContent = `Mode: ${assessment.mode.label}`;
   els.stanceForce.textContent = `Anchor force: ${assessment.preferredForce}/10`;
 
@@ -474,7 +476,7 @@ function renderStanceBoard(assessment, scoreColor) {
             <span class="stance-treatment ${item.response.treatment}">${treatment}</span>
             <strong>${item.risk}</strong>
           </span>
-          <span class="stance-card-title claim-text">${escapeHtml(formatClaim(item.title))}</span>
+          <span class="stance-card-title claim-text">${escapeHtml(formatClaim(item.title, item.stanceNumber))}</span>
           <span class="stance-card-meta">${Math.round(item.similarity * 100)}% similar | ${escapeHtml(item.variable)}</span>
           <span class="stance-tension-track" aria-hidden="true">
             <span style="width: ${item.risk}%"></span>
@@ -490,7 +492,9 @@ function renderStanceBoard(assessment, scoreColor) {
 function assess() {
   const preferredForce = Number(els.preferredForce.value);
   const mode = getDefenseMode();
-  const items = state.pattern.parallels.map((parallel) => assessParallel(parallel, preferredForce));
+  const items = state.pattern.parallels.map((parallel, index) =>
+    assessParallel(parallel, preferredForce, index + 2),
+  );
   const averageRisk = items.reduce((sum, item) => sum + item.risk, 0) / Math.max(items.length, 1);
   const score = clamp(Math.round(averageRisk + mode.riskModifier), 0, 100);
   const flags = buildFlags(items, mode, preferredForce);
@@ -508,11 +512,11 @@ function assess() {
   };
 }
 
-function assessParallel(parallel, preferredForce) {
-  return assessParallelWithResponse(parallel, preferredForce, state.responses.get(parallel.id));
+function assessParallel(parallel, preferredForce, stanceNumber) {
+  return assessParallelWithResponse(parallel, preferredForce, state.responses.get(parallel.id), stanceNumber);
 }
 
-function assessParallelWithResponse(parallel, preferredForce, response) {
+function assessParallelWithResponse(parallel, preferredForce, response, stanceNumber) {
   const treatmentScore = treatmentScores[response.treatment];
   const differentiator = getDifferentiatorType(response.differentiatorType);
   const gap = Math.max(0, preferredForce - treatmentScore) / 10;
@@ -523,6 +527,7 @@ function assessParallelWithResponse(parallel, preferredForce, response) {
 
   return {
     ...parallel,
+    stanceNumber,
     response,
     treatmentScore,
     differentiator,
@@ -533,12 +538,12 @@ function assessParallelWithResponse(parallel, preferredForce, response) {
 
 function assessArchetype(archetype) {
   const mode = state.data.defenseModes.find((item) => item.id === archetype.mode);
-  const items = state.pattern.parallels.map((parallel) =>
+  const items = state.pattern.parallels.map((parallel, index) =>
     assessParallelWithResponse(parallel, archetype.force, {
       treatment: archetype.treatment,
       differentiatorType: archetype.differentiatorType,
       differentiator: archetype.differentiator,
-    }),
+    }, index + 2),
   );
   const averageRisk = items.reduce((sum, item) => sum + item.risk, 0) / Math.max(items.length, 1);
   const score = clamp(Math.round(averageRisk + mode.riskModifier), 0, 100);
@@ -572,7 +577,7 @@ function renderArchetypeComparison() {
           </div>
           <p>${escapeHtml(comparison.summary)}</p>
           <small>Mode: ${escapeHtml(comparison.mode.label)} | Force: ${archetype.force}/10</small>
-          <small>Top tension: ${escapeHtml(top ? top.title : "None")}</small>
+          <small>Top tension: ${escapeHtml(top ? formatClaim(top.title, top.stanceNumber) : "None")}</small>
         </article>
       `;
     })
@@ -622,7 +627,9 @@ function buildFlags(items, mode, preferredForce) {
   if (highRisk.length > 0) {
     flags.push({
       title: "Residual asymmetry",
-      body: `The largest residual gaps appear in: ${highRisk.map((item) => item.title).join(", ")}.`,
+      body: `The largest residual gaps appear in: ${highRisk
+        .map((item) => formatClaim(item.title, item.stanceNumber))
+        .join(", ")}.`,
     });
   }
 
@@ -646,7 +653,10 @@ function buildRepairs(score, mode, items) {
   if (score >= 55 && highest) {
     repairs.push({
       title: "Immediate pressure point",
-      body: `Repair the argument by either accepting "${highest.title}" as relevant or supplying an independent differentiator that changes ${highest.variable.toLowerCase()}.`,
+      body: `Repair the argument by either accepting "${formatClaim(
+        highest.title,
+        highest.stanceNumber,
+      )}" as relevant or supplying an independent differentiator that changes ${highest.variable.toLowerCase()}.`,
     });
   }
 
@@ -673,7 +683,7 @@ function buildScoreDrivers(assessment) {
     drivers.push({
       title: "Largest residual tension",
       body: `${topItems
-        .map((item) => `${item.title} (${item.risk})`)
+        .map((item) => `${formatClaim(item.title, item.stanceNumber)} (${item.risk})`)
         .join(" and ")} drive the score because they are treated much weaker than the anchor while remaining similar.`,
     });
   }
@@ -726,13 +736,19 @@ function buildFollowUpPrompts(assessment) {
 
   if (highest) {
     prompts.push(
-      `Focus only on "${highest.title}". What exact premise would justify treating this parallel induction as weaker than my anchor rule, and what independent evidence would support that premise?`,
+      `Focus only on "${formatClaim(
+        highest.title,
+        highest.stanceNumber,
+      )}". What exact premise would justify treating this parallel induction as weaker than my anchor rule, and what independent evidence would support that premise?`,
     );
   }
 
   if (weakDifferentiator) {
     prompts.push(
-      `Rewrite my differentiator for "${weakDifferentiator.title}" so it is not circular, not merely asserted, and not just a restatement of the conclusion.`,
+      `Rewrite my differentiator for "${formatClaim(
+        weakDifferentiator.title,
+        weakDifferentiator.stanceNumber,
+      )}" so it is not circular, not merely asserted, and not just a restatement of the conclusion.`,
     );
   }
 
@@ -756,7 +772,20 @@ function buildFollowUpPrompts(assessment) {
     `Ask me five yes-or-no questions that would reveal whether I am applying one evidential standard to the anchor and another to the parallel inductions.`,
   );
 
-  return prompts.slice(0, 5);
+  const imagePrompt = buildImagePromptRequest(assessment);
+  return [...prompts.slice(0, 5), imagePrompt];
+}
+
+function buildImagePromptRequest(assessment) {
+  const quantifiedStances = [
+    `◉ [1] ${stripClaimPrefix(els.rule.value.trim() || assessment.pattern.rule)} - anchor force ${assessment.preferredForce}/10`,
+    ...assessment.items.map(
+      (item) =>
+        `${formatClaim(item.title, item.stanceNumber)} - ${treatmentLabels[item.response.treatment]}, residual tension ${item.risk}/100, similarity ${Math.round(item.similarity * 100)}%`,
+    ),
+  ].join("; ");
+
+  return `Create an image prompt for a largely quantified visual depiction of this stance map and its tensions. Show the numbered stances, treatment status, residual tension scores, similarity percentages, and overall risk score (${assessment.score}/100). Use a clean analytical dashboard style, not a cartoon. Data to visualize: ${quantifiedStances}.`;
 }
 
 function buildMarkdownReport(assessment) {
@@ -787,7 +816,7 @@ function buildMarkdownReport(assessment) {
     els.evidence.value.trim(),
     "",
     "## Accepted Rule",
-    els.rule.value.trim(),
+    formatClaim(els.rule.value.trim(), 1),
     "",
     "## Parallel Assessments",
   );
@@ -795,7 +824,7 @@ function buildMarkdownReport(assessment) {
   assessment.items.forEach((item) => {
     lines.push(
       "",
-      `### ${formatClaim(item.title)}`,
+      `### ${formatClaim(item.title, item.stanceNumber)}`,
       `Treatment: ${treatmentLabels[item.response.treatment]}`,
       `Similarity: ${Math.round(item.similarity * 100)}%`,
       `Differentiator: ${item.differentiator.label}`,
@@ -834,7 +863,7 @@ function buildAiExplorationPrompt(assessment) {
     "3. Ask targeted follow-up questions that would force the stance to become more consistent.",
     "4. Suggest the most charitable repair that preserves what the evidence can support.",
     "5. State what would need to be true for my stronger conclusion to be licensed.",
-    "6. Generate several follow-up prompts I can paste back into an AI assistant to continue the analysis.",
+    "6. Generate several follow-up prompts I can paste back into an AI assistant to continue the analysis, including one image-generation prompt for a quantified visual depiction of the numbered stance map.",
     "",
     "Theory vocabulary to use:",
     "- Inductive symmetry: similar inductive patterns should receive similar evidential permission unless a relevant differentiator is supplied.",
@@ -848,7 +877,7 @@ function buildAiExplorationPrompt(assessment) {
     `Pattern: ${assessment.pattern.title}`,
     `Claim being defended: ${els.claim.value.trim()}`,
     `Evidence emphasized: ${els.evidence.value.trim()}`,
-    `Accepted inductive rule: ${els.rule.value.trim()}`,
+    `Accepted inductive rule: ${formatClaim(els.rule.value.trim(), 1)}`,
     `Defense mode: ${assessment.mode.label}`,
     `Force assigned to accepted rule: ${assessment.preferredForce}/10`,
     `Risk score: ${assessment.score}/100`,
@@ -866,7 +895,7 @@ function buildAiExplorationPrompt(assessment) {
   assessment.items.forEach((item) => {
     lines.push(
       "",
-      `Parallel claim: ${formatClaim(item.title)}`,
+      `Parallel claim: ${formatClaim(item.title, item.stanceNumber)}`,
       `Treatment: ${treatmentLabels[item.response.treatment]}`,
       `Similarity to anchor: ${Math.round(item.similarity * 100)}%`,
       `Variable at issue: ${item.variable}`,
@@ -901,15 +930,23 @@ function buildAiExplorationPrompt(assessment) {
     "3. The differentiator that would most improve the argument, stated as a testable or independently defensible premise.",
     "4. Five Socratic questions I should answer before treating the original conclusion as licensed.",
     "5. A repaired version of the claim that avoids cherry-picking.",
-    "6. Five follow-up prompts I can paste next, each focused on a specific unresolved tension in this audit.",
+    "6. Six follow-up prompts I can paste next, each focused on a specific unresolved tension in this audit; one must ask for an image prompt that depicts the numbered stances and tensions quantitatively.",
   );
 
   return lines.join("\n");
 }
 
-function formatClaim(value) {
-  const text = String(value).trim();
-  return text.startsWith(claimMarker) ? text : `${claimMarker}${text}`;
+function formatClaim(value, stanceNumber = null) {
+  const text = stripClaimPrefix(value);
+  const numberedPrefix = Number.isInteger(stanceNumber) ? `[${stanceNumber}] ` : "";
+  return `${claimMarker}${numberedPrefix}${text}`;
+}
+
+function stripClaimPrefix(value) {
+  return String(value)
+    .trim()
+    .replace(/^◉\s*(?:\[\d+\]\s*)?/, "")
+    .trim();
 }
 
 async function copyReport() {
