@@ -16,8 +16,65 @@ const treatmentLabels = {
   reject: "Reject",
 };
 
+const claimMarker = "◉ ";
+
+const archetypes = [
+  {
+    id: "open-agnostic",
+    label: "Open Agnostic",
+    force: 3,
+    mode: "inductive",
+    treatment: "accept",
+    differentiatorType: "independent",
+    differentiator: "I am provisionally allowing the same inductive permission unless a real difference is shown.",
+    description: "Low certainty. Parallel inductions are treated as live evidence unless a specific differentiator earns its keep.",
+  },
+  {
+    id: "methodical-skeptic",
+    label: "Methodical Skeptic",
+    force: 4,
+    mode: "inductive",
+    treatment: "weaken",
+    differentiatorType: "quality",
+    differentiator: "The parallel may matter, but I want stronger evidence quality before giving it full force.",
+    description: "Cautious and evidence-first. The anchor and parallels are both allowed, but neither is treated as decisive.",
+  },
+  {
+    id: "cautious-theist",
+    label: "Cautious Theist",
+    force: 6,
+    mode: "abductive",
+    treatment: "weaken",
+    differentiatorType: "scope",
+    differentiator: "I think the cases differ in scope, but the distinction still needs independent defense.",
+    description: "Moderate confidence. Theistic inference is allowed as a possibility while parallel pressures remain visible.",
+  },
+  {
+    id: "classical-apologist",
+    label: "Classical Apologist",
+    force: 8,
+    mode: "metaphysical",
+    treatment: "reject",
+    differentiatorType: "assertion",
+    differentiator: "The theistic case is treated as different because it concerns ultimate reality rather than ordinary cases.",
+    description: "High confidence. The anchor is strong and most parallels are restricted by asserted scope differences.",
+  },
+  {
+    id: "evangelical-dogmatist",
+    label: "Evangelical Dogmatist",
+    force: 10,
+    mode: "modal",
+    treatment: "reject",
+    differentiatorType: "modal-smuggling",
+    differentiator: "The preferred rule is treated as necessary, while contrary parallels are ruled out as inapplicable.",
+    description: "Maximum certainty. The anchor is hardened into necessity and the parallels are largely denied permission.",
+  },
+];
+
 const els = {
   patternSelect: document.querySelector("#pattern-select"),
+  archetypeButtons: document.querySelector("#archetype-buttons"),
+  archetypeDescription: document.querySelector("#archetype-description"),
   claim: document.querySelector("#claim-input"),
   evidence: document.querySelector("#evidence-input"),
   rule: document.querySelector("#rule-input"),
@@ -50,6 +107,7 @@ async function init() {
     state.data = await response.json();
     buildPatternSelect();
     buildDefenseModes();
+    buildArchetypeButtons();
     bindBaseEvents();
     setPattern(state.data.patterns[0].id);
   } catch (error) {
@@ -65,6 +123,24 @@ async function init() {
 function buildPatternSelect() {
   els.patternSelect.innerHTML = state.data.patterns
     .map((pattern) => `<option value="${pattern.id}">${escapeHtml(pattern.title)}</option>`)
+    .join("");
+}
+
+function buildArchetypeButtons() {
+  els.archetypeButtons.innerHTML = archetypes
+    .map(
+      (archetype) => `
+        <button
+          class="archetype-button"
+          type="button"
+          data-archetype-id="${archetype.id}"
+          aria-label="Apply ${escapeHtml(archetype.label)} archetype"
+        >
+          <strong>${escapeHtml(archetype.label)}</strong>
+          <span>${escapeHtml(archetype.description)}</span>
+        </button>
+      `,
+    )
     .join("");
 }
 
@@ -99,6 +175,11 @@ function bindBaseEvents() {
   });
 
   els.modeOptions.addEventListener("change", renderResults);
+  els.archetypeButtons.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-archetype-id]");
+    if (!button) return;
+    applyArchetype(button.dataset.archetypeId);
+  });
   els.resetPattern.addEventListener("click", () => setPattern(state.pattern.id));
   els.copyReport.addEventListener("click", copyReport);
   els.stanceGrid.addEventListener("click", (event) => {
@@ -112,6 +193,31 @@ function bindBaseEvents() {
   });
 }
 
+function applyArchetype(archetypeId) {
+  const archetype = archetypes.find((item) => item.id === archetypeId);
+  if (!archetype) return;
+
+  els.preferredForce.value = String(archetype.force);
+  els.preferredForceValue.textContent = String(archetype.force);
+  document.querySelector(`#mode-${archetype.mode}`).checked = true;
+
+  state.pattern.parallels.forEach((parallel) => {
+    state.responses.set(parallel.id, {
+      treatment: archetype.treatment,
+      differentiatorType: archetype.differentiatorType,
+      differentiator: archetype.differentiator,
+    });
+  });
+
+  els.archetypeDescription.textContent = archetype.description;
+  document.querySelectorAll(".archetype-button").forEach((button) => {
+    button.classList.toggle("active", button.dataset.archetypeId === archetype.id);
+  });
+
+  renderParallels();
+  renderResults();
+}
+
 function setPattern(patternId) {
   const pattern = state.data.patterns.find((item) => item.id === patternId);
   state.pattern = pattern;
@@ -120,12 +226,17 @@ function setPattern(patternId) {
   els.patternSelect.value = pattern.id;
   els.claim.value = pattern.claim;
   els.evidence.value = pattern.evidence;
-  els.rule.value = pattern.rule;
+  els.rule.value = formatClaim(pattern.rule);
   els.preferredForce.value = String(pattern.defaultForce);
   els.preferredForceValue.textContent = String(pattern.defaultForce);
 
   const inductive = document.querySelector("#mode-inductive");
   if (inductive) inductive.checked = true;
+  els.archetypeDescription.textContent =
+    "Apply a common stance profile, then inspect how the tension changes.";
+  document.querySelectorAll(".archetype-button").forEach((button) => {
+    button.classList.remove("active");
+  });
 
   pattern.parallels.forEach((parallel) => {
     state.responses.set(parallel.id, {
@@ -199,7 +310,7 @@ function renderParallelCard(parallel) {
       <header class="parallel-compact-head">
         <div>
           <p class="app-step">Parallel induction</p>
-          <h3>${escapeHtml(parallel.title)}</h3>
+          <h3 class="claim-text">${escapeHtml(formatClaim(parallel.title))}</h3>
         </div>
         <div class="parallel-head-meta">
           <span class="similarity-pill">${Math.round(parallel.similarity * 100)}% similar</span>
@@ -264,7 +375,7 @@ function renderResults() {
     .map(
       (item) => `
         <div class="mini-bar">
-          <span>${escapeHtml(item.title)}</span>
+          <span class="claim-text">${escapeHtml(formatClaim(item.title))}</span>
           <span class="mini-bar-track">
             <span class="mini-bar-fill" style="width: ${item.risk}%; --score-color: ${scoreColor};"></span>
           </span>
@@ -289,7 +400,7 @@ function renderStanceBoard(assessment, scoreColor) {
   els.stanceScoreValue.textContent = String(assessment.score);
   els.stanceScoreLabel.textContent = getScoreLabel(assessment.score);
   els.stanceScoreValue.style.color = scoreColor;
-  els.stanceAnchorRule.textContent = els.rule.value.trim() || assessment.pattern.rule;
+  els.stanceAnchorRule.textContent = formatClaim(els.rule.value.trim() || assessment.pattern.rule);
   els.stanceMode.textContent = `Mode: ${assessment.mode.label}`;
   els.stanceForce.textContent = `Anchor force: ${assessment.preferredForce}/10`;
 
@@ -309,7 +420,7 @@ function renderStanceBoard(assessment, scoreColor) {
             <span class="stance-treatment ${item.response.treatment}">${treatment}</span>
             <strong>${item.risk}</strong>
           </span>
-          <span class="stance-card-title">${escapeHtml(item.title)}</span>
+          <span class="stance-card-title claim-text">${escapeHtml(formatClaim(item.title))}</span>
           <span class="stance-card-meta">${Math.round(item.similarity * 100)}% similar | ${escapeHtml(item.variable)}</span>
           <span class="stance-tension-track" aria-hidden="true">
             <span style="width: ${item.risk}%"></span>
@@ -466,7 +577,7 @@ function buildMarkdownReport(assessment) {
   assessment.items.forEach((item) => {
     lines.push(
       "",
-      `### ${item.title}`,
+      `### ${formatClaim(item.title)}`,
       `Treatment: ${treatmentLabels[item.response.treatment]}`,
       `Similarity: ${Math.round(item.similarity * 100)}%`,
       `Differentiator: ${item.differentiator.label}`,
@@ -484,6 +595,11 @@ function buildMarkdownReport(assessment) {
   assessment.repairs.forEach((repair) => lines.push(`- ${repair.title}: ${repair.body}`));
 
   return lines.join("\n");
+}
+
+function formatClaim(value) {
+  const text = String(value).trim();
+  return text.startsWith(claimMarker) ? text : `${claimMarker}${text}`;
 }
 
 async function copyReport() {
