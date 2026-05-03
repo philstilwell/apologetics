@@ -266,6 +266,25 @@
 
             <div class="repair-list" id="repair-list"></div>
             <textarea class="export-box" id="export-box" readonly></textarea>
+            <div class="prompt-panel" aria-labelledby="ai-prompt-title">
+              <div class="prompt-head">
+                <div>
+                  <p class="app-step">AI prompt</p>
+                  <h3 id="ai-prompt-title">Explore this stance more deeply</h3>
+                </div>
+                <button class="ghost" type="button" id="copy-ai-prompt">Copy AI prompt</button>
+              </div>
+              <details class="annotation">
+                <summary>Using the AI prompt</summary>
+                <p>
+                  This prompt packages the current score, claim, evidence, accepted rule,
+                  parallel stances, differentiators, flags, and repair options. Paste it
+                  into an AI assistant to get a guided follow-up conversation about where
+                  the stance is tense, under-defended, or repairable.
+                </p>
+              </details>
+              <textarea class="export-box ai-prompt-box" id="ai-prompt-box" readonly></textarea>
+            </div>
           </div>
         </div>
       </section>

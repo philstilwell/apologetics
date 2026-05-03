@@ -1301,6 +1301,31 @@ input[type="range"] {
   font-size: 0.8rem;
 }
 
+.prompt-panel {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 2px solid var(--line);
+}
+
+.prompt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.prompt-head h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.ai-prompt-box {
+  min-height: 280px;
+  background: #fff8dc;
+}
+
 .hidden {
   display: none !important;
 }
@@ -1477,6 +1502,7 @@ input[type="range"] {
 
   .parallel-card header,
   .panel-title,
+  .prompt-head,
   .section-heading {
     align-items: flex-start;
     flex-direction: column;
