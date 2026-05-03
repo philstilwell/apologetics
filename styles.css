@@ -467,6 +467,30 @@ button.ghost {
   color: var(--ink);
 }
 
+.example-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0 12px 12px;
+}
+
+.example-grid article {
+  border: 1px solid #8d5a12;
+  border-radius: var(--radius);
+  background: #fff3ba;
+}
+
+.example-grid article > strong {
+  display: block;
+  padding: 10px 12px 0;
+  color: var(--ink);
+}
+
+.differentiator-guide,
+.comparison-panel {
+  margin-bottom: 14px;
+}
+
 .app-header .annotation {
   margin-top: 0;
 }
@@ -545,6 +569,79 @@ button.ghost {
   line-height: 1.24;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
+}
+
+.comparison-panel {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.compact-title {
+  margin-bottom: 10px;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.comparison-card {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #8d5a12;
+  border-radius: var(--radius);
+  background: #fff8dc;
+}
+
+.comparison-top {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.comparison-top strong {
+  font-size: 0.88rem;
+  line-height: 1.16;
+}
+
+.comparison-top span {
+  font-size: 1.35rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.comparison-meter {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--soft);
+}
+
+.comparison-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.comparison-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.comparison-card small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.25;
 }
 
 .audit-panel .annotation,
@@ -1106,6 +1203,38 @@ input[type="range"] {
   line-height: 1.5;
 }
 
+.score-drivers {
+  margin: 8px 0 14px;
+}
+
+.driver-list {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.driver-card {
+  padding: 10px;
+  border: 1px solid #8d5a12;
+  border-radius: var(--radius);
+  background: #fff3ba;
+}
+
+.driver-card strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+
+.driver-card p {
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.36;
+}
+
 .mini-bars {
   display: grid;
   gap: 9px;
@@ -1176,6 +1305,68 @@ input[type="range"] {
   display: none !important;
 }
 
+.theory-shell {
+  width: min(1080px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 42px 0 72px;
+}
+
+.theory-hero {
+  display: grid;
+  gap: 18px;
+  padding: clamp(24px, 5vw, 42px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.theory-hero h1 {
+  font-size: clamp(2.2rem, 6vw, 4.8rem);
+}
+
+.theory-hero p,
+.source-panel p,
+.theory-card p {
+  color: var(--muted);
+  line-height: 1.58;
+}
+
+.theory-hero .button {
+  width: fit-content;
+}
+
+.theory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.theory-card,
+.source-panel {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff8dc;
+}
+
+.theory-card h2,
+.source-panel h2 {
+  font-size: 1.35rem;
+}
+
+.source-panel {
+  margin-top: 18px;
+  background: #ffdf73;
+}
+
+.source-panel a {
+  color: var(--wine);
+  font-weight: 900;
+  text-underline-offset: 3px;
+}
+
 @media (max-width: 980px) {
   .hub-layout,
   .app-header,
@@ -1194,6 +1385,10 @@ input[type="range"] {
   }
 
   .archetype-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .comparison-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1226,6 +1421,11 @@ input[type="range"] {
   .score-ring {
     width: 150px;
   }
+
+  .example-grid,
+  .theory-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 720px) {
@@ -1253,6 +1453,10 @@ input[type="range"] {
 
   .archetype-button {
     min-height: 88px;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
   }
 
   .differentiator-text {

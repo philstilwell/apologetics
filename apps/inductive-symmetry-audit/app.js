@@ -74,6 +74,7 @@ const archetypes = [
 const els = {
   patternSelect: document.querySelector("#pattern-select"),
   archetypeButtons: document.querySelector("#archetype-buttons"),
+  archetypeComparison: document.querySelector("#archetype-comparison"),
   archetypeDescription: document.querySelector("#archetype-description"),
   claim: document.querySelector("#claim-input"),
   evidence: document.querySelector("#evidence-input"),
@@ -94,6 +95,7 @@ const els = {
   scoreValue: document.querySelector("#score-value"),
   scoreSummary: document.querySelector("#score-summary"),
   miniBars: document.querySelector("#mini-bars"),
+  scoreDrivers: document.querySelector("#score-drivers"),
   flagList: document.querySelector("#flag-list"),
   repairList: document.querySelector("#repair-list"),
   exportBox: document.querySelector("#export-box"),
@@ -385,6 +387,7 @@ function renderResults() {
     )
     .join("");
 
+  renderScoreDrivers(assessment);
   els.flagList.innerHTML = assessment.flags
     .map((flag) => `<li><strong>${escapeHtml(flag.title)}:</strong> ${escapeHtml(flag.body)}</li>`)
     .join("");
@@ -394,6 +397,27 @@ function renderResults() {
     .join("");
 
   els.exportBox.value = buildMarkdownReport(assessment);
+}
+
+function renderScoreDrivers(assessment) {
+  const drivers = buildScoreDrivers(assessment);
+  els.scoreDrivers.innerHTML = `
+    <details class="annotation" open>
+      <summary>Why did my score change?</summary>
+      <div class="driver-list">
+        ${drivers
+          .map(
+            (driver) => `
+              <article class="driver-card">
+                <strong>${escapeHtml(driver.title)}</strong>
+                <p>${escapeHtml(driver.body)}</p>
+              </article>
+            `,
+          )
+          .join("")}
+      </div>
+    </details>
+  `;
 }
 
 function renderStanceBoard(assessment, scoreColor) {
@@ -429,6 +453,8 @@ function renderStanceBoard(assessment, scoreColor) {
       `;
     })
     .join("");
+
+  renderArchetypeComparison();
 }
 
 function assess() {
@@ -453,7 +479,10 @@ function assess() {
 }
 
 function assessParallel(parallel, preferredForce) {
-  const response = state.responses.get(parallel.id);
+  return assessParallelWithResponse(parallel, preferredForce, state.responses.get(parallel.id));
+}
+
+function assessParallelWithResponse(parallel, preferredForce, response) {
   const treatmentScore = treatmentScores[response.treatment];
   const differentiator = getDifferentiatorType(response.differentiatorType);
   const gap = Math.max(0, preferredForce - treatmentScore) / 10;
@@ -470,6 +499,54 @@ function assessParallel(parallel, preferredForce) {
     allowance,
     risk,
   };
+}
+
+function assessArchetype(archetype) {
+  const mode = state.data.defenseModes.find((item) => item.id === archetype.mode);
+  const items = state.pattern.parallels.map((parallel) =>
+    assessParallelWithResponse(parallel, archetype.force, {
+      treatment: archetype.treatment,
+      differentiatorType: archetype.differentiatorType,
+      differentiator: archetype.differentiator,
+    }),
+  );
+  const averageRisk = items.reduce((sum, item) => sum + item.risk, 0) / Math.max(items.length, 1);
+  const score = clamp(Math.round(averageRisk + mode.riskModifier), 0, 100);
+
+  return {
+    ...archetype,
+    mode,
+    items,
+    score,
+    summary: summarizeScore(score),
+  };
+}
+
+function renderArchetypeComparison() {
+  if (!state.pattern || !els.archetypeComparison) return;
+
+  els.archetypeComparison.innerHTML = archetypes
+    .map((archetype) => {
+      const comparison = assessArchetype(archetype);
+      const scoreColor = getScoreColor(comparison.score);
+      const top = [...comparison.items].sort((a, b) => b.risk - a.risk)[0];
+
+      return `
+        <article class="comparison-card">
+          <div class="comparison-top">
+            <strong>${escapeHtml(archetype.label)}</strong>
+            <span style="color: ${scoreColor};">${comparison.score}</span>
+          </div>
+          <div class="comparison-meter">
+            <span style="width: ${comparison.score}%; background: ${scoreColor};"></span>
+          </div>
+          <p>${escapeHtml(comparison.summary)}</p>
+          <small>Mode: ${escapeHtml(comparison.mode.label)} | Force: ${archetype.force}/10</small>
+          <small>Top tension: ${escapeHtml(top ? top.title : "None")}</small>
+        </article>
+      `;
+    })
+    .join("");
 }
 
 function buildFlags(items, mode, preferredForce) {
@@ -553,6 +630,60 @@ function buildRepairs(score, mode, items) {
   return repairs;
 }
 
+function buildScoreDrivers(assessment) {
+  const weakDifferentiators = assessment.items.filter(
+    (item) =>
+      item.response.treatment !== "accept" &&
+      ["none", "assertion", "circular", "modal-smuggling", "specificity"].includes(item.response.differentiatorType),
+  );
+  const topItems = [...assessment.items].sort((a, b) => b.risk - a.risk).slice(0, 2);
+  const drivers = [];
+
+  if (topItems[0]) {
+    drivers.push({
+      title: "Largest residual tension",
+      body: `${topItems
+        .map((item) => `${item.title} (${item.risk})`)
+        .join(" and ")} drive the score because they are treated much weaker than the anchor while remaining similar.`,
+    });
+  }
+
+  if (weakDifferentiators.length > 0) {
+    drivers.push({
+      title: "Differentiator quality",
+      body: `${weakDifferentiators.length} discounted parallel${weakDifferentiators.length === 1 ? " uses" : "s use"} no, weak, circular, modalized, or specificity-inflating differentiators.`,
+    });
+  }
+
+  if (assessment.mode.riskModifier > 0) {
+    drivers.push({
+      title: "Defense mode burden",
+      body: `${assessment.mode.label} mode adds pressure because it asks the anchor to do more than ordinary induction without automatically licensing the same move for parallels.`,
+    });
+  }
+
+  if (assessment.preferredForce >= 8) {
+    drivers.push({
+      title: "Anchor force",
+      body: `The accepted rule is set to ${assessment.preferredForce}/10, so rejecting similar parallels creates a larger evidential gap.`,
+    });
+  }
+
+  if (drivers.length === 0) {
+    drivers.push({
+      title: "Low tension profile",
+      body: "The score stays low because the anchor and the parallels are receiving broadly similar evidential permission.",
+    });
+  }
+
+  return drivers.slice(0, 3);
+}
+
+function buildDiagnosis(assessment) {
+  const drivers = buildScoreDrivers(assessment);
+  return `${assessment.summary} Main drivers: ${drivers.map((driver) => driver.title.toLowerCase()).join(", ")}.`;
+}
+
 function buildMarkdownReport(assessment) {
   const lines = [
     "# Inductive Symmetry Audit",
@@ -561,6 +692,18 @@ function buildMarkdownReport(assessment) {
     `Score: ${assessment.score}/100`,
     `Defense mode: ${assessment.mode.label}`,
     `Preferred force: ${assessment.preferredForce}/10`,
+    "",
+    "## Diagnosis",
+    buildDiagnosis(assessment),
+    "",
+    "### Why the score moved",
+  ];
+
+  buildScoreDrivers(assessment).forEach((driver) => {
+    lines.push(`- ${driver.title}: ${driver.body}`);
+  });
+
+  lines.push(
     "",
     "## Claim",
     els.claim.value.trim(),
@@ -572,7 +715,7 @@ function buildMarkdownReport(assessment) {
     els.rule.value.trim(),
     "",
     "## Parallel Assessments",
-  ];
+  );
 
   assessment.items.forEach((item) => {
     lines.push(

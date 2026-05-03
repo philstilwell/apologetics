@@ -3,24 +3,26 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inductive Symmetry Audit</title>
+    <title>Xhairs Apologetics Audit Lab | Inductive Symmetry Audit</title>
     <meta
       name="description"
       content="An interactive diagnostic for cherry-picked inductive reasoning in Christian apologetics."
     >
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../../styles.css">
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="../../" aria-label="Apologetics Audit Lab home">
-        <span class="brand-mark" aria-hidden="true">A</span>
+      <a class="brand" href="../../" aria-label="Xhairs Apologetics Audit Lab home">
+        <span class="brand-mark" aria-hidden="true">X</span>
         <span>
-          <strong>Apologetics Audit Lab</strong>
+          <strong>Xhairs Apologetics Audit Lab</strong>
           <small>Inductive Symmetry Audit</small>
         </span>
       </a>
       <nav class="top-nav" aria-label="Primary">
         <a href="../../">Hub</a>
+        <a href="./theory.html">Theory</a>
         <a href="#stances">Stances</a>
         <a href="#audit">Audit</a>
         <a href="#results">Results</a>
@@ -65,6 +67,47 @@
           </p>
         </div>
         <div class="archetype-buttons" id="archetype-buttons"></div>
+      </section>
+
+      <details class="annotation differentiator-guide">
+        <summary>What counts as a good differentiator?</summary>
+        <p>
+          A good differentiator identifies a real evidential difference between the accepted
+          induction and the parallel induction. It should change scope, evidence quality,
+          defeaters, dependence, rival hypotheses, or specificity burden without simply
+          restating the preferred conclusion.
+        </p>
+        <div class="example-grid">
+          <article>
+            <strong>Stronger differentiators</strong>
+            <ul>
+              <li>Independent evidence that the target domain really differs from the observed domain.</li>
+              <li>A quality difference such as replication, reliability, specificity, or source independence.</li>
+              <li>A defeater that undercuts the parallel without also undercutting the anchor rule.</li>
+              <li>A clear rival-hypothesis comparison showing why one explanation predicts the evidence better.</li>
+            </ul>
+          </article>
+          <article>
+            <strong>Weak differentiators</strong>
+            <ul>
+              <li>"God is different" without explaining which evidential variable changes.</li>
+              <li>Calling the preferred induction necessary while treating contrary inductions as merely empirical.</li>
+              <li>Moving from a modest explanation to a specific doctrine without added support.</li>
+              <li>Rejecting a parallel because it threatens the conclusion rather than because it is disanalogous.</li>
+            </ul>
+          </article>
+        </div>
+      </details>
+
+      <section class="comparison-panel" aria-labelledby="comparison-title">
+        <div class="panel-title compact-title">
+          <div>
+            <p class="app-step">Compare archetypes</p>
+            <h2 id="comparison-title">Same argument, different posture</h2>
+            <p>Scores below show how the selected argument behaves under each preset stance.</p>
+          </div>
+        </div>
+        <div class="comparison-grid" id="archetype-comparison"></div>
       </section>
 
       <section class="stance-board" id="stances" aria-labelledby="stances-title">
@@ -181,6 +224,8 @@
             </details>
 
             <div class="mini-bars" id="mini-bars"></div>
+
+            <div class="score-drivers" id="score-drivers" aria-label="Why the score changed"></div>
 
             <ul class="flag-list" id="flag-list"></ul>
           </div>
