@@ -1300,6 +1300,51 @@ input[type="range"] {
   box-shadow: none;
 }
 
+.unpicked-stances {
+  margin-top: 12px;
+}
+
+.induction-consideration-list {
+  display: grid;
+  gap: 8px;
+  max-height: 520px;
+  overflow: auto;
+  padding: 0 12px 12px;
+}
+
+.induction-consideration {
+  padding: 10px;
+  border: 1px solid #b7791f;
+  border-radius: var(--radius);
+  background: #fff8dc;
+}
+
+.induction-consideration h3 {
+  margin: 0 0 6px;
+}
+
+.induction-consideration h3.claim-text {
+  font-size: 1.02rem;
+  line-height: 1.22;
+}
+
+.induction-consideration p {
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.induction-consideration p + p {
+  margin-top: 4px;
+}
+
+.induction-consideration strong {
+  color: var(--ink);
+}
+
 .export-box {
   width: 100%;
   min-height: 180px;
