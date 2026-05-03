@@ -1301,29 +1301,54 @@ input[type="range"] {
   font-size: 0.8rem;
 }
 
-.prompt-panel {
+.output-grid {
   display: grid;
-  gap: 10px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 18px;
   margin-top: 18px;
-  padding-top: 16px;
-  border-top: 2px solid var(--line);
 }
 
-.prompt-head {
+.output-card {
+  padding: 18px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.ai-output-card {
+  border-color: #8d5a12;
+  background: #fff3ba;
+}
+
+.output-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 }
 
-.prompt-head h3 {
+.output-head h2 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.35rem;
+}
+
+.output-head p:not(.app-step) {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.42;
+}
+
+.summary-box {
+  min-height: 260px;
+  background: #fff8dc;
 }
 
 .ai-prompt-box {
-  min-height: 280px;
-  background: #fff8dc;
+  min-height: 420px;
+  border-color: #8d5a12;
+  background: #fff9e7;
 }
 
 .hidden {
@@ -1417,6 +1442,10 @@ input[type="range"] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .output-grid {
+    grid-template-columns: 1fr;
+  }
+
   .stance-grid {
     flex-wrap: wrap;
     overflow-x: visible;
@@ -1502,7 +1531,7 @@ input[type="range"] {
 
   .parallel-card header,
   .panel-title,
-  .prompt-head,
+  .output-head,
   .section-heading {
     align-items: flex-start;
     flex-direction: column;

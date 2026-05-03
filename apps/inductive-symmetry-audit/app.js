@@ -339,6 +339,22 @@ function renderParallelCard(parallel) {
           permission as the anchor rule. If you weaken or reject it, name the evidential
           difference that does the work.
         </p>
+        <p>
+          Start by asking whether the parallel uses the same style of inference as the
+          anchor: observed pattern, analogy, best explanation, necessity claim, or exception
+          from ordinary cases. Similarity does not mean the conclusions must match. It means
+          the standards for counting the evidence should match.
+        </p>
+        <ul>
+          <li><strong>Accept</strong> when the parallel should count with roughly the same permission as the anchor.</li>
+          <li><strong>Weaken</strong> when the parallel counts, but a real difference lowers its force.</li>
+          <li><strong>Reject</strong> when the parallel should not count unless you can name why it is evidentially different.</li>
+        </ul>
+        <p>
+          The differentiator should identify the variable that changes the evidential
+          situation. Merely saying that the preferred conclusion is special will usually
+          register as unresolved asymmetry.
+        </p>
       </details>
 
       <div class="parallel-controls">
@@ -408,6 +424,16 @@ function renderScoreDrivers(assessment) {
   els.scoreDrivers.innerHTML = `
     <details class="annotation" open>
       <summary>Why did my score change?</summary>
+      <p>
+        This panel names the main variables currently moving the score. It prioritizes
+        the largest residual tensions, weak differentiators, defense-mode burdens, and
+        high anchor force.
+      </p>
+      <p>
+        To reduce the score, revise the items named here first. A useful revision usually
+        accepts more of the parallel pressure, lowers the claimed force of the anchor, or
+        replaces a weak differentiator with one that has independent support.
+      </p>
       <div class="driver-list">
         ${drivers
           .map(
@@ -688,6 +714,51 @@ function buildDiagnosis(assessment) {
   return `${assessment.summary} Main drivers: ${drivers.map((driver) => driver.title.toLowerCase()).join(", ")}.`;
 }
 
+function buildFollowUpPrompts(assessment) {
+  const topItems = [...assessment.items].sort((a, b) => b.risk - a.risk).slice(0, 3);
+  const highest = topItems[0];
+  const weakDifferentiator = assessment.items.find(
+    (item) =>
+      item.response.treatment !== "accept" &&
+      ["none", "assertion", "circular", "modal-smuggling", "specificity"].includes(item.response.differentiatorType),
+  );
+  const prompts = [];
+
+  if (highest) {
+    prompts.push(
+      `Focus only on "${highest.title}". What exact premise would justify treating this parallel induction as weaker than my anchor rule, and what independent evidence would support that premise?`,
+    );
+  }
+
+  if (weakDifferentiator) {
+    prompts.push(
+      `Rewrite my differentiator for "${weakDifferentiator.title}" so it is not circular, not merely asserted, and not just a restatement of the conclusion.`,
+    );
+  }
+
+  if (assessment.mode.riskModifier > 0) {
+    prompts.push(
+      `Explain what extra bridge premise is required by ${assessment.mode.label} mode, and show how the argument changes if that bridge premise is removed.`,
+    );
+  }
+
+  if (assessment.preferredForce >= 8) {
+    prompts.push(
+      `Test whether my ${assessment.preferredForce}/10 force rating is too high. What would a 5/10 version of the same inductive rule permit and forbid?`,
+    );
+  }
+
+  prompts.push(
+    `Compare the original claim with this repaired claim: "${assessment.repairs[0]?.body || els.claim.value.trim()}". What evidence would be needed to move from the repaired claim back to the original conclusion?`,
+  );
+
+  prompts.push(
+    `Ask me five yes-or-no questions that would reveal whether I am applying one evidential standard to the anchor and another to the parallel inductions.`,
+  );
+
+  return prompts.slice(0, 5);
+}
+
 function buildMarkdownReport(assessment) {
   const lines = [
     "# Inductive Symmetry Audit",
@@ -746,11 +817,14 @@ function buildMarkdownReport(assessment) {
 
 function buildAiExplorationPrompt(assessment) {
   const drivers = buildScoreDrivers(assessment);
+  const followUpPrompts = buildFollowUpPrompts(assessment);
   const archetypeSummaries = archetypes.map((archetype) => {
     const comparison = assessArchetype(archetype);
     return `${archetype.label}: ${comparison.score}/100, ${comparison.mode.label} mode, force ${archetype.force}/10`;
   });
   const lines = [
+    "Copy/paste this entire prompt into an AI assistant.",
+    "",
     "You are a rigorous but fair Socratic auditor of inductive reasoning in apologetics.",
     "Help me examine whether my current stance is cherry-picking inductive permission. Do not simply reassure me or dunk on the argument. Separate truth, possibility, and evidential permission.",
     "",
@@ -760,12 +834,15 @@ function buildAiExplorationPrompt(assessment) {
     "3. Ask targeted follow-up questions that would force the stance to become more consistent.",
     "4. Suggest the most charitable repair that preserves what the evidence can support.",
     "5. State what would need to be true for my stronger conclusion to be licensed.",
+    "6. Generate several follow-up prompts I can paste back into an AI assistant to continue the analysis.",
     "",
     "Theory vocabulary to use:",
     "- Inductive symmetry: similar inductive patterns should receive similar evidential permission unless a relevant differentiator is supplied.",
     "- Modal smuggling: turning an observed regularity or plausible explanation into necessity without an independent bridge.",
     "- Scope drift: moving beyond the domain actually supported by the evidence.",
     "- Specificity inflation: using modest evidence to reach a highly specific theological conclusion.",
+    "",
+    "BEGIN CURRENT USER DATA",
     "",
     "Audit context:",
     `Pattern: ${assessment.pattern.title}`,
@@ -811,7 +888,12 @@ function buildAiExplorationPrompt(assessment) {
   lines.push("", "Archetype comparison for the same argument:");
   archetypeSummaries.forEach((summary) => lines.push(`- ${summary}`));
 
+  lines.push("", "Suggested subsequent prompts to ask next:");
+  followUpPrompts.forEach((prompt, index) => lines.push(`${index + 1}. ${prompt}`));
+
   lines.push(
+    "",
+    "END CURRENT USER DATA",
     "",
     "Please respond in this format:",
     "1. A concise diagnosis of the stance.",
@@ -819,6 +901,7 @@ function buildAiExplorationPrompt(assessment) {
     "3. The differentiator that would most improve the argument, stated as a testable or independently defensible premise.",
     "4. Five Socratic questions I should answer before treating the original conclusion as licensed.",
     "5. A repaired version of the claim that avoids cherry-picking.",
+    "6. Five follow-up prompts I can paste next, each focused on a specific unresolved tension in this audit.",
   );
 
   return lines.join("\n");
@@ -830,30 +913,61 @@ function formatClaim(value) {
 }
 
 async function copyReport() {
-  const text = els.exportBox.value;
-  try {
-    await navigator.clipboard.writeText(text);
-    els.copyReport.textContent = "Copied";
-    setTimeout(() => {
-      els.copyReport.textContent = "Copy report";
-    }, 1400);
-  } catch {
-    els.exportBox.focus();
-    els.exportBox.select();
-  }
+  await copyTextFromBox(els.exportBox, els.copyReport, "Copy summary");
 }
 
 async function copyAiPrompt() {
-  const text = els.aiPromptBox.value;
+  await copyTextFromBox(els.aiPromptBox, els.copyAiPrompt, "Copy AI prompt");
+}
+
+async function copyTextFromBox(box, button, resetLabel) {
+  const text = box.value;
+  let copied = copyTextBySelection(text);
+
+  if (!copied && navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    } catch {
+      copied = false;
+    }
+  }
+
+  button.textContent = copied ? "Copied" : "Select text";
+  setTimeout(() => {
+    button.textContent = resetLabel;
+  }, 3000);
+}
+
+function copyTextBySelection(text) {
+  const temporaryBox = document.createElement("textarea");
+  let copyEventHandled = false;
+  const handleCopy = (event) => {
+    event.preventDefault();
+    event.clipboardData?.setData("text/plain", text);
+    copyEventHandled = true;
+  };
+
+  temporaryBox.value = text;
+  temporaryBox.setAttribute("readonly", "");
+  temporaryBox.style.position = "fixed";
+  temporaryBox.style.inset = "0 auto auto 0";
+  temporaryBox.style.width = "1px";
+  temporaryBox.style.height = "1px";
+  temporaryBox.style.opacity = "0";
+  document.body.appendChild(temporaryBox);
+  temporaryBox.focus();
+  temporaryBox.select();
+  temporaryBox.setSelectionRange(0, text.length);
+  document.addEventListener("copy", handleCopy, { once: true });
+
   try {
-    await navigator.clipboard.writeText(text);
-    els.copyAiPrompt.textContent = "Copied";
-    setTimeout(() => {
-      els.copyAiPrompt.textContent = "Copy AI prompt";
-    }, 1400);
+    return document.execCommand("copy") || copyEventHandled;
   } catch {
-    els.aiPromptBox.focus();
-    els.aiPromptBox.select();
+    return false;
+  } finally {
+    document.removeEventListener("copy", handleCopy);
+    temporaryBox.remove();
   }
 }
 

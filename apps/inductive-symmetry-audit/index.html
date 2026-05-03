@@ -55,6 +55,18 @@
             The point is not to force identical conclusions. The point is to make every
             asymmetry pay rent by naming a real evidential difference.
           </p>
+          <ul>
+            <li><strong>Step 1:</strong> choose the apologetic pattern closest to the argument being assessed.</li>
+            <li><strong>Step 2:</strong> adjust the claim, evidence, rule, defense mode, and force slider until they match the actual argument.</li>
+            <li><strong>Step 3:</strong> judge each parallel induction using the same evidential standards you want applied to the anchor.</li>
+            <li><strong>Step 4:</strong> if a parallel is weakened or rejected, supply the differentiator that explains why.</li>
+            <li><strong>Step 5:</strong> use the score, repair panel, summary, and AI prompt to decide whether the original conclusion is proportionate.</li>
+          </ul>
+          <p>
+            Treat the tool as a consistency audit. A high score means the argument may still
+            be interesting, but it needs clearer limits, better differentiators, or a more
+            modest conclusion before it should be treated as licensed.
+          </p>
         </details>
       </section>
 
@@ -77,6 +89,12 @@
           defeaters, dependence, rival hypotheses, or specificity burden without simply
           restating the preferred conclusion.
         </p>
+        <p>
+          The best differentiators are transferable: a fair critic could apply the same
+          standard in other cases without quietly protecting only the preferred theological
+          result. Weak differentiators usually rename the conclusion, appeal to mystery, or
+          move from empirical evidence to necessity without a bridge premise.
+        </p>
         <div class="example-grid">
           <article>
             <strong>Stronger differentiators</strong>
@@ -97,6 +115,11 @@
             </ul>
           </article>
         </div>
+        <p>
+          When in doubt, ask: if this same differentiator were used against my preferred
+          argument, would I still count it as legitimate? If the answer is no, the
+          differentiator probably needs more independent support.
+        </p>
       </details>
 
       <section class="comparison-panel" aria-labelledby="comparison-title">
@@ -135,6 +158,22 @@
             shows whether a parallel induction is accepted, weakened, or rejected, and how
             much tension that stance creates relative to the accepted anchor rule.
           </p>
+          <p>
+            The anchor is the rule you are allowing to support the apologetic claim. The
+            parallel tiles are nearby inductions that use comparable reasoning but pressure
+            the argument in an uncomfortable direction. The tile number rises when a similar
+            parallel receives much less permission than the anchor.
+          </p>
+          <ul>
+            <li><strong>Accept</strong> means the parallel receives roughly the same kind of evidential permission as the anchor.</li>
+            <li><strong>Weaken</strong> means the parallel matters, but you think a real evidential difference reduces its force.</li>
+            <li><strong>Reject</strong> means the parallel should not count unless a strong differentiator explains why.</li>
+          </ul>
+          <p>
+            Click a tile to jump to the controls for that parallel. If a tile is high, the
+            fastest repair is usually to accept more of the parallel pressure, lower the
+            force of the anchor, or give a stronger differentiator.
+          </p>
         </details>
       </section>
 
@@ -153,6 +192,21 @@
               The anchor is the inductive assertion the apologetic argument wants to count
               as strong. Raising the force slider means you are asking that rule to do more
               evidential work, so rejected parallels will create more tension.
+            </p>
+            <p>
+              Use the claim field for the conclusion being defended, the evidence field for
+              the observed pattern being emphasized, and the accepted rule field for the
+              general inductive move that connects the evidence to the conclusion. Keep the
+              rule as general as the argument needs it to be.
+            </p>
+            <ul>
+              <li><strong>Inductive</strong> means the argument relies on observed regularities or analogies.</li>
+              <li><strong>Abductive</strong> means the argument claims theism is the best explanation among rivals.</li>
+              <li><strong>Modal, metaphysical, analytic, or rhetorical</strong> modes ask the rule to do extra work beyond ordinary observation.</li>
+            </ul>
+            <p>
+              The force slider is not a confidence meter for the whole religion. It measures
+              how much work this particular rule is being asked to do in this argument.
             </p>
           </details>
 
@@ -181,6 +235,31 @@
             <div class="segmented three" id="mode-options"></div>
           </div>
 
+          <details class="annotation defense-mode-guide">
+            <summary>Understanding defense modes</summary>
+            <p>
+              Defense mode describes what kind of move the argument is making from evidence
+              to conclusion. This matters because different moves carry different burdens.
+              A modest induction from observed patterns is not the same as a claim about
+              necessity, metaphysical structure, or analytic truth.
+            </p>
+            <ul>
+              <li><strong>Inductive:</strong> The argument says observed regularities or analogies support a probable conclusion. This is the lightest mode, but it must still treat similar regularities with similar permission.</li>
+              <li><strong>Abductive:</strong> The argument says theism is the best explanation. This requires comparison against live rivals, not merely showing that theism is compatible with the evidence.</li>
+              <li><strong>Modal:</strong> The argument moves from what appears regular, intelligible, or unavoidable to what must be true. This requires a bridge from observed patterns to necessity.</li>
+              <li><strong>Metaphysical:</strong> The argument makes a claim about the deep structure of reality, such as grounding, ultimate explanation, or being itself. Ordinary examples can motivate this, but they do not automatically settle it.</li>
+              <li><strong>Analytic:</strong> The argument treats the key rule as definitional or conceptually true. This can clarify terms, but it may stop doing evidential work unless an additional premise connects the definition to reality.</li>
+              <li><strong>Rhetorical:</strong> The argument leans on obviousness, intuition, incredulity, or persuasive framing. This can be psychologically powerful, but it is the riskiest mode because it can hide missing premises.</li>
+            </ul>
+            <p>
+              Choose the weakest mode that honestly captures the argument. If the argument
+              only needs ordinary pattern recognition, use Inductive. If it claims rival
+              explanations fail, use Abductive. If it says the conclusion is necessary or
+              built into reality, use Modal or Metaphysical. Higher-burden modes increase
+              the score because they ask the anchor rule to do more work.
+            </p>
+          </details>
+
           <div class="range-row">
             <div class="range-top">
               <label for="preferred-force">Force assigned to accepted rule</label>
@@ -191,7 +270,6 @@
 
           <div class="audit-actions">
             <button class="primary" type="button" id="reset-pattern">Reset pattern</button>
-            <button class="ghost" type="button" id="copy-report">Copy report</button>
           </div>
         </form>
 
@@ -220,6 +298,21 @@
                 The score measures leftover asymmetry after your differentiators are counted.
                 It is a pressure reading, not a truth verdict. A high score means the favored
                 induction is being allowed to count more than similar rejected inductions.
+              </p>
+              <p>
+                Low scores usually mean the anchor and parallels are being treated with
+                comparable permission. Moderate scores suggest the argument may be repairable
+                by clarifying scope or improving a few differentiators. High and severe scores
+                indicate that the preferred conclusion is receiving special treatment.
+              </p>
+              <ul>
+                <li><strong>Lower the score</strong> by accepting relevant parallels, reducing anchor force, or supplying independent differentiators.</li>
+                <li><strong>Raise the score</strong> by giving the anchor high force while rejecting similar parallels with weak or circular reasons.</li>
+                <li><strong>Use the bars</strong> to see which parallel claims are carrying the most tension.</li>
+              </ul>
+              <p>
+                A high score does not show that the conclusion is false. It shows that this
+                route to the conclusion is carrying an unresolved consistency burden.
               </p>
             </details>
 
@@ -258,35 +351,75 @@
                 <li><strong>Burden shift</strong> appears when the defense mode has moved from induction into modal, metaphysical, or analytic territory.</li>
               </ul>
               <p>
-                The export box is a compact audit report. It preserves the selected claim,
-                the current stances, the differentiator ledger, the flags, and the repaired
-                conclusion so the user can compare versions of the argument.
+                Use these repairs as candidate revisions, not as final answers. A good
+                repair should keep the legitimate evidential pressure while refusing to infer
+                more than the evidence licenses. If the repaired claim feels too modest, that
+                is often a sign that the original argument owed additional bridge premises.
               </p>
             </details>
 
             <div class="repair-list" id="repair-list"></div>
-            <textarea class="export-box" id="export-box" readonly></textarea>
-            <div class="prompt-panel" aria-labelledby="ai-prompt-title">
-              <div class="prompt-head">
-                <div>
-                  <p class="app-step">AI prompt</p>
-                  <h3 id="ai-prompt-title">Explore this stance more deeply</h3>
-                </div>
-                <button class="ghost" type="button" id="copy-ai-prompt">Copy AI prompt</button>
-              </div>
-              <details class="annotation">
-                <summary>Using the AI prompt</summary>
-                <p>
-                  This prompt packages the current score, claim, evidence, accepted rule,
-                  parallel stances, differentiators, flags, and repair options. Paste it
-                  into an AI assistant to get a guided follow-up conversation about where
-                  the stance is tense, under-defended, or repairable.
-                </p>
-              </details>
-              <textarea class="export-box ai-prompt-box" id="ai-prompt-box" readonly></textarea>
-            </div>
           </div>
         </div>
+
+        <section class="output-grid" aria-label="Generated audit outputs">
+          <article class="output-card" aria-labelledby="summary-output-title">
+            <div class="output-head">
+              <div>
+                <p class="app-step">Summary</p>
+                <h2 id="summary-output-title">Audit summary report</h2>
+                <p>
+                  A compact record of the current score, stance ledger, flags, and repairs.
+                </p>
+              </div>
+              <button class="ghost" type="button" id="copy-report">Copy summary</button>
+            </div>
+            <textarea
+              class="export-box summary-box"
+              id="export-box"
+              aria-label="Audit summary report"
+              readonly
+            ></textarea>
+          </article>
+
+          <article class="output-card ai-output-card" aria-labelledby="ai-prompt-title">
+            <div class="output-head">
+              <div>
+                <p class="app-step">AI prompt</p>
+                <h2 id="ai-prompt-title">Ready-to-paste exploration prompt</h2>
+                <p>
+                  A self-contained prompt that updates with every current stance and
+                  differentiator.
+                </p>
+              </div>
+              <button class="ghost" type="button" id="copy-ai-prompt">Copy AI prompt</button>
+            </div>
+            <details class="annotation">
+              <summary>Using the AI prompt</summary>
+              <p>
+                Paste this entire prompt into an AI assistant. It includes the current
+                argument profile, parallel stances, score drivers, flags, repair options,
+                and output instructions so the assistant can examine the tensions directly.
+              </p>
+              <p>
+                The prompt is regenerated whenever you change the pattern, edit the argument,
+                move the force slider, change a treatment, or revise a differentiator. Copy
+                it after the settings match the stance you actually want to explore.
+              </p>
+              <p>
+                The generated prompt asks the assistant for a diagnosis, the top tensions, a
+                stronger differentiator, a repaired claim, and follow-up prompts you can paste
+                as the next step in the conversation.
+              </p>
+            </details>
+            <textarea
+              class="export-box ai-prompt-box"
+              id="ai-prompt-box"
+              aria-label="Ready-to-paste AI exploration prompt"
+              readonly
+            ></textarea>
+          </article>
+        </section>
       </section>
     </main>
 
