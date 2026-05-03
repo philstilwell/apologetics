@@ -785,7 +785,7 @@ function buildImagePromptRequest(assessment) {
     ),
   ].join("; ");
 
-  return `Create an image prompt for a largely quantified visual depiction of this stance map and its tensions. Show the numbered stances, treatment status, residual tension scores, similarity percentages, and overall risk score (${assessment.score}/100). Use a clean analytical dashboard style, not a cartoon. Data to visualize: ${quantifiedStances}.`;
+  return `Create an image prompt for a largely quantified visual depiction of this stance map and its tensions, and include prose insights to accompany the image. Show the numbered stances, treatment status, residual tension scores, similarity percentages, and overall risk score (${assessment.score}/100). Use a clean analytical dashboard style, not a cartoon. The prose insights should explain the two or three strongest tensions, what the numbers imply about evidential symmetry, and what repair would most reduce the tension. Data to visualize and interpret: ${quantifiedStances}.`;
 }
 
 function buildMarkdownReport(assessment) {
