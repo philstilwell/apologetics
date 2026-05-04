@@ -183,6 +183,26 @@ const claimPresets = [
       actType: 1.5,
       unknownReserve: 12,
     },
+    alternativeTitle: "Keep modern miracle alternatives visible",
+    alternativeCopy:
+      "A striking report may still fit ordinary recovery, diagnostic uncertainty, memory, selection effects, timing coincidence, or an unexplained but not-yet-attributed cause.",
+    alternativeLabel: "Modern miracle alternative strength",
+    alternativesHelpTitle: "Why modern miracle alternatives matter",
+    alternativesHelpOne:
+      "The alternative is not simply 'the witness lied.' Honest people can report a real improvement while the cause remains ordinary, uncertain, selectively reported, or misattributed.",
+    alternativesHelpTwo:
+      "Treat an alternative as weak only when the records, timing, base rates, and missing-case problem have been handled directly.",
+    alternativeReportLabel: "Modern miracle alternative strength",
+    suppressedPathName: "non-miracle path",
+    alternativeStrongTitle: "Modern miracle alternatives remain strong",
+    alternativeStrongBody:
+      "The selected medical, reporting, timing, and attribution alternatives still fit the miracle report without requiring the specific supernatural conclusion.",
+    comparisonRepairBody:
+      "Add base rates, diagnostic uncertainty, natural recovery, treatment effects, selective reporting, unreported misses, timing coincidence, and unknowns before judging how surprising the evidence is without a miracle.",
+    overlapRepairBody:
+      "Reduce independence for reports that come from the same witness network, church community, medical summary, media story, or retelling chain.",
+    specificityRepairBody:
+      "Separate a generally unusual event from this intervention, this deity, this timing, this purpose, and this doctrinal interpretation.",
     evidence: [
       {
         id: "testimony",
@@ -233,6 +253,26 @@ const claimPresets = [
       actType: 2,
       unknownReserve: 15,
     },
+    alternativeTitle: "Keep answered-prayer alternatives visible",
+    alternativeCopy:
+      "A desired outcome can occur after prayer because of base rates, ordinary causes, broad target framing, selective memory, unreported misses, or later interpretation.",
+    alternativeLabel: "Answered-prayer alternative strength",
+    alternativesHelpTitle: "Why answered-prayer alternatives matter",
+    alternativesHelpOne:
+      "The alternative is not simply 'nothing happened.' The outcome may be real while the causal story remains ordinary, uncertain, or shaped by how the request was remembered.",
+    alternativesHelpTwo:
+      "Treat prayer as strongly supported only when misses, base rates, timing flexibility, ordinary causes, and interpretation after the fact have been handled fairly.",
+    alternativeReportLabel: "Answered-prayer alternative strength",
+    suppressedPathName: "ordinary-outcome path",
+    alternativeStrongTitle: "Answered-prayer alternatives remain strong",
+    alternativeStrongBody:
+      "The selected ordinary-outcome, timing, memory, and selection alternatives still fit the prayer report without requiring divine causation.",
+    comparisonRepairBody:
+      "Add base rates, unreported misses, ordinary causes, timing flexibility, broad or vague requests, community reinforcement, retrospective fitting, and unknowns before treating prayer as the best explanation.",
+    overlapRepairBody:
+      "Reduce independence for reports that come from the same person, prayer group, church network, testimony setting, or retelling chain.",
+    specificityRepairBody:
+      "Separate general belief that God may answer prayer from this request, this timing, this outcome, this interpretation, and this causal claim.",
     evidence: [
       {
         id: "desired-outcome",
@@ -439,6 +479,108 @@ const crashAlternativeFeatures = [
   },
 ];
 
+const modernMiracleAlternativeFeatures = [
+  {
+    id: "ordinary-recovery",
+    title: "Ordinary recovery or fluctuation",
+    ratio: 3.5,
+    note: "Some conditions improve, fluctuate, remit, or respond to treatment without needing a miracle explanation.",
+    detail:
+      "A recovery can be real and still have an ordinary medical pathway. The audit should ask about the condition's natural history, treatment, regression to the mean, delayed improvement, and whether similar recoveries occur without the religious context.",
+  },
+  {
+    id: "diagnostic-uncertainty",
+    title: "Diagnostic uncertainty",
+    ratio: 3,
+    note: "Initial reports may overstate certainty about diagnosis, prognosis, timing, or what changed.",
+    detail:
+      "Medical language can sound more exact than the evidence allows. The audit should ask whether the diagnosis was confirmed, whether records are complete, and whether the alleged change is measured or mainly described by memory.",
+  },
+  {
+    id: "selective-reporting",
+    title: "Selective reporting",
+    ratio: 3,
+    note: "Successful stories travel farther than misses, ambiguous cases, and similar non-miracle recoveries.",
+    detail:
+      "A community may remember the striking positive case while forgetting prayers that were followed by ordinary outcomes or no improvement. The audit should ask what comparison pool is visible and what cases are missing.",
+  },
+  {
+    id: "testimony-memory",
+    title: "Testimony and memory shaping",
+    ratio: 2.5,
+    note: "Sincere witnesses can simplify timelines, intensify details, or retell the case through later meaning.",
+    detail:
+      "Witness confidence matters, but memory can change as a story is repeated. The audit should separate honest experience from accurate sequence, exact medical fact, and correct causal interpretation.",
+  },
+  {
+    id: "timing-coincidence",
+    title: "Timing coincidence",
+    ratio: 2.5,
+    note: "Prayer or ritual may happen near an improvement without causing the improvement.",
+    detail:
+      "When many people pray over time, some prayer will occur near an improvement by chance. The audit should ask how wide the timing window is and whether similar timing is counted when no improvement follows.",
+  },
+  {
+    id: "attribution-specificity",
+    title: "Specific Christian attribution",
+    ratio: 2,
+    note: "Moving from unusual recovery to a specific divine cause adds a further claim.",
+    detail:
+      "Even if the event remains partly unexplained, the step to 'therefore the Christian God did this' needs its own support. The audit should ask what distinguishes that conclusion from unknown natural causes or other possible interpretations.",
+  },
+];
+
+const prayerAlternativeFeatures = [
+  {
+    id: "ordinary-outcome-rate",
+    title: "Ordinary outcome rate",
+    ratio: 3.2,
+    note: "Desired outcomes sometimes occur without prayer being the cause.",
+    detail:
+      "Before treating prayer as causal, the audit should ask how often the outcome happens anyway. A low-visibility base rate can make ordinary events feel more evidential than they are.",
+  },
+  {
+    id: "unreported-misses",
+    title: "Unreported misses",
+    ratio: 3,
+    note: "Answered-prayer stories often leave out prayers followed by no clear answer.",
+    detail:
+      "If only hits are remembered, the evidence pool is distorted. The audit should ask how many similar prayers were made, how many did not receive the desired outcome, and whether those misses are counted with the same care.",
+  },
+  {
+    id: "broad-request-window",
+    title: "Broad request or timing window",
+    ratio: 2.4,
+    note: "A request can be flexible enough that many outcomes later look like a match.",
+    detail:
+      "The wider the request and timing window, the easier it is to find a fit afterward. The audit should ask whether the expected outcome was specific, measurable, and time-bounded before the result occurred.",
+  },
+  {
+    id: "ordinary-causes",
+    title: "Ordinary causes of the outcome",
+    ratio: 2.8,
+    note: "Other people, planning, treatment, luck, or background processes may explain the result.",
+    detail:
+      "A good outcome may have ordinary causal contributors. The audit should ask what practical actions, medical factors, social help, prior trends, or chance processes were already in motion.",
+  },
+  {
+    id: "retrospective-fitting",
+    title: "Retrospective fitting",
+    ratio: 2.3,
+    note: "After a good outcome, people may reinterpret the original request to fit what happened.",
+    detail:
+      "Meaning can be found after the fact. The audit should ask what the request meant before the outcome and whether a different result would also have been interpreted as an answer.",
+  },
+  {
+    id: "community-reinforcement-prayer",
+    title: "Community reinforcement",
+    ratio: 2,
+    note: "A group can stabilize the prayer interpretation through testimony, worship, and repetition.",
+    detail:
+      "Shared celebration can strengthen confidence without adding independent causal evidence. The audit should ask whether the claim rests on separate checks or on one community repeating a preferred interpretation.",
+  },
+];
+
 const defaultPresetText = {
   reportTitle: "# Crosshairs Resurrection Evidence Audit",
   claimCopy:
@@ -627,9 +769,16 @@ function getPresetMeta(preset = getCurrentPreset()) {
 }
 
 function getAlternativesForPreset(preset = getCurrentPreset()) {
-  return preset.id === "car-crash-demon"
-    ? crashAlternativeFeatures
-    : resurrectionAlternativeFeatures;
+  switch (preset.id) {
+    case "car-crash-demon":
+      return crashAlternativeFeatures;
+    case "modern-miracle":
+      return modernMiracleAlternativeFeatures;
+    case "prayer-answer":
+      return prayerAlternativeFeatures;
+    default:
+      return resurrectionAlternativeFeatures;
+  }
 }
 
 function getCurrentAlternatives() {
