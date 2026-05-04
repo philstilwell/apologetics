@@ -59,6 +59,117 @@ const claimPresets = [
     ],
   },
   {
+    id: "car-crash-demon",
+    title: "Teaching parallel: demon turned the wheel",
+    claim:
+      "A car crashed because a demon physically turned the steering wheel, rather than because of ordinary causes such as mechanical failure, swerving to avoid an animal, falling asleep, distraction, or road conditions.",
+    prior: {
+      general: 12,
+      targeting: 0.6,
+      actType: 0.15,
+      unknownReserve: 20,
+    },
+    claimCopy:
+      "Use this teaching example to compare a specific non-material claim with ordinary crash explanations. The point is to see why a dramatic explanation must do more than say, 'the cause is unclear.'",
+    startingCopy:
+      "Before counting crash details or testimony, ask how plausible this exact kind of cause is. The sliders use ordinary questions instead of probability notation.",
+    startingHelpOne:
+      "These sliders ask what the demon-wheel claim should get before the crash evidence is added. A broad belief in spiritual beings does not automatically make this exact crash demon-caused.",
+    generalPriorLabel: "How open are you to demon action in general?",
+    generalPriorHelper:
+      "Higher means you already think demons sometimes act in the physical world.",
+    targetingPenaltyLabel: "How much of that openness applies to this exact crash?",
+    targetingPenaltyHelper:
+      "Lower means the claim is very specific: this demon, this car, this road, this moment.",
+    actTypeRateLabel: "How common is this kind of demon-caused event?",
+    actTypeRateHelper:
+      "Lower means demon-caused steering is rare even before this crash is considered.",
+    unknownReserveHelper:
+      "Higher means you are leaving room for mechanical, driver, road, animal, or unknown causes.",
+    alternativeTitle: "Teaching parallel: test the demon-wheel claim",
+    alternativeCopy:
+      "The crash is real, but the cause is disputed. This preset asks whether the evidence selects a demon rather than ordinary crash causes.",
+    alternativeLabel: "Competing crash explanations",
+    alternativesHelpTitle: "Why the crash alternatives matter",
+    alternativesHelpOne:
+      "The alternative is not simply 'the driver lied.' A driver can be sincere and still misread a sudden crash caused by steering failure, a tire problem, an animal, fatigue, distraction, or the road.",
+    alternativesHelpTwo:
+      "Mark a crash explanation as strong when it fits the details. Set it aside only when the evidence really rules it out, not because it makes the demon claim harder to defend.",
+    alternativeReportLabel: "Ordinary crash-explanation strength",
+    trueEvidenceHelper:
+      "Set this high only if the evidence would be natural to expect if a demon really turned the wheel.",
+    altEvidenceHelper:
+      "Set this high if mechanical failure, an animal swerve, sleep, distraction, or road conditions could still explain it.",
+    weightEvidenceHelper:
+      "Set this lower when details come from the same person, same memory, same camera angle, or same investigation.",
+    startingPointKind: "specific demon-wheel claim",
+    borrowingTitle: "The claim may borrow too much from general supernatural openness",
+    borrowingBody:
+      "Being open to spirits or demons in general is not the same as support for this demon, this road, this moment, and this physical steering claim.",
+    suppressedPathName: "ordinary crash path",
+    alternativeStrongTitle: "Ordinary crash explanations remain strong",
+    alternativeStrongBody:
+      "The selected crash features still fit mechanical failure, animal avoidance, fatigue, distraction, or road conditions better than a demon-turning-the-wheel claim.",
+    comparisonRepairBody:
+      "Check steering and tires, road evidence, animal signs, fatigue, distraction, phone data, and witness timing before treating a demon as the best explanation.",
+    overlapRepairBody:
+      "Reduce independence for details that come from the same driver, witness conversation, camera angle, police report, or repair inspection.",
+    specificityRepairBody:
+      "Separate general openness to non-material causes from this demon, this car, this road, this moment, and this physical steering claim.",
+    aiAuditLine:
+      "You are auditing a non-material claim using a car-crash teaching parallel for plain-language probabilistic rigor. Do not merely affirm or deny the claim. Stress-test the model.",
+    aiCheckHint:
+      "Checks to apply: inflated starting point, specificity cost, suppressed ordinary crash causes, false independence, sincere testimony vs event cause, transfer from an unexplained crash to a demon cause, truncated alternatives, missing unknown reserve, neutral evidence, and fragility.",
+    reportTitle: "# Crosshairs Teaching Parallel Audit",
+    evidence: [
+      {
+        id: "crash-happened",
+        title: "The crash happened",
+        type: "background",
+        note: "The crash itself is expected under both a demon claim and ordinary crash explanations; it does not choose between them.",
+        pTrue: 98,
+        pAlt: 98,
+        weight: 100,
+      },
+      {
+        id: "sudden-swerve",
+        title: "Sudden wheel movement",
+        type: "event detail",
+        note: "A sudden turn fits the demon story, but it also fits a driver swerving, a steering problem, a tire problem, or a startled correction.",
+        pTrue: 85,
+        pAlt: 75,
+        weight: 75,
+      },
+      {
+        id: "driver-reports-force",
+        title: "Driver says the wheel was pulled",
+        type: "testimony",
+        note: "The driver may be sincere, but shock and memory can turn 'I lost control' into 'something grabbed the wheel.'",
+        pTrue: 80,
+        pAlt: 35,
+        weight: 55,
+      },
+      {
+        id: "no-obvious-cause",
+        title: "No obvious cause at first",
+        type: "unknowns",
+        note: "Not seeing a cause right away is not the same as ruling out mechanical failure, fatigue, animal avoidance, distraction, or road conditions.",
+        pTrue: 65,
+        pAlt: 60,
+        weight: 70,
+      },
+      {
+        id: "prior-demon-belief",
+        title: "Demon explanation appears quickly",
+        type: "social",
+        note: "A community may quickly interpret an unclear event through its existing beliefs. That can explain the label without proving the cause.",
+        pTrue: 70,
+        pAlt: 75,
+        weight: 40,
+      },
+    ],
+  },
+  {
     id: "modern-miracle",
     title: "Modern miracle report",
     claim:
@@ -183,7 +294,7 @@ const posturePresets = {
   },
 };
 
-const alternativeFeatures = [
+const resurrectionAlternativeFeatures = [
   {
     id: "decades-late",
     title: "Decades-late composition",
@@ -246,19 +357,136 @@ const alternativeFeatures = [
   },
 ];
 
+const crashAlternativeFeatures = [
+  {
+    id: "mechanical-failure",
+    title: "Mechanical failure",
+    ratio: 4,
+    note: "A steering, tire, brake, suspension, or warning-light problem can cause a sudden loss of control.",
+  },
+  {
+    id: "animal-swerve",
+    title: "Swerving to miss an animal",
+    ratio: 3,
+    note: "A sudden steering move is common when a driver reacts to a deer, dog, or other animal near the road.",
+  },
+  {
+    id: "falling-asleep",
+    title: "Falling asleep or microsleep",
+    ratio: 3.5,
+    note: "Fatigue can cause lane drift, late correction, and a crash without much braking or clear memory.",
+  },
+  {
+    id: "driver-distraction",
+    title: "Driver distraction",
+    ratio: 2.5,
+    note: "A phone, passenger, dashboard control, or momentary attention lapse can explain delayed reaction.",
+  },
+  {
+    id: "road-conditions",
+    title: "Road or weather conditions",
+    ratio: 2,
+    note: "Wet pavement, gravel, ice, a curve, or poor visibility can make ordinary control loss more likely.",
+  },
+  {
+    id: "stress-memory",
+    title: "Stress-shaped memory",
+    ratio: 2.5,
+    note: "After a frightening crash, a sincere driver may remember force, grabbing, or pulling more vividly than the mechanics of the event.",
+  },
+  {
+    id: "demon-specificity",
+    title: "Extra specificity of the demon claim",
+    ratio: 3,
+    note: "Moving from 'the cause is unclear' to 'a demon turned the wheel' adds a very specific claim that needs its own support.",
+  },
+];
+
+const defaultPresetText = {
+  reportTitle: "# Crosshairs Resurrection Evidence Audit",
+  claimCopy:
+    "Start with the exact claim. A thinner claim needs less support; a highly specific miracle claim needs more.",
+  startingCopy:
+    "Before counting testimony or stories, ask how plausible this specific kind of event is. The sliders below replace formal probability labels with ordinary questions.",
+  startingHelpTitle: "How to set these sliders",
+  startingHelpOne:
+    "These sliders ask what the claim should get before the specific evidence is added. A broad belief that God may exist does not automatically make one exact miracle likely.",
+  startingHelpTwo:
+    "Move slowly. If you raise one slider, ask what fact justifies the higher number. If the reason is only 'I already believe this,' the slider may be too generous.",
+  generalPriorLabel: "How open are you to divine action in general?",
+  generalPriorHelper:
+    "Higher means you already think God acting in the world is broadly plausible.",
+  targetingPenaltyLabel: "How much of that openness applies to this exact claim?",
+  targetingPenaltyHelper:
+    "Lower means the claim is very specific: this person, this time, this purpose.",
+  actTypeRateLabel: "How common is this kind of event?",
+  actTypeRateHelper:
+    "Lower means events like this are rare even before this case is considered.",
+  unknownReserveLabel: "How much room remains for other explanations?",
+  unknownReserveHelper:
+    "Higher means you are leaving room for explanations you may not have thought of yet.",
+  alternativeTitle: "Keep sincere alternatives visible",
+  alternativeCopy:
+    "The alternative is not 'they lied.' It can include grief, dissonance, memory, scriptural rereading, and community reinforcement.",
+  alternativeLabel: "Alternative pathway strength",
+  alternativesHelpTitle: "Why the alternative pathway matters",
+  alternativesHelpOne:
+    "The alternative is not simply 'everyone lied.' People can be sincere and still explain events through grief, group pressure, memory, scripture, or later storytelling.",
+  alternativesHelpTwo:
+    "Mark a pathway as strong when it clearly fits the evidence. Set it aside only when you have a reason, not just because it makes the miracle claim harder to defend.",
+  alternativeReportLabel: "Sincere meaning-making pathway strength",
+  trueEvidenceHelper:
+    "Set this high only if the evidence would be natural to expect under the miracle claim.",
+  altEvidenceHelper:
+    "Set this high if ordinary causes, memory, grief, rumor, or story growth could also explain it.",
+  weightEvidenceHelper:
+    "Set this lower when sources share the same people, texts, memories, or community.",
+  startingPointKind: "specific miracle",
+  borrowingTitle: "The claim may borrow too much from generic theism",
+  borrowingBody:
+    "Belief that God might exist is not the same as support for this person, this event, this purpose, and this doctrine.",
+  suppressedPathName: "non-miracle path",
+  alternativeStrongTitle: "Sincere meaning-making remains a strong alternative",
+  alternativeStrongBody:
+    "The selected psychology and tradition-development features strongly fit a sincere post-crisis meaning-making pathway.",
+  comparisonRepairBody:
+    "Add grief visions, rumor growth, memory distortion, literary development, social reinforcement, selection effects, and unknowns before judging how surprising the evidence is without a miracle.",
+  overlapRepairBody:
+    "Reduce independence for sources or traditions that share a community, text, memory stream, or apologetic purpose.",
+  specificityRepairBody:
+    "Separate general openness to God from this person, this time, this kind of act, and this Christian interpretation.",
+  aiAuditLine:
+    "You are auditing a Christian evidential claim for plain-language probabilistic rigor. Do not merely affirm or deny the claim. Stress-test the model.",
+  aiCheckHint:
+    "Checks to apply: inflated starting point, specificity cost, suppressed alternatives, false independence, sincerity vs event truth, transfer from ordinary details to miracle truth, truncated alternatives, missing unknown reserve, neutral evidence, and fragility.",
+};
+
 const state = {
   presetId: claimPresets[0].id,
   evidence: [],
-  featureWeights: new Map(alternativeFeatures.map((feature) => [feature.id, 1])),
+  featureWeights: new Map(resurrectionAlternativeFeatures.map((feature) => [feature.id, 1])),
 };
 
 const els = {
   preset: document.querySelector("#claim-preset"),
   claim: document.querySelector("#claim-text"),
+  claimCopy: document.querySelector("#claim-copy"),
+  startingCopy: document.querySelector("#starting-copy"),
+  startingHelpTitle: document.querySelector("#starting-help-title"),
+  startingHelpOne: document.querySelector("#starting-help-one"),
+  startingHelpTwo: document.querySelector("#starting-help-two"),
   generalPrior: document.querySelector("#general-prior"),
+  generalPriorLabel: document.querySelector("#general-prior-label"),
+  generalPriorHelper: document.querySelector("#general-prior-helper"),
   targetingPenalty: document.querySelector("#targeting-penalty"),
+  targetingPenaltyLabel: document.querySelector("#targeting-penalty-label"),
+  targetingPenaltyHelper: document.querySelector("#targeting-penalty-helper"),
   actTypeRate: document.querySelector("#act-type-rate"),
+  actTypeRateLabel: document.querySelector("#act-type-rate-label"),
+  actTypeRateHelper: document.querySelector("#act-type-rate-helper"),
   unknownReserve: document.querySelector("#unknown-reserve"),
+  unknownReserveLabel: document.querySelector("#unknown-reserve-label"),
+  unknownReserveHelper: document.querySelector("#unknown-reserve-helper"),
   ledgerList: document.querySelector("#ledger-list"),
   featureGrid: document.querySelector("#feature-grid"),
   loadGenerous: document.querySelector("#load-generous"),
@@ -271,7 +499,13 @@ const els = {
   neededForHigh: document.querySelector("#needed-for-high"),
   neededForHighNote: document.querySelector("#needed-for-high-note"),
   topDriver: document.querySelector("#top-driver"),
+  alternativeTitle: document.querySelector("#alternatives-title"),
+  alternativeCopy: document.querySelector("#alternatives-copy"),
+  alternativeStrengthLabel: document.querySelector("#alternative-strength-label"),
   alternativeStrength: document.querySelector("#alternative-strength"),
+  alternativesHelpTitle: document.querySelector("#alternatives-help-title"),
+  alternativesHelpOne: document.querySelector("#alternatives-help-one"),
+  alternativesHelpTwo: document.querySelector("#alternatives-help-two"),
   resultCopy: document.querySelector("#result-copy"),
   auditScore: document.querySelector("#audit-score"),
   auditSummary: document.querySelector("#audit-summary"),
@@ -299,13 +533,20 @@ init();
 function init() {
   buildPresetSelect();
   bindEvents();
-  loadPreset(state.presetId);
+  loadPreset(getInitialPresetId());
 }
 
 function buildPresetSelect() {
   els.preset.innerHTML = claimPresets
     .map((preset) => `<option value="${preset.id}">${escapeHtml(preset.title)}</option>`)
     .join("");
+}
+
+function getInitialPresetId() {
+  const requestedPreset = new URLSearchParams(window.location.search).get("preset");
+  return claimPresets.some((preset) => preset.id === requestedPreset)
+    ? requestedPreset
+    : state.presetId;
 }
 
 function bindEvents() {
@@ -323,11 +564,36 @@ function bindEvents() {
   els.copyAiPrompt.addEventListener("click", () => copyText(els.aiPrompt.value, els.copyAiPrompt));
 }
 
+function getPresetById(presetId) {
+  return claimPresets.find((item) => item.id === presetId) || claimPresets[0];
+}
+
+function getCurrentPreset() {
+  return getPresetById(state.presetId);
+}
+
+function getPresetMeta(preset = getCurrentPreset()) {
+  return {
+    ...defaultPresetText,
+    ...preset,
+  };
+}
+
+function getAlternativesForPreset(preset = getCurrentPreset()) {
+  return preset.id === "car-crash-demon"
+    ? crashAlternativeFeatures
+    : resurrectionAlternativeFeatures;
+}
+
+function getCurrentAlternatives() {
+  return getAlternativesForPreset();
+}
+
 function loadPreset(presetId) {
-  const preset = claimPresets.find((item) => item.id === presetId);
+  const preset = getPresetById(presetId);
   state.presetId = preset.id;
   state.evidence = preset.evidence.map((item) => ({ ...item }));
-  state.featureWeights = new Map(alternativeFeatures.map((feature) => [feature.id, 1]));
+  state.featureWeights = new Map(getAlternativesForPreset(preset).map((feature) => [feature.id, 1]));
 
   els.preset.value = preset.id;
   els.claim.value = preset.claim;
@@ -336,6 +602,7 @@ function loadPreset(presetId) {
   els.actTypeRate.value = String(preset.prior.actType);
   els.unknownReserve.value = String(preset.prior.unknownReserve);
 
+  renderPresetText(preset);
   renderLedger();
   renderFeatures();
   render();
@@ -343,7 +610,7 @@ function loadPreset(presetId) {
 
 function applyPosture(kind) {
   const posture = posturePresets[kind];
-  const preset = claimPresets.find((item) => item.id === state.presetId);
+  const preset = getCurrentPreset();
   const prior = kind === "corrected" ? preset.prior : posture.prior;
 
   els.generalPrior.value = String(prior.general);
@@ -362,6 +629,29 @@ function applyPosture(kind) {
   render();
 }
 
+function renderPresetText(preset) {
+  const meta = getPresetMeta(preset);
+  setText(els.claimCopy, meta.claimCopy);
+  setText(els.startingCopy, meta.startingCopy);
+  setText(els.startingHelpTitle, meta.startingHelpTitle);
+  setText(els.startingHelpOne, meta.startingHelpOne);
+  setText(els.startingHelpTwo, meta.startingHelpTwo);
+  setText(els.generalPriorLabel, meta.generalPriorLabel);
+  setText(els.generalPriorHelper, meta.generalPriorHelper);
+  setText(els.targetingPenaltyLabel, meta.targetingPenaltyLabel);
+  setText(els.targetingPenaltyHelper, meta.targetingPenaltyHelper);
+  setText(els.actTypeRateLabel, meta.actTypeRateLabel);
+  setText(els.actTypeRateHelper, meta.actTypeRateHelper);
+  setText(els.unknownReserveLabel, meta.unknownReserveLabel);
+  setText(els.unknownReserveHelper, meta.unknownReserveHelper);
+  setText(els.alternativeTitle, meta.alternativeTitle);
+  setText(els.alternativeCopy, meta.alternativeCopy);
+  setText(els.alternativeStrengthLabel, meta.alternativeLabel);
+  setText(els.alternativesHelpTitle, meta.alternativesHelpTitle);
+  setText(els.alternativesHelpOne, meta.alternativesHelpOne);
+  setText(els.alternativesHelpTwo, meta.alternativesHelpTwo);
+}
+
 function renderLedger() {
   els.ledgerList.innerHTML = state.evidence.map(renderEvidenceCard).join("");
   state.evidence.forEach((item) => {
@@ -376,6 +666,8 @@ function renderLedger() {
 }
 
 function renderEvidenceCard(item) {
+  const meta = getPresetMeta();
+
   return `
     <article class="ledger-card plain-evidence-card" data-evidence-id="${item.id}">
       <header>
@@ -395,7 +687,7 @@ function renderEvidenceCard(item) {
           id: item.id,
           key: "pTrue",
           label: "Would we expect this if the claim is true?",
-          helper: "Higher means this evidence fits the miracle claim well.",
+          helper: meta.trueEvidenceHelper,
           value: item.pTrue,
           min: 0.01,
           max: 99.9,
@@ -405,7 +697,7 @@ function renderEvidenceCard(item) {
           id: item.id,
           key: "pAlt",
           label: "Would we still expect this if the claim is not true?",
-          helper: "Higher means this evidence can also arise through ordinary or alternative pathways.",
+          helper: meta.altEvidenceHelper,
           value: item.pAlt,
           min: 0.01,
           max: 99.9,
@@ -415,7 +707,7 @@ function renderEvidenceCard(item) {
           id: item.id,
           key: "weight",
           label: "How independent is this evidence?",
-          helper: "Lower this when sources, memories, communities, or traditions overlap.",
+          helper: meta.weightEvidenceHelper,
           value: item.weight,
           min: 10,
           max: 100,
@@ -440,6 +732,8 @@ function renderRange({ id, key, label, helper, value, min, max, step }) {
 }
 
 function renderFeatures() {
+  const alternativeFeatures = getCurrentAlternatives();
+
   els.featureGrid.innerHTML = alternativeFeatures
     .map((feature) => {
       const current = String(state.featureWeights.get(feature.id) ?? 1);
@@ -527,13 +821,13 @@ function renderResultStrip(assessment) {
   els.startingConfidence.textContent = formatPercent(assessment.prior);
   els.evidenceAdded.textContent = formatLift(assessment.totalBf);
   els.updatedConfidence.textContent = formatPercent(assessment.posterior);
-  els.updatedConfidenceNote.textContent = "After the listed evidence is counted";
+  els.updatedConfidenceNote.textContent = "The result after the current evidence settings";
   els.neededForHigh.textContent = shortfallText;
   els.neededForHighNote.textContent = assessment.shortfall90 > 1
     ? "more evidence lift needed to reach 90%"
     : "the current inputs already reach 90%";
   els.topDriver.textContent = assessment.topDriver
-    ? `Biggest mover: ${assessment.topDriver.title}`
+    ? `Most of the movement: ${assessment.topDriver.title}`
     : "No evidence driver yet";
   els.alternativeStrength.textContent = formatLift(assessment.alternativeBf);
   els.auditScore.textContent = String(assessment.auditPressure);
@@ -566,6 +860,8 @@ function renderWarnings(assessment) {
 }
 
 function assess() {
+  const preset = getCurrentPreset();
+  const meta = getPresetMeta(preset);
   const priorParts = {
     general: Number(els.generalPrior.value) / 100,
     targeting: Number(els.targetingPenalty.value) / 100,
@@ -615,6 +911,8 @@ function assess() {
   const shortfall90 = required[90] / Math.max(totalBf, 0.000000000001);
   const alternativeBf = calculateAlternativeBf();
   const flags = buildFlags({
+    preset,
+    meta,
     prior,
     priorParts,
     items,
@@ -624,10 +922,12 @@ function assess() {
     required,
     shortfall90,
   });
-  const repairs = buildRepairs(flags);
+  const repairs = buildRepairs(flags, meta);
   const auditPressure = calculateAuditPressure(flags, shortfall90, topDriver, priorParts);
 
   return {
+    preset,
+    meta,
     claim: els.claim.value.trim(),
     prior,
     priorParts,
@@ -648,6 +948,7 @@ function assess() {
 }
 
 function buildFlags(context) {
+  const meta = context.meta;
   const flags = [];
   const suppressed = context.items.filter((item) => item.pAlt < 3 && item.pTrue > 50);
   const highDependence = context.items.filter(
@@ -661,15 +962,15 @@ function buildFlags(context) {
   if (context.prior > 0.01) {
     flags.push({
       title: "The starting point may be too high",
-      body: "This specific miracle begins above 1% before the evidence is counted. That can be fair only if the specificity and event-type assumptions are defended.",
+      body: `This ${meta.startingPointKind} begins above 1% before the evidence is counted. That can be fair only if the specificity and event-type assumptions are defended.`,
       weight: 16,
     });
   }
 
   if (context.priorParts.general > 0.45 && context.priorParts.targeting > 0.1) {
     flags.push({
-      title: "The claim may borrow too much from generic theism",
-      body: "Belief that God might exist is not the same as support for this person, this event, this purpose, and this doctrine.",
+      title: meta.borrowingTitle,
+      body: meta.borrowingBody,
       weight: 16,
     });
   }
@@ -685,7 +986,7 @@ function buildFlags(context) {
   if (suppressed.length > 0) {
     flags.push({
       title: "Alternative explanations are treated as almost impossible",
-      body: `${suppressed.length} evidence item${suppressed.length === 1 ? "" : "s"} make the non-miracle path lower than 3%, which can make the evidence look stronger than it is.`,
+      body: `${suppressed.length} evidence item${suppressed.length === 1 ? "" : "s"} make the ${meta.suppressedPathName} lower than 3%, which can make the evidence look stronger than it is.`,
       weight: 18,
     });
   }
@@ -732,8 +1033,8 @@ function buildFlags(context) {
 
   if (context.alternativeBf > 100) {
     flags.push({
-      title: "Sincere meaning-making remains a strong alternative",
-      body: "The selected psychology and tradition-development features strongly fit a sincere post-crisis meaning-making pathway.",
+      title: meta.alternativeStrongTitle,
+      body: meta.alternativeStrongBody,
       weight: 10,
     });
   }
@@ -749,28 +1050,31 @@ function buildFlags(context) {
   return flags;
 }
 
-function buildRepairs(flags) {
+function buildRepairs(flags, meta) {
   const titles = new Set(flags.map((flag) => flag.title));
   const repairs = [];
 
-  if (titles.has("Alternative explanations are treated as almost impossible")) {
+  if (
+    titles.has("Alternative explanations are treated as almost impossible") ||
+    titles.has(meta.alternativeStrongTitle)
+  ) {
     repairs.push({
       title: "Rebuild the comparison side",
-      body: "Add grief visions, rumor growth, memory distortion, literary development, social reinforcement, selection effects, and unknowns before judging how surprising the evidence is without a miracle.",
+      body: meta.comparisonRepairBody,
     });
   }
 
   if (titles.has("Related evidence may be counted as separate") || titles.has("One evidence item is carrying the case")) {
     repairs.push({
       title: "Lower overlap-sensitive evidence",
-      body: "Reduce independence for sources or traditions that share a community, text, memory stream, or apologetic purpose.",
+      body: meta.overlapRepairBody,
     });
   }
 
-  if (titles.has("The starting point may be too high") || titles.has("The claim may borrow too much from generic theism")) {
+  if (titles.has("The starting point may be too high") || titles.has(meta.borrowingTitle)) {
     repairs.push({
       title: "Show the full specificity chain",
-      body: "Separate general openness to God from this person, this time, this kind of act, and this Christian interpretation.",
+      body: meta.specificityRepairBody,
     });
   }
 
@@ -807,7 +1111,7 @@ function calculateAuditPressure(flags, shortfall90, topDriver, priorParts) {
 }
 
 function calculateAlternativeBf() {
-  return alternativeFeatures.reduce((product, feature) => {
+  return getCurrentAlternatives().reduce((product, feature) => {
     const weight = state.featureWeights.get(feature.id) ?? 1;
     return product * Math.pow(feature.ratio, weight);
   }, 1);
@@ -821,6 +1125,10 @@ function requiredBfForTarget(priorOdds, target) {
 function setPercentLabel(id, value) {
   const label = document.querySelector(`#${id}-value`);
   if (label) label.textContent = formatPercent(value);
+}
+
+function setText(element, value) {
+  if (element) element.textContent = value;
 }
 
 function summarizePressure(score) {
@@ -848,7 +1156,7 @@ function buildPressureCopy(assessment) {
 
 function buildReport(assessment) {
   const lines = [
-    "# Crosshairs Resurrection Evidence Audit",
+    assessment.meta.reportTitle,
     "",
     `Claim: ${assessment.claim || "Not supplied"}`,
     "",
@@ -858,7 +1166,7 @@ function buildReport(assessment) {
     `Updated confidence: ${formatPercent(assessment.posterior)}`,
     `More evidence needed for 90% confidence: ${assessment.shortfall90 > 1 ? formatLift(assessment.shortfall90) : "none under current inputs"}`,
     `Biggest mover: ${assessment.topDriver ? assessment.topDriver.title : "None"} (${Math.round((assessment.topDriver?.share || 0) * 100)}% of positive movement)`,
-    `Sincere meaning-making pathway strength: ${formatLift(assessment.alternativeBf)}`,
+    `${assessment.meta.alternativeReportLabel}: ${formatLift(assessment.alternativeBf)}`,
     `Audit pressure: ${assessment.auditPressure}/100 (${summarizePressure(assessment.auditPressure)})`,
     "",
     "## Starting Point",
@@ -895,7 +1203,7 @@ function buildReport(assessment) {
 
 function buildAiPrompt(assessment) {
   return [
-    "You are auditing a Christian evidential claim for plain-language probabilistic rigor. Do not merely affirm or deny the claim. Stress-test the model.",
+    assessment.meta.aiAuditLine,
     "",
     "Use plain terms first:",
     "- Starting confidence = prior.",
@@ -906,7 +1214,7 @@ function buildAiPrompt(assessment) {
     "- Independent evidence = dependence correction.",
     "- Room for other explanations = unknown reserve.",
     "",
-    "Checks to apply: inflated starting point, specificity cost, suppressed alternatives, false independence, sincerity vs event truth, transfer from ordinary details to miracle truth, truncated alternatives, missing unknown reserve, neutral evidence, and fragility.",
+    assessment.meta.aiCheckHint,
     "",
     buildReport(assessment),
     "",
@@ -967,8 +1275,8 @@ function formatOdds(odds) {
 function getScoreColor(score) {
   if (score >= 75) return "#5b1705";
   if (score >= 50) return "#9a3d00";
-  if (score >= 25) return "#b76600";
-  return "#5f5400";
+  if (score >= 25) return "#66752c";
+  return "#1f5a3a";
 }
 
 function clamp(value, min, max) {

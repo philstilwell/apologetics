@@ -9,7 +9,7 @@
       content="A plain-language Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-resurrection-guided-2">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-resurrection-forest">
   </head>
   <body>
     <header class="site-header">
@@ -72,7 +72,7 @@
         <article>
           <span>Updated confidence</span>
           <strong id="updated-confidence">0%</strong>
-          <small id="updated-confidence-note">After the evidence is counted</small>
+          <small id="updated-confidence-note">The result after the current evidence settings</small>
         </article>
         <article>
           <span>Still needed for high confidence</span>
@@ -81,11 +81,26 @@
         </article>
       </section>
 
+      <details class="annotation plain-help app-wide">
+        <summary>What the live numbers mean</summary>
+        <p>
+          <strong>Starting confidence</strong> is where the claim begins before this evidence is counted.
+          <strong>Evidence added</strong> shows how much the listed evidence moves the claim.
+          <strong>Updated confidence</strong> is the new result after the evidence is counted.
+          <strong>Still needed</strong> shows how much more support would be needed before the claim
+          reaches high confidence.
+        </p>
+        <p>
+          The numbers are not a verdict from the app. They are a mirror for your assumptions.
+          If a small slider change causes a big swing, the claim is depending heavily on that assumption.
+        </p>
+      </details>
+
       <aside class="floating-pressure-gauge" aria-live="polite" aria-label="Live audit pressure">
         <div
           class="score-ring compact-score-ring"
           id="floating-score-ring"
-          style="--score: 0%; --score-color: #5f5400;"
+          style="--score: 0%; --score-color: #1f5a3a;"
         >
           <div class="score-ring-inner">
             <div>
@@ -104,7 +119,7 @@
         <div class="step-copy">
           <p class="app-step">Step 1</p>
           <h2 id="claim-title">State the claim</h2>
-          <p>
+          <p id="claim-copy">
             Start with the exact claim. A thinner claim needs less support; a highly specific
             miracle claim needs more.
           </p>
@@ -130,46 +145,57 @@
         <div class="step-copy">
           <p class="app-step">Step 2</p>
           <h2 id="starting-title">Set the starting point</h2>
-          <p>
+          <p id="starting-copy">
             Before counting testimony or stories, ask how plausible this specific kind of
             event is. The sliders below replace formal probability labels with ordinary questions.
           </p>
         </div>
         <div class="step-panel">
+          <details class="annotation plain-help">
+            <summary id="starting-help-title">How to set these sliders</summary>
+            <p id="starting-help-one">
+              These sliders ask what the claim should get before the specific evidence is added.
+              A broad belief that God may exist does not automatically make one exact miracle likely.
+            </p>
+            <p id="starting-help-two">
+              Move slowly. If you raise one slider, ask what fact justifies the higher number.
+              If the reason is only “I already believe this,” the slider may be too generous.
+            </p>
+          </details>
           <div class="range-stack" id="prior-model">
             <div class="range-row plain-range">
               <div class="range-top">
-                <label for="general-prior">How open are you to divine action in general?</label>
+                <label for="general-prior" id="general-prior-label">How open are you to divine action in general?</label>
                 <span class="range-value" id="general-prior-value">0%</span>
               </div>
-              <p>Higher means you already think divine action is broadly plausible.</p>
+              <p id="general-prior-helper">Higher means you already think God acting in the world is broadly plausible.</p>
               <input id="general-prior" type="range" min="0.1" max="80" step="0.1">
             </div>
 
             <div class="range-row plain-range">
               <div class="range-top">
-                <label for="targeting-penalty">How much of that openness applies to this exact claim?</label>
+                <label for="targeting-penalty" id="targeting-penalty-label">How much of that openness applies to this exact claim?</label>
                 <span class="range-value" id="targeting-penalty-value">0%</span>
               </div>
-              <p>Lower means the claim is highly targeted: this person, this time, this purpose.</p>
+              <p id="targeting-penalty-helper">Lower means the claim is very specific: this person, this time, this purpose.</p>
               <input id="targeting-penalty" type="range" min="0.01" max="50" step="0.01">
             </div>
 
             <div class="range-row plain-range">
               <div class="range-top">
-                <label for="act-type-rate">How common is this kind of event?</label>
+                <label for="act-type-rate" id="act-type-rate-label">How common is this kind of event?</label>
                 <span class="range-value" id="act-type-rate-value">0%</span>
               </div>
-              <p>Lower means this is not just rare, but rare as a type of event.</p>
+              <p id="act-type-rate-helper">Lower means events like this are rare even before this case is considered.</p>
               <input id="act-type-rate" type="range" min="0.001" max="20" step="0.001">
             </div>
 
             <div class="range-row plain-range">
               <div class="range-top">
-                <label for="unknown-reserve">How much room remains for other explanations?</label>
+                <label for="unknown-reserve" id="unknown-reserve-label">How much room remains for other explanations?</label>
                 <span class="range-value" id="unknown-reserve-value">0%</span>
               </div>
-              <p>Higher means you are leaving space for explanations not yet fully modeled.</p>
+              <p id="unknown-reserve-helper">Higher means you are leaving room for explanations you may not have thought of yet.</p>
               <input id="unknown-reserve" type="range" min="0" max="30" step="1">
             </div>
           </div>
@@ -187,6 +213,19 @@
             </p>
           </div>
         </div>
+        <details class="annotation plain-help app-wide">
+          <summary>How to answer the evidence questions</summary>
+          <p>
+            Each evidence item has two sides. First ask, “Would I expect this if the claim is true?”
+            Then ask, “Could this still happen if the claim is not true?” Strong evidence should
+            fit the claim much better than it fits ordinary alternatives.
+          </p>
+          <p>
+            The independence slider matters because five reports from one shared source are not
+            the same as five unrelated sources. Lower the slider when memories, texts,
+            communities, investigations, or later retellings overlap.
+          </p>
+        </details>
         <div class="ledger-list plain-ledger" id="ledger-list"></div>
       </section>
 
@@ -195,16 +234,27 @@
           <div>
             <p class="app-step">Step 4</p>
             <h2 id="alternatives-title">Keep sincere alternatives visible</h2>
-            <p>
+            <p id="alternatives-copy">
               The alternative is not “they lied.” It can include grief, dissonance, memory,
               scriptural rereading, and community reinforcement.
             </p>
           </div>
           <div class="postdiction-score">
-            <span>Alternative pathway strength</span>
+            <span id="alternative-strength-label">Alternative pathway strength</span>
             <strong id="alternative-strength">1x</strong>
           </div>
         </div>
+        <details class="annotation plain-help app-wide">
+          <summary id="alternatives-help-title">Why the alternative pathway matters</summary>
+          <p id="alternatives-help-one">
+            The alternative is not simply “everyone lied.” People can be sincere and still explain
+            events through grief, group pressure, memory, scripture, or later storytelling.
+          </p>
+          <p id="alternatives-help-two">
+            Mark a pathway as strong when it clearly fits the evidence. Set it aside only when you
+            have a reason, not just because it makes the miracle claim harder to defend.
+          </p>
+        </details>
         <div class="feature-grid plain-feature-grid" id="feature-grid"></div>
       </section>
 
@@ -217,7 +267,7 @@
               The audit is ready for input.
             </p>
           </div>
-          <div class="score-ring" id="score-ring" style="--score: 0%; --score-color: #5f5400;">
+          <div class="score-ring" id="score-ring" style="--score: 0%; --score-color: #1f5a3a;">
             <div class="score-ring-inner">
               <div>
                 <strong id="audit-score">0</strong>
@@ -237,6 +287,19 @@
             <div class="repair-list" id="repair-list"></div>
           </section>
         </div>
+
+        <details class="annotation plain-help app-wide">
+          <summary>How to read audit pressure</summary>
+          <p>
+            Audit pressure is a warning light. A higher score means the case may depend on a high
+            starting point, weak treatment of alternatives, repeated sources counted as separate,
+            or one evidence item doing too much work.
+          </p>
+          <p>
+            High pressure does not prove the claim false. It means the current case needs repairs
+            before the confidence level is fair.
+          </p>
+        </details>
 
         <details class="math-details">
           <summary>Show math details</summary>
@@ -312,6 +375,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260504-resurrection-guided-2"></script>
+    <script src="./app.js?v=20260504-resurrection-forest"></script>
   </body>
 </html>
