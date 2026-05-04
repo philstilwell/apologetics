@@ -666,6 +666,13 @@ h2 {
   font-size: 0.82rem;
 }
 
+.filter-note {
+  margin: -2px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.42;
+}
+
 select,
 input[type="search"],
 textarea {
