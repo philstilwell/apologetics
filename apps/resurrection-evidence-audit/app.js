@@ -86,6 +86,9 @@ const claimPresets = [
       "Lower means demon-caused steering is rare even before this crash is considered.",
     unknownReserveHelper:
       "Higher means you are preserving room for mechanical, driver, road, animal, or unknown causes.",
+    unknownNotesLabel: "What ordinary crash explanations might still be missing?",
+    unknownNotesPlaceholder:
+      "Example: intermittent steering fault, tire defect, medication, glare, road debris, panic reaction, incomplete inspection, or a cause no one has identified yet.",
     alternativeTitle: "Teaching parallel: test the demon-wheel claim",
     alternativeCopy:
       "The crash is real, but the cause is disputed. This preset asks whether the evidence selects a demon rather than standard crash causes.",
@@ -456,9 +459,12 @@ const defaultPresetText = {
   actTypeRateLabel: "How common is this kind of event?",
   actTypeRateHelper:
     "Lower means events like this are rare even before this case is considered.",
-  unknownReserveLabel: "How much room remains for other explanations?",
+  unknownReserveLabel: "How much room remains for unconceived explanations?",
   unknownReserveHelper:
-    "Higher means you are preserving room for explanations you may not have considered yet.",
+    "Higher means you are preserving room for missing causes, incomplete records, or explanations you may not have considered yet.",
+  unknownNotesLabel: "What might be missing from the comparison side?",
+  unknownNotesPlaceholder:
+    "Example: missing records, ordinary causes not listed, mistaken timing, social pressure, source dependence, selection effects, or mechanisms we have not yet imagined.",
   alternativeTitle: "Keep serious alternatives visible",
   alternativeCopy:
     "The alternative is not merely 'they lied.' It can include grief, dissonance, memory, scriptural rereading, and community reinforcement.",
@@ -521,6 +527,8 @@ const els = {
   unknownReserve: document.querySelector("#unknown-reserve"),
   unknownReserveLabel: document.querySelector("#unknown-reserve-label"),
   unknownReserveHelper: document.querySelector("#unknown-reserve-helper"),
+  unknownNotes: document.querySelector("#unknown-notes"),
+  unknownNotesLabel: document.querySelector("#unknown-notes-label"),
   ledgerList: document.querySelector("#ledger-list"),
   featureGrid: document.querySelector("#feature-grid"),
   loadGenerous: document.querySelector("#load-generous"),
@@ -548,6 +556,8 @@ const els = {
   floatingAuditScore: document.querySelector("#floating-audit-score"),
   floatingAuditState: document.querySelector("#floating-audit-state"),
   floatingScoreRing: document.querySelector("#floating-score-ring"),
+  unknownReserveRingNote: document.querySelector("#unknown-reserve-ring-note"),
+  floatingUnknownReserve: document.querySelector("#floating-unknown-reserve"),
   pitfallList: document.querySelector("#pitfall-list"),
   repairList: document.querySelector("#repair-list"),
   mathStarting: document.querySelector("#math-starting"),
@@ -587,6 +597,7 @@ function getInitialPresetId() {
 function bindEvents() {
   els.preset.addEventListener("change", () => loadPreset(els.preset.value));
   els.claim.addEventListener("input", render);
+  els.unknownNotes.addEventListener("input", render);
 
   [els.generalPrior, els.targetingPenalty, els.actTypeRate, els.unknownReserve].forEach((input) => {
     input.addEventListener("input", render);
@@ -637,6 +648,7 @@ function loadPreset(presetId) {
   els.targetingPenalty.value = String(preset.prior.targeting);
   els.actTypeRate.value = String(preset.prior.actType);
   els.unknownReserve.value = String(preset.prior.unknownReserve);
+  els.unknownNotes.value = preset.unknownNotes || "";
 
   renderPresetText(preset);
   renderLedger();
@@ -680,6 +692,8 @@ function renderPresetText(preset) {
   setText(els.actTypeRateHelper, meta.actTypeRateHelper);
   setText(els.unknownReserveLabel, meta.unknownReserveLabel);
   setText(els.unknownReserveHelper, meta.unknownReserveHelper);
+  setText(els.unknownNotesLabel, meta.unknownNotesLabel);
+  els.unknownNotes.placeholder = meta.unknownNotesPlaceholder;
   setText(els.alternativeTitle, meta.alternativeTitle);
   setText(els.alternativeCopy, meta.alternativeCopy);
   setText(els.alternativeStrengthLabel, meta.alternativeLabel);
@@ -882,12 +896,12 @@ function renderResultStrip(assessment) {
   els.auditScore.textContent = String(assessment.auditPressure);
   els.auditSummary.textContent = summarizePressure(assessment.auditPressure);
   els.resultCopy.textContent = buildPressureCopy(assessment);
-  els.scoreRing.style.setProperty("--score", `${assessment.auditPressure}%`);
-  els.scoreRing.style.setProperty("--score-color", scoreColor);
+  renderPressureRing(els.scoreRing, assessment, scoreColor);
   els.floatingAuditScore.textContent = String(assessment.auditPressure);
   els.floatingAuditState.textContent = summarizePressure(assessment.auditPressure);
-  els.floatingScoreRing.style.setProperty("--score", `${assessment.auditPressure}%`);
-  els.floatingScoreRing.style.setProperty("--score-color", scoreColor);
+  els.unknownReserveRingNote.textContent = `Unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}`;
+  els.floatingUnknownReserve.textContent = `Unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}`;
+  renderPressureRing(els.floatingScoreRing, assessment, scoreColor);
 
   els.mathStarting.textContent = formatPercentWithRatio(assessment.prior);
   els.mathUpdated.textContent = formatPercentWithRatio(assessment.posterior);
@@ -896,6 +910,20 @@ function renderResultStrip(assessment) {
   els.mathLogBf.textContent = `log lift ${assessment.totalLogBf.toFixed(2)}`;
   els.mathRequired50.textContent = formatLift(assessment.required[50]);
   els.mathRequired90.textContent = formatLift(assessment.required[90]);
+}
+
+function renderPressureRing(ring, assessment, scoreColor) {
+  const unknownSlice = assessment.priorParts.unknownReserve * 100;
+  const scoreEnd = clamp(unknownSlice + assessment.auditPressure, unknownSlice, 100);
+  ring.setAttribute(
+    "aria-label",
+    `Audit pressure ${assessment.auditPressure} out of 100. Black slice: unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}.`,
+  );
+  ring.parentElement.style.setProperty("--score-color", scoreColor);
+  ring.style.setProperty("--score", `${assessment.auditPressure}%`);
+  ring.style.setProperty("--unknown-slice", `${unknownSlice}%`);
+  ring.style.setProperty("--score-end", `${scoreEnd}%`);
+  ring.style.setProperty("--score-color", scoreColor);
 }
 
 function renderWarnings(assessment) {
@@ -917,7 +945,13 @@ function assess() {
     actType: Number(els.actTypeRate.value) / 100,
     unknownReserve: Number(els.unknownReserve.value) / 100,
   };
-  const prior = clamp(priorParts.general * priorParts.targeting * priorParts.actType, 0.000000000001, 0.999999);
+  const unreservedPrior = clamp(
+    priorParts.general * priorParts.targeting * priorParts.actType,
+    0.000000000001,
+    0.999999,
+  );
+  const prior = clamp(unreservedPrior * (1 - priorParts.unknownReserve), 0.000000000001, 0.999999);
+  const unknownReserveDiscount = Math.max(0, unreservedPrior - prior);
   const priorOdds = prior / (1 - prior);
 
   const rawItems = state.evidence.map((item) => {
@@ -970,6 +1004,7 @@ function assess() {
     totalBf,
     required,
     shortfall90,
+    unknownNotes: els.unknownNotes.value.trim(),
   });
   const repairs = buildRepairs(flags, meta);
   const auditPressure = calculateAuditPressure(flags, shortfall90, topDriver, priorParts);
@@ -978,6 +1013,9 @@ function assess() {
     preset,
     meta,
     claim: els.claim.value.trim(),
+    unknownNotes: els.unknownNotes.value.trim(),
+    unreservedPrior,
+    unknownReserveDiscount,
     prior,
     priorParts,
     priorOdds,
@@ -1026,9 +1064,15 @@ function buildFlags(context) {
 
   if (context.priorParts.unknownReserve < 0.05) {
     flags.push({
-      title: "Too little room for other explanations",
-      body: "The audit leaves little space for unmodeled mechanisms, selection effects, mistaken memory, or explanations that have not yet been considered.",
-      weight: 13,
+      title: "Too little room for unconceived explanations",
+      body: "The audit leaves very little space for unmodeled mechanisms, selection effects, mistaken memory, missing records, or explanations that have not yet been considered.",
+      weight: 15,
+    });
+  } else if (context.priorParts.unknownReserve < 0.1 && !context.unknownNotes) {
+    flags.push({
+      title: "Unconceived explanations are not named",
+      body: "The reserve is modest, and the notes field does not name what might still be missing from the comparison side.",
+      weight: 8,
     });
   }
 
@@ -1134,6 +1178,16 @@ function buildRepairs(flags, meta) {
     });
   }
 
+  if (
+    titles.has("Too little room for unconceived explanations") ||
+    titles.has("Unconceived explanations are not named")
+  ) {
+    repairs.push({
+      title: "Add an unknowns reserve",
+      body: "Name what could still be missing, then leave some probability room for unlisted causes, incomplete records, selection effects, mistaken assumptions, and ordinary mechanisms not yet considered.",
+    });
+  }
+
   if (titles.has("The evidence is still far short of high confidence")) {
     repairs.push({
       title: "State the burden plainly",
@@ -1155,7 +1209,7 @@ function calculateAuditPressure(flags, shortfall90, topDriver, priorParts) {
   const flagScore = flags.reduce((sum, flag) => sum + flag.weight, 0);
   const shortfallScore = clamp(Math.log10(Math.max(shortfall90, 1)) * 9, 0, 26);
   const driverScore = topDriver ? clamp((topDriver.share - 0.35) * 48, 0, 18) : 0;
-  const reserveScore = priorParts.unknownReserve < 0.05 ? 8 : 0;
+  const reserveScore = priorParts.unknownReserve < 0.05 ? 12 : priorParts.unknownReserve < 0.1 ? 6 : 0;
   return Math.round(clamp(flagScore + shortfallScore + driverScore + reserveScore, 0, 100));
 }
 
@@ -1219,10 +1273,17 @@ function buildReport(assessment) {
     `Audit pressure: ${assessment.auditPressure}/100 (${summarizePressure(assessment.auditPressure)})`,
     "",
     "## Baseline Assumptions",
-    `Openness to divine action in general: ${formatPercentWithRatio(assessment.priorParts.general)}`,
-    `Specificity allowance for this claim: ${formatPercentWithRatio(assessment.priorParts.targeting)}`,
-    `Commonness of this kind of event: ${formatPercentWithRatio(assessment.priorParts.actType)}`,
-    `Room left for other explanations: ${formatPercentWithRatio(assessment.priorParts.unknownReserve)}`,
+    `${assessment.meta.generalPriorLabel}: ${formatPercentWithRatio(assessment.priorParts.general)}`,
+    `${assessment.meta.targetingPenaltyLabel}: ${formatPercentWithRatio(assessment.priorParts.targeting)}`,
+    `${assessment.meta.actTypeRateLabel}: ${formatPercentWithRatio(assessment.priorParts.actType)}`,
+    `Baseline before unknown reserve: ${formatPercentWithRatio(assessment.unreservedPrior)}`,
+    `Room left for unconceived explanations: ${formatPercentWithRatio(assessment.priorParts.unknownReserve)}`,
+    `Baseline confidence removed by this reserve: ${formatPercentWithRatio(assessment.unknownReserveDiscount)}`,
+    `Baseline after unconceived-explanation reserve: ${formatPercentWithRatio(assessment.prior)}`,
+    "",
+    "## Unconceived Explanations Reserve",
+    `Reserved room for missing material or immaterial explanations: ${formatPercentWithRatio(assessment.priorParts.unknownReserve)}`,
+    `User notes on what may be missing: ${assessment.unknownNotes || "None entered."}`,
     "",
     "## Evidence Questions",
     ...assessment.items.map(
@@ -1271,6 +1332,7 @@ function buildAiPrompt(assessment) {
     "- Look for motivated reasoning, special pleading, confirmation bias, or protecting a conclusion by lowering rival explanations without a clear reason.",
     "- Check for base-rate neglect, missing alternatives, false independence, sincerity treated as accuracy, and leaps from 'unexplained' to a specific miracle claim.",
     "- Name any modeling blunder directly: double counting, tiny 'expected if false' values, unjustified starting confidence, overconfident independence, or ignored unknown reserve.",
+    "- Pay special attention to unconceived explanations: missing ordinary causes, missing records, unknown mechanisms, selection effects, and material or immaterial explanations the user did not name.",
     "- Be direct but fair. Critique the reasoning and the numbers, not the person's intelligence or character.",
     "",
     "Questions to answer:",

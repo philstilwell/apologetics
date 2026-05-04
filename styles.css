@@ -1525,13 +1525,21 @@ input[type="range"] {
 }
 
 .score-ring {
+  --score: 0%;
+  --score-end: var(--score);
+  --unknown-slice: 0%;
+  --score-color: var(--green);
   display: grid;
   width: 168px;
   aspect-ratio: 1;
   place-items: center;
   border-radius: 50%;
   background:
-    conic-gradient(var(--score-color) var(--score), #c99c42 0),
+    conic-gradient(
+      #111 0 var(--unknown-slice),
+      var(--score-color) var(--unknown-slice) var(--score-end),
+      #c99c42 0
+    ),
     var(--card);
 }
 
@@ -1559,6 +1567,42 @@ input[type="range"] {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.score-ring-wrap {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.score-ring-legend {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.score-ring-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.pressure-swatch {
+  background: var(--score-color, var(--plain-green));
+}
+
+.unknown-swatch {
+  background: #111;
 }
 
 .score-copy h2 {
@@ -2739,6 +2783,51 @@ body:has(.guided-resurrection) a:focus-visible {
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
 }
 
+.unknown-reserve-panel {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
+  margin: 14px 0;
+  padding: 16px;
+  border: 1px solid #9cbba5;
+  border-left: 7px solid var(--plain-green);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, var(--plain-green-soft) 0, #fff 82%);
+}
+
+.unknown-reserve-copy h3 {
+  color: var(--plain-ink);
+  font-size: 1.22rem;
+  line-height: 1.1;
+}
+
+.unknown-reserve-copy p:not(.card-kicker) {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+
+.unknown-reserve-controls {
+  display: grid;
+  gap: 10px;
+}
+
+.unknown-range {
+  background: #fff;
+}
+
+.unknown-notes-field {
+  margin-bottom: 0;
+}
+
+.unknown-notes-field textarea {
+  min-height: 104px;
+  background: #fff;
+}
+
 .plain-feature-card {
   min-height: 210px;
   border-color: #9cbba5;
@@ -2791,7 +2880,11 @@ body:has(.guided-resurrection) a:focus-visible {
 
 .guided-resurrection .score-ring {
   background:
-    conic-gradient(var(--score-color) var(--score), #dbe8df 0),
+    conic-gradient(
+      #111 0 var(--unknown-slice),
+      var(--score-color) var(--unknown-slice) var(--score-end),
+      #dbe8df 0
+    ),
     var(--card);
 }
 
@@ -3140,6 +3233,10 @@ body:has(.guided-resurrection) a:focus-visible {
   }
 
   .plain-result-body {
+    grid-template-columns: 1fr;
+  }
+
+  .unknown-reserve-panel {
     grid-template-columns: 1fr;
   }
 

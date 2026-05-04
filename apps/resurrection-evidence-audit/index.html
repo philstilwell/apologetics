@@ -9,7 +9,7 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-label-popups">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-unconceived-ring">
   </head>
   <body>
     <header class="site-header">
@@ -176,7 +176,7 @@
         <div
           class="score-ring compact-score-ring"
           id="floating-score-ring"
-          style="--score: 0%; --score-color: #1f5a3a;"
+          style="--score: 0%; --score-end: 0%; --unknown-slice: 0%; --score-color: #1f5a3a;"
         >
           <div class="score-ring-inner">
             <div>
@@ -188,6 +188,7 @@
         <div class="floating-pressure-copy">
           <strong id="floating-audit-state">Low audit pressure</strong>
           <span>Updates as assumptions change</span>
+          <span id="floating-unknown-reserve">Unknown reserve 0%</span>
         </div>
       </aside>
 
@@ -303,15 +304,6 @@
               <p id="act-type-rate-helper">Lower means events like this are rare even before this case is considered.</p>
               <input id="act-type-rate" type="range" min="0.001" max="20" step="0.001">
             </div>
-
-            <div class="range-row plain-range">
-              <div class="range-top">
-                <label for="unknown-reserve" id="unknown-reserve-label">How much room remains for other explanations?</label>
-                <span class="range-value" id="unknown-reserve-value">0%</span>
-              </div>
-              <p id="unknown-reserve-helper">Higher means you are leaving room for explanations you may not have thought of yet.</p>
-              <input id="unknown-reserve" type="range" min="0" max="30" step="1">
-            </div>
           </div>
         </div>
       </section>
@@ -369,6 +361,41 @@
             when you have a reason, not just because it makes the miracle claim harder to defend.
           </p>
         </details>
+        <section class="unknown-reserve-panel" aria-labelledby="unknown-reserve-title">
+          <div class="unknown-reserve-copy">
+            <p class="card-kicker">Unconceived explanations</p>
+            <h3 id="unknown-reserve-title">Reserve room for what you may not have thought of yet</h3>
+            <p>
+              A named list of alternatives can still be incomplete. This section makes the
+              “unknown unknowns” explicit so a claim is not treated as proven simply because the
+              current comparison list feels exhausted.
+            </p>
+            <p>
+              The reserve lowers the starting confidence by keeping some probability space open
+              for missing causes, incomplete records, mistaken assumptions, and material or
+              immaterial explanations that no one in the conversation has yet framed clearly.
+            </p>
+          </div>
+          <div class="unknown-reserve-controls">
+            <div class="range-row plain-range unknown-range">
+              <div class="range-top">
+                <label for="unknown-reserve" id="unknown-reserve-label">How much room remains for unconceived explanations?</label>
+                <span class="range-value" id="unknown-reserve-value">0%</span>
+              </div>
+              <p id="unknown-reserve-helper">Higher means you are leaving room for explanations you may not have thought of yet.</p>
+              <input id="unknown-reserve" type="range" min="0" max="30" step="1">
+            </div>
+            <div class="field-group unknown-notes-field">
+              <label for="unknown-notes" id="unknown-notes-label">What might be missing from the comparison side?</label>
+              <textarea
+                id="unknown-notes"
+                name="unknown-notes"
+                rows="4"
+                placeholder="Example: missing records, ordinary causes not listed, mistaken timing, social pressure, source dependence, selection effects, or mechanisms we have not yet imagined."
+              ></textarea>
+            </div>
+          </div>
+        </section>
         <div class="feature-grid plain-feature-grid" id="feature-grid"></div>
       </section>
 
@@ -381,12 +408,22 @@
               The audit is ready for input.
             </p>
           </div>
-          <div class="score-ring" id="score-ring" style="--score: 0%; --score-color: #1f5a3a;">
-            <div class="score-ring-inner">
-              <div>
-                <strong id="audit-score">0</strong>
-                <span>audit pressure</span>
+          <div class="score-ring-wrap">
+            <div
+              class="score-ring"
+              id="score-ring"
+              style="--score: 0%; --score-end: 0%; --unknown-slice: 0%; --score-color: #1f5a3a;"
+            >
+              <div class="score-ring-inner">
+                <div>
+                  <strong id="audit-score">0</strong>
+                  <span>audit pressure</span>
+                </div>
               </div>
+            </div>
+            <div class="score-ring-legend" aria-label="Audit pressure ring legend">
+              <span><i class="legend-swatch pressure-swatch" aria-hidden="true"></i>Audit pressure</span>
+              <span><i class="legend-swatch unknown-swatch" aria-hidden="true"></i><span id="unknown-reserve-ring-note">Unknown reserve 0%</span></span>
             </div>
           </div>
         </div>
@@ -489,6 +526,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260504-app-guidance"></script>
+    <script src="./app.js?v=20260504-unconceived-ring"></script>
   </body>
 </html>
