@@ -5,6 +5,7 @@ Static GitHub Pages apps that examine recurring weaknesses in Christian apologet
 ## Apps
 
 - Inductive Symmetry Audit: an interactive diagnostic for spotting cherry-picked inductive standards.
+- Theism Gradient: a Christianity-focused assessment of confidence, substantiation gaps, dependency tensions, and divine-action claims.
 
 ## GitHub Pages
 
@@ -23,3 +24,9 @@ python3 -m http.server 8080
 ```
 
 Then open `http://localhost:8080`.
+
+Useful paths:
+
+- Hub: `http://localhost:8080/`
+- Inductive Symmetry Audit: `http://localhost:8080/apps/inductive-symmetry-audit/`
+- Theism Gradient: `http://localhost:8080/apps/theism-gradient-audit/app.html`
