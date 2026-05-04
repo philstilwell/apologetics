@@ -9,7 +9,7 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-app-guidance">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-label-popups">
   </head>
   <body>
     <header class="site-header">
@@ -50,32 +50,108 @@
       </section>
 
       <nav class="guided-steps" aria-label="Audit steps">
-        <a href="#claim-step"><span>1</span> Claim</a>
-        <a href="#starting-step"><span>2</span> Starting Point</a>
-        <a href="#evidence-step"><span>3</span> Evidence</a>
-        <a href="#alternatives-step"><span>4</span> Alternatives</a>
-        <a href="#result-step"><span>5</span> Result</a>
-        <a href="#report-step"><span>6</span> Report</a>
+        <a href="#claim-step" aria-describedby="step-claim-help">
+          <span class="step-number">1</span>
+          <span class="step-label">Claim</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="step-claim-help" role="tooltip">
+            State exactly what is being claimed before evaluating evidence. A broad claim needs
+            less support than a highly specific claim about one person, event, purpose, and doctrine.
+          </span>
+        </a>
+        <a href="#starting-step" aria-describedby="step-starting-help">
+          <span class="step-number">2</span>
+          <span class="step-label">Starting Point</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="step-starting-help" role="tooltip">
+            Set the claim's starting plausibility before the listed evidence is counted. This is
+            not your final belief; it shows how much the claim receives before this case is argued.
+          </span>
+        </a>
+        <a href="#evidence-step" aria-describedby="step-evidence-help">
+          <span class="step-number">3</span>
+          <span class="step-label">Evidence</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="step-evidence-help" role="tooltip">
+            Compare each evidence item both ways: how expected it is if the claim is true, and how
+            expected it remains if the claim is false. Strong evidence should fit one side much better.
+          </span>
+        </a>
+        <a href="#alternatives-step" aria-describedby="step-alternatives-help">
+          <span class="step-number">4</span>
+          <span class="step-label">Alternatives</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="step-alternatives-help" role="tooltip">
+            Keep serious competing explanations visible. The alternative does not have to be fraud;
+            it can include sincere memory, grief, source dependence, social pressure, or story growth.
+          </span>
+        </a>
+        <a href="#result-step" aria-describedby="step-result-help">
+          <span class="step-number">5</span>
+          <span class="step-label">Result</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="step-result-help" role="tooltip">
+            See what your current assumptions imply. This is not the app's verdict; it is a mirror
+            showing how your sliders, evidence ratings, and alternative settings combine.
+          </span>
+        </a>
+        <a href="#report-step" aria-describedby="step-report-help">
+          <span class="step-number">6</span>
+          <span class="step-label">Report</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="step-report-help" role="tooltip">
+            Export a readable audit summary with assumptions, warnings, repair moves, math details,
+            and an AI prompt that asks another tool to stress-test the reasoning.
+          </span>
+        </a>
       </nav>
 
       <section class="plain-result-strip" aria-label="Current audit result">
-        <article>
-          <span>Baseline confidence</span>
+        <article class="metric-card" aria-describedby="baseline-confidence-help">
+          <span class="metric-label" tabindex="0" aria-describedby="baseline-confidence-help">
+            <span class="metric-label-text">Baseline confidence</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="baseline-confidence-help" role="tooltip">
+            The claim's estimated starting plausibility before this case evidence is added. It
+            combines general openness, claim specificity, event rarity, and room for unknown causes.
+          </span>
           <strong id="starting-confidence">0%</strong>
           <small>Before this case evidence is added</small>
         </article>
-        <article>
-          <span>Evidence added</span>
+        <article class="metric-card" aria-describedby="evidence-added-help">
+          <span class="metric-label" tabindex="0" aria-describedby="evidence-added-help">
+            <span class="metric-label-text">Evidence added</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="evidence-added-help" role="tooltip">
+            How strongly the entered evidence moves the case from its starting point. A large value
+            means the settings make the evidence fit the claim much better than the alternatives.
+          </span>
           <strong id="evidence-added">1x</strong>
           <small id="top-driver">No evidence driver yet</small>
         </article>
-        <article>
-          <span>Revised confidence</span>
+        <article class="metric-card" aria-describedby="revised-confidence-help">
+          <span class="metric-label" tabindex="0" aria-describedby="revised-confidence-help">
+            <span class="metric-label-text">Revised confidence</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="revised-confidence-help" role="tooltip">
+            The current result after the evidence is combined with the baseline. If this number
+            changes sharply when one slider moves, the conclusion is fragile.
+          </span>
           <strong id="updated-confidence">0%</strong>
           <small id="updated-confidence-note">The result after the current evidence settings</small>
         </article>
-        <article>
-          <span>Still needed for high confidence</span>
+        <article class="metric-card" aria-describedby="needed-for-high-help">
+          <span class="metric-label" tabindex="0" aria-describedby="needed-for-high-help">
+            <span class="metric-label-text">Still needed for high confidence</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="needed-for-high-help" role="tooltip">
+            How much more evidence lift would be needed to reach high confidence, usually about
+            90%. If it says enough, the current assumptions already reach that threshold.
+          </span>
           <strong id="needed-for-high">1x</strong>
           <small id="needed-for-high-note">Evidence burden</small>
         </article>
