@@ -55,17 +55,24 @@ export function substantiationGap(confidence: number, personalSubstantiation: nu
 export function aggregateGradientPosition(claims: Claim[], profile: UserProfile): number | null {
   let weightedSum = 0;
   let totalWeight = 0;
+  let ratedClaims = 0;
 
   for (const claim of claims) {
     const response = profile.responses[claim.id];
     if (!response) continue;
+    ratedClaims += 1;
 
     const w = claimWeight(response.confidence, response.personalSubstantiation);
     weightedSum += claim.gradientPosition * w;
     totalWeight += w;
   }
 
-  return totalWeight === 0 ? null : weightedSum / totalWeight;
+  if (totalWeight === 0 || ratedClaims === 0) return null;
+
+  const weightedPosition = weightedSum / totalWeight;
+  const averageCommitmentWeight = totalWeight / ratedClaims;
+  const commitmentDampening = Math.min(1, averageCommitmentWeight / 0.45);
+  return 1 + (weightedPosition - 1) * commitmentDampening;
 }
 
 export function evidentiallyWeightedTheismIndex(claims: Claim[], profile: UserProfile): number | null {
@@ -176,15 +183,17 @@ export function profileSummary(claims: Claim[], profile: UserProfile): string {
     return 'No claims have been rated yet. Start with the claims that feel most central, then use the diagnostics to find unsupported leaps.';
   }
 
-  const positionText = aggregate < 1.8
-    ? 'primarily minimal-deistic'
-    : aggregate < 2.6
-      ? 'deistic with design-oriented leanings'
-      : aggregate < 3.4
-        ? 'personal-theistic leaning'
-        : aggregate < 4.3
-          ? 'interventionist or revelatory'
-          : 'strongly Christian-theistic';
+  const positionText = aggregate < 1.25
+    ? 'below the deistic threshold'
+    : aggregate < 1.8
+      ? 'primarily minimal-deistic'
+      : aggregate < 2.6
+        ? 'deistic with design-oriented leanings'
+        : aggregate < 3.4
+          ? 'personal-theistic leaning'
+          : aggregate < 4.3
+            ? 'interventionist or revelatory'
+            : 'strongly Christian-theistic';
 
   const gapText = (gap ?? 0) >= 30
     ? 'with a noticeable gap between confidence and personal substantiation'

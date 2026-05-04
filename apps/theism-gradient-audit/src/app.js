@@ -52,24 +52,24 @@ const profilePresets = [
     id: "skeptical-naturalist",
     label: "Skeptical Naturalist",
     description: "Low ratings across the gradient unless divine agency can be personally defended with clear evidence.",
-    confidence: [35, 28, 22, 12, 8],
-    personal: [30, 24, 18, 10, 6],
+    confidence: [28, 14, 7, 3, 1],
+    personal: [22, 10, 5, 2, 1],
     boosts: {}
   },
   {
     id: "minimal-deist",
     label: "Minimal Deist",
     description: "Strongest on source and explanation claims, cautious about personal and Christian divine-action claims.",
-    confidence: [78, 55, 28, 12, 8],
-    personal: [66, 42, 20, 8, 5],
+    confidence: [82, 45, 18, 6, 3],
+    personal: [68, 32, 12, 3, 1],
     boosts: {}
   },
   {
     id: "cautious-christian",
     label: "Cautious Christian",
     description: "Moderate Christian confidence, with personal substantiation lagging on thicker claims.",
-    confidence: [62, 58, 55, 44, 40],
-    personal: [50, 46, 42, 30, 26],
+    confidence: [62, 58, 58, 48, 46],
+    personal: [50, 46, 44, 34, 32],
     boosts: { scripture: 5, jesus: 5, prayer: 4 }
   },
   {
@@ -84,8 +84,8 @@ const profilePresets = [
     id: "doctrinal-christian",
     label: "Doctrinal Christian",
     description: "Highest on Christian revelation, Jesus, scripture, Spirit, and salvation, with moderate action claims.",
-    confidence: [55, 54, 62, 58, 78],
-    personal: [40, 40, 50, 44, 64],
+    confidence: [55, 54, 62, 52, 82],
+    personal: [40, 40, 50, 38, 68],
     boosts: { scripture: 8, jesus: 8, revelation: 6, "holy spirit": 6, salvation: 8 }
   }
 ];
