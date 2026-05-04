@@ -6,10 +6,10 @@
     <title>Crosshairs Audit Lab | Resurrection Evidence Audit</title>
     <meta
       name="description"
-      content="A Crosshairs self-audit for priors, likelihoods, alternatives, dependence, and postdiction pressure in resurrection apologetics."
+      content="A plain-language Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-resurrection-audit">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-resurrection-guided-2">
   </head>
   <body>
     <header class="site-header">
@@ -22,218 +22,296 @@
       </a>
       <nav class="top-nav" aria-label="Primary">
         <a class="hub-link" href="../../">Hub</a>
-        <a href="#prior-model">Prior</a>
-        <a href="#evidence-ledger">Evidence</a>
-        <a href="#postdiction-lens">Postdiction</a>
-        <a href="#audit-report">Report</a>
+        <a href="#claim-step">Claim</a>
+        <a href="#starting-step">Starting Point</a>
+        <a href="#evidence-step">Evidence</a>
+        <a href="#result-step">Result</a>
+        <a href="#report-step">Report</a>
       </nav>
     </header>
 
-    <main class="app-shell resurrection-audit">
+    <main class="app-shell resurrection-audit guided-resurrection">
       <section class="app-header">
         <div class="app-title">
-          <p class="eyebrow">Evidence substantiation audit</p>
+          <p class="eyebrow">Plain-language evidence audit</p>
           <h1><span>Resurrection</span> <span>Evidence Audit</span></h1>
           <p>
-            Test whether a resurrection claim is being carried by transparent evidence or by
-            hidden priors, compressed alternatives, dependence inflation, and sincerity-to-truth
-            transfer.
+            Walk through a claim, its starting plausibility, the evidence offered for it,
+            the alternative explanations still in play, and the confidence the evidence can
+            responsibly support.
           </p>
         </div>
         <aside class="source-note">
-          <strong>Diagnostic, not verdict.</strong>
-          The app audits the model structure and its sensitivity. It does not decide every
-          historical detail; it shows which assumptions must be defended.
+          <strong>Math underneath, ordinary language on top.</strong>
+          The audit uses probability behind the scenes, but the main questions are simple:
+          What exactly is claimed? Would this evidence be expected either way? Is the evidence
+          independent? What alternatives remain?
         </aside>
       </section>
 
-      <section class="resurrection-dashboard" aria-label="Current Bayesian profile">
+      <nav class="guided-steps" aria-label="Audit steps">
+        <a href="#claim-step"><span>1</span> Claim</a>
+        <a href="#starting-step"><span>2</span> Starting Point</a>
+        <a href="#evidence-step"><span>3</span> Evidence</a>
+        <a href="#alternatives-step"><span>4</span> Alternatives</a>
+        <a href="#result-step"><span>5</span> Result</a>
+        <a href="#report-step"><span>6</span> Report</a>
+      </nav>
+
+      <section class="plain-result-strip" aria-label="Current audit result">
         <article>
-          <span>Posterior</span>
-          <strong id="posterior-value">0%</strong>
-          <small id="posterior-odds">odds unavailable</small>
+          <span>Starting confidence</span>
+          <strong id="starting-confidence">0%</strong>
+          <small>Before the listed evidence is counted</small>
         </article>
         <article>
-          <span>Actual Bayes factor</span>
-          <strong id="actual-bf">1</strong>
-          <small id="actual-log-bf">log BF 0</small>
+          <span>Evidence added</span>
+          <strong id="evidence-added">1x</strong>
+          <small id="top-driver">No evidence driver yet</small>
         </article>
         <article>
-          <span>BF needed for 90%</span>
-          <strong id="required-bf">1</strong>
-          <small id="bf-shortfall">shortfall unavailable</small>
+          <span>Updated confidence</span>
+          <strong id="updated-confidence">0%</strong>
+          <small id="updated-confidence-note">After the evidence is counted</small>
         </article>
         <article>
-          <span>Top swing driver</span>
-          <strong id="top-driver">None</strong>
-          <small id="driver-share">0% of update</small>
+          <span>Still needed for high confidence</span>
+          <strong id="needed-for-high">1x</strong>
+          <small id="needed-for-high-note">Evidence burden</small>
         </article>
       </section>
 
-      <section class="audit-grid resurrection-grid">
-        <form class="audit-panel sticky" id="audit-form">
-          <div class="panel-title">
+      <aside class="floating-pressure-gauge" aria-live="polite" aria-label="Live audit pressure">
+        <div
+          class="score-ring compact-score-ring"
+          id="floating-score-ring"
+          style="--score: 0%; --score-color: #5f5400;"
+        >
+          <div class="score-ring-inner">
             <div>
-              <p class="app-step">Input</p>
-              <h2>Claim profile</h2>
-              <p>Choose a starting profile, then revise the numbers until they match the case being made.</p>
+              <strong id="floating-audit-score">0</strong>
+              <span>pressure</span>
             </div>
           </div>
+        </div>
+        <div class="floating-pressure-copy">
+          <strong id="floating-audit-state">Low pressure</strong>
+          <span>Updates as you move sliders</span>
+        </div>
+      </aside>
 
+      <section class="audit-step" id="claim-step" aria-labelledby="claim-title">
+        <div class="step-copy">
+          <p class="app-step">Step 1</p>
+          <h2 id="claim-title">State the claim</h2>
+          <p>
+            Start with the exact claim. A thinner claim needs less support; a highly specific
+            miracle claim needs more.
+          </p>
+        </div>
+        <div class="step-panel">
           <div class="field-group">
-            <label for="claim-preset">Claim preset</label>
+            <label for="claim-preset">Choose a starting claim</label>
             <select id="claim-preset" name="claim-preset"></select>
           </div>
-
           <div class="field-group">
-            <label for="claim-text">Claim being audited</label>
+            <label for="claim-text">What exactly is being claimed?</label>
             <textarea id="claim-text" name="claim-text"></textarea>
           </div>
-
           <div class="resurrection-preset-actions">
-            <button type="button" id="load-generous">Generous Apologetic</button>
-            <button type="button" id="load-corrected">Corrected Skeptical</button>
-            <button type="button" id="reset-current">Reset Preset</button>
+            <button type="button" id="load-generous">Load generous case</button>
+            <button type="button" id="load-corrected">Load cautious case</button>
+            <button type="button" id="reset-current">Reset claim</button>
           </div>
+        </div>
+      </section>
 
+      <section class="audit-step" id="starting-step" aria-labelledby="starting-title">
+        <div class="step-copy">
+          <p class="app-step">Step 2</p>
+          <h2 id="starting-title">Set the starting point</h2>
+          <p>
+            Before counting testimony or stories, ask how plausible this specific kind of
+            event is. The sliders below replace formal probability labels with ordinary questions.
+          </p>
+        </div>
+        <div class="step-panel">
           <div class="range-stack" id="prior-model">
-            <div class="range-row">
+            <div class="range-row plain-range">
               <div class="range-top">
-                <label for="general-prior">General divine-action prior</label>
+                <label for="general-prior">How open are you to divine action in general?</label>
                 <span class="range-value" id="general-prior-value">0%</span>
               </div>
+              <p>Higher means you already think divine action is broadly plausible.</p>
               <input id="general-prior" type="range" min="0.1" max="80" step="0.1">
             </div>
 
-            <div class="range-row">
+            <div class="range-row plain-range">
               <div class="range-top">
-                <label for="targeting-penalty">Targeting specificity</label>
+                <label for="targeting-penalty">How much of that openness applies to this exact claim?</label>
                 <span class="range-value" id="targeting-penalty-value">0%</span>
               </div>
+              <p>Lower means the claim is highly targeted: this person, this time, this purpose.</p>
               <input id="targeting-penalty" type="range" min="0.01" max="50" step="0.01">
             </div>
 
-            <div class="range-row">
+            <div class="range-row plain-range">
               <div class="range-top">
-                <label for="act-type-rate">Act-type rate</label>
+                <label for="act-type-rate">How common is this kind of event?</label>
                 <span class="range-value" id="act-type-rate-value">0%</span>
               </div>
+              <p>Lower means this is not just rare, but rare as a type of event.</p>
               <input id="act-type-rate" type="range" min="0.001" max="20" step="0.001">
             </div>
 
-            <div class="range-row">
+            <div class="range-row plain-range">
               <div class="range-top">
-                <label for="unknown-reserve">Unknown-alternatives reserve</label>
+                <label for="unknown-reserve">How much room remains for other explanations?</label>
                 <span class="range-value" id="unknown-reserve-value">0%</span>
               </div>
+              <p>Higher means you are leaving space for explanations not yet fully modeled.</p>
               <input id="unknown-reserve" type="range" min="0" max="30" step="1">
             </div>
           </div>
-        </form>
-
-        <section class="result-panel resurrection-results" aria-live="polite">
-          <div class="scoreboard resurrection-scoreboard">
-            <div class="score-ring" id="score-ring" style="--score: 0%; --score-color: #5f5400;">
-              <div class="score-ring-inner">
-                <div>
-                  <strong id="audit-score">0</strong>
-                  <span>audit pressure</span>
-                </div>
-              </div>
-            </div>
-            <div class="score-copy">
-              <p class="app-step">Live readout</p>
-              <h2 id="audit-summary">Low pressure</h2>
-              <p id="audit-copy">
-                The model is ready for input.
-              </p>
-            </div>
-          </div>
-
-          <div class="required-grid" aria-label="Required evidence thresholds">
-            <article>
-              <span>50%</span>
-              <strong id="required-50">1</strong>
-            </article>
-            <article>
-              <span>90%</span>
-              <strong id="required-90">1</strong>
-            </article>
-            <article>
-              <span>99%</span>
-              <strong id="required-99">1</strong>
-            </article>
-          </div>
-
-          <div class="pitfall-columns">
-            <section>
-              <h3>Probabilistic flags</h3>
-              <ul class="flag-list" id="pitfall-list"></ul>
-            </section>
-            <section>
-              <h3>Repair moves</h3>
-              <div class="repair-list" id="repair-list"></div>
-            </section>
-          </div>
-        </section>
+        </div>
       </section>
 
-      <section class="ledger-section" id="evidence-ledger" aria-labelledby="ledger-title">
+      <section class="audit-step full-step" id="evidence-step" aria-labelledby="evidence-title">
         <div class="section-heading">
           <div>
-            <p class="app-step">Evidence ledger</p>
-            <h2 id="ledger-title">Which evidence actually moves the odds?</h2>
-            <p>Each row compares how expected the evidence is if the claim is true versus if it is not.</p>
+            <p class="app-step">Step 3</p>
+            <h2 id="evidence-title">Test each piece of evidence</h2>
+            <p>
+              The whole audit turns on a simple pair of questions: would we expect this evidence
+              if the claim is true, and would we still expect it if the claim is not true?
+            </p>
           </div>
         </div>
-        <div class="ledger-list" id="ledger-list"></div>
+        <div class="ledger-list plain-ledger" id="ledger-list"></div>
       </section>
 
-      <section class="postdiction-panel" id="postdiction-lens" aria-labelledby="postdiction-title">
-        <div class="panel-title">
+      <section class="audit-step full-step" id="alternatives-step" aria-labelledby="alternatives-title">
+        <div class="section-heading">
           <div>
-            <p class="app-step">Psychology lens</p>
-            <h2 id="postdiction-title">Postdiction comparator</h2>
+            <p class="app-step">Step 4</p>
+            <h2 id="alternatives-title">Keep sincere alternatives visible</h2>
             <p>
-              Compare the observed profile against a postdiction account: grief, dissonance,
-              scriptural rereading, memory, and communal reinforcement.
+              The alternative is not “they lied.” It can include grief, dissonance, memory,
+              scriptural rereading, and community reinforcement.
             </p>
           </div>
           <div class="postdiction-score">
-            <span>BF for postdiction</span>
-            <strong id="postdiction-bf">1</strong>
+            <span>Alternative pathway strength</span>
+            <strong id="alternative-strength">1x</strong>
           </div>
         </div>
-        <div class="feature-grid" id="feature-grid"></div>
+        <div class="feature-grid plain-feature-grid" id="feature-grid"></div>
       </section>
 
-      <section class="report-grid resurrection-report" id="audit-report" aria-labelledby="report-title">
-        <div class="result-panel">
-          <div class="panel-title">
-            <div>
-              <p class="app-step">Export</p>
-              <h2 id="report-title">Audit report</h2>
-              <p>A compact summary of priors, likelihoods, flags, thresholds, and postdiction pressure.</p>
+      <section class="audit-step full-step" id="result-step" aria-labelledby="result-title">
+        <div class="section-heading">
+          <div>
+            <p class="app-step">Step 5</p>
+            <h2 id="result-title">Read the result</h2>
+            <p id="result-copy">
+              The audit is ready for input.
+            </p>
+          </div>
+          <div class="score-ring" id="score-ring" style="--score: 0%; --score-color: #5f5400;">
+            <div class="score-ring-inner">
+              <div>
+                <strong id="audit-score">0</strong>
+                <span>audit pressure</span>
+              </div>
             </div>
           </div>
-          <textarea id="final-report" class="export-box" rows="12" readonly></textarea>
-          <button type="button" id="copy-report">Copy Report</button>
         </div>
 
-        <div class="result-panel">
-          <div class="panel-title">
-            <div>
-              <p class="app-step">AI prompt</p>
-              <h2>Stress-test prompt</h2>
-              <p>Use this prompt to ask another tool to critique the model rather than merely repeat it.</p>
-            </div>
+        <div class="plain-result-body">
+          <section>
+            <h3 id="audit-summary">Low pressure</h3>
+            <ul class="flag-list plain-warning-list" id="pitfall-list"></ul>
+          </section>
+          <section>
+            <h3>Best next repairs</h3>
+            <div class="repair-list" id="repair-list"></div>
+          </section>
+        </div>
+
+        <details class="math-details">
+          <summary>Show math details</summary>
+          <div class="math-grid">
+            <article>
+              <span>Starting plausibility</span>
+              <strong id="math-starting">0%</strong>
+              <small>Formerly: prior</small>
+            </article>
+            <article>
+              <span>Updated confidence</span>
+              <strong id="math-updated">0%</strong>
+              <small>Formerly: posterior</small>
+            </article>
+            <article>
+              <span>Evidence lift</span>
+              <strong id="math-bf">1x</strong>
+              <small>Formerly: Bayes factor</small>
+            </article>
+            <article>
+              <span>Odds</span>
+              <strong id="math-odds">1:1</strong>
+              <small id="math-log-bf">log lift 0</small>
+            </article>
+            <article>
+              <span>Needed for 50%</span>
+              <strong id="math-required-50">1x</strong>
+              <small>Break-even confidence</small>
+            </article>
+            <article>
+              <span>Needed for 90%</span>
+              <strong id="math-required-90">1x</strong>
+              <small>High confidence</small>
+            </article>
           </div>
-          <textarea id="ai-prompt" class="export-box" rows="12" readonly></textarea>
-          <button type="button" id="copy-ai-prompt">Copy AI Prompt</button>
+        </details>
+      </section>
+
+      <section class="audit-step full-step" id="report-step" aria-labelledby="report-title">
+        <div class="section-heading">
+          <div>
+            <p class="app-step">Step 6</p>
+            <h2 id="report-title">Export the audit</h2>
+            <p>
+              The report uses plain terms first, with the formal details included only where
+              they help another reviewer stress-test the model.
+            </p>
+          </div>
+        </div>
+        <div class="resurrection-report">
+          <div class="result-panel">
+            <div class="panel-title">
+              <div>
+                <h3>Audit report</h3>
+                <p>Plain-language summary of the claim, evidence, warnings, and repair moves.</p>
+              </div>
+            </div>
+            <textarea id="final-report" class="export-box" rows="12" readonly></textarea>
+            <button type="button" id="copy-report">Copy Report</button>
+          </div>
+
+          <div class="result-panel">
+            <div class="panel-title">
+              <div>
+                <h3>Stress-test prompt</h3>
+                <p>Ask another tool to critique the assumptions rather than merely repeat them.</p>
+              </div>
+            </div>
+            <textarea id="ai-prompt" class="export-box" rows="12" readonly></textarea>
+            <button type="button" id="copy-ai-prompt">Copy AI Prompt</button>
+          </div>
         </div>
       </section>
     </main>
 
-    <script src="./app.js?v=20260504-resurrection-audit"></script>
+    <script src="./app.js?v=20260504-resurrection-guided-2"></script>
   </body>
 </html>

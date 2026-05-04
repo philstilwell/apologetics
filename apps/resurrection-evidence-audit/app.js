@@ -15,16 +15,16 @@ const claimPresets = [
         id: "crucifixion",
         title: "Crucifixion",
         type: "background",
-        note: "Expected under resurrection and non-resurrection hypotheses; it anchors the story but barely discriminates.",
+        note: "This anchors the story, but it is expected whether or not a resurrection happened.",
         pTrue: 95,
         pAlt: 90,
         weight: 100,
       },
       {
         id: "appearances",
-        title: "Post-mortem appearances",
+        title: "Post-mortem appearance reports",
         type: "testimony",
-        note: "The major swing point; the denominator must include grief visions, memory, rumor, and communal reinforcement.",
+        note: "This is a major pressure point. The comparison side must include grief visions, memory, rumor, and communal reinforcement.",
         pTrue: 90,
         pAlt: 20,
         weight: 55,
@@ -33,7 +33,7 @@ const claimPresets = [
         id: "conversions",
         title: "Conversions and costly commitment",
         type: "testimony",
-        note: "Sincerity can support belief that experiences occurred, but it does not directly validate the event.",
+        note: "Sincerity can show that people really believed, but sincere belief is not the same as event truth.",
         pTrue: 70,
         pAlt: 10,
         weight: 70,
@@ -42,7 +42,7 @@ const claimPresets = [
         id: "empty-tomb",
         title: "Empty tomb tradition",
         type: "literary",
-        note: "Natural complement space includes mislocation, reburial, theological narrative, and later development.",
+        note: "The comparison side includes mislocation, reburial, theological story-shaping, and later development.",
         pTrue: 60,
         pAlt: 20,
         weight: 60,
@@ -51,7 +51,7 @@ const claimPresets = [
         id: "movement-growth",
         title: "Early creed and movement growth",
         type: "social",
-        note: "Growth, slogans, and community persistence are often expected under both sincere postdiction and miracle claims.",
+        note: "Growth, slogans, and community persistence can happen in sincere movements even when the central interpretation is mistaken.",
         pTrue: 65,
         pAlt: 45,
         weight: 50,
@@ -74,7 +74,7 @@ const claimPresets = [
         id: "testimony",
         title: "Witness testimony",
         type: "testimony",
-        note: "Sincerity and confidence must be separated from event truth.",
+        note: "Confidence, sincerity, and event truth need to be separated.",
         pTrue: 85,
         pAlt: 25,
         weight: 70,
@@ -83,7 +83,7 @@ const claimPresets = [
         id: "medical",
         title: "Medical or external record",
         type: "public",
-        note: "Independent documentation can matter, but unexplained recovery is not automatically Christian intervention.",
+        note: "Independent documentation matters, but an unexplained recovery is not automatically a specific Christian intervention.",
         pTrue: 75,
         pAlt: 35,
         weight: 85,
@@ -92,7 +92,7 @@ const claimPresets = [
         id: "specific-prayer",
         title: "Specific prayer timing",
         type: "timing",
-        note: "Timing evidence must be compared against selection effects and unreported misses.",
+        note: "Timing evidence should include selection effects, unreported misses, and how wide the target was.",
         pTrue: 70,
         pAlt: 30,
         weight: 65,
@@ -101,7 +101,7 @@ const claimPresets = [
         id: "attribution",
         title: "Christian attribution",
         type: "specificity",
-        note: "Attribution to a specific deity or doctrine carries extra targeting cost.",
+        note: "Moving from unusual event to a specific deity or doctrine adds extra burden.",
         pTrue: 80,
         pAlt: 55,
         weight: 50,
@@ -124,7 +124,7 @@ const claimPresets = [
         id: "desired-outcome",
         title: "Desired outcome occurred",
         type: "outcome",
-        note: "The baseline probability of the outcome matters before prayer is counted as explanatory.",
+        note: "The ordinary chance of the outcome matters before prayer is treated as the explanation.",
         pTrue: 70,
         pAlt: 45,
         weight: 80,
@@ -142,7 +142,7 @@ const claimPresets = [
         id: "community-confidence",
         title: "Community confidence",
         type: "social",
-        note: "Shared confidence can stabilize interpretation without adding much event-level discrimination.",
+        note: "Shared confidence can stabilize an interpretation without adding much event-level discrimination.",
         pTrue: 80,
         pAlt: 60,
         weight: 45,
@@ -151,7 +151,7 @@ const claimPresets = [
         id: "no-clear-alternative",
         title: "No clear alternative named",
         type: "unknowns",
-        note: "Not naming an alternative is not the same as eliminating the complement.",
+        note: "Not naming an alternative is not the same as eliminating the comparison side.",
         pTrue: 70,
         pAlt: 50,
         weight: 55,
@@ -175,12 +175,6 @@ const posturePresets = {
     },
   },
   corrected: {
-    prior: {
-      general: 20,
-      targeting: 1,
-      actType: 0.5,
-      unknownReserve: 10,
-    },
     evidence: {
       pTrueBoost: 1,
       pAltFactor: 1,
@@ -189,24 +183,24 @@ const posturePresets = {
   },
 };
 
-const postdictionFeatures = [
+const alternativeFeatures = [
   {
     id: "decades-late",
     title: "Decades-late composition",
     ratio: 3,
-    note: "Later narrative crystallization is more expected if memory and tradition developed after crisis.",
+    note: "Later narrative crystallization is easier to understand if memory and tradition developed after the crisis.",
   },
   {
     id: "scripture-wrap",
     title: "Scriptural fulfillment framing",
     ratio: 3,
-    note: "Heavy retrofitting is expected under reinterpretation after disconfirmation.",
+    note: "Heavy fulfillment framing is expected when a community rereads defeat as vindication.",
   },
   {
     id: "grief-visions",
     title: "Grief-aligned appearances",
     ratio: 2.5,
-    note: "Bereavement experiences and visionary interpretation are ordinary psychological mechanisms.",
+    note: "Bereavement experiences and visionary interpretation are ordinary human mechanisms.",
   },
   {
     id: "communal-reinforcement",
@@ -216,27 +210,27 @@ const postdictionFeatures = [
   },
   {
     id: "physicalization",
-    title: "Increasing physicalization",
+    title: "Increasing physical detail",
     ratio: 2.5,
-    note: "A trajectory toward concrete apologetic detail fits developing tradition.",
+    note: "A movement toward concrete apologetic detail fits developing tradition.",
   },
   {
     id: "thin-corroboration",
-    title: "Thin external corroboration",
+    title: "Thin outside confirmation",
     ratio: 2,
-    note: "Limited public confirmation is more expected under an internal proclamation stream.",
+    note: "Limited public confirmation is more expected when the claim grows inside a proclamation stream.",
   },
   {
     id: "early-creed",
     title: "Early creed slogans",
     ratio: 0.8,
-    note: "Early summaries can slightly favor resurrection reportage, but they are still insider proclamation.",
+    note: "Early summaries can favor reportage somewhat, but they are still insider proclamation.",
   },
   {
     id: "transformation",
     title: "Follower transformation",
     ratio: 2,
-    note: "Renewed zeal after disconfirmation is historically familiar and not truth-discriminating by itself.",
+    note: "Renewed zeal after disconfirmation is historically familiar and does not settle truth by itself.",
   },
   {
     id: "source-dependence",
@@ -248,14 +242,14 @@ const postdictionFeatures = [
     id: "no-conspiracy",
     title: "No conspiracy required",
     ratio: 1.3,
-    note: "Sincere postdiction avoids the false choice between miracle and deliberate lie.",
+    note: "Sincere meaning-making avoids the false choice between miracle and deliberate lie.",
   },
 ];
 
 const state = {
   presetId: claimPresets[0].id,
   evidence: [],
-  featureWeights: new Map(postdictionFeatures.map((feature) => [feature.id, 1])),
+  featureWeights: new Map(alternativeFeatures.map((feature) => [feature.id, 1])),
 };
 
 const els = {
@@ -270,24 +264,30 @@ const els = {
   loadGenerous: document.querySelector("#load-generous"),
   loadCorrected: document.querySelector("#load-corrected"),
   resetCurrent: document.querySelector("#reset-current"),
-  posteriorValue: document.querySelector("#posterior-value"),
-  posteriorOdds: document.querySelector("#posterior-odds"),
-  actualBf: document.querySelector("#actual-bf"),
-  actualLogBf: document.querySelector("#actual-log-bf"),
-  requiredBf: document.querySelector("#required-bf"),
-  bfShortfall: document.querySelector("#bf-shortfall"),
+  startingConfidence: document.querySelector("#starting-confidence"),
+  evidenceAdded: document.querySelector("#evidence-added"),
+  updatedConfidence: document.querySelector("#updated-confidence"),
+  updatedConfidenceNote: document.querySelector("#updated-confidence-note"),
+  neededForHigh: document.querySelector("#needed-for-high"),
+  neededForHighNote: document.querySelector("#needed-for-high-note"),
   topDriver: document.querySelector("#top-driver"),
-  driverShare: document.querySelector("#driver-share"),
-  required50: document.querySelector("#required-50"),
-  required90: document.querySelector("#required-90"),
-  required99: document.querySelector("#required-99"),
+  alternativeStrength: document.querySelector("#alternative-strength"),
+  resultCopy: document.querySelector("#result-copy"),
   auditScore: document.querySelector("#audit-score"),
   auditSummary: document.querySelector("#audit-summary"),
-  auditCopy: document.querySelector("#audit-copy"),
   scoreRing: document.querySelector("#score-ring"),
+  floatingAuditScore: document.querySelector("#floating-audit-score"),
+  floatingAuditState: document.querySelector("#floating-audit-state"),
+  floatingScoreRing: document.querySelector("#floating-score-ring"),
   pitfallList: document.querySelector("#pitfall-list"),
   repairList: document.querySelector("#repair-list"),
-  postdictionBf: document.querySelector("#postdiction-bf"),
+  mathStarting: document.querySelector("#math-starting"),
+  mathUpdated: document.querySelector("#math-updated"),
+  mathBf: document.querySelector("#math-bf"),
+  mathOdds: document.querySelector("#math-odds"),
+  mathLogBf: document.querySelector("#math-log-bf"),
+  mathRequired50: document.querySelector("#math-required-50"),
+  mathRequired90: document.querySelector("#math-required-90"),
   finalReport: document.querySelector("#final-report"),
   aiPrompt: document.querySelector("#ai-prompt"),
   copyReport: document.querySelector("#copy-report"),
@@ -327,6 +327,7 @@ function loadPreset(presetId) {
   const preset = claimPresets.find((item) => item.id === presetId);
   state.presetId = preset.id;
   state.evidence = preset.evidence.map((item) => ({ ...item }));
+  state.featureWeights = new Map(alternativeFeatures.map((feature) => [feature.id, 1]));
 
   els.preset.value = preset.id;
   els.claim.value = preset.claim;
@@ -376,7 +377,7 @@ function renderLedger() {
 
 function renderEvidenceCard(item) {
   return `
-    <article class="ledger-card" data-evidence-id="${item.id}">
+    <article class="ledger-card plain-evidence-card" data-evidence-id="${item.id}">
       <header>
         <div>
           <p class="app-step">${escapeHtml(item.type)}</p>
@@ -384,39 +385,68 @@ function renderEvidenceCard(item) {
           <p>${escapeHtml(item.note)}</p>
         </div>
         <div class="ledger-live" id="${item.id}-live">
-          <span>BF</span>
-          <strong>1</strong>
+          <span>Evidence lift</span>
+          <strong>1x</strong>
         </div>
       </header>
 
-      <div class="ledger-controls">
-        ${renderRange(item.id, "pTrue", "P(E|claim)", item.pTrue, 0.01, 99.9, 0.01)}
-        ${renderRange(item.id, "pAlt", "P(E|not claim)", item.pAlt, 0.01, 99.9, 0.01)}
-        ${renderRange(item.id, "weight", "Independence weight", item.weight, 10, 100, 1)}
+      <div class="ledger-controls plain-evidence-controls">
+        ${renderRange({
+          id: item.id,
+          key: "pTrue",
+          label: "Would we expect this if the claim is true?",
+          helper: "Higher means this evidence fits the miracle claim well.",
+          value: item.pTrue,
+          min: 0.01,
+          max: 99.9,
+          step: 0.01,
+        })}
+        ${renderRange({
+          id: item.id,
+          key: "pAlt",
+          label: "Would we still expect this if the claim is not true?",
+          helper: "Higher means this evidence can also arise through ordinary or alternative pathways.",
+          value: item.pAlt,
+          min: 0.01,
+          max: 99.9,
+          step: 0.01,
+        })}
+        ${renderRange({
+          id: item.id,
+          key: "weight",
+          label: "How independent is this evidence?",
+          helper: "Lower this when sources, memories, communities, or traditions overlap.",
+          value: item.weight,
+          min: 10,
+          max: 100,
+          step: 1,
+        })}
       </div>
     </article>
   `;
 }
 
-function renderRange(id, key, label, value, min, max, step) {
+function renderRange({ id, key, label, helper, value, min, max, step }) {
   return `
-    <div class="range-row compact">
+    <div class="range-row compact plain-range">
       <div class="range-top">
-        <label for="${id}-${key}">${label}</label>
+        <label for="${id}-${key}">${escapeHtml(label)}</label>
         <span class="range-value" id="${id}-${key}-value">${formatPercent(value / 100)}</span>
       </div>
+      <p>${escapeHtml(helper)}</p>
       <input id="${id}-${key}" type="range" min="${min}" max="${max}" step="${step}" value="${value}">
     </div>
   `;
 }
 
 function renderFeatures() {
-  els.featureGrid.innerHTML = postdictionFeatures
+  els.featureGrid.innerHTML = alternativeFeatures
     .map((feature) => {
+      const current = String(state.featureWeights.get(feature.id) ?? 1);
       const options = [
-        ["0", "Ignore"],
-        ["0.5", "Weak"],
-        ["1", "Full"],
+        ["0", "Set aside"],
+        ["0.5", "Some"],
+        ["1", "Strong"],
       ]
         .map(
           ([value, label]) => `
@@ -426,7 +456,7 @@ function renderFeatures() {
                 type="radio"
                 name="feature-${feature.id}"
                 value="${value}"
-                ${value === "1" ? "checked" : ""}
+                ${value === current ? "checked" : ""}
               >
               <label for="feature-${feature.id}-${value}">${label}</label>
             </span>
@@ -435,13 +465,13 @@ function renderFeatures() {
         .join("");
 
       return `
-        <article class="feature-card">
+        <article class="feature-card plain-feature-card">
           <div>
             <h3>${escapeHtml(feature.title)}</h3>
             <p>${escapeHtml(feature.note)}</p>
           </div>
           <div class="feature-bottom">
-            <span>LR ${feature.ratio.toFixed(1)}</span>
+            <span>Pathway strength: ${formatLift(feature.ratio)}</span>
             <div class="segmented three">${options}</div>
           </div>
         </article>
@@ -449,7 +479,7 @@ function renderFeatures() {
     })
     .join("");
 
-  postdictionFeatures.forEach((feature) => {
+  alternativeFeatures.forEach((feature) => {
     document.querySelectorAll(`[name="feature-${feature.id}"]`).forEach((input) => {
       input.addEventListener("change", () => {
         state.featureWeights.set(feature.id, Number(input.value));
@@ -461,57 +491,71 @@ function renderFeatures() {
 
 function render() {
   const assessment = assess();
-  renderPriorLabels();
-  renderLedgerLive(assessment);
-  renderDashboard(assessment);
-  renderPitfalls(assessment);
+  renderSliderLabels();
+  renderEvidenceLive(assessment);
+  renderResultStrip(assessment);
+  renderWarnings(assessment);
   els.finalReport.value = buildReport(assessment);
   els.aiPrompt.value = buildAiPrompt(assessment);
 }
 
-function renderPriorLabels() {
+function renderSliderLabels() {
   setPercentLabel("general-prior", Number(els.generalPrior.value) / 100);
   setPercentLabel("targeting-penalty", Number(els.targetingPenalty.value) / 100);
   setPercentLabel("act-type-rate", Number(els.actTypeRate.value) / 100);
   setPercentLabel("unknown-reserve", Number(els.unknownReserve.value) / 100);
 }
 
-function renderLedgerLive(assessment) {
+function renderEvidenceLive(assessment) {
   assessment.items.forEach((item) => {
     setPercentLabel(`${item.id}-pTrue`, item.pTrue / 100);
     setPercentLabel(`${item.id}-pAlt`, item.pAlt / 100);
     setPercentLabel(`${item.id}-weight`, item.weight / 100);
     const live = document.querySelector(`#${item.id}-live`);
     if (!live) return;
-    live.querySelector("strong").textContent = formatFactor(item.adjustedBf);
-    live.querySelector("span").textContent = `${Math.round(item.share * 100)}% swing`;
+    live.querySelector("strong").textContent = formatLift(item.adjustedBf);
+    live.querySelector("span").textContent = `${Math.round(item.share * 100)}% of evidence added`;
   });
 }
 
-function renderDashboard(assessment) {
+function renderResultStrip(assessment) {
   const scoreColor = getScoreColor(assessment.auditPressure);
-  els.posteriorValue.textContent = formatPercent(assessment.posterior);
-  els.posteriorOdds.textContent = `odds ${formatOdds(assessment.posteriorOdds)}`;
-  els.actualBf.textContent = formatFactor(assessment.totalBf);
-  els.actualLogBf.textContent = `log BF ${assessment.totalLogBf.toFixed(2)}`;
-  els.requiredBf.textContent = formatFactor(assessment.required[90]);
-  els.bfShortfall.textContent = assessment.shortfall90 > 1
-    ? `${formatFactor(assessment.shortfall90)} more evidence needed`
-    : "meets the 90% threshold";
-  els.topDriver.textContent = assessment.topDriver ? assessment.topDriver.title : "None";
-  els.driverShare.textContent = `${Math.round((assessment.topDriver?.share || 0) * 100)}% of update`;
-  els.required50.textContent = formatFactor(assessment.required[50]);
-  els.required90.textContent = formatFactor(assessment.required[90]);
-  els.required99.textContent = formatFactor(assessment.required[99]);
+  const shortfallText = assessment.shortfall90 > 1
+    ? formatLift(assessment.shortfall90)
+    : "Enough";
+
+  els.startingConfidence.textContent = formatPercent(assessment.prior);
+  els.evidenceAdded.textContent = formatLift(assessment.totalBf);
+  els.updatedConfidence.textContent = formatPercent(assessment.posterior);
+  els.updatedConfidenceNote.textContent = "After the listed evidence is counted";
+  els.neededForHigh.textContent = shortfallText;
+  els.neededForHighNote.textContent = assessment.shortfall90 > 1
+    ? "more evidence lift needed to reach 90%"
+    : "the current inputs already reach 90%";
+  els.topDriver.textContent = assessment.topDriver
+    ? `Biggest mover: ${assessment.topDriver.title}`
+    : "No evidence driver yet";
+  els.alternativeStrength.textContent = formatLift(assessment.alternativeBf);
   els.auditScore.textContent = String(assessment.auditPressure);
   els.auditSummary.textContent = summarizePressure(assessment.auditPressure);
-  els.auditCopy.textContent = buildPressureCopy(assessment);
+  els.resultCopy.textContent = buildPressureCopy(assessment);
   els.scoreRing.style.setProperty("--score", `${assessment.auditPressure}%`);
   els.scoreRing.style.setProperty("--score-color", scoreColor);
-  els.postdictionBf.textContent = formatFactor(assessment.postdictionBf);
+  els.floatingAuditScore.textContent = String(assessment.auditPressure);
+  els.floatingAuditState.textContent = summarizePressure(assessment.auditPressure);
+  els.floatingScoreRing.style.setProperty("--score", `${assessment.auditPressure}%`);
+  els.floatingScoreRing.style.setProperty("--score-color", scoreColor);
+
+  els.mathStarting.textContent = formatPercent(assessment.prior);
+  els.mathUpdated.textContent = formatPercent(assessment.posterior);
+  els.mathBf.textContent = formatLift(assessment.totalBf);
+  els.mathOdds.textContent = formatOdds(assessment.posteriorOdds);
+  els.mathLogBf.textContent = `log lift ${assessment.totalLogBf.toFixed(2)}`;
+  els.mathRequired50.textContent = formatLift(assessment.required[50]);
+  els.mathRequired90.textContent = formatLift(assessment.required[90]);
 }
 
-function renderPitfalls(assessment) {
+function renderWarnings(assessment) {
   els.pitfallList.innerHTML = assessment.flags
     .map((flag) => `<li><strong>${escapeHtml(flag.title)}:</strong> ${escapeHtml(flag.body)}</li>`)
     .join("");
@@ -569,13 +613,13 @@ function assess() {
     99: requiredBfForTarget(priorOdds, 0.99),
   };
   const shortfall90 = required[90] / Math.max(totalBf, 0.000000000001);
-  const postdictionBf = calculatePostdictionBf();
+  const alternativeBf = calculateAlternativeBf();
   const flags = buildFlags({
     prior,
     priorParts,
     items,
     topDriver,
-    postdictionBf,
+    alternativeBf,
     totalBf,
     required,
     shortfall90,
@@ -596,7 +640,7 @@ function assess() {
     required,
     shortfall90,
     topDriver,
-    postdictionBf,
+    alternativeBf,
     flags,
     repairs,
     auditPressure,
@@ -616,88 +660,88 @@ function buildFlags(context) {
 
   if (context.prior > 0.01) {
     flags.push({
-      title: "Targeted prior is doing heavy work",
-      body: "The prior for this specific miracle is above 1%; the targeting and act-type costs need independent defense.",
+      title: "The starting point may be too high",
+      body: "This specific miracle begins above 1% before the evidence is counted. That can be fair only if the specificity and event-type assumptions are defended.",
       weight: 16,
     });
   }
 
   if (context.priorParts.general > 0.45 && context.priorParts.targeting > 0.1) {
     flags.push({
-      title: "Possible prior stacking",
-      body: "Generic theism appears to be carrying a highly specific Christian intervention without enough partition cost.",
+      title: "The claim may borrow too much from generic theism",
+      body: "Belief that God might exist is not the same as support for this person, this event, this purpose, and this doctrine.",
       weight: 16,
     });
   }
 
   if (context.priorParts.unknownReserve < 0.05) {
     flags.push({
-      title: "Unknown reserve too thin",
-      body: "The complement leaves little room for unmodeled natural mechanisms, selection effects, or long-tail alternatives.",
+      title: "Too little room for other explanations",
+      body: "The audit leaves little space for unmodeled mechanisms, selection effects, mistaken memory, or explanations not yet considered.",
       weight: 13,
     });
   }
 
   if (suppressed.length > 0) {
     flags.push({
-      title: "Suppressed alternative likelihood",
-      body: `${suppressed.length} evidence row${suppressed.length === 1 ? "" : "s"} set P(E|not claim) below 3%, which can manufacture huge Bayes factors.`,
+      title: "Alternative explanations are treated as almost impossible",
+      body: `${suppressed.length} evidence item${suppressed.length === 1 ? "" : "s"} make the non-miracle path lower than 3%, which can make the evidence look stronger than it is.`,
       weight: 18,
     });
   }
 
   if (highDependence.length > 0) {
     flags.push({
-      title: "Dependence inflation",
-      body: `${highDependence.length} testimony, literary, or social row${highDependence.length === 1 ? "" : "s"} retain very high independence weight.`,
+      title: "Related evidence may be counted as separate",
+      body: `${highDependence.length} testimony, story, or social item${highDependence.length === 1 ? "" : "s"} are treated as highly independent even though source overlap may matter.`,
       weight: 14,
     });
   }
 
   if (sincerityRows.length > 0) {
     flags.push({
-      title: "Sincerity-to-truth transfer",
-      body: "Testimony rows are producing large Bayes factors; separate sincerity, experience, interpretation, and event truth.",
+      title: "Sincerity is doing too much work",
+      body: "Some testimony is adding a large lift. Separate honest belief, real experience, correct interpretation, and the event actually happening.",
       weight: 12,
     });
   }
 
   if (neutralRows.length > 0) {
     flags.push({
-      title: "Bayes-neutral evidence counted",
-      body: `${neutralRows.length} row${neutralRows.length === 1 ? " is" : "s are"} close to BF 1 and should not be rhetorically treated as strong confirmation.`,
+      title: "Some evidence barely distinguishes the claim",
+      body: `${neutralRows.length} item${neutralRows.length === 1 ? " is" : "s are"} close to neutral. That evidence may belong in the story, but it should not be presented as strong confirmation.`,
       weight: 8,
     });
   }
 
   if (context.topDriver && context.topDriver.share > 0.55) {
     flags.push({
-      title: "Single swing driver",
-      body: `${context.topDriver.title} supplies more than half of the positive update, so the posterior is fragile around that row.`,
+      title: "One evidence item is carrying the case",
+      body: `${context.topDriver.title} supplies more than half of the positive movement, so the result is fragile around that single judgment.`,
       weight: 14,
     });
   }
 
   if (context.shortfall90 > 1000) {
     flags.push({
-      title: "Required evidence gap",
-      body: "The current Bayes factor is more than three orders of magnitude short of the 90% threshold.",
+      title: "The evidence is still far short of high confidence",
+      body: "The current evidence would need more than a thousand times additional lift to reach 90% confidence from the entered starting point.",
       weight: 16,
     });
   }
 
-  if (context.postdictionBf > 100) {
+  if (context.alternativeBf > 100) {
     flags.push({
-      title: "Postdiction pressure active",
-      body: "The selected psychology and tradition-development features strongly favor postdiction over literal reportage.",
+      title: "Sincere meaning-making remains a strong alternative",
+      body: "The selected psychology and tradition-development features strongly fit a sincere post-crisis meaning-making pathway.",
       weight: 10,
     });
   }
 
   if (flags.length === 0) {
     flags.push({
-      title: "No major structural flags",
-      body: "The current model avoids the most obvious Bayesian pitfalls, though the numeric assumptions still need defense.",
+      title: "No major structural warnings",
+      body: "The current model avoids the most obvious reasoning traps. The remaining question is whether each slider value can be defended.",
       weight: 2,
     });
   }
@@ -709,45 +753,45 @@ function buildRepairs(flags) {
   const titles = new Set(flags.map((flag) => flag.title));
   const repairs = [];
 
-  if (titles.has("Suppressed alternative likelihood")) {
+  if (titles.has("Alternative explanations are treated as almost impossible")) {
     repairs.push({
-      title: "Rebuild the denominator",
-      body: "Model grief visions, rumor cascades, memory distortion, legendary growth, incentive structures, and unknowns before assigning P(E|not claim).",
+      title: "Rebuild the comparison side",
+      body: "Add grief visions, rumor growth, memory distortion, literary development, social reinforcement, selection effects, and unknowns before judging how surprising the evidence is without a miracle.",
     });
   }
 
-  if (titles.has("Dependence inflation") || titles.has("Single swing driver")) {
+  if (titles.has("Related evidence may be counted as separate") || titles.has("One evidence item is carrying the case")) {
     repairs.push({
-      title: "Run a dependence sweep",
-      body: "Lower independence weights for shared traditions, source dependence, and community clustering; then report the posterior band rather than a point result.",
+      title: "Lower overlap-sensitive evidence",
+      body: "Reduce independence for sources or traditions that share a community, text, memory stream, or apologetic purpose.",
     });
   }
 
-  if (titles.has("Targeted prior is doing heavy work") || titles.has("Possible prior stacking")) {
+  if (titles.has("The starting point may be too high") || titles.has("The claim may borrow too much from generic theism")) {
     repairs.push({
-      title: "Publish the prior chain",
-      body: "Show the move from generic theism to this person, this time, this purpose, this act type, and this doctrinal interpretation.",
+      title: "Show the full specificity chain",
+      body: "Separate general openness to God from this person, this time, this kind of act, and this Christian interpretation.",
     });
   }
 
-  if (titles.has("Sincerity-to-truth transfer")) {
+  if (titles.has("Sincerity is doing too much work")) {
     repairs.push({
-      title: "Separate testimony layers",
-      body: "Treat honest testimony, real experience, correct interpretation, and actual miracle as distinct conditional steps.",
+      title: "Separate belief from event truth",
+      body: "Ask what sincerity proves, then separately ask whether the experience was interpreted correctly and whether the event occurred.",
     });
   }
 
-  if (titles.has("Required evidence gap")) {
+  if (titles.has("The evidence is still far short of high confidence")) {
     repairs.push({
-      title: "State the evidence burden plainly",
-      body: "Report how much Bayes-factor weight is needed for 50%, 90%, and 99% confidence before declaring the case cumulative.",
+      title: "State the burden plainly",
+      body: "Before saying the case is strong, report how much more evidence lift is needed to reach high confidence.",
     });
   }
 
   if (repairs.length === 0) {
     repairs.push({
-      title: "Keep assumptions visible",
-      body: "Export the report and ask whether a critic could adjust any one assumption without collapsing the conclusion.",
+      title: "Keep the assumptions visible",
+      body: "Export the report and ask whether a fair critic could change any one slider without collapsing the conclusion.",
     });
   }
 
@@ -762,8 +806,8 @@ function calculateAuditPressure(flags, shortfall90, topDriver, priorParts) {
   return Math.round(clamp(flagScore + shortfallScore + driverScore + reserveScore, 0, 100));
 }
 
-function calculatePostdictionBf() {
-  return postdictionFeatures.reduce((product, feature) => {
+function calculateAlternativeBf() {
+  return alternativeFeatures.reduce((product, feature) => {
     const weight = state.featureWeights.get(feature.id) ?? 1;
     return product * Math.pow(feature.ratio, weight);
   }, 1);
@@ -788,18 +832,18 @@ function summarizePressure(score) {
 
 function buildPressureCopy(assessment) {
   if (assessment.auditPressure >= 75) {
-    return "The model depends on fragile or under-defended assumptions. A confident conclusion would need stronger denominator work, dependence correction, and sensitivity reporting.";
+    return "The case currently depends on fragile or under-defended assumptions. A confident conclusion would need stronger alternative-side work, overlap correction, and clearer evidence burden.";
   }
 
   if (assessment.auditPressure >= 50) {
-    return "Several assumptions are carrying more than they can currently justify. The conclusion should be softened unless the flagged variables can be defended.";
+    return "Several assumptions are carrying more than they can currently justify. The conclusion should be softened unless the warnings can be answered.";
   }
 
   if (assessment.auditPressure >= 25) {
-    return "The structure is partly disciplined, but some assumptions still deserve scrutiny before the claim is treated as substantiated.";
+    return "The structure is partly disciplined, but some assumptions still deserve scrutiny before the claim is treated as well substantiated.";
   }
 
-  return "The model is structurally modest. The remaining question is whether the entered probabilities are independently defensible.";
+  return "The model is structurally modest. The remaining question is whether the entered judgments are independently defensible.";
 }
 
 function buildReport(assessment) {
@@ -808,34 +852,42 @@ function buildReport(assessment) {
     "",
     `Claim: ${assessment.claim || "Not supplied"}`,
     "",
-    "## Prior Chain",
-    `General divine-action prior: ${formatPercent(assessment.priorParts.general)}`,
-    `Targeting specificity: ${formatPercent(assessment.priorParts.targeting)}`,
-    `Act-type rate: ${formatPercent(assessment.priorParts.actType)}`,
-    `Targeted prior: ${formatPercent(assessment.prior)}`,
-    `Unknown reserve: ${formatPercent(assessment.priorParts.unknownReserve)}`,
-    "",
-    "## Evidence Ledger",
-    ...assessment.items.map(
-      (item) =>
-        `- ${item.title}: P(E|claim) ${formatPercent(item.pTrue / 100)}, P(E|not claim) ${formatPercent(item.pAlt / 100)}, independence ${Math.round(item.weight)}%, adjusted BF ${formatFactor(item.adjustedBf)}.`,
-    ),
-    "",
-    "## Results",
-    `Actual BF: ${formatFactor(assessment.totalBf)} (log BF ${assessment.totalLogBf.toFixed(2)})`,
-    `Posterior: ${formatPercent(assessment.posterior)} (${formatOdds(assessment.posteriorOdds)} odds)`,
-    `BF needed for 50%: ${formatFactor(assessment.required[50])}`,
-    `BF needed for 90%: ${formatFactor(assessment.required[90])}`,
-    `BF needed for 99%: ${formatFactor(assessment.required[99])}`,
-    `Top swing driver: ${assessment.topDriver ? assessment.topDriver.title : "None"} (${Math.round((assessment.topDriver?.share || 0) * 100)}%)`,
-    `Postdiction BF: ${formatFactor(assessment.postdictionBf)}`,
+    "## Plain-Language Result",
+    `Starting confidence: ${formatPercent(assessment.prior)}`,
+    `Evidence added: ${formatLift(assessment.totalBf)}`,
+    `Updated confidence: ${formatPercent(assessment.posterior)}`,
+    `More evidence needed for 90% confidence: ${assessment.shortfall90 > 1 ? formatLift(assessment.shortfall90) : "none under current inputs"}`,
+    `Biggest mover: ${assessment.topDriver ? assessment.topDriver.title : "None"} (${Math.round((assessment.topDriver?.share || 0) * 100)}% of positive movement)`,
+    `Sincere meaning-making pathway strength: ${formatLift(assessment.alternativeBf)}`,
     `Audit pressure: ${assessment.auditPressure}/100 (${summarizePressure(assessment.auditPressure)})`,
     "",
-    "## Flags",
+    "## Starting Point",
+    `Openness to divine action in general: ${formatPercent(assessment.priorParts.general)}`,
+    `Specificity allowance for this claim: ${formatPercent(assessment.priorParts.targeting)}`,
+    `Commonness of this kind of event: ${formatPercent(assessment.priorParts.actType)}`,
+    `Room left for other explanations: ${formatPercent(assessment.priorParts.unknownReserve)}`,
+    "",
+    "## Evidence Questions",
+    ...assessment.items.map(
+      (item) =>
+        `- ${item.title}: expected if true ${formatPercent(item.pTrue / 100)}, still expected if not true ${formatPercent(item.pAlt / 100)}, independent ${Math.round(item.weight)}%, evidence lift ${formatLift(item.adjustedBf)}.`,
+    ),
+    "",
+    "## Warnings",
     ...assessment.flags.map((flag) => `- ${flag.title}: ${flag.body}`),
     "",
-    "## Repairs",
+    "## Repair Moves",
     ...assessment.repairs.map((repair) => `- ${repair.title}: ${repair.body}`),
+    "",
+    "## Math Details",
+    `Former prior: ${formatPercent(assessment.prior)}`,
+    `Former posterior: ${formatPercent(assessment.posterior)}`,
+    `Bayes factor / evidence lift: ${formatFactor(assessment.totalBf)}`,
+    `Log evidence lift: ${assessment.totalLogBf.toFixed(2)}`,
+    `Posterior odds: ${formatOdds(assessment.posteriorOdds)}`,
+    `Lift needed for 50%: ${formatLift(assessment.required[50])}`,
+    `Lift needed for 90%: ${formatLift(assessment.required[90])}`,
+    `Lift needed for 99%: ${formatLift(assessment.required[99])}`,
   ];
 
   return lines.join("\n");
@@ -843,17 +895,26 @@ function buildReport(assessment) {
 
 function buildAiPrompt(assessment) {
   return [
-    "You are auditing a Christian evidential claim for probabilistic rigor. Do not merely affirm or deny the claim. Stress-test the model.",
+    "You are auditing a Christian evidential claim for plain-language probabilistic rigor. Do not merely affirm or deny the claim. Stress-test the model.",
     "",
-    "Use these checks: prior stacking, specificity/targeting cost, suppressed P(E|not-H), false independence, testimony sincerity vs event truth, likelihood transfer from mundane details to miracles, truncated alternatives, no unknown reserve, Bayes-neutral evidence, and posterior fragility.",
+    "Use plain terms first:",
+    "- Starting confidence = prior.",
+    "- Updated confidence = posterior.",
+    "- Evidence lift = Bayes factor.",
+    "- 'Would we expect this if true?' = P(E|H).",
+    "- 'Would we still expect this if not true?' = P(E|not-H).",
+    "- Independent evidence = dependence correction.",
+    "- Room for other explanations = unknown reserve.",
+    "",
+    "Checks to apply: inflated starting point, specificity cost, suppressed alternatives, false independence, sincerity vs event truth, transfer from ordinary details to miracle truth, truncated alternatives, missing unknown reserve, neutral evidence, and fragility.",
     "",
     buildReport(assessment),
     "",
     "Questions to answer:",
     "1. Which assumption is doing the most work?",
-    "2. Which P(E|not-H) values are too low, if any?",
-    "3. Which evidence rows should be down-weighted for dependence?",
-    "4. What posterior band results under modest skeptical and generous assumptions?",
+    "2. Which 'still expected if not true' values are too low, if any?",
+    "3. Which evidence items should be lowered for overlap or dependence?",
+    "4. What updated confidence range results under cautious and generous assumptions?",
     "5. What claim would be proportionate to the evidence actually entered?",
   ].join("\n");
 }
@@ -874,21 +935,27 @@ async function copyText(text, button) {
 
 function formatPercent(value) {
   if (value === 0) return "0%";
-  if (value < 0.000001) return `${(value * 100).toExponential(2)}%`;
-  if (value < 0.001) return `${(value * 100).toFixed(5)}%`;
-  if (value < 0.01) return `${(value * 100).toFixed(3)}%`;
-  if (value < 0.1) return `${(value * 100).toFixed(2)}%`;
-  return `${(value * 100).toFixed(1)}%`;
+  const percent = value * 100;
+  if (percent < 0.000001) return "less than 0.000001%";
+  if (percent < 0.01) return `${trimNumber(percent, 5)}%`;
+  if (percent < 0.1) return `${trimNumber(percent, 3)}%`;
+  return `${trimNumber(percent, 1)}%`;
 }
 
 function formatFactor(value) {
   if (!Number.isFinite(value)) return "infinite";
   if (value === 0) return "0";
-  if (value >= 100000 || value < 0.001) return value.toExponential(2);
+  if (value < 0.001) return "less than 0.001";
+  if (value >= 1000000000000) return formatLargeFactor(value);
+  if (value >= 100000) return (Math.round(value / 1000) * 1000).toLocaleString();
   if (value >= 1000) return Math.round(value).toLocaleString();
-  if (value >= 100) return value.toFixed(1);
-  if (value >= 10) return value.toFixed(2);
-  return value.toFixed(3);
+  if (value >= 100) return trimNumber(value, 1);
+  if (value >= 10) return trimNumber(value, 2);
+  return trimNumber(value, 2);
+}
+
+function formatLift(value) {
+  return `${formatFactor(value)}x`;
 }
 
 function formatOdds(odds) {
@@ -906,6 +973,23 @@ function getScoreColor(score) {
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+function trimNumber(value, digits) {
+  return value
+    .toFixed(digits)
+    .replace(/(\.\d*?)0+$/, "$1")
+    .replace(/\.$/, "");
+}
+
+function formatLargeFactor(value) {
+  const units = [
+    [1000000000000000, "quadrillion"],
+    [1000000000000, "trillion"],
+  ];
+  const [divisor, label] = units.find(([unit]) => value >= unit);
+  const scaled = value / divisor;
+  return `${trimNumber(scaled, scaled >= 100 ? 0 : 1)} ${label}`;
 }
 
 function escapeHtml(value) {
