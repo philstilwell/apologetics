@@ -300,60 +300,80 @@ const resurrectionAlternativeFeatures = [
     title: "Decades-late composition",
     ratio: 3,
     note: "Later narrative crystallization is easier to understand if memory and tradition developed after the crisis.",
+    detail:
+      "Later composition gives memory, preaching needs, and community interpretation time to shape the story. That does not prove invention, but it weakens the claim that every detail is direct, independent reporting.",
   },
   {
     id: "scripture-wrap",
     title: "Scriptural fulfillment framing",
     ratio: 3,
     note: "Heavy fulfillment framing is expected when a community rereads defeat as vindication.",
+    detail:
+      "When a story is strongly framed as fulfillment of scripture, the wording may reflect theological interpretation as much as memory. The audit asks whether fulfillment language is evidence for the event or evidence of later interpretation.",
   },
   {
     id: "grief-visions",
     title: "Grief-aligned appearances",
     ratio: 2.5,
     note: "Bereavement experiences and visionary interpretation are ordinary human mechanisms.",
+    detail:
+      "Bereavement and crisis experiences can feel vivid and real. This alternative matters because sincere appearance reports can arise without fraud and without a bodily resurrection.",
   },
   {
     id: "communal-reinforcement",
     title: "Communal reinforcement",
     ratio: 2,
     note: "Tight groups can harmonize and intensify meaning without deliberate fraud.",
+    detail:
+      "A close community can stabilize one interpretation through worship, repetition, and shared expectation. That can make a belief stronger without making the original event more likely.",
   },
   {
     id: "physicalization",
     title: "Increasing physical detail",
     ratio: 2.5,
     note: "A movement toward concrete apologetic detail fits developing tradition.",
+    detail:
+      "As debates develop, traditions can gain concrete details that answer objections. More physical detail may reflect apologetic development rather than independent confirmation.",
   },
   {
     id: "thin-corroboration",
     title: "Thin outside confirmation",
     ratio: 2,
     note: "Limited public confirmation is more expected when the claim grows inside a proclamation stream.",
+    detail:
+      "If a public miracle occurred, outside confirmation would be expected to some degree. Thin external support does not disprove the claim, but it keeps the alternative explanation alive.",
   },
   {
     id: "early-creed",
     title: "Early creed slogans",
     ratio: 0.8,
     note: "Early summaries can favor reportage somewhat, but they are still insider proclamation.",
+    detail:
+      "Early summaries are relevant because they reduce the time available for later invention. They still need care because slogans can preserve proclamation without preserving independent detail.",
   },
   {
     id: "transformation",
     title: "Follower transformation",
     ratio: 2,
     note: "Renewed zeal after disconfirmation is historically familiar and does not settle truth by itself.",
+    detail:
+      "Changed lives can show sincere conviction. They do not by themselves show that the central interpretation of the experience was correct.",
   },
   {
     id: "source-dependence",
     title: "Source dependence",
     ratio: 1.5,
     note: "Shared sources reduce the force of apparent multiplicity.",
+    detail:
+      "Multiple texts may not mean multiple independent sources if they share traditions, wording, communities, or theological aims.",
   },
   {
     id: "no-conspiracy",
     title: "No conspiracy required",
     ratio: 1.3,
     note: "Sincere meaning-making avoids the false choice between miracle and deliberate lie.",
+    detail:
+      "The alternative does not require a deliberate fraud. Sincere interpretation, memory, and group reinforcement can explain confidence without a planned deception.",
   },
 ];
 
@@ -363,42 +383,56 @@ const crashAlternativeFeatures = [
     title: "Mechanical failure",
     ratio: 4,
     note: "A steering, tire, brake, suspension, or warning-light problem can cause a sudden loss of control.",
+    detail:
+      "A fault in steering, tires, brakes, suspension, or electronics can create a sudden loss of control. This alternative should stay live until inspection evidence rules it out.",
   },
   {
     id: "animal-swerve",
     title: "Swerving to miss an animal",
     ratio: 3,
     note: "A sudden steering move is common when a driver reacts to a deer, dog, or other animal near the road.",
+    detail:
+      "Drivers often react before they can clearly identify what entered the road. A sudden swerve can fit animal avoidance even without perfect memory afterward.",
   },
   {
     id: "falling-asleep",
     title: "Falling asleep or microsleep",
     ratio: 3.5,
     note: "Fatigue can cause lane drift, late correction, and a crash without much braking or clear memory.",
+    detail:
+      "Fatigue and microsleep can cause drift, delayed correction, and patchy recall. This can make the driver's later explanation sincere but mistaken.",
   },
   {
     id: "driver-distraction",
     title: "Driver distraction",
     ratio: 2.5,
     note: "A phone, passenger, dashboard control, or momentary attention lapse can explain delayed reaction.",
+    detail:
+      "Attention lapses from a phone, passenger, dashboard control, or outside stimulus can explain delayed response without requiring a non-material cause.",
   },
   {
     id: "road-conditions",
     title: "Road or weather conditions",
     ratio: 2,
     note: "Wet pavement, gravel, ice, a curve, or poor visibility can make ordinary control loss more likely.",
+    detail:
+      "Wet pavement, gravel, ice, curves, glare, or poor visibility can make ordinary loss of control more likely.",
   },
   {
     id: "stress-memory",
     title: "Stress-shaped memory",
     ratio: 2.5,
     note: "After a frightening crash, a sincere driver may remember force, grabbing, or pulling more vividly than the mechanics of the event.",
+    detail:
+      "After a frightening crash, memory may emphasize force or being pulled. This matters because the driver can be honest while the interpretation becomes less reliable.",
   },
   {
     id: "demon-specificity",
     title: "Extra specificity of the demon claim",
     ratio: 3,
     note: "Moving from 'the cause is unclear' to 'a demon turned the wheel' adds a very specific claim that needs its own support.",
+    detail:
+      "The step from 'the cause is unclear' to 'a demon turned the wheel' is a large interpretive jump. The specific demon claim needs evidence beyond the absence of an obvious cause.",
   },
 ];
 
@@ -737,6 +771,7 @@ function renderFeatures() {
   els.featureGrid.innerHTML = alternativeFeatures
     .map((feature) => {
       const current = String(state.featureWeights.get(feature.id) ?? 1);
+      const detail = feature.detail || feature.note;
       const options = [
         ["0", "Set aside"],
         ["0.5", "Some"],
@@ -761,7 +796,15 @@ function renderFeatures() {
       return `
         <article class="feature-card plain-feature-card">
           <div>
-            <h3>${escapeHtml(feature.title)}</h3>
+            <div class="feature-title-wrap">
+              <h3 tabindex="0" aria-describedby="feature-${feature.id}-detail">
+                ${escapeHtml(feature.title)}
+                <span class="feature-help-indicator" aria-hidden="true">?</span>
+              </h3>
+              <div class="feature-tooltip" id="feature-${feature.id}-detail" role="tooltip">
+                ${escapeHtml(detail)}
+              </div>
+            </div>
             <p>${escapeHtml(feature.note)}</p>
           </div>
           <div class="feature-bottom">
@@ -1217,6 +1260,12 @@ function buildAiPrompt(assessment) {
     assessment.meta.aiCheckHint,
     "",
     buildReport(assessment),
+    "",
+    "Challenge possible irrational stances, blunders, or oversights in the user's reasoning calculus:",
+    "- Look for motivated reasoning, special pleading, confirmation bias, or protecting a conclusion by lowering rival explanations without a clear reason.",
+    "- Check for base-rate neglect, missing alternatives, false independence, sincerity treated as accuracy, and leaps from 'unexplained' to a specific miracle claim.",
+    "- Name any modeling blunder directly: double counting, tiny 'expected if false' values, unjustified starting confidence, overconfident independence, or ignored unknown reserve.",
+    "- Be direct but fair. Critique the reasoning and the numbers, not the person's intelligence or character.",
     "",
     "Questions to answer:",
     "1. Which assumption is doing the most work?",
