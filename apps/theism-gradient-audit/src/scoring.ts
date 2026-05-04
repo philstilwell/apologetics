@@ -1,5 +1,3 @@
-export type Tradition = 'general' | 'Christianity' | 'other';
-
 export type ClaimCategory =
   | 'Minimal Deism'
   | 'Design Deism'
@@ -12,8 +10,6 @@ export interface Claim {
   text: string;
   category: ClaimCategory;
   gradientPosition: 1 | 2 | 3 | 4 | 5;
-  specificityWeight: number;
-  tradition: Tradition;
   tags: string[];
   dependencyIds: string[];
 }
@@ -55,24 +51,17 @@ export function substantiationGap(confidence: number, personalSubstantiation: nu
 export function aggregateGradientPosition(claims: Claim[], profile: UserProfile): number | null {
   let weightedSum = 0;
   let totalWeight = 0;
-  let ratedClaims = 0;
 
   for (const claim of claims) {
     const response = profile.responses[claim.id];
     if (!response) continue;
-    ratedClaims += 1;
 
     const w = claimWeight(response.confidence, response.personalSubstantiation);
     weightedSum += claim.gradientPosition * w;
     totalWeight += w;
   }
 
-  if (totalWeight === 0 || ratedClaims === 0) return null;
-
-  const weightedPosition = weightedSum / totalWeight;
-  const averageCommitmentWeight = totalWeight / ratedClaims;
-  const commitmentDampening = Math.min(1, averageCommitmentWeight / 0.45);
-  return 1 + (weightedPosition - 1) * commitmentDampening;
+  return totalWeight === 0 ? null : weightedSum / totalWeight;
 }
 
 export function evidentiallyWeightedTheismIndex(claims: Claim[], profile: UserProfile): number | null {
@@ -92,7 +81,7 @@ export function evidentiallyWeightedTheismIndex(claims: Claim[], profile: UserPr
   return ratedClaims === 0 ? null : 100 * (weightedRightwardCommitment / ratedClaims);
 }
 
-export function dependencyTension(claim: Claim, claims: Claim[], profile: UserProfile): number | null {
+export function dependencyTension(claim: Claim, profile: UserProfile): number | null {
   const response = profile.responses[claim.id];
   if (!response || claim.dependencyIds.length === 0) return null;
 
@@ -119,7 +108,16 @@ export function averageSubstantiationGap(claims: Claim[], profile: UserProfile):
 }
 
 export function categoryAverages(claims: Claim[], profile: UserProfile) {
-  const buckets = new Map<ClaimCategory, { confidence: number; personalSubstantiation: number; count: number }>();
+  const categories: ClaimCategory[] = [
+    'Minimal Deism',
+    'Design Deism',
+    'Personal Theism',
+    'Interventionist Theism',
+    'Specific Christian Theism',
+  ];
+  const buckets = new Map<ClaimCategory, { confidence: number; personalSubstantiation: number; count: number }>(
+    categories.map(category => [category, { confidence: 0, personalSubstantiation: 0, count: 0 }])
+  );
 
   for (const claim of claims) {
     const response = profile.responses[claim.id];
@@ -134,8 +132,8 @@ export function categoryAverages(claims: Claim[], profile: UserProfile) {
 
   return Array.from(buckets.entries()).map(([category, values]) => ({
     category,
-    confidence: values.confidence / values.count,
-    personalSubstantiation: values.personalSubstantiation / values.count,
+    confidence: values.count ? values.confidence / values.count : 0,
+    personalSubstantiation: values.count ? values.personalSubstantiation / values.count : 0,
     count: values.count,
   }));
 }
@@ -158,7 +156,7 @@ export function buildDiagnostics(claims: Claim[], profile: UserProfile): Diagnos
       });
     }
 
-    const tension = dependencyTension(claim, claims, profile);
+    const tension = dependencyTension(claim, profile);
     if (tension !== null && tension >= 25 && response.confidence >= 55) {
       alerts.push({
         type: 'dependency',
@@ -177,23 +175,23 @@ export function profileSummary(claims: Claim[], profile: UserProfile): string {
   const aggregate = aggregateGradientPosition(claims, profile);
   const ewti = evidentiallyWeightedTheismIndex(claims, profile);
   const gap = averageSubstantiationGap(claims, profile);
-  const rated = Object.keys(profile.responses).length;
+  const rated = Object.values(profile.responses)
+    .filter(response => response.confidence > 0 || response.personalSubstantiation > 0 || response.note)
+    .length;
 
   if (!rated || aggregate === null) {
     return 'No claims have been rated yet. Start with the claims that feel most central, then use the diagnostics to find unsupported leaps.';
   }
 
-  const positionText = aggregate < 1.25
-    ? 'below the deistic threshold'
-    : aggregate < 1.8
-      ? 'primarily minimal-deistic'
-      : aggregate < 2.6
-        ? 'deistic with design-oriented leanings'
-        : aggregate < 3.4
-          ? 'personal-theistic leaning'
-          : aggregate < 4.3
-            ? 'interventionist or revelatory'
-            : 'strongly Christian-theistic';
+  const positionText = aggregate < 1.8
+    ? 'primarily minimal-deistic'
+    : aggregate < 2.6
+      ? 'deistic with design-oriented leanings'
+      : aggregate < 3.4
+        ? 'personal-theistic leaning'
+        : aggregate < 4.3
+          ? 'interventionist or revelatory'
+          : 'strongly Christian-theistic';
 
   const gapText = (gap ?? 0) >= 30
     ? 'with a noticeable gap between confidence and personal substantiation'

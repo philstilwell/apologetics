@@ -8,37 +8,23 @@
       name="description"
       content="A Christianity-focused deism-to-theism gradient for rating confidence, substantiation, dependency tension, and divine-action claims."
     >
-    <link rel="icon" href="./favicon.svg?v=20260504-green-x" type="image/svg+xml">
-    <link rel="stylesheet" href="./src/styles.css?v=20260504-standalone-hub">
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./src/styles.css">
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
-        <span class="brand-mark" aria-hidden="true">X</span>
-        <span>
-          <strong>Crosshairs Audit Lab</strong>
-          <small>Deism—Theism Gradient Audit</small>
-        </span>
-      </a>
-      <nav class="top-nav" aria-label="Primary">
-        <a class="hub-link" href="../../">Hub</a>
-        <a href="#method-guide">Guide</a>
-        <a href="#lenses">Lenses</a>
-        <a href="#dashboard">Dashboard</a>
-        <a href="#report">Report</a>
-      </nav>
-    </header>
-
     <main class="app-shell">
       <section class="topbar" aria-labelledby="app-title">
         <div>
-          <p class="eyebrow">Deism—Theism Gradient Audit</p>
+          <p class="eyebrow">Deism-to-Christian-theism assessment</p>
           <h1 id="app-title">Theism Gradient</h1>
         </div>
         <div class="toolbar" aria-label="Assessment controls">
-          <a class="nav-button hub-link" href="../../">Hub</a>
+          <a class="nav-button" href="../../">Hub</a>
+          <a class="nav-button" href="#claim-explorer-title">Start Claims</a>
+          <a class="nav-button" href="#dashboard-title">Dashboard</a>
+          <a class="nav-button" href="#report-title">Report</a>
           <button id="copy-summary" type="button" title="Copy a text summary of the current profile">Copy Summary</button>
-          <button id="seed-balanced" type="button" title="Load a sample middle profile">Sample</button>
+          <button id="seed-balanced" type="button" title="Load the Cautious Christian sample profile">Load Sample</button>
           <button id="reset" type="button" title="Clear all local responses">Reset</button>
         </div>
       </section>
@@ -63,22 +49,43 @@
         <article>
           <span>Aggregate position</span>
           <strong id="aggregate-position">0.00</strong>
+          <p>Weighted 1-5 location across the deism-to-Christian-theism gradient.</p>
         </article>
         <article>
           <span>Theism index</span>
           <strong id="theism-index">0</strong>
+          <p>How much rightward commitment is carried by claims you rate as both credible and personally substantiated.</p>
         </article>
         <article>
           <span>Average substantiation gap</span>
           <strong id="avg-gap">0</strong>
+          <p>Average amount by which Confidence outruns Personal Substantiation.</p>
         </article>
         <article>
           <span>Claims rated</span>
           <strong id="rated-count">0 / 50</strong>
+          <p>Your progress through the full claim set.</p>
         </article>
       </section>
 
-      <section class="method-panel" id="method-guide" aria-labelledby="method-guide-title">
+      <section class="guided-panel panel" aria-labelledby="guided-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="guided-title">Guided Assessment</h2>
+            <p>Work through the 50 claims, revisit skipped items, and export a profile before major changes.</p>
+          </div>
+          <div class="guided-actions">
+            <button id="next-unrated" type="button">Next Unrated</button>
+            <button id="review-pressure" type="button">Review Pressure</button>
+            <button id="export-profile" type="button">Export Profile</button>
+            <button id="import-profile" type="button">Import Profile</button>
+            <input id="import-profile-file" type="file" accept="application/json,.json" hidden>
+          </div>
+        </div>
+        <div id="category-progress" class="category-progress" aria-label="Category progress"></div>
+      </section>
+
+      <section class="method-panel" aria-labelledby="method-guide-title">
         <div class="section-heading">
           <div>
             <h2 id="method-guide-title">Assessment Guide</h2>
@@ -91,9 +98,8 @@
             <p>The left side tracks thin background claims about source, design, and personal agency. The right side tracks Christian divine-action claims such as prayer, healing, wisdom, foreknowledge, scripture, Jesus, Spirit, salvation, and transformation.</p>
           </details>
           <details>
-            <summary><strong>C</strong>onfidence versus <strong>P</strong>ersonal substantiation</summary>
-            <p><strong>C</strong>onfidence asks how credible or supportable the claim seems to you. <strong>P</strong>ersonal substantiation asks how well you can personally make a responsible case for it using reasons, evidence, examples, comparisons, and answers to major alternatives.</p>
-            <p>Personal substantiation is not mere agreement, sincerity, inherited confidence, community confidence, or reliance on what a stronger advocate could argue. A high-confidence, low-substantiation answer is intentionally discounted by the geometric score because the audit is tracking what your own present case can carry.</p>
+            <summary>Confidence versus personal substantiation</summary>
+            <p>Confidence asks whether the claim can be substantiated at all. Personal substantiation asks whether you can personally make that case. A high-confidence, low-substantiation answer is intentionally discounted by the geometric score.</p>
           </details>
           <details>
             <summary>Dependency tension</summary>
@@ -106,29 +112,30 @@
         </div>
       </section>
 
-      <section class="lens-panel" id="lenses" aria-labelledby="lens-title">
+      <section class="lens-panel" aria-labelledby="lens-title">
         <div class="section-heading">
           <div>
-            <h2 id="lens-title">Gradient Profiles</h2>
-            <p>Apply a deism-to-Christian-theism profile, then inspect where the ratings and annotations put pressure on it.</p>
+            <h2 id="lens-title">Preset Lenses</h2>
+            <p>Apply a stance profile, then inspect where the scores and annotations put pressure on it.</p>
           </div>
         </div>
         <div id="lens-buttons" class="lens-buttons"></div>
       </section>
 
-      <section class="dashboard-grid" id="dashboard">
+      <section class="dashboard-grid">
         <div class="panel plot-panel">
           <div class="panel-heading">
-            <h2>Claim Scatter</h2>
-            <p><strong>C</strong>onfidence within category lanes; darker points indicate stronger <strong>P</strong>ersonal substantiation.</p>
+            <h2 id="dashboard-title">Claim Scatter</h2>
+            <p>Confidence within category lanes; darker points indicate stronger personal substantiation.</p>
           </div>
           <div id="scatter-plot" class="scatter-plot" role="img" aria-label="Scatter plot of rated claims"></div>
+          <div id="scatter-legend" class="scatter-legend" aria-label="Scatter category legend"></div>
         </div>
 
         <div class="panel">
           <div class="panel-heading">
             <h2>Category Profile</h2>
-            <p>Average <strong>C</strong>onfidence and <strong>P</strong>ersonal substantiation per gradient band.</p>
+            <p>Average confidence and personal substantiation per gradient band.</p>
           </div>
           <div id="category-bars" class="category-bars"></div>
         </div>
@@ -150,6 +157,10 @@
           </div>
           <div class="filters">
             <label>
+              <span>View</span>
+              <select id="mode-filter"></select>
+            </label>
+            <label>
               <span>Category</span>
               <select id="category-filter"></select>
             </label>
@@ -157,16 +168,61 @@
               <span>Search</span>
               <input id="search-filter" type="search" placeholder="claim, tag, or id">
             </label>
-            <p class="filter-note">Only matching items from the 50-claim list will be displayed below in the Claim Explorer.</p>
+            <p id="filter-note" class="filter-note">Only items from the list of 50 claims that match the selected view, category, and search text will be displayed below.</p>
           </div>
         </div>
       </section>
 
-      <section class="report-grid" id="report" aria-labelledby="report-title">
+      <section class="claim-section" aria-labelledby="claim-explorer-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="claim-explorer-title">Claim Explorer</h2>
+            <p>Rate Confidence and Personal Substantiation for each auditable claim. Filtered views below never change your saved scores.</p>
+          </div>
+          <span id="filter-count" class="filter-count"></span>
+        </div>
+        <div id="claim-list" class="claim-list"></div>
+      </section>
+
+      <section class="analysis-grid" aria-label="Profile analysis">
         <div class="panel">
           <div class="panel-heading">
-            <h2 id="report-title">Final Report</h2>
-            <p>A compact export of the current profile, diagnostics, and highest-pressure claims.</p>
+            <div>
+              <h2>Dependency Map</h2>
+              <p>Shows downstream claims alongside the bridge claims they currently depend on.</p>
+            </div>
+          </div>
+          <div id="dependency-map" class="dependency-map"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Preset Comparison</h2>
+              <p>Compare your current profile against the built-in lenses without changing your ratings.</p>
+            </div>
+          </div>
+          <div id="preset-comparison" class="preset-comparison"></div>
+        </div>
+      </section>
+
+      <section class="report-grid" aria-labelledby="report-title">
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2 id="report-title">Final Report</h2>
+              <p>A configurable export of the current profile, diagnostics, and highest-pressure claims.</p>
+            </div>
+            <label class="report-mode">
+              <span>Mode</span>
+              <select id="report-mode">
+                <option value="brief">Brief</option>
+                <option value="full" selected>Full</option>
+                <option value="skeptical">Skeptical audit</option>
+                <option value="pastoral">Pastoral reflection</option>
+                <option value="ai">AI prompt only</option>
+              </select>
+            </label>
           </div>
           <textarea id="final-report" class="export-box" rows="10" readonly></textarea>
           <button id="copy-report" type="button">Copy Report</button>
@@ -181,18 +237,8 @@
           <button id="copy-ai-prompt" type="button">Copy AI Prompt</button>
         </div>
       </section>
-
-      <section class="claim-section" aria-labelledby="claim-explorer-title">
-        <div class="section-heading">
-          <div>
-            <h2 id="claim-explorer-title">Claim Explorer</h2>
-            <p>Rate confidence and personal substantiation for each auditable claim.</p>
-          </div>
-        </div>
-        <div id="claim-list" class="claim-list"></div>
-      </section>
     </main>
 
-    <script type="module" src="./src/app.js?v=20260504-personal-substantiation"></script>
+    <script type="module" src="./src/app.js"></script>
   </body>
 </html>

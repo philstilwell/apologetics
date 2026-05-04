@@ -25,23 +25,16 @@ export function substantiationGap(confidence, personalSubstantiation) {
 export function aggregateGradientPosition(claims, profile) {
   let weightedSum = 0;
   let totalWeight = 0;
-  let ratedClaims = 0;
 
   for (const claim of claims) {
     const response = profile.responses[claim.id];
     if (!response) continue;
-    ratedClaims += 1;
     const weight = claimWeight(response.confidence, response.personalSubstantiation);
     weightedSum += claim.gradientPosition * weight;
     totalWeight += weight;
   }
 
-  if (totalWeight === 0 || ratedClaims === 0) return null;
-
-  const weightedPosition = weightedSum / totalWeight;
-  const averageCommitmentWeight = totalWeight / ratedClaims;
-  const commitmentDampening = Math.min(1, averageCommitmentWeight / 0.45);
-  return 1 + (weightedPosition - 1) * commitmentDampening;
+  return totalWeight === 0 ? null : weightedSum / totalWeight;
 }
 
 export function evidentiallyWeightedTheismIndex(claims, profile) {
@@ -143,23 +136,23 @@ export function profileSummary(claims, profile) {
   const aggregate = aggregateGradientPosition(claims, profile);
   const ewti = evidentiallyWeightedTheismIndex(claims, profile);
   const gap = averageSubstantiationGap(claims, profile);
-  const rated = Object.keys(profile.responses).length;
+  const rated = Object.values(profile.responses)
+    .filter((response) => response.confidence > 0 || response.personalSubstantiation > 0 || response.note)
+    .length;
 
   if (!rated) {
     return "No claims have been rated yet. Start with the claims that feel most central, then use the diagnostics to find unsupported leaps.";
   }
 
-  const positionText = aggregate < 1.25
-    ? "below the deistic threshold"
-    : aggregate < 1.8
-      ? "primarily minimal-deistic"
-      : aggregate < 2.6
-        ? "deistic with design-oriented leanings"
-        : aggregate < 3.4
-          ? "personal-theistic leaning"
-          : aggregate < 4.3
-            ? "interventionist or revelatory"
-            : "strongly Christian-theistic";
+  const positionText = aggregate < 1.8
+    ? "primarily minimal-deistic"
+    : aggregate < 2.6
+      ? "deistic with design-oriented leanings"
+      : aggregate < 3.4
+        ? "personal-theistic leaning"
+        : aggregate < 4.3
+          ? "interventionist or revelatory"
+          : "strongly Christian-theistic";
 
   const gapText = gap >= 30
     ? "with a noticeable gap between confidence and personal substantiation"

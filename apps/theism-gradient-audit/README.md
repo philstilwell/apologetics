@@ -1,6 +1,6 @@
 # Theism Gradient
 
-A local, dependency-free dashboard for assessing Christianity-focused God-related claims, especially general claims about divine action, prayer, healing, wisdom, foreknowledge, guidance, and transformation.
+A local, dependency-free dashboard inside the Crosshairs Audit Lab suite for assessing Christianity-focused God-related claims, especially general claims about divine action, prayer, healing, wisdom, foreknowledge, guidance, and transformation.
 
 The app rates 50 auditable claims using confidence and personal-substantiation sliders, stores responses in `localStorage`, and computes:
 
@@ -22,7 +22,7 @@ Then open [http://localhost:4173](http://localhost:4173) for the hub, or [http:/
 
 ## Structure
 
-- `index.html`: hub page linking this assessment and the Inductive Symmetry Audit
+- `index.html`: app entry page linking this assessment and sibling Crosshairs audits
 - `app.html`: the Theism Gradient assessment
 - `favicon.svg`: olive-green `T` favicon
 - `public/claims.json`: the 50-claim bank and metadata
