@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crosshairs Audit Lab | Resurrection Evidence Audit</title>
+    <meta
+      name="description"
+      content="A Crosshairs self-audit for priors, likelihoods, alternatives, dependence, and postdiction pressure in resurrection apologetics."
+    >
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-resurrection-audit">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
+        <span class="brand-mark" aria-hidden="true">X</span>
+        <span>
+          <strong>Crosshairs Audit Lab</strong>
+          <small>Resurrection Evidence Audit</small>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a class="hub-link" href="../../">Hub</a>
+        <a href="#prior-model">Prior</a>
+        <a href="#evidence-ledger">Evidence</a>
+        <a href="#postdiction-lens">Postdiction</a>
+        <a href="#audit-report">Report</a>
+      </nav>
+    </header>
+
+    <main class="app-shell resurrection-audit">
+      <section class="app-header">
+        <div class="app-title">
+          <p class="eyebrow">Evidence substantiation audit</p>
+          <h1><span>Resurrection</span> <span>Evidence Audit</span></h1>
+          <p>
+            Test whether a resurrection claim is being carried by transparent evidence or by
+            hidden priors, compressed alternatives, dependence inflation, and sincerity-to-truth
+            transfer.
+          </p>
+        </div>
+        <aside class="source-note">
+          <strong>Diagnostic, not verdict.</strong>
+          The app audits the model structure and its sensitivity. It does not decide every
+          historical detail; it shows which assumptions must be defended.
+        </aside>
+      </section>
+
+      <section class="resurrection-dashboard" aria-label="Current Bayesian profile">
+        <article>
+          <span>Posterior</span>
+          <strong id="posterior-value">0%</strong>
+          <small id="posterior-odds">odds unavailable</small>
+        </article>
+        <article>
+          <span>Actual Bayes factor</span>
+          <strong id="actual-bf">1</strong>
+          <small id="actual-log-bf">log BF 0</small>
+        </article>
+        <article>
+          <span>BF needed for 90%</span>
+          <strong id="required-bf">1</strong>
+          <small id="bf-shortfall">shortfall unavailable</small>
+        </article>
+        <article>
+          <span>Top swing driver</span>
+          <strong id="top-driver">None</strong>
+          <small id="driver-share">0% of update</small>
+        </article>
+      </section>
+
+      <section class="audit-grid resurrection-grid">
+        <form class="audit-panel sticky" id="audit-form">
+          <div class="panel-title">
+            <div>
+              <p class="app-step">Input</p>
+              <h2>Claim profile</h2>
+              <p>Choose a starting profile, then revise the numbers until they match the case being made.</p>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="claim-preset">Claim preset</label>
+            <select id="claim-preset" name="claim-preset"></select>
+          </div>
+
+          <div class="field-group">
+            <label for="claim-text">Claim being audited</label>
+            <textarea id="claim-text" name="claim-text"></textarea>
+          </div>
+
+          <div class="resurrection-preset-actions">
+            <button type="button" id="load-generous">Generous Apologetic</button>
+            <button type="button" id="load-corrected">Corrected Skeptical</button>
+            <button type="button" id="reset-current">Reset Preset</button>
+          </div>
+
+          <div class="range-stack" id="prior-model">
+            <div class="range-row">
+              <div class="range-top">
+                <label for="general-prior">General divine-action prior</label>
+                <span class="range-value" id="general-prior-value">0%</span>
+              </div>
+              <input id="general-prior" type="range" min="0.1" max="80" step="0.1">
+            </div>
+
+            <div class="range-row">
+              <div class="range-top">
+                <label for="targeting-penalty">Targeting specificity</label>
+                <span class="range-value" id="targeting-penalty-value">0%</span>
+              </div>
+              <input id="targeting-penalty" type="range" min="0.01" max="50" step="0.01">
+            </div>
+
+            <div class="range-row">
+              <div class="range-top">
+                <label for="act-type-rate">Act-type rate</label>
+                <span class="range-value" id="act-type-rate-value">0%</span>
+              </div>
+              <input id="act-type-rate" type="range" min="0.001" max="20" step="0.001">
+            </div>
+
+            <div class="range-row">
+              <div class="range-top">
+                <label for="unknown-reserve">Unknown-alternatives reserve</label>
+                <span class="range-value" id="unknown-reserve-value">0%</span>
+              </div>
+              <input id="unknown-reserve" type="range" min="0" max="30" step="1">
+            </div>
+          </div>
+        </form>
+
+        <section class="result-panel resurrection-results" aria-live="polite">
+          <div class="scoreboard resurrection-scoreboard">
+            <div class="score-ring" id="score-ring" style="--score: 0%; --score-color: #5f5400;">
+              <div class="score-ring-inner">
+                <div>
+                  <strong id="audit-score">0</strong>
+                  <span>audit pressure</span>
+                </div>
+              </div>
+            </div>
+            <div class="score-copy">
+              <p class="app-step">Live readout</p>
+              <h2 id="audit-summary">Low pressure</h2>
+              <p id="audit-copy">
+                The model is ready for input.
+              </p>
+            </div>
+          </div>
+
+          <div class="required-grid" aria-label="Required evidence thresholds">
+            <article>
+              <span>50%</span>
+              <strong id="required-50">1</strong>
+            </article>
+            <article>
+              <span>90%</span>
+              <strong id="required-90">1</strong>
+            </article>
+            <article>
+              <span>99%</span>
+              <strong id="required-99">1</strong>
+            </article>
+          </div>
+
+          <div class="pitfall-columns">
+            <section>
+              <h3>Probabilistic flags</h3>
+              <ul class="flag-list" id="pitfall-list"></ul>
+            </section>
+            <section>
+              <h3>Repair moves</h3>
+              <div class="repair-list" id="repair-list"></div>
+            </section>
+          </div>
+        </section>
+      </section>
+
+      <section class="ledger-section" id="evidence-ledger" aria-labelledby="ledger-title">
+        <div class="section-heading">
+          <div>
+            <p class="app-step">Evidence ledger</p>
+            <h2 id="ledger-title">Which evidence actually moves the odds?</h2>
+            <p>Each row compares how expected the evidence is if the claim is true versus if it is not.</p>
+          </div>
+        </div>
+        <div class="ledger-list" id="ledger-list"></div>
+      </section>
+
+      <section class="postdiction-panel" id="postdiction-lens" aria-labelledby="postdiction-title">
+        <div class="panel-title">
+          <div>
+            <p class="app-step">Psychology lens</p>
+            <h2 id="postdiction-title">Postdiction comparator</h2>
+            <p>
+              Compare the observed profile against a postdiction account: grief, dissonance,
+              scriptural rereading, memory, and communal reinforcement.
+            </p>
+          </div>
+          <div class="postdiction-score">
+            <span>BF for postdiction</span>
+            <strong id="postdiction-bf">1</strong>
+          </div>
+        </div>
+        <div class="feature-grid" id="feature-grid"></div>
+      </section>
+
+      <section class="report-grid resurrection-report" id="audit-report" aria-labelledby="report-title">
+        <div class="result-panel">
+          <div class="panel-title">
+            <div>
+              <p class="app-step">Export</p>
+              <h2 id="report-title">Audit report</h2>
+              <p>A compact summary of priors, likelihoods, flags, thresholds, and postdiction pressure.</p>
+            </div>
+          </div>
+          <textarea id="final-report" class="export-box" rows="12" readonly></textarea>
+          <button type="button" id="copy-report">Copy Report</button>
+        </div>
+
+        <div class="result-panel">
+          <div class="panel-title">
+            <div>
+              <p class="app-step">AI prompt</p>
+              <h2>Stress-test prompt</h2>
+              <p>Use this prompt to ask another tool to critique the model rather than merely repeat it.</p>
+            </div>
+          </div>
+          <textarea id="ai-prompt" class="export-box" rows="12" readonly></textarea>
+          <button type="button" id="copy-ai-prompt">Copy AI Prompt</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js?v=20260504-resurrection-audit"></script>
+  </body>
+</html>
