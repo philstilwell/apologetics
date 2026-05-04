@@ -18,7 +18,6 @@ const state = {
   profile: { userId: "local", responses: {} },
   filters: {
     category: "All",
-    tradition: "All",
     search: ""
   }
 };
@@ -43,8 +42,7 @@ const nodes = {
   sample: document.querySelector("#seed-balanced"),
   scatter: document.querySelector("#scatter-plot"),
   searchFilter: document.querySelector("#search-filter"),
-  theismIndex: document.querySelector("#theism-index"),
-  traditionFilter: document.querySelector("#tradition-filter")
+  theismIndex: document.querySelector("#theism-index")
 };
 
 const profilePresets = [
@@ -333,7 +331,7 @@ function buildFollowUpPrompts(rows) {
   const topGap = [...rows].sort((a, b) => b.gap - a.gap)[0];
   const topTension = [...rows].sort((a, b) => b.tension - a.tension)[0];
   const topWeighted = [...rows].sort((a, b) => b.weight - a.weight)[0];
-  const christianRows = rows.filter((row) => row.claim.tradition === "Christianity");
+  const christianRows = rows.filter((row) => row.claim.gradientPosition >= 4);
   const topChristian = [...christianRows].sort((a, b) => b.weight - a.weight)[0] ?? topWeighted;
   const actionRows = rows.filter((row) => row.claim.gradientPosition >= 4);
   const topAction = [...actionRows].sort((a, b) => b.gap + b.tension - (a.gap + a.tension))[0] ?? topGap;
@@ -506,12 +504,11 @@ function filterClaims() {
   const query = state.filters.search.trim().toLowerCase();
   return state.claims.filter((claim) => {
     const categoryMatch = state.filters.category === "All" || claim.category === state.filters.category;
-    const traditionMatch = state.filters.tradition === "All" || claim.tradition === state.filters.tradition;
     const searchMatch = !query
       || claim.id.toLowerCase().includes(query)
       || claim.text.toLowerCase().includes(query)
       || claim.tags.some((tag) => tag.toLowerCase().includes(query));
-    return categoryMatch && traditionMatch && searchMatch;
+    return categoryMatch && searchMatch;
   });
 }
 
@@ -614,7 +611,6 @@ function renderClaims() {
           <div class="claim-meta">
             <strong>${escapeHtml(claim.id)}</strong>
             <span>${escapeHtml(claim.category)}</span>
-            <span>${escapeHtml(claim.tradition)}</span>
           </div>
           <p>${escapeHtml(claim.text)}</p>
           <div class="tags">${tags}</div>
@@ -662,12 +658,8 @@ function renderClaims() {
 }
 
 function renderFilters() {
-  const traditions = Array.from(new Set(state.claims.map((claim) => claim.tradition)));
   nodes.categoryFilter.innerHTML = ["All", ...categories].map((category) => `
     <option value="${escapeHtml(category)}" ${state.filters.category === category ? "selected" : ""}>${escapeHtml(category)}</option>
-  `).join("");
-  nodes.traditionFilter.innerHTML = ["All", ...traditions].map((tradition) => `
-    <option value="${escapeHtml(tradition)}" ${state.filters.tradition === tradition ? "selected" : ""}>${escapeHtml(tradition)}</option>
   `).join("");
 }
 
@@ -730,11 +722,6 @@ function bindEvents() {
 
   nodes.categoryFilter.addEventListener("change", (event) => {
     state.filters.category = event.target.value;
-    renderClaims();
-  });
-
-  nodes.traditionFilter.addEventListener("change", (event) => {
-    state.filters.tradition = event.target.value;
     renderClaims();
   });
 
