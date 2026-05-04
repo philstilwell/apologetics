@@ -1274,7 +1274,7 @@ function formatOdds(odds) {
 
 function getScoreColor(score) {
   if (score >= 75) return "#5b1705";
-  if (score >= 50) return "#9a3d00";
+  if (score >= 50) return "#8a4b18";
   if (score >= 25) return "#66752c";
   return "#1f5a3a";
 }

@@ -2066,7 +2066,7 @@ input[type="range"] {
 body:has(.guided-resurrection) {
   --ink: #122017;
   --muted: #415144;
-  --line: #9fbea8;
+  --line: #9ebaa5;
   --paper: #eef5ee;
   --soft: #dfece2;
   --teal: #1f5a3a;
@@ -2078,7 +2078,7 @@ body:has(.guided-resurrection) {
   --card: #fff;
   --shadow: 0 18px 45px rgba(21, 61, 40, 0.13);
   background:
-    linear-gradient(180deg, #e4f0e6 0, #f5faf5 320px, #eef5ee 100%);
+    linear-gradient(180deg, #ddebe1 0, #f5faf5 320px, #eef5ee 100%);
   padding-bottom: 112px;
 }
 
@@ -2102,9 +2102,12 @@ body:has(.guided-resurrection) {
 .guided-resurrection {
   --plain-blue: #1f5a3a;
   --plain-blue-soft: #eaf4ed;
-  --plain-green: #2f6b42;
-  --plain-green-soft: #e2f0e5;
+  --plain-green: #66752c;
+  --plain-green-soft: #eef2dc;
+  --plain-copper: #8a4b18;
+  --plain-copper-soft: #fff4e2;
   --plain-red: #7d2516;
+  --plain-red-soft: #fff1ec;
   --plain-ink: #122017;
   display: grid;
   gap: 18px;
@@ -2122,13 +2125,13 @@ body:has(.guided-resurrection) {
 
 .guided-resurrection .source-note {
   border-left-color: var(--plain-blue);
-  background: #f6fbf7;
+  background: #f7fbf6;
 }
 
 .guided-resurrection .annotation.plain-help {
   margin: 0 0 14px;
   border-color: #7aa489;
-  background: #edf7ef;
+  background: #eef7f0;
   color: var(--plain-ink);
 }
 
@@ -2150,6 +2153,14 @@ body:has(.guided-resurrection) {
 
 .guided-resurrection .annotation.plain-help p strong {
   color: var(--plain-blue);
+}
+
+body:has(.guided-resurrection) select:focus-visible,
+body:has(.guided-resurrection) input:focus-visible,
+body:has(.guided-resurrection) textarea:focus-visible,
+body:has(.guided-resurrection) button:focus-visible,
+body:has(.guided-resurrection) a:focus-visible {
+  outline-color: rgba(31, 90, 58, 0.32);
 }
 
 .audit-step.full-step > .annotation.plain-help {
@@ -2234,7 +2245,7 @@ body:has(.guided-resurrection) {
 
 .plain-result-strip article:nth-child(4) {
   border-top-color: var(--plain-red);
-  background: #fff3ed;
+  background: var(--plain-red-soft);
 }
 
 .plain-result-strip span,
@@ -2283,7 +2294,7 @@ body:has(.guided-resurrection) {
   padding: 10px;
   border: 1px solid #9fbea8;
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(251, 255, 249, 0.96);
   box-shadow: 0 16px 42px rgba(21, 61, 40, 0.2);
   backdrop-filter: blur(12px);
 }
@@ -2330,7 +2341,7 @@ body:has(.guided-resurrection) {
   gap: clamp(18px, 3vw, 34px);
   align-items: start;
   padding: 28px 0 8px;
-  border-top: 1px solid rgba(159, 121, 53, 0.62);
+  border-top: 1px solid rgba(31, 90, 58, 0.22);
   scroll-margin-top: 170px;
 }
 
@@ -2371,6 +2382,15 @@ body:has(.guided-resurrection) {
 .plain-range {
   border-color: #a9c8b2;
   background: #f6fbf7;
+}
+
+.guided-resurrection .range-value {
+  background: var(--plain-blue);
+  color: #eaf4ed;
+}
+
+.guided-resurrection input[type="range"] {
+  accent-color: var(--plain-blue);
 }
 
 .plain-range p {
@@ -2427,6 +2447,12 @@ body:has(.guided-resurrection) {
   color: var(--plain-green);
 }
 
+.guided-resurrection .segmented input:checked + label {
+  border-color: var(--plain-copper);
+  background: var(--plain-copper-soft);
+  color: var(--plain-copper);
+}
+
 .guided-resurrection .postdiction-score {
   border-color: #9cbba5;
   background: var(--plain-green-soft);
@@ -2452,8 +2478,19 @@ body:has(.guided-resurrection) {
 }
 
 .plain-warning-list li {
-  border-color: #cda85b;
-  background: #fff8e6;
+  border-color: #c99162;
+  background: var(--plain-copper-soft);
+}
+
+.guided-resurrection .repair-card {
+  border-color: #9ebaa5;
+  background: #f7fbf6;
+}
+
+.guided-resurrection .score-ring {
+  background:
+    conic-gradient(var(--score-color) var(--score), #dbe8df 0),
+    var(--card);
 }
 
 .math-details {
