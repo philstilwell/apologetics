@@ -546,8 +546,8 @@ function renderCategoryBars() {
         <div class="bar substantiation" style="width: ${item.personalSubstantiation}%"></div>
       </div>
       <div class="bar-values">
-        <span>C ${Math.round(item.confidence)}</span>
-        <span>P ${Math.round(item.personalSubstantiation)}</span>
+        <span><strong>C</strong> ${Math.round(item.confidence)}</span>
+        <span><strong>P</strong> ${Math.round(item.personalSubstantiation)}</span>
       </div>
     </div>
   `).join("");
@@ -642,11 +642,11 @@ function renderClaims() {
         </div>
         <div class="claim-controls">
           <label>
-            <span>Confidence <b>${Math.round(response.confidence)}</b></span>
+            <span><strong>C</strong>onfidence <b>${Math.round(response.confidence)}</b></span>
             <input data-field="confidence" type="range" min="0" max="100" value="${response.confidence}">
           </label>
           <label>
-            <span>Personal substantiation <b>${Math.round(response.personalSubstantiation)}</b></span>
+            <span><strong>P</strong>ersonal substantiation <b>${Math.round(response.personalSubstantiation)}</b></span>
             <input data-field="personalSubstantiation" type="range" min="0" max="100" value="${response.personalSubstantiation}">
           </label>
             <textarea data-field="note" rows="2" placeholder="Rationale note">${escapeHtml(response.note)}</textarea>
