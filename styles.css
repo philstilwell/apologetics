@@ -1328,20 +1328,23 @@ a:focus-visible {
 
 .range-top {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 }
 
 .range-value {
-  min-width: 42px;
+  max-width: min(190px, 48vw);
+  min-width: 86px;
   padding: 4px 8px;
   border-radius: 999px;
   background: var(--ink);
   color: #fff4bf;
   font-size: 0.82rem;
   font-weight: 800;
+  line-height: 1.15;
   text-align: center;
+  white-space: normal;
 }
 
 input[type="range"] {
@@ -2269,8 +2272,8 @@ body:has(.guided-resurrection) a:focus-visible {
   display: block;
   margin: 7px 0 5px;
   color: var(--plain-blue);
-  font-size: clamp(1.22rem, 2vw, 1.8rem);
-  line-height: 1;
+  font-size: clamp(1.05rem, 1.7vw, 1.6rem);
+  line-height: 1.12;
 }
 
 .plain-result-strip article:nth-child(2) strong {
@@ -2549,8 +2552,8 @@ body:has(.guided-resurrection) a:focus-visible {
   display: block;
   margin: 7px 0 5px;
   color: var(--plain-blue);
-  font-size: 1.12rem;
-  line-height: 1;
+  font-size: 1.02rem;
+  line-height: 1.12;
 }
 
 .guided-resurrection .resurrection-report .result-panel {
@@ -2732,13 +2735,13 @@ body:has(.guided-resurrection) a:focus-visible {
 
   main,
   .app-shell {
-    width: calc(100vw - 24px);
-    max-width: calc(100vw - 24px);
+    width: calc(100% - 24px);
+    max-width: calc(100% - 24px);
   }
 
   .site-header {
-    width: 100vw;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
   }
 
@@ -2870,8 +2873,21 @@ body:has(.guided-resurrection) a:focus-visible {
 
   .guided-resurrection .source-note,
   .guided-resurrection .app-title p,
+  .guided-resurrection .app-title,
+  .guided-resurrection .step-copy,
+  .guided-resurrection .section-heading,
+  .guided-resurrection .top-nav a,
+  .guided-resurrection .range-value,
   .plain-result-strip small {
     overflow-wrap: anywhere;
+  }
+
+  body:has(.guided-resurrection) .brand,
+  body:has(.guided-resurrection) .top-nav,
+  body:has(.guided-resurrection) .top-nav a,
+  .guided-resurrection,
+  .guided-resurrection * {
+    min-width: 0;
   }
 
   body:has(.guided-resurrection) .top-nav a.hub-link {
@@ -2923,6 +2939,20 @@ body:has(.guided-resurrection) a:focus-visible {
 
   .plain-result-strip article {
     min-height: auto;
+  }
+
+  .plain-result-strip strong {
+    font-size: 1.02rem;
+  }
+
+  .range-top {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .range-value {
+    max-width: 100%;
+    min-width: 0;
   }
 
   .audit-step {

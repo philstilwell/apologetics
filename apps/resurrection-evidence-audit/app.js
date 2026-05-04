@@ -723,7 +723,7 @@ function renderRange({ id, key, label, helper, value, min, max, step }) {
     <div class="range-row compact plain-range">
       <div class="range-top">
         <label for="${id}-${key}">${escapeHtml(label)}</label>
-        <span class="range-value" id="${id}-${key}-value">${formatPercent(value / 100)}</span>
+        <span class="range-value" id="${id}-${key}-value">${formatPercentWithRatio(value / 100)}</span>
       </div>
       <p>${escapeHtml(helper)}</p>
       <input id="${id}-${key}" type="range" min="${min}" max="${max}" step="${step}" value="${value}">
@@ -808,7 +808,7 @@ function renderEvidenceLive(assessment) {
     const live = document.querySelector(`#${item.id}-live`);
     if (!live) return;
     live.querySelector("strong").textContent = formatLift(item.adjustedBf);
-    live.querySelector("span").textContent = `${Math.round(item.share * 100)}% of evidence added`;
+    live.querySelector("span").textContent = `${formatPercentWithRatio(item.share)} of evidence added`;
   });
 }
 
@@ -818,14 +818,14 @@ function renderResultStrip(assessment) {
     ? formatLift(assessment.shortfall90)
     : "Enough";
 
-  els.startingConfidence.textContent = formatPercent(assessment.prior);
+  els.startingConfidence.textContent = formatPercentWithRatio(assessment.prior);
   els.evidenceAdded.textContent = formatLift(assessment.totalBf);
-  els.updatedConfidence.textContent = formatPercent(assessment.posterior);
+  els.updatedConfidence.textContent = formatPercentWithRatio(assessment.posterior);
   els.updatedConfidenceNote.textContent = "The result after the current evidence settings";
   els.neededForHigh.textContent = shortfallText;
   els.neededForHighNote.textContent = assessment.shortfall90 > 1
-    ? "more evidence lift needed to reach 90%"
-    : "the current inputs already reach 90%";
+    ? "more evidence lift needed to reach 90% (about 9 in 10)"
+    : "the current inputs already reach 90% (about 9 in 10)";
   els.topDriver.textContent = assessment.topDriver
     ? `Most of the movement: ${assessment.topDriver.title}`
     : "No evidence driver yet";
@@ -840,8 +840,8 @@ function renderResultStrip(assessment) {
   els.floatingScoreRing.style.setProperty("--score", `${assessment.auditPressure}%`);
   els.floatingScoreRing.style.setProperty("--score-color", scoreColor);
 
-  els.mathStarting.textContent = formatPercent(assessment.prior);
-  els.mathUpdated.textContent = formatPercent(assessment.posterior);
+  els.mathStarting.textContent = formatPercentWithRatio(assessment.prior);
+  els.mathUpdated.textContent = formatPercentWithRatio(assessment.posterior);
   els.mathBf.textContent = formatLift(assessment.totalBf);
   els.mathOdds.textContent = formatOdds(assessment.posteriorOdds);
   els.mathLogBf.textContent = `log lift ${assessment.totalLogBf.toFixed(2)}`;
@@ -1124,7 +1124,7 @@ function requiredBfForTarget(priorOdds, target) {
 
 function setPercentLabel(id, value) {
   const label = document.querySelector(`#${id}-value`);
-  if (label) label.textContent = formatPercent(value);
+  if (label) label.textContent = formatPercentWithRatio(value);
 }
 
 function setText(element, value) {
@@ -1161,24 +1161,24 @@ function buildReport(assessment) {
     `Claim: ${assessment.claim || "Not supplied"}`,
     "",
     "## Plain-Language Result",
-    `Starting confidence: ${formatPercent(assessment.prior)}`,
+    `Starting confidence: ${formatPercentWithRatio(assessment.prior)}`,
     `Evidence added: ${formatLift(assessment.totalBf)}`,
-    `Updated confidence: ${formatPercent(assessment.posterior)}`,
-    `More evidence needed for 90% confidence: ${assessment.shortfall90 > 1 ? formatLift(assessment.shortfall90) : "none under current inputs"}`,
-    `Biggest mover: ${assessment.topDriver ? assessment.topDriver.title : "None"} (${Math.round((assessment.topDriver?.share || 0) * 100)}% of positive movement)`,
+    `Updated confidence: ${formatPercentWithRatio(assessment.posterior)}`,
+    `More evidence needed for 90% (about 9 in 10) confidence: ${assessment.shortfall90 > 1 ? formatLift(assessment.shortfall90) : "none under current inputs"}`,
+    `Biggest mover: ${assessment.topDriver ? assessment.topDriver.title : "None"} (${formatPercentWithRatio(assessment.topDriver?.share || 0)} of positive movement)`,
     `${assessment.meta.alternativeReportLabel}: ${formatLift(assessment.alternativeBf)}`,
     `Audit pressure: ${assessment.auditPressure}/100 (${summarizePressure(assessment.auditPressure)})`,
     "",
     "## Starting Point",
-    `Openness to divine action in general: ${formatPercent(assessment.priorParts.general)}`,
-    `Specificity allowance for this claim: ${formatPercent(assessment.priorParts.targeting)}`,
-    `Commonness of this kind of event: ${formatPercent(assessment.priorParts.actType)}`,
-    `Room left for other explanations: ${formatPercent(assessment.priorParts.unknownReserve)}`,
+    `Openness to divine action in general: ${formatPercentWithRatio(assessment.priorParts.general)}`,
+    `Specificity allowance for this claim: ${formatPercentWithRatio(assessment.priorParts.targeting)}`,
+    `Commonness of this kind of event: ${formatPercentWithRatio(assessment.priorParts.actType)}`,
+    `Room left for other explanations: ${formatPercentWithRatio(assessment.priorParts.unknownReserve)}`,
     "",
     "## Evidence Questions",
     ...assessment.items.map(
       (item) =>
-        `- ${item.title}: expected if true ${formatPercent(item.pTrue / 100)}, still expected if not true ${formatPercent(item.pAlt / 100)}, independent ${Math.round(item.weight)}%, evidence lift ${formatLift(item.adjustedBf)}.`,
+        `- ${item.title}: expected if true ${formatPercentWithRatio(item.pTrue / 100)}, still expected if not true ${formatPercentWithRatio(item.pAlt / 100)}, independent ${formatPercentWithRatio(item.weight / 100)}, evidence lift ${formatLift(item.adjustedBf)}.`,
     ),
     "",
     "## Warnings",
@@ -1188,8 +1188,8 @@ function buildReport(assessment) {
     ...assessment.repairs.map((repair) => `- ${repair.title}: ${repair.body}`),
     "",
     "## Math Details",
-    `Former prior: ${formatPercent(assessment.prior)}`,
-    `Former posterior: ${formatPercent(assessment.posterior)}`,
+    `Former prior: ${formatPercentWithRatio(assessment.prior)}`,
+    `Former posterior: ${formatPercentWithRatio(assessment.posterior)}`,
     `Bayes factor / evidence lift: ${formatFactor(assessment.totalBf)}`,
     `Log evidence lift: ${assessment.totalLogBf.toFixed(2)}`,
     `Posterior odds: ${formatOdds(assessment.posteriorOdds)}`,
@@ -1250,6 +1250,33 @@ function formatPercent(value) {
   return `${trimNumber(percent, 1)}%`;
 }
 
+function formatPercentWithRatio(value) {
+  return `${formatPercent(value)} (${formatProbabilityRatio(value)})`;
+}
+
+function formatProbabilityRatio(value) {
+  const probability = clamp(value, 0, 1);
+
+  if (probability === 0) return "none";
+  if (probability === 1) return "all";
+
+  if (probability < 0.01) {
+    return `about 1 in ${formatOneInCount(1 / probability)}`;
+  }
+
+  const denominator = probability >= 0.99 ? 1000 : 100;
+  const numerator = Math.max(1, Math.min(denominator - 1, Math.round(probability * denominator)));
+  const divisor = gcd(numerator, denominator);
+  const reducedNumerator = numerator / divisor;
+  const reducedDenominator = denominator / divisor;
+
+  if (denominator === 100 && reducedDenominator > 20) {
+    return `about ${numerator} in ${denominator}`;
+  }
+
+  return `about ${reducedNumerator} in ${reducedDenominator}`;
+}
+
 function formatFactor(value) {
   if (!Number.isFinite(value)) return "infinite";
   if (value === 0) return "0";
@@ -1272,6 +1299,12 @@ function formatOdds(odds) {
   return `1:${formatFactor(1 / odds)}`;
 }
 
+function formatOneInCount(value) {
+  if (!Number.isFinite(value)) return "many";
+  if (value >= 100000) return (Math.round(value / 1000) * 1000).toLocaleString();
+  return Math.max(1, Math.round(value)).toLocaleString();
+}
+
 function getScoreColor(score) {
   if (score >= 75) return "#5b1705";
   if (score >= 50) return "#8a4b18";
@@ -1288,6 +1321,19 @@ function trimNumber(value, digits) {
     .toFixed(digits)
     .replace(/(\.\d*?)0+$/, "$1")
     .replace(/\.$/, "");
+}
+
+function gcd(a, b) {
+  let left = Math.abs(a);
+  let right = Math.abs(b);
+
+  while (right) {
+    const next = left % right;
+    left = right;
+    right = next;
+  }
+
+  return left || 1;
 }
 
 function formatLargeFactor(value) {
