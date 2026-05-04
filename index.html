@@ -3,107 +3,144 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Xhairs Apologetics Audit Lab</title>
+    <title>Crosshairs Audit Lab</title>
     <meta
       name="description"
-      content="Interactive GitHub Pages apps for testing the evidential structure of Christian apologetics arguments."
+      content="Crosshairs audits help Christians reassess what and why they believe by identifying tensions in their web of beliefs."
     >
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20260504-standalone-hub">
   </head>
-  <body>
+  <body class="hub-landing">
     <header class="site-header">
-      <a class="brand" href="./" aria-label="Xhairs Apologetics Audit Lab home">
+      <a class="brand" href="./" aria-label="Crosshairs Audit Lab home">
         <span class="brand-mark" aria-hidden="true">X</span>
         <span>
-          <strong>Xhairs Apologetics Audit Lab</strong>
-          <small>Evidence standards under inspection</small>
+          <strong>Crosshairs Audit Lab</strong>
+          <small>Belief under inspection</small>
         </span>
       </a>
       <nav class="top-nav" aria-label="Primary">
-        <a href="./apps/inductive-symmetry-audit/">Inductive Symmetry Audit</a>
-        <a href="./apps/theism-gradient-audit/app.html">Theism Gradient</a>
+        <a href="#purpose">Purpose</a>
+        <a href="#apps">Audits</a>
         <a href="./apps/inductive-symmetry-audit/theory.html">Theory</a>
       </nav>
     </header>
 
     <main>
-      <section class="hub-layout" aria-labelledby="hub-title">
-        <div class="hub-copy">
-          <p class="eyebrow">GitHub Pages apps</p>
-          <h1 id="hub-title">Xhairs Apologetics Audit Lab</h1>
-          <p class="lede">
-            A growing set of compact reasoning tools for testing whether religious arguments apply
-            evidence, induction, and explanatory standards consistently.
-          </p>
-          <div class="hub-actions">
-            <a class="button primary" href="./apps/inductive-symmetry-audit/">Open first app</a>
-            <a class="button secondary" href="#apps">View app list</a>
-          </div>
+      <section class="landing-hero" aria-labelledby="hub-title">
+        <div class="belief-map" aria-hidden="true">
+          <span class="map-line line-a"></span>
+          <span class="map-line line-b"></span>
+          <span class="map-line line-c"></span>
+          <span class="map-line line-d"></span>
+          <span class="map-node node-a"><b>Claim</b><small>God acts</small></span>
+          <span class="map-node node-b"><b>Evidence</b><small>Testimony</small></span>
+          <span class="map-node node-c"><b>Bridge</b><small>Inference</small></span>
+          <span class="map-node node-d"><b>Tension</b><small>Gap found</small></span>
+          <span class="map-node node-e"><b>Repair</b><small>Modest claim</small></span>
         </div>
 
-        <div class="logic-panel" aria-label="Inductive audit preview">
-          <div class="logic-row header">
-            <span>Accepted rule</span>
-            <span>Parallel rule</span>
-            <span>Status</span>
+        <div class="landing-inner">
+          <p class="eyebrow">Crosshairs audits</p>
+          <h1 id="hub-title">Crosshairs Audit Lab</h1>
+          <p class="lede">
+            Compact reasoning tools that encourage Christians to reassess what they believe,
+            why they believe it, and where their web of beliefs may be carrying unresolved
+            tensions.
+          </p>
+          <div class="hub-actions">
+            <a class="button primary" href="#apps">Choose an audit</a>
+            <a class="button secondary" href="./apps/inductive-symmetry-audit/theory.html">Read the theory</a>
           </div>
-          <div class="logic-row">
-            <span>Beginnings need causes</span>
-            <span>Known causes occur in spacetime</span>
-            <strong>Differentiate</strong>
+
+          <dl class="hero-metrics" aria-label="Audit focus areas">
+            <div>
+              <dt>1</dt>
+              <dd>Separate confidence from substantiation.</dd>
+            </div>
+            <div>
+              <dt>2</dt>
+              <dd>Expose asymmetries in evidential standards.</dd>
+            </div>
+            <div>
+              <dt>3</dt>
+              <dd>Name bridge premises before conclusions thicken.</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="purpose-band" id="purpose" aria-labelledby="purpose-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">Purpose</p>
+            <h2 id="purpose-title">What the audits are for</h2>
           </div>
-          <div class="logic-row">
-            <span>Order suggests agency</span>
-            <span>Known agents are embodied</span>
-            <strong>Differentiate</strong>
-          </div>
-          <div class="logic-row">
-            <span>Testimony can preserve truth</span>
-            <span>Rival traditions also testify</span>
-            <strong>Compare</strong>
-          </div>
-          <div class="meter-strip" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+
+          <div class="principle-grid">
+            <article>
+              <span>01</span>
+              <h3>Reassess the belief</h3>
+              <p>
+                Bring a Christian claim into view without treating familiarity, sincerity,
+                or community confidence as enough by itself.
+              </p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Clarify the why</h3>
+              <p>
+                Distinguish what might be true from what the current evidence, argument, or
+                experience can responsibly license.
+              </p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Locate the pressure</h3>
+              <p>
+                Surface substantiation gaps, bridge-premise jumps, and places where one part
+                of the belief web strains another.
+              </p>
+            </article>
           </div>
         </div>
       </section>
 
-      <section class="section" id="apps" aria-labelledby="apps-title">
-        <div class="section-heading">
-          <p class="eyebrow">App list</p>
-          <h2 id="apps-title">Available audits</h2>
-        </div>
+      <section class="audit-list-band" id="apps" aria-labelledby="apps-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">Available audits</p>
+            <h2 id="apps-title">Choose a pressure test</h2>
+          </div>
 
-        <div class="app-grid">
-          <article class="app-card">
-            <div>
-              <p class="card-kicker">This site</p>
-              <h3>Inductive Symmetry Audit</h3>
-              <p>
-                Tests whether an apologetic argument accepts one inductive pattern while
-                dismissing relevantly similar patterns that count against the same conclusion.
-              </p>
-            </div>
-            <a class="card-link" href="./apps/inductive-symmetry-audit/">Run audit</a>
-            <a class="card-link secondary-link" href="./apps/inductive-symmetry-audit/theory.html">Theory notes</a>
-          </article>
+          <div class="app-grid">
+            <article class="app-card">
+              <div>
+                <p class="card-kicker">Live audit</p>
+                <h3>Inductive Symmetry Audit</h3>
+                <p>
+                  Tests whether an apologetic argument accepts one inductive pattern while
+                  dismissing relevantly similar patterns that count against the same conclusion.
+                </p>
+              </div>
+              <a class="card-link" href="./apps/inductive-symmetry-audit/">Run audit</a>
+              <a class="card-link secondary-link" href="./apps/inductive-symmetry-audit/theory.html">Theory notes</a>
+            </article>
 
-          <article class="app-card">
-            <div>
-              <p class="card-kicker">Companion app</p>
-              <h3>Theism Gradient</h3>
-              <p>
-                Rates 50 Christianity-focused claims across a deism-to-Christian-theism gradient,
-                then surfaces substantiation gaps, dependency tensions, category profiles, and an
-                AI-ready report.
-              </p>
-            </div>
-            <a class="card-link" href="./apps/theism-gradient-audit/app.html">Run assessment</a>
-          </article>
+            <article class="app-card">
+              <div>
+                <p class="card-kicker">Live audit</p>
+                <h3>Deism-Theism Gradient Audit</h3>
+                <p>
+                  Rates 50 Christianity-focused claims across a deism-to-Christian-theism gradient,
+                  then surfaces substantiation gaps, dependency tensions, category profiles, and an
+                  AI-ready report.
+                </p>
+              </div>
+              <a class="card-link" href="./apps/theism-gradient-audit/app.html">Run assessment</a>
+            </article>
+          </div>
         </div>
       </section>
     </main>

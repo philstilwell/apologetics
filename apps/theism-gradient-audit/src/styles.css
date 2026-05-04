@@ -153,6 +153,34 @@ button:hover {
   text-decoration-color: currentColor;
 }
 
+.top-nav a.hub-link,
+.nav-button.hub-link {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.top-nav a.hub-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 5px 12px;
+  border: 1px solid #111;
+  border-radius: 6px;
+}
+
+.top-nav a.hub-link:hover,
+.top-nav a.hub-link:focus-visible,
+.nav-button.hub-link:hover,
+.nav-button.hub-link:focus-visible {
+  border-color: #333;
+  background: #333;
+  color: #fff;
+  text-decoration: none;
+}
+
 .hub-shell {
   width: min(1180px, calc(100vw - 36px));
   margin: 0 auto;
