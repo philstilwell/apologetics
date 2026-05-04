@@ -8,14 +8,31 @@
       name="description"
       content="A Christianity-focused deism-to-theism gradient for rating confidence, substantiation, dependency tension, and divine-action claims."
     >
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./src/styles.css">
+    <link rel="icon" href="./favicon.svg?v=20260504-green-header" type="image/svg+xml">
+    <link rel="stylesheet" href="./src/styles.css?v=20260504-green-header">
   </head>
   <body>
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Xhairs Apologetics Audit Lab home">
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <span>
+          <strong>Xhairs Apologetics Audit Lab</strong>
+          <small>Deism—Theism Gradient Audit</small>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="../../">Hub</a>
+        <a href="#method-guide">Guide</a>
+        <a href="#lenses">Lenses</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#report">Report</a>
+      </nav>
+    </header>
+
     <main class="app-shell">
       <section class="topbar" aria-labelledby="app-title">
         <div>
-          <p class="eyebrow">Deism-to-Christian-theism assessment</p>
+          <p class="eyebrow">Deism—Theism Gradient Audit</p>
           <h1 id="app-title">Theism Gradient</h1>
         </div>
         <div class="toolbar" aria-label="Assessment controls">
@@ -61,7 +78,7 @@
         </article>
       </section>
 
-      <section class="method-panel" aria-labelledby="method-guide-title">
+      <section class="method-panel" id="method-guide" aria-labelledby="method-guide-title">
         <div class="section-heading">
           <div>
             <h2 id="method-guide-title">Assessment Guide</h2>
@@ -88,7 +105,7 @@
         </div>
       </section>
 
-      <section class="lens-panel" aria-labelledby="lens-title">
+      <section class="lens-panel" id="lenses" aria-labelledby="lens-title">
         <div class="section-heading">
           <div>
             <h2 id="lens-title">Preset Lenses</h2>
@@ -98,7 +115,7 @@
         <div id="lens-buttons" class="lens-buttons"></div>
       </section>
 
-      <section class="dashboard-grid">
+      <section class="dashboard-grid" id="dashboard">
         <div class="panel plot-panel">
           <div class="panel-heading">
             <h2>Claim Scatter</h2>
@@ -147,7 +164,7 @@
         </div>
       </section>
 
-      <section class="report-grid" aria-labelledby="report-title">
+      <section class="report-grid" id="report" aria-labelledby="report-title">
         <div class="panel">
           <div class="panel-heading">
             <h2 id="report-title">Final Report</h2>
