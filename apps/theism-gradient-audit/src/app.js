@@ -642,11 +642,11 @@ function renderClaims() {
         </div>
         <div class="claim-controls">
           <label>
-            <span><strong>C</strong>onfidence <b>${Math.round(response.confidence)}</b></span>
+            <span><span><strong>C</strong>onfidence</span> <b>${Math.round(response.confidence)}</b></span>
             <input data-field="confidence" type="range" min="0" max="100" value="${response.confidence}">
           </label>
           <label>
-            <span><strong>P</strong>ersonal substantiation <b>${Math.round(response.personalSubstantiation)}</b></span>
+            <span><span><strong>P</strong>ersonal substantiation</span> <b>${Math.round(response.personalSubstantiation)}</b></span>
             <input data-field="personalSubstantiation" type="range" min="0" max="100" value="${response.personalSubstantiation}">
           </label>
             <textarea data-field="note" rows="2" placeholder="Rationale note">${escapeHtml(response.note)}</textarea>
