@@ -49,9 +49,9 @@ const nodes = {
 
 const profilePresets = [
   {
-    id: "methodical-skeptic",
-    label: "Methodical Skeptic",
-    description: "Low-to-moderate ratings unless the claim can be personally defended with clear evidence.",
+    id: "skeptical-naturalist",
+    label: "Skeptical Naturalist",
+    description: "Low ratings across the gradient unless divine agency can be personally defended with clear evidence.",
     confidence: [35, 28, 22, 12, 8],
     personal: [30, 24, 18, 10, 6],
     boosts: {}
