@@ -6,10 +6,10 @@
     <title>Crosshairs Audit Lab | Resurrection Evidence Audit</title>
     <meta
       name="description"
-      content="A plain-language Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
+      content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-ratio-labels">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-register-pass">
   </head>
   <body>
     <header class="site-header">
@@ -33,19 +33,19 @@
     <main class="app-shell resurrection-audit guided-resurrection">
       <section class="app-header">
         <div class="app-title">
-          <p class="eyebrow">Plain-language evidence audit</p>
+          <p class="eyebrow">Structured evidence audit</p>
           <h1><span>Resurrection</span> <span>Evidence Audit</span></h1>
           <p>
-            Walk through a claim, its starting plausibility, the evidence offered for it,
+            Evaluate a claim, its baseline plausibility, the evidence offered for it,
             the alternative explanations still in play, and the confidence the evidence can
-            responsibly support.
+            responsibly justify.
           </p>
         </div>
         <aside class="source-note">
-          <strong>Math underneath, ordinary language on top.</strong>
-          The audit uses probability behind the scenes, but the main questions are simple:
-          What exactly is claimed? Would this evidence be expected either way? Is the evidence
-          independent? What alternatives remain?
+          <strong>Probability underneath, accessible language on top.</strong>
+          The audit handles the probability work in the background, but the main questions are
+          concrete: What exactly is being claimed? Would this evidence be expected either way?
+          Is the evidence independent? Which alternatives remain plausible?
         </aside>
       </section>
 
@@ -60,9 +60,9 @@
 
       <section class="plain-result-strip" aria-label="Current audit result">
         <article>
-          <span>Starting confidence</span>
+          <span>Baseline confidence</span>
           <strong id="starting-confidence">0%</strong>
-          <small>Before the listed evidence is counted</small>
+          <small>Before this case evidence is added</small>
         </article>
         <article>
           <span>Evidence added</span>
@@ -70,7 +70,7 @@
           <small id="top-driver">No evidence driver yet</small>
         </article>
         <article>
-          <span>Updated confidence</span>
+          <span>Revised confidence</span>
           <strong id="updated-confidence">0%</strong>
           <small id="updated-confidence-note">The result after the current evidence settings</small>
         </article>
@@ -84,9 +84,9 @@
       <details class="annotation plain-help app-wide">
         <summary>What the live numbers mean</summary>
         <p>
-          <strong>Starting confidence</strong> is where the claim begins before this evidence is counted.
+          <strong>Baseline confidence</strong> is where the claim begins before this evidence is counted.
           <strong>Evidence added</strong> shows how much the listed evidence moves the claim.
-          <strong>Updated confidence</strong> is the new result after the evidence is counted.
+          <strong>Revised confidence</strong> is the new result after the evidence is counted.
           <strong>Still needed</strong> shows how much more support would be needed before the claim
           reaches high confidence.
         </p>
@@ -110,32 +110,32 @@
           </div>
         </div>
         <div class="floating-pressure-copy">
-          <strong id="floating-audit-state">Low pressure</strong>
-          <span>Updates as you move sliders</span>
+          <strong id="floating-audit-state">Low audit pressure</strong>
+          <span>Updates as assumptions change</span>
         </div>
       </aside>
 
       <section class="audit-step" id="claim-step" aria-labelledby="claim-title">
         <div class="step-copy">
           <p class="app-step">Step 1</p>
-          <h2 id="claim-title">State the claim</h2>
+          <h2 id="claim-title">State the claim precisely</h2>
           <p id="claim-copy">
-            Start with the exact claim. A thinner claim needs less support; a highly specific
-            miracle claim needs more.
+            Start with the exact claim. A modest claim requires less support; a highly specific
+            miracle claim carries a heavier burden.
           </p>
         </div>
         <div class="step-panel">
           <div class="field-group">
-            <label for="claim-preset">Choose a starting claim</label>
+            <label for="claim-preset">Choose a claim preset</label>
             <select id="claim-preset" name="claim-preset"></select>
           </div>
           <div class="field-group">
-            <label for="claim-text">What exactly is being claimed?</label>
+            <label for="claim-text">State the exact claim</label>
             <textarea id="claim-text" name="claim-text"></textarea>
           </div>
           <div class="resurrection-preset-actions">
-            <button type="button" id="load-generous">Load generous case</button>
-            <button type="button" id="load-corrected">Load cautious case</button>
+            <button type="button" id="load-generous">Generous assumptions</button>
+            <button type="button" id="load-corrected">Cautious assumptions</button>
             <button type="button" id="reset-current">Reset claim</button>
           </div>
         </div>
@@ -144,22 +144,22 @@
       <section class="audit-step" id="starting-step" aria-labelledby="starting-title">
         <div class="step-copy">
           <p class="app-step">Step 2</p>
-          <h2 id="starting-title">Set the starting point</h2>
+          <h2 id="starting-title">Set the baseline</h2>
           <p id="starting-copy">
             Before counting testimony or stories, ask how plausible this specific kind of
-            event is. The sliders below replace formal probability labels with ordinary questions.
+            event is. The sliders translate formal probability ideas into direct questions.
           </p>
         </div>
         <div class="step-panel">
           <details class="annotation plain-help">
-            <summary id="starting-help-title">How to set these sliders</summary>
+            <summary id="starting-help-title">How to calibrate these sliders</summary>
             <p id="starting-help-one">
-              These sliders ask what the claim should get before the specific evidence is added.
+              These sliders ask what the claim should receive before the specific evidence is added.
               A broad belief that God may exist does not automatically make one exact miracle likely.
             </p>
             <p id="starting-help-two">
-              Move slowly. If you raise one slider, ask what fact justifies the higher number.
-              If the reason is only “I already believe this,” the slider may be too generous.
+              Adjust them deliberately. If you raise one slider, identify what fact justifies the
+              higher number. If the reason is only “I already believe this,” the slider may be too generous.
             </p>
           </details>
           <div class="range-stack" id="prior-model">
@@ -206,19 +206,19 @@
         <div class="section-heading">
           <div>
             <p class="app-step">Step 3</p>
-            <h2 id="evidence-title">Test each piece of evidence</h2>
+            <h2 id="evidence-title">Evaluate each evidence item</h2>
             <p>
-              The whole audit turns on a simple pair of questions: would we expect this evidence
-              if the claim is true, and would we still expect it if the claim is not true?
+              The audit turns on a disciplined comparison: how expected is this evidence if the
+              claim is true, and how expected is it if the claim is false?
             </p>
           </div>
         </div>
         <details class="annotation plain-help app-wide">
-          <summary>How to answer the evidence questions</summary>
+          <summary>How to judge the evidence questions</summary>
           <p>
             Each evidence item has two sides. First ask, “Would I expect this if the claim is true?”
-            Then ask, “Could this still happen if the claim is not true?” Strong evidence should
-            fit the claim much better than it fits ordinary alternatives.
+            Then ask, “Would I still expect this if the claim is false?” Strong evidence should
+            fit the claim substantially better than it fits serious alternatives.
           </p>
           <p>
             The independence slider matters because five reports from one shared source are not
@@ -233,9 +233,9 @@
         <div class="section-heading">
           <div>
             <p class="app-step">Step 4</p>
-            <h2 id="alternatives-title">Keep sincere alternatives visible</h2>
+            <h2 id="alternatives-title">Keep serious alternatives visible</h2>
             <p id="alternatives-copy">
-              The alternative is not “they lied.” It can include grief, dissonance, memory,
+              The alternative is not merely “they lied.” It can include grief, dissonance, memory,
               scriptural rereading, and community reinforcement.
             </p>
           </div>
@@ -251,8 +251,8 @@
             events through grief, group pressure, memory, scripture, or later storytelling.
           </p>
           <p id="alternatives-help-two">
-            Mark a pathway as strong when it clearly fits the evidence. Set it aside only when you
-            have a reason, not just because it makes the miracle claim harder to defend.
+            Mark a pathway as strong when it clearly fits the evidence. Treat it as ruled out only
+            when you have a reason, not just because it makes the miracle claim harder to defend.
           </p>
         </details>
         <div class="feature-grid plain-feature-grid" id="feature-grid"></div>
@@ -262,7 +262,7 @@
         <div class="section-heading">
           <div>
             <p class="app-step">Step 5</p>
-            <h2 id="result-title">Read the result</h2>
+            <h2 id="result-title">Interpret the result</h2>
             <p id="result-copy">
               The audit is ready for input.
             </p>
@@ -283,7 +283,7 @@
             <ul class="flag-list plain-warning-list" id="pitfall-list"></ul>
           </section>
           <section>
-            <h3>Best next repairs</h3>
+            <h3>Best repair moves</h3>
             <div class="repair-list" id="repair-list"></div>
           </section>
         </div>
@@ -291,12 +291,12 @@
         <details class="annotation plain-help app-wide">
           <summary>How to read audit pressure</summary>
           <p>
-            Audit pressure is a warning light. A higher score means the case may depend on a high
-            starting point, weak treatment of alternatives, repeated sources counted as separate,
+            Audit pressure is a diagnostic warning. A higher score means the case may depend on a
+            high baseline, weak treatment of alternatives, repeated sources counted as separate,
             or one evidence item doing too much work.
           </p>
           <p>
-            High pressure does not prove the claim false. It means the current case needs repairs
+            High pressure does not prove the claim false. It means the current case needs revision
             before the confidence level is fair.
           </p>
         </details>
@@ -305,12 +305,12 @@
           <summary>Show math details</summary>
           <div class="math-grid">
             <article>
-              <span>Starting plausibility</span>
+              <span>Baseline plausibility</span>
               <strong id="math-starting">0%</strong>
               <small>Formerly: prior</small>
             </article>
             <article>
-              <span>Updated confidence</span>
+              <span>Revised confidence</span>
               <strong id="math-updated">0%</strong>
               <small>Formerly: posterior</small>
             </article>
@@ -342,9 +342,9 @@
         <div class="section-heading">
           <div>
             <p class="app-step">Step 6</p>
-            <h2 id="report-title">Export the audit</h2>
+            <h2 id="report-title">Export the analysis</h2>
             <p>
-              The report uses plain terms first, with the formal details included only where
+              The report uses accessible terms first, with formal details included only where
               they help another reviewer stress-test the model.
             </p>
           </div>
@@ -354,7 +354,7 @@
             <div class="panel-title">
               <div>
                 <h3>Audit report</h3>
-                <p>Plain-language summary of the claim, evidence, warnings, and repair moves.</p>
+                <p>Accessible summary of the claim, evidence, warnings, and repair moves.</p>
               </div>
             </div>
             <textarea id="final-report" class="export-box" rows="12" readonly></textarea>
@@ -364,7 +364,7 @@
           <div class="result-panel">
             <div class="panel-title">
               <div>
-                <h3>Stress-test prompt</h3>
+                <h3>Structured stress-test prompt</h3>
                 <p>Ask another tool to critique the assumptions rather than merely repeat them.</p>
               </div>
             </div>
@@ -375,6 +375,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260504-ratio-labels"></script>
+    <script src="./app.js?v=20260504-register-pass"></script>
   </body>
 </html>

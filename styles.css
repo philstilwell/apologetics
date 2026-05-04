@@ -399,6 +399,44 @@ main {
   gap: 20px;
 }
 
+.hub-recommendation {
+  --app-accent: #1f5a3a;
+  --app-accent-dark: #153d28;
+  --app-tint: #eaf4ed;
+  --app-line: #9fbea8;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  margin: 0 0 22px;
+  padding: clamp(18px, 3vw, 24px);
+  border: 1px solid var(--app-line);
+  border-left: 7px solid var(--app-accent);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, var(--app-tint) 0, #fff 78%);
+}
+
+.hub-recommendation h3 {
+  color: var(--app-accent-dark);
+  font-size: 1.55rem;
+}
+
+.hub-recommendation p:not(.card-kicker) {
+  max-width: 850px;
+  margin-top: 8px;
+  color: #3e4d43;
+  line-height: 1.55;
+}
+
+.hub-recommendation strong {
+  color: var(--app-accent-dark);
+}
+
+.hub-recommendation .card-link {
+  white-space: nowrap;
+}
+
 .hub-landing .app-card {
   min-height: 260px;
   padding: clamp(20px, 3vw, 28px);
@@ -2615,6 +2653,14 @@ body:has(.guided-resurrection) a:focus-visible {
 
   .hub-layout {
     min-height: auto;
+  }
+
+  .hub-recommendation {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-recommendation .card-link {
+    width: fit-content;
   }
 
   .landing-inner {
