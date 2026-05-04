@@ -301,7 +301,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 3,
     note: "Later narrative crystallization is easier to understand if memory and tradition developed after the crisis.",
     detail:
-      "Later composition gives memory, preaching needs, and community interpretation time to shape the story. That does not prove invention, but it weakens the claim that every detail is direct, independent reporting.",
+      "Later composition gives memory, preaching needs, and community interpretation time to shape the story. That does not prove invention. It does mean the audit should ask whether each detail is early, independent reporting or later community interpretation.",
   },
   {
     id: "scripture-wrap",
@@ -309,7 +309,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 3,
     note: "Heavy fulfillment framing is expected when a community rereads defeat as vindication.",
     detail:
-      "When a story is strongly framed as fulfillment of scripture, the wording may reflect theological interpretation as much as memory. The audit asks whether fulfillment language is evidence for the event or evidence of later interpretation.",
+      "When a story is strongly framed as fulfillment of scripture, the wording may reflect theological interpretation as much as memory. The key question is whether fulfillment language is independent evidence for the event or evidence that later believers interpreted the event through scripture.",
   },
   {
     id: "grief-visions",
@@ -317,7 +317,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 2.5,
     note: "Bereavement experiences and visionary interpretation are ordinary human mechanisms.",
     detail:
-      "Bereavement and crisis experiences can feel vivid and real. This alternative matters because sincere appearance reports can arise without fraud and without a bodily resurrection.",
+      "Bereavement and crisis experiences can feel vivid and real. This alternative matters because sincere appearance reports can arise without fraud and without a bodily resurrection. If the evidence is mainly testimony to experiences, the audit should not treat sincerity as the same thing as event accuracy.",
   },
   {
     id: "communal-reinforcement",
@@ -325,7 +325,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 2,
     note: "Tight groups can harmonize and intensify meaning without deliberate fraud.",
     detail:
-      "A close community can stabilize one interpretation through worship, repetition, and shared expectation. That can make a belief stronger without making the original event more likely.",
+      "A close community can stabilize one interpretation through worship, repetition, and shared expectation. That can make a belief stronger without making the original event more likely. The audit should ask whether repeated agreement comes from independent checks or from one community reinforcing the same interpretation.",
   },
   {
     id: "physicalization",
@@ -333,7 +333,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 2.5,
     note: "A movement toward concrete apologetic detail fits developing tradition.",
     detail:
-      "As debates develop, traditions can gain concrete details that answer objections. More physical detail may reflect apologetic development rather than independent confirmation.",
+      "As debates develop, traditions can gain concrete details that answer objections. More physical detail may reflect apologetic development rather than independent confirmation. The audit should ask whether the added detail comes from new evidence or from later storytelling that answers doubts.",
   },
   {
     id: "thin-corroboration",
@@ -341,7 +341,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 2,
     note: "Limited public confirmation is more expected when the claim grows inside a proclamation stream.",
     detail:
-      "If a public miracle occurred, outside confirmation would be expected to some degree. Thin external support does not disprove the claim, but it keeps the alternative explanation alive.",
+      "If a public miracle occurred, outside confirmation would be expected to some degree. Thin external support does not disprove the claim, but it keeps the alternative explanation alive. The audit should ask what neutral observers, public records, or independent sources would be expected if the event happened as described.",
   },
   {
     id: "early-creed",
@@ -349,7 +349,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 0.8,
     note: "Early summaries can favor reportage somewhat, but they are still insider proclamation.",
     detail:
-      "Early summaries are relevant because they reduce the time available for later invention. They still need care because slogans can preserve proclamation without preserving independent detail.",
+      "Early summaries are relevant because they reduce the time available for later invention. They still need care because slogans can preserve proclamation without preserving independent detail. The audit should separate early belief from early, checkable evidence for the exact event.",
   },
   {
     id: "transformation",
@@ -357,7 +357,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 2,
     note: "Renewed zeal after disconfirmation is historically familiar and does not settle truth by itself.",
     detail:
-      "Changed lives can show sincere conviction. They do not by themselves show that the central interpretation of the experience was correct.",
+      "Changed lives can show sincere conviction and social impact. They do not by themselves show that the central interpretation of the experience was correct. The audit should ask whether transformation supports the event itself or mainly supports the followers' confidence.",
   },
   {
     id: "source-dependence",
@@ -365,7 +365,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 1.5,
     note: "Shared sources reduce the force of apparent multiplicity.",
     detail:
-      "Multiple texts may not mean multiple independent sources if they share traditions, wording, communities, or theological aims.",
+      "Multiple texts may not mean multiple independent sources if they share traditions, wording, communities, or theological aims. The audit should lower the independence of evidence when later reports may be drawing from the same memory stream or source tradition.",
   },
   {
     id: "no-conspiracy",
@@ -373,7 +373,7 @@ const resurrectionAlternativeFeatures = [
     ratio: 1.3,
     note: "Sincere meaning-making avoids the false choice between miracle and deliberate lie.",
     detail:
-      "The alternative does not require a deliberate fraud. Sincere interpretation, memory, and group reinforcement can explain confidence without a planned deception.",
+      "The alternative does not require a deliberate fraud. Sincere interpretation, memory, and group reinforcement can explain confidence without a planned deception. The audit should avoid the false choice that the witnesses were either perfectly accurate or intentionally lying.",
   },
 ];
 
@@ -384,7 +384,7 @@ const crashAlternativeFeatures = [
     ratio: 4,
     note: "A steering, tire, brake, suspension, or warning-light problem can cause a sudden loss of control.",
     detail:
-      "A fault in steering, tires, brakes, suspension, or electronics can create a sudden loss of control. This alternative should stay live until inspection evidence rules it out.",
+      "A fault in steering, tires, brakes, suspension, or electronics can create a sudden loss of control. This alternative should stay live until inspection evidence rules it out. A demon claim needs more than a damaged car and frightened testimony; it needs evidence that points away from ordinary failure.",
   },
   {
     id: "animal-swerve",
@@ -392,7 +392,7 @@ const crashAlternativeFeatures = [
     ratio: 3,
     note: "A sudden steering move is common when a driver reacts to a deer, dog, or other animal near the road.",
     detail:
-      "Drivers often react before they can clearly identify what entered the road. A sudden swerve can fit animal avoidance even without perfect memory afterward.",
+      "Drivers often react before they can clearly identify what entered the road. A sudden swerve can fit animal avoidance even without perfect memory afterward. The audit should ask whether road marks, witness statements, or the driver's reaction pattern fit an ordinary evasive move.",
   },
   {
     id: "falling-asleep",
@@ -400,7 +400,7 @@ const crashAlternativeFeatures = [
     ratio: 3.5,
     note: "Fatigue can cause lane drift, late correction, and a crash without much braking or clear memory.",
     detail:
-      "Fatigue and microsleep can cause drift, delayed correction, and patchy recall. This can make the driver's later explanation sincere but mistaken.",
+      "Fatigue and microsleep can cause drift, delayed correction, and patchy recall. This can make the driver's later explanation sincere but mistaken. The audit should ask about time of day, sleep history, braking evidence, and whether the crash pattern fits a lapse in awareness.",
   },
   {
     id: "driver-distraction",
@@ -408,7 +408,7 @@ const crashAlternativeFeatures = [
     ratio: 2.5,
     note: "A phone, passenger, dashboard control, or momentary attention lapse can explain delayed reaction.",
     detail:
-      "Attention lapses from a phone, passenger, dashboard control, or outside stimulus can explain delayed response without requiring a non-material cause.",
+      "Attention lapses from a phone, passenger, dashboard control, or outside stimulus can explain delayed response without requiring a non-material cause. The audit should ask whether the driver had any ordinary reason not to notice the danger until too late.",
   },
   {
     id: "road-conditions",
@@ -416,7 +416,7 @@ const crashAlternativeFeatures = [
     ratio: 2,
     note: "Wet pavement, gravel, ice, a curve, or poor visibility can make ordinary control loss more likely.",
     detail:
-      "Wet pavement, gravel, ice, curves, glare, or poor visibility can make ordinary loss of control more likely.",
+      "Wet pavement, gravel, ice, curves, glare, or poor visibility can make ordinary loss of control more likely. The audit should ask whether the road environment made a normal mistake or skid more expected before reaching for a non-material explanation.",
   },
   {
     id: "stress-memory",
@@ -424,7 +424,7 @@ const crashAlternativeFeatures = [
     ratio: 2.5,
     note: "After a frightening crash, a sincere driver may remember force, grabbing, or pulling more vividly than the mechanics of the event.",
     detail:
-      "After a frightening crash, memory may emphasize force or being pulled. This matters because the driver can be honest while the interpretation becomes less reliable.",
+      "After a frightening crash, memory may emphasize force or being pulled. This matters because the driver can be honest while the interpretation becomes less reliable. The audit should separate what the driver experienced from what actually caused the wheel to turn.",
   },
   {
     id: "demon-specificity",
@@ -432,7 +432,7 @@ const crashAlternativeFeatures = [
     ratio: 3,
     note: "Moving from 'the cause is unclear' to 'a demon turned the wheel' adds a very specific claim that needs its own support.",
     detail:
-      "The step from 'the cause is unclear' to 'a demon turned the wheel' is a large interpretive jump. The specific demon claim needs evidence beyond the absence of an obvious cause.",
+      "The step from 'the cause is unclear' to 'a demon turned the wheel' is a large interpretive jump. The specific demon claim needs evidence beyond the absence of an obvious cause. The audit should ask what would distinguish a demon from mechanical failure, fatigue, distraction, or unknown ordinary causes.",
   },
 ];
 
@@ -525,6 +525,7 @@ const els = {
   featureGrid: document.querySelector("#feature-grid"),
   loadGenerous: document.querySelector("#load-generous"),
   loadCorrected: document.querySelector("#load-corrected"),
+  loadTeachingParallel: document.querySelector("#load-teaching-parallel"),
   resetCurrent: document.querySelector("#reset-current"),
   startingConfidence: document.querySelector("#starting-confidence"),
   evidenceAdded: document.querySelector("#evidence-added"),
@@ -593,6 +594,7 @@ function bindEvents() {
 
   els.loadGenerous.addEventListener("click", () => applyPosture("generous"));
   els.loadCorrected.addEventListener("click", () => applyPosture("corrected"));
+  els.loadTeachingParallel.addEventListener("click", () => loadPreset("car-crash-demon"));
   els.resetCurrent.addEventListener("click", () => loadPreset(state.presetId));
   els.copyReport.addEventListener("click", () => copyText(els.finalReport.value, els.copyReport));
   els.copyAiPrompt.addEventListener("click", () => copyText(els.aiPrompt.value, els.copyAiPrompt));
@@ -806,6 +808,10 @@ function renderFeatures() {
               </div>
             </div>
             <p>${escapeHtml(feature.note)}</p>
+            <details class="feature-detail-panel">
+              <summary>Deeper explanation</summary>
+              <p>${escapeHtml(detail)}</p>
+            </details>
           </div>
           <div class="feature-bottom">
             <span>Alternative fit: ${formatLift(feature.ratio)}</span>
@@ -1271,7 +1277,7 @@ function buildAiPrompt(assessment) {
     "1. Which assumption is doing the most work?",
     "2. Which 'expected if false' values are too low, if any?",
     "3. Which evidence items should be lowered for overlap or dependence?",
-    "4. What revised confidence range results under cautious and generous assumptions?",
+    "4. What revised confidence range results under stricter audit settings and believer-friendly settings?",
     "5. What claim would be proportionate to the evidence actually entered?",
   ].join("\n");
 }

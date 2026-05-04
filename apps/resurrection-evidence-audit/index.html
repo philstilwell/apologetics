@@ -9,7 +9,7 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-teaching-tooltips">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-app-guidance">
   </head>
   <body>
     <header class="site-header">
@@ -129,14 +129,52 @@
             <label for="claim-preset">Choose a claim preset</label>
             <select id="claim-preset" name="claim-preset"></select>
           </div>
+          <aside class="teaching-parallel-callout" aria-label="Recommended starting exercise">
+            <div>
+              <p class="card-kicker">Recommended starting exercise</p>
+              <h3>Begin with the teaching parallel</h3>
+              <p>
+                Start with <strong>Teaching parallel: demon turned the wheel</strong> before
+                auditing the resurrection preset. It uses a car-crash claim to make the same
+                evidence-versus-alternatives pattern easier to see.
+              </p>
+            </div>
+            <button type="button" id="load-teaching-parallel">Load teaching parallel</button>
+          </aside>
           <div class="field-group">
             <label for="claim-text">State the exact claim</label>
             <textarea id="claim-text" name="claim-text"></textarea>
           </div>
-          <div class="resurrection-preset-actions">
-            <button type="button" id="load-generous">Generous assumptions</button>
-            <button type="button" id="load-corrected">Cautious assumptions</button>
-            <button type="button" id="reset-current">Reset claim</button>
+          <div class="resurrection-preset-actions" aria-label="Preset setting shortcuts">
+            <div class="preset-action-help">
+              <button type="button" id="load-generous" aria-describedby="believer-friendly-help">
+                Load believer-friendly settings
+              </button>
+              <div class="action-tooltip" id="believer-friendly-help" role="tooltip">
+                Gives the claim more benefit of the doubt: a higher starting point, stronger
+                evidence fit, and less penalty for overlap. Use it to see whether the case works
+                even under friendly assumptions.
+              </div>
+            </div>
+            <div class="preset-action-help">
+              <button type="button" id="load-corrected" aria-describedby="stricter-audit-help">
+                Load stricter audit settings
+              </button>
+              <div class="action-tooltip" id="stricter-audit-help" role="tooltip">
+                Applies more pressure: lower baseline confidence, more room for alternatives,
+                and more caution about shared sources. Use it to see whether the claim survives
+                a careful audit.
+              </div>
+            </div>
+            <div class="preset-action-help">
+              <button type="button" id="reset-current" aria-describedby="reset-current-help">
+                Reset selected preset
+              </button>
+              <div class="action-tooltip" id="reset-current-help" role="tooltip">
+                Returns the selected scenario to its original claim text, evidence items,
+                alternatives, and starting settings.
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -375,6 +413,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260504-teaching-tooltips"></script>
+    <script src="./app.js?v=20260504-app-guidance"></script>
   </body>
 </html>
