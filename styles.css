@@ -2612,12 +2612,7 @@ body:has(.guided-resurrection) a:focus-visible {
   visibility: visible;
 }
 
-.plain-result-strip article:nth-child(-n + 2) .metric-tooltip {
-  top: calc(100% + 9px);
-  bottom: auto;
-}
-
-.plain-result-strip article:nth-child(n + 3):nth-child(-n + 4) .metric-tooltip {
+.plain-result-strip .metric-tooltip {
   top: calc(100% + 9px);
   bottom: auto;
 }
@@ -2628,9 +2623,7 @@ body:has(.guided-resurrection) a:focus-visible {
 }
 
 .plain-result-strip .metric-donut-card .metric-tooltip {
-  top: calc(100% + 9px);
   right: 0;
-  bottom: auto;
   left: auto;
 }
 
