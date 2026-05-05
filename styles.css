@@ -2672,20 +2672,24 @@ body:has(.guided-resurrection) a:focus-visible {
 }
 
 .floating-audit-donuts .floating-credence-inner span {
-  display: block;
-  max-width: 48px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  max-width: 52px;
   color: var(--muted);
-  font-size: 0.42rem;
+  font-size: 0.4rem;
   font-weight: 900;
   letter-spacing: 0;
   line-height: 1.1;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .floating-audit-donuts .floating-credence-inner strong {
-  display: block;
+  display: inline;
   color: var(--plain-ink);
-  font-size: 0.58rem;
+  font-size: 0.5rem;
   line-height: 1;
 }
 
@@ -3443,12 +3447,13 @@ body:has(.guided-resurrection) a:focus-visible {
   }
 
   .floating-audit-donuts .floating-credence-inner span {
-    max-width: 36px;
-    font-size: 0.34rem;
+    max-width: 38px;
+    font-size: 0.3rem;
+    gap: 1px;
   }
 
   .floating-audit-donuts .floating-credence-inner strong {
-    font-size: 0.46rem;
+    font-size: 0.38rem;
   }
 
   .guided-steps {
