@@ -2343,7 +2343,7 @@ body:has(.guided-resurrection) {
   --plain-green-soft: #eef2dc;
   --plain-copper: #8a4b18;
   --plain-copper-soft: #fff4e2;
-  --selected-claim-orange: #ff7a00;
+  --selected-claim-color: #14a01d;
   --plain-red: #7d2516;
   --plain-red-soft: #fff1ec;
   --plain-ink: #122017;
@@ -2748,11 +2748,11 @@ body:has(.guided-resurrection) a:focus-visible {
 .guided-resurrection .selected-claim-display {
   margin: 0;
   padding: 14px 16px;
-  border: 1px solid var(--selected-claim-orange);
-  border-left: 5px solid var(--selected-claim-orange);
+  border: 1px solid var(--selected-claim-color);
+  border-left: 5px solid var(--selected-claim-color);
   border-radius: var(--radius);
   background: #050505;
-  color: var(--selected-claim-orange);
+  color: var(--selected-claim-color);
   font-size: clamp(1.1rem, 1.7vw, 1.45rem);
   font-weight: 850;
   line-height: 1.35;
@@ -2938,7 +2938,7 @@ body:has(.guided-resurrection) a:focus-visible {
   border-radius: 50%;
   background:
     conic-gradient(
-      var(--selected-claim-orange) 0 var(--claim-slice),
+      var(--selected-claim-color) 0 var(--claim-slice),
       var(--plain-copper) var(--claim-slice) var(--material-end),
       #111 var(--material-end) 100%
     );
@@ -2955,7 +2955,7 @@ body:has(.guided-resurrection) a:focus-visible {
 }
 
 .credence-donut-inner strong {
-  color: var(--selected-claim-orange);
+  color: var(--selected-claim-color);
   font-size: 1.5rem;
   line-height: 1;
 }
@@ -3004,12 +3004,12 @@ body:has(.guided-resurrection) a:focus-visible {
 }
 
 .selected-claim-swatch {
-  background: var(--selected-claim-orange);
+  background: var(--selected-claim-color);
 }
 
 #credence-claim-label,
 #floating-credence-claim {
-  color: var(--selected-claim-orange);
+  color: var(--selected-claim-color);
 }
 
 .material-cause-swatch {
