@@ -106,6 +106,8 @@ const els = {
 init();
 
 async function init() {
+  bindTopNavEvents();
+
   try {
     const response = await fetch("./data/audit-patterns.json");
     state.data = await response.json();
@@ -122,6 +124,12 @@ async function init() {
       </article>
     `;
   }
+}
+
+function bindTopNavEvents() {
+  document.querySelectorAll(".top-nav a[href^='#']").forEach((link) => {
+    link.addEventListener("click", handleAnchorNavigation);
+  });
 }
 
 function buildPatternSelect() {
@@ -168,10 +176,6 @@ function buildDefenseModes() {
 }
 
 function bindBaseEvents() {
-  document.querySelectorAll(".top-nav a[href^='#']").forEach((link) => {
-    link.addEventListener("click", handleAnchorNavigation);
-  });
-
   els.patternSelect.addEventListener("change", () => setPattern(els.patternSelect.value));
   els.preferredForce.addEventListener("input", () => {
     els.preferredForceValue.textContent = els.preferredForce.value;

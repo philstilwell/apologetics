@@ -62,6 +62,12 @@ body.app-resurrection {
   --brand-cross-color: #97544d;
 }
 
+body.app-induction #stances,
+body.app-induction #audit,
+body.app-induction #symmetry-status {
+  scroll-margin-top: 92px;
+}
+
 a {
   color: inherit;
 }
