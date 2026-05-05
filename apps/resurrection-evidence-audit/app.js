@@ -1,3 +1,5 @@
+const MIN_UNKNOWN_DISPLAY_CREDENCE = 0.000001; // 0.0001%
+
 const claimPresets = [
   {
     id: "resurrection",
@@ -697,7 +699,6 @@ const els = {
   scoreRing: document.querySelector("#score-ring"),
   floatingAuditScore: document.querySelector("#floating-audit-score"),
   floatingScoreRing: document.querySelector("#floating-score-ring"),
-  unknownReserveRingNote: document.querySelector("#unknown-reserve-ring-note"),
   credenceDonut: document.querySelector("#credence-donut"),
   credenceClaimValue: document.querySelector("#credence-claim-value"),
   credenceClaimLabel: document.querySelector("#credence-claim-label"),
@@ -1054,7 +1055,6 @@ function renderResultStrip(assessment) {
   els.resultCopy.textContent = buildPressureCopy(assessment);
   renderPressureRing(els.scoreRing, assessment, scoreColor);
   els.floatingAuditScore.textContent = String(assessment.auditPressure);
-  els.unknownReserveRingNote.textContent = `Unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}`;
   renderPressureRing(els.floatingScoreRing, assessment, scoreColor, { includeUnknown: false });
   renderCredenceMix(assessment);
 
@@ -1068,7 +1068,7 @@ function renderResultStrip(assessment) {
 }
 
 function renderPressureRing(ring, assessment, scoreColor, options = {}) {
-  const includeUnknown = options.includeUnknown ?? true;
+  const includeUnknown = options.includeUnknown ?? false;
   const unknownSlice = includeUnknown ? assessment.priorParts.unknownReserve * 100 : 0;
   const scoreEnd = clamp(unknownSlice + assessment.auditPressure, unknownSlice, 100);
   ring.setAttribute(
@@ -1407,8 +1407,6 @@ function calculateAlternativeBf() {
     return product * Math.pow(feature.ratio, weight);
   }, 1);
 }
-
-const MIN_UNKNOWN_DISPLAY_CREDENCE = 0.000001; // 0.0001%
 
 function calculateCredenceMix(selectedClaim, unknownReserve) {
   const claim = clamp(selectedClaim, 0, 1);
