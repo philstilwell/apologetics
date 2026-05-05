@@ -1,0 +1,24 @@
+{
+  "name": "apologetics",
+  "version": "1.0.0",
+  "description": "Static GitHub Pages suite for Crosshairs audits: compact tools that inspect Christian claims, evidential standards, bridge premises, probabilistic assumptions, and substantiation gaps.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philstilwell/apologetics.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/philstilwell/apologetics/issues"
+  },
+  "homepage": "https://github.com/philstilwell/apologetics#readme",
+  "devDependencies": {
+    "playwright": "^1.59.1"
+  }
+}
