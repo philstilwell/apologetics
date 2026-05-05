@@ -1,4 +1,5 @@
 const MIN_UNKNOWN_DISPLAY_CREDENCE = 0.000001; // 0.0001%
+const MIN_CLAIM_DISPLAY_CREDENCE = 0.012; // Cosmetic sliver only.
 
 const claimPresets = [
   {
@@ -1113,7 +1114,7 @@ function renderPressureRing(ring, assessment, scoreColor, options = {}) {
 
 function renderCredenceMix(assessment) {
   const displayUnknown = getCosmeticUnknownCredence(assessment.credenceMix.unknown);
-  const displayClaim = Math.min(assessment.credenceMix.claim, 1 - displayUnknown);
+  const displayClaim = getCosmeticClaimCredence(assessment.credenceMix.claim, displayUnknown);
   const displayMaterial = Math.max(0, 1 - displayUnknown - displayClaim);
   const claimPct = displayClaim * 100;
   const materialEnd = (displayClaim + displayMaterial) * 100;
@@ -1607,6 +1608,11 @@ function formatPercentWithRatio(value) {
 
 function getCosmeticUnknownCredence(value) {
   return Math.max(clamp(value, 0, 1), MIN_UNKNOWN_DISPLAY_CREDENCE);
+}
+
+function getCosmeticClaimCredence(value, displayUnknown) {
+  const available = Math.max(0, 1 - displayUnknown);
+  return Math.min(available, Math.max(clamp(value, 0, 1), MIN_CLAIM_DISPLAY_CREDENCE));
 }
 
 function formatCosmeticUnknownCredence(value) {

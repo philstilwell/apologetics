@@ -2342,6 +2342,7 @@ body:has(.guided-resurrection) {
   --plain-green-soft: #eef2dc;
   --plain-copper: #8a4b18;
   --plain-copper-soft: #fff4e2;
+  --selected-claim-orange: #ff7a00;
   --plain-red: #7d2516;
   --plain-red-soft: #fff1ec;
   --plain-ink: #122017;
@@ -2917,7 +2918,7 @@ body:has(.guided-resurrection) a:focus-visible {
   border-radius: 50%;
   background:
     conic-gradient(
-      var(--plain-blue) 0 var(--claim-slice),
+      var(--selected-claim-orange) 0 var(--claim-slice),
       var(--plain-copper) var(--claim-slice) var(--material-end),
       #111 var(--material-end) 100%
     );
@@ -2934,7 +2935,7 @@ body:has(.guided-resurrection) a:focus-visible {
 }
 
 .credence-donut-inner strong {
-  color: var(--plain-blue);
+  color: var(--selected-claim-orange);
   font-size: 1.5rem;
   line-height: 1;
 }
@@ -2983,7 +2984,12 @@ body:has(.guided-resurrection) a:focus-visible {
 }
 
 .selected-claim-swatch {
-  background: var(--plain-blue);
+  background: var(--selected-claim-orange);
+}
+
+#credence-claim-label,
+#floating-credence-claim {
+  color: var(--selected-claim-orange);
 }
 
 .material-cause-swatch {
