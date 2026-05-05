@@ -59,6 +59,8 @@ const nodes = {
   theismIndex: document.querySelector("#theism-index")
 };
 
+const stickyGap = 14;
+
 const profilePresets = [
   {
     id: "methodical-skeptic",
@@ -774,16 +776,22 @@ function renderCategoryBars() {
   nodes.categoryBars.innerHTML = categoryAverages(state.claims, state.profile).map((item) => `
     <button type="button" class="category-row" data-category-jump="${escapeHtml(item.category)}">
       <div class="category-row-heading">
-        <strong>${escapeHtml(item.category)}</strong>
+        <strong title="${escapeHtml(item.category)}">${escapeHtml(categoryShortLabels[item.category] ?? item.category)}</strong>
         <span>${item.count} rated</span>
       </div>
       <div class="bar-pair" aria-label="${item.category} averages">
-        <div class="bar confidence" style="width: ${item.confidence}%"></div>
-        <div class="bar substantiation" style="width: ${item.personalSubstantiation}%"></div>
+        <div class="bar-row">
+          <span>C</span>
+          <i><b class="bar confidence" style="width: ${item.confidence}%"></b></i>
+        </div>
+        <div class="bar-row">
+          <span>P</span>
+          <i><b class="bar substantiation" style="width: ${item.personalSubstantiation}%"></b></i>
+        </div>
       </div>
       <div class="bar-values">
-        <span>C ${Math.round(item.confidence)}</span>
-        <span>P ${Math.round(item.personalSubstantiation)}</span>
+        <span><strong>C</strong> ${Math.round(item.confidence)}</span>
+        <span><strong>P</strong> ${Math.round(item.personalSubstantiation)}</span>
       </div>
     </button>
   `).join("");
@@ -1039,6 +1047,36 @@ function applyPreset(presetId) {
   render();
 }
 
+function handleAnchorNavigation(event) {
+  const hash = event.currentTarget.getAttribute("href");
+  const target = hash ? document.querySelector(hash) : null;
+  if (!target) return;
+
+  event.preventDefault();
+  scrollToTarget(target, { behavior: "auto" });
+  history.pushState(null, "", hash);
+}
+
+function scrollToTarget(target, options = {}) {
+  const header = document.querySelector(".site-header");
+  const dashboard = document.querySelector(".dashboard-grid");
+  const headerHeight = header && getComputedStyle(header).position === "sticky" ? header.offsetHeight : 0;
+  const dashboardHeight = dashboard && getComputedStyle(dashboard).position === "sticky" && !dashboard.contains(target)
+    ? dashboard.offsetHeight
+    : 0;
+
+  if (options.center) {
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+
+  const targetTop = target.getBoundingClientRect().top + window.scrollY - headerHeight - dashboardHeight - stickyGap;
+  window.scrollTo({
+    top: Math.max(0, targetTop),
+    behavior: options.behavior || "instant",
+  });
+}
+
 function showClaim(claimId) {
   const claim = state.claims.find((item) => item.id === claimId);
   if (!claim) return;
@@ -1048,7 +1086,7 @@ function showClaim(claimId) {
   render();
   window.requestAnimationFrame(() => {
     const card = document.querySelector(`.claim[data-claim-id="${escapeSelectorValue(claimId)}"]`);
-    card?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (card) scrollToTarget(card, { center: true });
     card?.classList.add("claim-focus");
     window.setTimeout(() => card?.classList.remove("claim-focus"), 1600);
   });
@@ -1060,7 +1098,8 @@ function showCategory(category) {
   state.filters.search = "";
   render();
   window.requestAnimationFrame(() => {
-    document.querySelector("#claim-explorer-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const target = document.querySelector("#claim-explorer-title");
+    if (target) scrollToTarget(target);
   });
 }
 
@@ -1140,6 +1179,10 @@ async function importProfileFromFile(file) {
 }
 
 function bindEvents() {
+  document.querySelectorAll(".site-header a[href^='#']").forEach((link) => {
+    link.addEventListener("click", handleAnchorNavigation);
+  });
+
   nodes.claimList.addEventListener("input", (event) => {
     const target = event.target;
     const claim = target.closest(".claim");

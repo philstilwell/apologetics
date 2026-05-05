@@ -808,7 +808,7 @@ function handleAnchorNavigation(event) {
   history.pushState(null, "", hash);
   window.scrollTo({
     top: Math.max(0, targetTop),
-    behavior: "auto",
+    behavior: "instant",
   });
 }
 

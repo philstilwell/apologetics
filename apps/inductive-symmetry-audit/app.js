@@ -168,6 +168,10 @@ function buildDefenseModes() {
 }
 
 function bindBaseEvents() {
+  document.querySelectorAll(".top-nav a[href^='#']").forEach((link) => {
+    link.addEventListener("click", handleAnchorNavigation);
+  });
+
   els.patternSelect.addEventListener("change", () => setPattern(els.patternSelect.value));
   els.preferredForce.addEventListener("input", () => {
     els.preferredForceValue.textContent = els.preferredForce.value;
@@ -195,6 +199,22 @@ function bindBaseEvents() {
       behavior: "smooth",
       block: "center",
     });
+  });
+}
+
+function handleAnchorNavigation(event) {
+  const hash = event.currentTarget.getAttribute("href");
+  const target = hash ? document.querySelector(hash) : null;
+  if (!target) return;
+
+  event.preventDefault();
+  const header = document.querySelector(".site-header");
+  const headerHeight = header && getComputedStyle(header).position === "sticky" ? header.offsetHeight : 0;
+  const targetTop = target.getBoundingClientRect().top + window.scrollY - headerHeight - 18;
+  history.pushState(null, "", hash);
+  window.scrollTo({
+    top: Math.max(0, targetTop),
+    behavior: "instant",
   });
 }
 
