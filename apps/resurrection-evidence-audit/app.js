@@ -1,5 +1,6 @@
 const MIN_UNKNOWN_DISPLAY_CREDENCE = 0.000001; // 0.0001%
 const MIN_CLAIM_DISPLAY_CREDENCE = 0.0035; // Cosmetic hairline only.
+const MIN_MATERIAL_DISPLAY_CREDENCE = 0.0035; // Cosmetic hairline only.
 
 const claimPresets = [
   {
@@ -1120,9 +1121,10 @@ function renderPressureRing(ring, assessment, scoreColor, options = {}) {
 }
 
 function renderCredenceMix(assessment) {
-  const displayUnknown = getCosmeticUnknownCredence(assessment.credenceMix.unknown);
-  const displayClaim = getCosmeticClaimCredence(assessment.credenceMix.claim, displayUnknown);
-  const displayMaterial = Math.max(0, 1 - displayUnknown - displayClaim);
+  const displayMix = getCosmeticCredenceMix(assessment.credenceMix);
+  const displayClaim = displayMix.claim;
+  const displayMaterial = displayMix.material;
+  const displayUnknown = displayMix.unknown;
   const claimPct = displayClaim * 100;
   const materialEnd = (displayClaim + displayMaterial) * 100;
   const unknownLabel = formatCosmeticUnknownCredence(assessment.credenceMix.unknown);
@@ -1618,9 +1620,23 @@ function getCosmeticUnknownCredence(value) {
   return Math.max(clamp(value, 0, 1), MIN_UNKNOWN_DISPLAY_CREDENCE);
 }
 
-function getCosmeticClaimCredence(value, displayUnknown) {
-  const available = Math.max(0, 1 - displayUnknown);
-  return Math.min(available, Math.max(clamp(value, 0, 1), MIN_CLAIM_DISPLAY_CREDENCE));
+function getCosmeticCredenceMix(mix) {
+  const unknown = getCosmeticUnknownCredence(mix.unknown);
+  const available = Math.max(0, 1 - unknown);
+  let claim = Math.max(clamp(mix.claim, 0, 1), MIN_CLAIM_DISPLAY_CREDENCE);
+  let material = Math.max(clamp(mix.material, 0, 1), MIN_MATERIAL_DISPLAY_CREDENCE);
+
+  if (claim + material > available) {
+    const scale = available / (claim + material || 1);
+    claim *= scale;
+    material *= scale;
+  }
+
+  return {
+    claim,
+    material,
+    unknown,
+  };
 }
 
 function formatCosmeticUnknownCredence(value) {
