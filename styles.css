@@ -2555,7 +2555,7 @@ body:has(.guided-resurrection) a:focus-visible {
 
 .plain-result-strip .metric-donut-card {
   display: grid;
-  min-height: 98px;
+  min-height: 118px;
   align-content: center;
   justify-items: center;
   gap: 4px;
@@ -2651,17 +2651,17 @@ body:has(.guided-resurrection) a:focus-visible {
 
 .plain-result-strip .score-ring,
 .plain-result-strip .credence-donut {
-  width: 76px;
+  width: 92px;
 }
 
 .plain-result-strip .score-ring-inner,
 .plain-result-strip .credence-donut-inner {
-  width: 56px;
+  width: 66px;
 }
 
 .plain-result-strip .score-ring strong {
   margin: 0;
-  font-size: 1.08rem;
+  font-size: 1.3rem;
 }
 
 .floating-credence-inner {
@@ -2674,9 +2674,9 @@ body:has(.guided-resurrection) a:focus-visible {
   align-items: baseline;
   justify-content: center;
   gap: 2px;
-  max-width: 52px;
+  max-width: 62px;
   color: var(--muted);
-  font-size: 0.4rem;
+  font-size: 0.48rem;
   font-weight: 900;
   letter-spacing: 0;
   line-height: 1.1;
@@ -2688,7 +2688,7 @@ body:has(.guided-resurrection) a:focus-visible {
   display: inline;
   margin: 0;
   color: var(--plain-ink);
-  font-size: 0.5rem;
+  font-size: 0.62rem;
   line-height: 1;
 }
 
@@ -3457,26 +3457,26 @@ body:has(.guided-resurrection) a:focus-visible {
 
   .plain-result-strip .score-ring,
   .plain-result-strip .credence-donut {
-    width: 64px;
+    width: 74px;
   }
 
   .plain-result-strip .score-ring-inner,
   .plain-result-strip .credence-donut-inner {
-    width: 46px;
+    width: 54px;
   }
 
   .plain-result-strip .score-ring strong {
-    font-size: 0.92rem;
+    font-size: 1.02rem;
   }
 
   .plain-result-strip .floating-credence-inner span {
-    max-width: 42px;
-    font-size: 0.32rem;
+    max-width: 50px;
+    font-size: 0.36rem;
     gap: 1px;
   }
 
   .plain-result-strip .floating-credence-inner strong {
-    font-size: 0.4rem;
+    font-size: 0.46rem;
   }
 
   .range-top {
