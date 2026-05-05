@@ -9,7 +9,7 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260505-reserved-unknown-credence">
+    <link rel="stylesheet" href="../../styles.css?v=20260505-claim-display">
   </head>
   <body>
     <header class="site-header">
@@ -248,9 +248,14 @@
             </div>
             <button type="button" id="load-teaching-parallel">Load teaching parallel</button>
           </aside>
-          <div class="field-group">
-            <label for="claim-text">State the exact claim</label>
-            <textarea id="claim-text" name="claim-text"></textarea>
+          <div class="field-group selected-claim-display-group">
+            <p class="field-label" id="claim-text-label">Selected claim</p>
+            <p
+              class="selected-claim-display"
+              id="claim-text"
+              tabindex="0"
+              aria-labelledby="claim-text-label"
+            ></p>
           </div>
           <div class="resurrection-preset-actions" aria-label="Preset setting shortcuts">
             <div class="preset-action-help">
@@ -599,6 +604,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260505-reserved-unknown-credence"></script>
+    <script src="./app.js?v=20260505-claim-display"></script>
   </body>
 </html>

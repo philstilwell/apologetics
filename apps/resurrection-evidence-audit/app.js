@@ -751,7 +751,6 @@ function bindEvents() {
   });
 
   els.preset.addEventListener("change", () => loadPreset(els.preset.value));
-  els.claim.addEventListener("input", render);
   els.unknownNotes.addEventListener("input", render);
 
   [els.generalPrior, els.targetingPenalty, els.actTypeRate, els.unknownReserve].forEach((input) => {
@@ -828,7 +827,7 @@ function loadPreset(presetId) {
   state.featureWeights = new Map(getAlternativesForPreset(preset).map((feature) => [feature.id, 1]));
 
   els.preset.value = preset.id;
-  els.claim.value = preset.claim;
+  setClaimText(preset.claim);
   els.generalPrior.value = String(preset.prior.general);
   els.targetingPenalty.value = String(preset.prior.targeting);
   els.actTypeRate.value = String(preset.prior.actType);
@@ -885,6 +884,14 @@ function renderPresetText(preset) {
   setText(els.alternativesHelpTitle, meta.alternativesHelpTitle);
   setText(els.alternativesHelpOne, meta.alternativesHelpOne);
   setText(els.alternativesHelpTwo, meta.alternativesHelpTwo);
+}
+
+function setClaimText(value) {
+  els.claim.textContent = value;
+}
+
+function getClaimText() {
+  return els.claim.textContent.trim();
 }
 
 function renderLedger() {
@@ -1227,7 +1234,7 @@ function assess() {
   return {
     preset,
     meta,
-    claim: els.claim.value.trim(),
+    claim: getClaimText(),
     unknownNotes: els.unknownNotes.value.trim(),
     unreservedPrior,
     unknownReserveDiscount,

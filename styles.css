@@ -1274,6 +1274,7 @@ button.ghost {
 }
 
 .field-group label,
+.field-group .field-label,
 .range-row label,
 .parallel-label {
   color: var(--ink);
@@ -2395,6 +2396,7 @@ body:has(.guided-resurrection) {
 body:has(.guided-resurrection) select:focus-visible,
 body:has(.guided-resurrection) input:focus-visible,
 body:has(.guided-resurrection) textarea:focus-visible,
+body:has(.guided-resurrection) [tabindex]:focus-visible,
 body:has(.guided-resurrection) button:focus-visible,
 body:has(.guided-resurrection) a:focus-visible {
   outline-color: rgba(31, 90, 58, 0.32);
@@ -2739,8 +2741,26 @@ body:has(.guided-resurrection) a:focus-visible {
   padding: 16px;
 }
 
-.guided-resurrection #claim-text {
-  min-height: 118px;
+.field-group .field-label {
+  margin: 0;
+}
+
+.guided-resurrection .selected-claim-display {
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid #ffc17f;
+  border-left: 5px solid var(--selected-claim-orange);
+  border-radius: var(--radius);
+  background: #fff8ef;
+  color: var(--selected-claim-orange);
+  font-size: clamp(1.1rem, 1.7vw, 1.45rem);
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.guided-resurrection .selected-claim-display:empty::before {
+  content: "No claim selected";
+  color: var(--muted);
 }
 
 .plain-range {
