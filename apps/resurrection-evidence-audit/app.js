@@ -1154,11 +1154,11 @@ function renderCredenceMix(assessment) {
 
 function renderWarnings(assessment) {
   els.pitfallList.innerHTML = assessment.flags
-    .map((flag) => `<li><strong>${escapeHtml(flag.title)}:</strong> ${escapeHtml(flag.body)}</li>`)
+    .map((flag) => `<li><strong>${escapeHtml(flag.title)}</strong><p>${escapeHtml(flag.body)}</p></li>`)
     .join("");
 
   els.repairList.innerHTML = assessment.repairs
-    .map((repair) => `<article class="repair-card"><strong>${escapeHtml(repair.title)}</strong><br>${escapeHtml(repair.body)}</article>`)
+    .map((repair) => `<article class="repair-card"><strong>${escapeHtml(repair.title)}</strong><p>${escapeHtml(repair.body)}</p></article>`)
     .join("");
 }
 
@@ -1277,7 +1277,7 @@ function buildFlags(context) {
   if (context.prior > 0.01) {
     flags.push({
       title: "The baseline may be too high",
-      body: `This ${meta.startingPointKind} begins above 1% before the evidence is counted. That may be reasonable only if the specificity and event-type assumptions can be defended.`,
+      body: `This ${meta.startingPointKind} begins above 1% before the case evidence is counted. That means the claim is already receiving meaningful credit before the testimony, reports, or other details are added. This may be fair, but only if you can explain why this exact kind of event should be expected in advance. If the starting point is too generous, the final result can look stronger than the evidence itself deserves.`,
       weight: 16,
     });
   }
@@ -1285,7 +1285,7 @@ function buildFlags(context) {
   if (context.priorParts.general > 0.45 && context.priorParts.targeting > 0.1) {
     flags.push({
       title: meta.borrowingTitle,
-      body: meta.borrowingBody,
+      body: `${meta.borrowingBody} In ordinary terms, a broad worldview belief should not automatically pay the bill for one very specific event claim. The audit is asking whether the support really reaches this person, this event, this time, and this interpretation.`,
       weight: 16,
     });
   }
@@ -1293,13 +1293,13 @@ function buildFlags(context) {
   if (context.priorParts.unknownReserve < 0.05) {
     flags.push({
       title: "Too little room for unconceived explanations",
-      body: "The audit leaves very little space for unmodeled mechanisms, selection effects, mistaken memory, missing records, or explanations that have not yet been considered.",
+      body: "The audit leaves very little space for causes you have not listed yet. That matters because real cases often include missing records, mistaken memory, selective reporting, social pressure, ordinary mechanisms, or mixed causes that no one noticed at first. Leaving room for the unknown is not a trick against the claim; it is a way to admit that our comparison list may be incomplete.",
       weight: 15,
     });
   } else if (context.priorParts.unknownReserve < 0.1 && !context.unknownNotes) {
     flags.push({
       title: "Unconceived explanations are not named",
-      body: "The reserve is modest, and the notes field does not name what might still be missing from the comparison side.",
+      body: "The reserve for unknowns is modest, and the notes field does not say what might be missing. A reserve is more useful when it is connected to concrete possibilities: missing documents, unreported failures, timing mistakes, memory pressure, ordinary causes not listed, or ways the story may have changed. Naming these possibilities helps keep the audit honest.",
       weight: 8,
     });
   }
@@ -1307,7 +1307,7 @@ function buildFlags(context) {
   if (suppressed.length > 0) {
     flags.push({
       title: "Alternative explanations are treated as almost impossible",
-      body: `${suppressed.length} evidence item${suppressed.length === 1 ? "" : "s"} place the ${meta.suppressedPathName} below 3%, which can make the evidence appear stronger than it is.`,
+      body: `${suppressed.length} evidence item${suppressed.length === 1 ? "" : "s"} place the ${meta.suppressedPathName} below 3%. That is a very strong judgment. Before using it, ask whether ordinary explanations, sincere misinterpretation, source dependence, missing data, or later story-shaping have really been ruled down that far. If alternatives are pushed too low too quickly, the evidence can look more decisive than it actually is.`,
       weight: 18,
     });
   }
@@ -1315,7 +1315,7 @@ function buildFlags(context) {
   if (highDependence.length > 0) {
     flags.push({
       title: "Related evidence may be counted as separate",
-      body: `${highDependence.length} testimony, story, or social item${highDependence.length === 1 ? "" : "s"} are treated as highly independent even though source overlap may be significant.`,
+      body: `${highDependence.length} testimony, story, or social item${highDependence.length === 1 ? "" : "s"} are treated as highly independent even though they may come from overlapping people, memories, texts, communities, or retellings. Evidence is strongest when separate lines could have gone different ways. If several items trace back to the same stream, counting them as fully separate can multiply confidence without adding truly new support.`,
       weight: 14,
     });
   }
@@ -1323,7 +1323,7 @@ function buildFlags(context) {
   if (sincerityRows.length > 0) {
     flags.push({
       title: "Sincerity is doing too much work",
-      body: "Some testimony is adding a large lift. Separate honest belief, genuine experience, accurate interpretation, and the event actually occurring.",
+      body: "Some testimony is adding a large lift. Honest belief matters, but it does not settle everything. A person can be sincere and still misremember, misread the cause, inherit a community interpretation, or draw too strong a conclusion from a real experience. The audit should separate four questions: were people honest, did they experience something, did they interpret it correctly, and did the claimed event actually happen?",
       weight: 12,
     });
   }
@@ -1331,7 +1331,7 @@ function buildFlags(context) {
   if (neutralRows.length > 0) {
     flags.push({
       title: "Some evidence barely distinguishes the claim",
-      body: `${neutralRows.length} item${neutralRows.length === 1 ? " is" : "s are"} close to neutral. That evidence may belong in the account, but it should not be presented as strong confirmation.`,
+      body: `${neutralRows.length} item${neutralRows.length === 1 ? " is" : "s are"} close to neutral, meaning it fits the selected claim and the alternatives at about the same level. Such evidence may still belong in the story, but it should not be sold as strong confirmation. Background facts, sincere emotion, or movement growth can be real without clearly selecting one explanation over another.`,
       weight: 8,
     });
   }
@@ -1339,7 +1339,7 @@ function buildFlags(context) {
   if (context.topDriver && context.topDriver.share > 0.55) {
     flags.push({
       title: "One evidence item is carrying the case",
-      body: `${context.topDriver.title} supplies more than half of the positive movement, so the result is fragile around that single judgment.`,
+      body: `${context.topDriver.title} supplies more than half of the positive movement. That makes the result fragile: if this one item is weaker, less independent, or more explainable by alternatives than entered, the overall conclusion changes sharply. A strong case should not depend too heavily on one slider judgment unless that item is exceptionally clear and well defended.`,
       weight: 14,
     });
   }
@@ -1347,7 +1347,7 @@ function buildFlags(context) {
   if (context.shortfall90 > 1000) {
     flags.push({
       title: "The evidence is still far short of high confidence",
-      body: "The current evidence would need more than a thousand times additional lift to reach 90% confidence from the entered baseline.",
+      body: "The current evidence would need more than a thousand times additional lift to reach 90% confidence from the entered baseline. In plain language, the evidence entered so far does not yet bridge the gap between the starting point and a confident conclusion. This does not prove the claim false, but it does mean the claim should be stated more cautiously unless stronger support can be added.",
       weight: 16,
     });
   }
@@ -1355,7 +1355,7 @@ function buildFlags(context) {
   if (context.alternativeBf > 100) {
     flags.push({
       title: meta.alternativeStrongTitle,
-      body: meta.alternativeStrongBody,
+      body: `${meta.alternativeStrongBody} This means the competing explanations are not just abstract possibilities. Given the settings selected below, they still have real explanatory strength and should stay in the comparison until specific evidence rules them out.`,
       weight: 10,
     });
   }
@@ -1363,7 +1363,7 @@ function buildFlags(context) {
   if (flags.length === 0) {
     flags.push({
       title: "No major structural warnings",
-      body: "The current model avoids the most obvious reasoning traps. The remaining question is whether each slider value can be defended.",
+      body: "The current model avoids the most obvious reasoning traps in this audit. That is not the same as proving the claim. It means the structure is more balanced: alternatives have not been dismissed too quickly, unknowns have some room, and no single warning dominates. The next step is to ask whether each slider value could be defended to someone who does not already share the conclusion.",
       weight: 2,
     });
   }
@@ -1381,28 +1381,28 @@ function buildRepairs(flags, meta) {
   ) {
     repairs.push({
       title: "Rebuild the comparison side",
-      body: meta.comparisonRepairBody,
+      body: `${meta.comparisonRepairBody} Then ask, item by item, what you would expect if one of those alternatives were true. The goal is not to defeat the selected claim by piling on doubts; the goal is to avoid giving the claim credit simply because the other side was left underdeveloped.`,
     });
   }
 
   if (titles.has("Related evidence may be counted as separate") || titles.has("One evidence item is carrying the case")) {
     repairs.push({
       title: "Lower overlap-sensitive evidence",
-      body: meta.overlapRepairBody,
+      body: `${meta.overlapRepairBody} If several pieces of evidence depend on the same people, documents, community memory, or repeated story, reduce their independence. Treat them as connected support unless you can show they are genuinely separate checks on the claim.`,
     });
   }
 
   if (titles.has("The baseline may be too high") || titles.has(meta.borrowingTitle)) {
     repairs.push({
-      title: "Show the full specificity chain",
-      body: meta.specificityRepairBody,
+      title: "Show the exact claim step by step",
+      body: `${meta.specificityRepairBody} Write the path from the broad belief to the exact claim in small steps. At each step, ask what new support is needed. This prevents a general belief from quietly turning into high confidence about a very detailed event.`,
     });
   }
 
   if (titles.has("Sincerity is doing too much work")) {
     repairs.push({
       title: "Separate belief from event truth",
-      body: "Ask what sincerity proves, then separately ask whether the experience was interpreted correctly and whether the event occurred.",
+      body: "Ask what sincerity proves, then separately ask whether the experience was interpreted correctly and whether the event occurred. In the report, state this plainly: sincere witnesses can strongly support sincere conviction, but further evidence is needed to move from sincere conviction to the exact event claim.",
     });
   }
 
@@ -1412,21 +1412,21 @@ function buildRepairs(flags, meta) {
   ) {
     repairs.push({
       title: "Add an unknowns reserve",
-      body: "Name what could still be missing, then leave some probability room for unlisted causes, incomplete records, selection effects, mistaken assumptions, and ordinary mechanisms not yet considered.",
+      body: "Name what could still be missing, then leave some probability room for unlisted causes, incomplete records, selection effects, mistaken assumptions, and mechanisms not yet considered. This is epistemic humility in practice: it admits that the current list of explanations may not exhaust reality.",
     });
   }
 
   if (titles.has("The evidence is still far short of high confidence")) {
     repairs.push({
       title: "State the burden plainly",
-      body: "Before calling the case strong, report how much additional evidence lift is needed to reach high confidence.",
+      body: "Before calling the case strong, report how much additional evidence lift is needed to reach high confidence. This makes the conclusion easier to understand: the user can see whether the current evidence nearly reaches the target or whether a much stronger case would be required.",
     });
   }
 
   if (repairs.length === 0) {
     repairs.push({
       title: "Keep the assumptions visible",
-      body: "Export the report and ask whether a fair critic could change any one slider without undermining the conclusion.",
+      body: "Export the report and ask whether a fair critic could change any one slider without undermining the conclusion. If the result holds after reasonable adjustments, the audit is more stable. If one ordinary adjustment changes everything, the conclusion should be stated with more caution.",
     });
   }
 
