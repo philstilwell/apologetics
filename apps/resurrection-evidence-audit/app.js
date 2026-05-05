@@ -332,6 +332,14 @@ const posturePresets = {
       weightFloor: 88,
     },
   },
+  seeker: {
+    priorBlend: 0.5,
+    evidence: {
+      pTrueBoost: 1.06,
+      pAltFactor: 0.55,
+      weightFloor: 70,
+    },
+  },
   corrected: {
     evidence: {
       pTrueBoost: 1,
@@ -652,6 +660,7 @@ const state = {
   evidence: [],
   featureWeights: new Map(resurrectionAlternativeFeatures.map((feature) => [feature.id, 1])),
   baselineRefusalOpened: false,
+  activePosture: null,
 };
 
 const els = {
@@ -684,9 +693,9 @@ const els = {
   useBelieverRange: document.querySelector("#use-believer-range"),
   useTeachingParallelRange: document.querySelector("#use-teaching-parallel-range"),
   loadGenerous: document.querySelector("#load-generous"),
+  loadSeeker: document.querySelector("#load-seeker"),
   loadCorrected: document.querySelector("#load-corrected"),
   loadTeachingParallel: document.querySelector("#load-teaching-parallel"),
-  resetCurrent: document.querySelector("#reset-current"),
   startingConfidence: document.querySelector("#starting-confidence"),
   evidenceAdded: document.querySelector("#evidence-added"),
   updatedConfidence: document.querySelector("#updated-confidence"),
@@ -779,9 +788,9 @@ function bindEvents() {
     focusStartingPoint();
   });
   els.loadGenerous.addEventListener("click", () => applyPosture("generous"));
+  els.loadSeeker.addEventListener("click", () => applyPosture("seeker"));
   els.loadCorrected.addEventListener("click", () => applyPosture("corrected"));
   els.loadTeachingParallel.addEventListener("click", () => loadPreset("car-crash-demon"));
-  els.resetCurrent.addEventListener("click", () => loadPreset(state.presetId));
   els.copyReport.addEventListener("click", () => copyText(els.finalReport.value, els.copyReport));
   els.copyAiPrompt.addEventListener("click", () => copyText(els.aiPrompt.value, els.copyAiPrompt));
 }
@@ -865,22 +874,25 @@ function loadPreset(presetId) {
   els.actTypeRate.value = String(preset.prior.actType);
   els.unknownReserve.value = String(preset.prior.unknownReserve);
   els.unknownNotes.value = preset.unknownNotes || "";
+  state.activePosture = null;
 
   renderPresetText(preset);
   renderLedger();
   renderFeatures();
+  renderPostureState();
   render();
 }
 
 function applyPosture(kind) {
   const posture = posturePresets[kind];
   const preset = getCurrentPreset();
-  const prior = kind === "corrected" ? preset.prior : posture.prior;
+  const prior = getPosturePrior(kind, preset, posture);
 
   els.generalPrior.value = String(prior.general);
   els.targetingPenalty.value = String(prior.targeting);
   els.actTypeRate.value = String(prior.actType);
   els.unknownReserve.value = String(prior.unknownReserve);
+  state.activePosture = kind;
 
   state.evidence = preset.evidence.map((item) => ({
     ...item,
@@ -890,7 +902,50 @@ function applyPosture(kind) {
   }));
 
   renderLedger();
+  renderPostureState();
   render();
+}
+
+function getPosturePrior(kind, preset, posture) {
+  if (kind === "corrected") {
+    return preset.prior;
+  }
+
+  if (posture.prior) {
+    return posture.prior;
+  }
+
+  if (typeof posture.priorBlend === "number") {
+    return blendPrior(preset.prior, posturePresets.generous.prior, posture.priorBlend);
+  }
+
+  return preset.prior;
+}
+
+function blendPrior(base, target, targetShare) {
+  const baseShare = 1 - targetShare;
+  return {
+    general: roundSetting(base.general * baseShare + target.general * targetShare),
+    targeting: roundSetting(base.targeting * baseShare + target.targeting * targetShare),
+    actType: roundSetting(base.actType * baseShare + target.actType * targetShare),
+    unknownReserve: roundSetting(base.unknownReserve * baseShare + target.unknownReserve * targetShare),
+  };
+}
+
+function roundSetting(value) {
+  return Number(value.toFixed(value < 1 ? 2 : 1));
+}
+
+function renderPostureState() {
+  [
+    ["generous", els.loadGenerous],
+    ["seeker", els.loadSeeker],
+    ["corrected", els.loadCorrected],
+  ].forEach(([kind, button]) => {
+    const isActive = state.activePosture === kind;
+    button.dataset.active = String(isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
 }
 
 function renderPresetText(preset) {

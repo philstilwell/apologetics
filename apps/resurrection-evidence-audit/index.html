@@ -269,9 +269,21 @@
                 Load believer-friendly settings
               </button>
               <div class="action-tooltip" id="believer-friendly-help" role="tooltip">
-                Gives the claim more benefit of the doubt: a higher starting point, stronger
-                evidence fit, and less penalty for overlap. Use it to see whether the case works
-                even under friendly assumptions.
+                Believer-friendly gives the claim more benefit of the doubt. It raises the baseline
+                openness to the claim, treats the listed evidence as fitting the claim strongly, treats
+                alternatives as weaker, and gives more independence credit to related evidence items.
+                Use it to test whether the claim looks strong under charitable assumptions.
+              </div>
+            </div>
+            <div class="preset-action-help">
+              <button type="button" id="load-seeker" aria-describedby="seeker-audit-help">
+                Load seeker's audit settings
+              </button>
+              <div class="action-tooltip" id="seeker-audit-help" role="tooltip">
+                Seeker's audit uses a middle posture for a fair-minded inquirer. It keeps some
+                openness to the claim, keeps meaningful room for ordinary alternatives and unknowns,
+                and applies moderate caution when evidence items may share the same source, memory,
+                community, or retelling chain. It adjusts to the selected claim.
               </div>
             </div>
             <div class="preset-action-help">
@@ -279,18 +291,10 @@
                 Load stricter audit settings
               </button>
               <div class="action-tooltip" id="stricter-audit-help" role="tooltip">
-                Applies more pressure: lower baseline confidence, more room for alternatives,
-                and more caution about shared sources. Use it to see whether the claim survives
-                a careful audit.
-              </div>
-            </div>
-            <div class="preset-action-help">
-              <button type="button" id="reset-current" aria-describedby="reset-current-help">
-                Reset selected preset
-              </button>
-              <div class="action-tooltip" id="reset-current-help" role="tooltip">
-                Returns the selected scenario to its original claim text, evidence items,
-                alternatives, and starting settings.
+                Stricter audit applies the most pressure. It returns to the preset's cautious
+                baseline, preserves more force for material alternatives and unknown explanations,
+                and counts related evidence less independently. Use it to see whether the claim
+                still holds up when the comparison side is fully represented.
               </div>
             </div>
           </div>

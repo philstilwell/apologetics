@@ -2013,6 +2013,13 @@ input[type="range"] {
   font-size: 0.8rem;
 }
 
+.resurrection-preset-actions button[data-active="true"] {
+  border-color: var(--selected-claim-color);
+  background: #050807;
+  color: var(--selected-claim-color);
+  box-shadow: inset 0 0 0 2px rgba(6, 218, 73, 0.38);
+}
+
 .action-tooltip {
   position: absolute;
   right: 0;
