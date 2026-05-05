@@ -2528,6 +2528,13 @@ body:has(.guided-resurrection) a:focus-visible {
   outline-color: rgba(31, 90, 58, 0.32);
 }
 
+.guided-resurrection #claim-preset {
+  min-height: 52px;
+  padding: 10px 14px;
+  font-size: 1.24rem;
+  line-height: 1.2;
+}
+
 .audit-step.full-step > .annotation.plain-help {
   margin-top: -8px;
 }
