@@ -2671,7 +2671,7 @@ body:has(.guided-resurrection) a:focus-visible {
   gap: 1px;
 }
 
-.floating-credence-inner span {
+.floating-audit-donuts .floating-credence-inner span {
   display: block;
   max-width: 48px;
   color: var(--muted);
@@ -2682,7 +2682,7 @@ body:has(.guided-resurrection) a:focus-visible {
   text-transform: uppercase;
 }
 
-.floating-credence-inner strong {
+.floating-audit-donuts .floating-credence-inner strong {
   display: block;
   color: var(--plain-ink);
   font-size: 0.58rem;
@@ -3442,12 +3442,12 @@ body:has(.guided-resurrection) a:focus-visible {
     font-size: 0.88rem;
   }
 
-  .floating-credence-inner span {
+  .floating-audit-donuts .floating-credence-inner span {
     max-width: 36px;
     font-size: 0.34rem;
   }
 
-  .floating-credence-inner strong {
+  .floating-audit-donuts .floating-credence-inner strong {
     font-size: 0.46rem;
   }
 
