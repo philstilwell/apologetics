@@ -2617,6 +2617,11 @@ body:has(.guided-resurrection) a:focus-visible {
   bottom: auto;
 }
 
+.plain-result-strip article:nth-child(n + 3):nth-child(-n + 4) .metric-tooltip {
+  top: calc(100% + 9px);
+  bottom: auto;
+}
+
 .plain-result-strip article:nth-child(n + 3) .metric-tooltip {
   right: 0;
   left: auto;
