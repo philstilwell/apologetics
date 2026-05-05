@@ -2600,6 +2600,11 @@ body:has(.guided-resurrection) a:focus-visible {
   border-radius: 4px;
 }
 
+.metric-card:focus-visible {
+  outline: 2px solid var(--plain-copper);
+  outline-offset: 3px;
+}
+
 .metric-card:hover .metric-tooltip,
 .metric-card:focus-within .metric-tooltip {
   opacity: 1;
@@ -2614,6 +2619,13 @@ body:has(.guided-resurrection) a:focus-visible {
 
 .plain-result-strip article:nth-child(n + 3) .metric-tooltip {
   right: 0;
+  left: auto;
+}
+
+.plain-result-strip .metric-donut-card .metric-tooltip {
+  top: calc(100% + 9px);
+  right: 0;
+  bottom: auto;
   left: auto;
 }
 

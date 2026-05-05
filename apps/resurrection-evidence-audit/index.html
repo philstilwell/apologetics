@@ -9,7 +9,7 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-sticky-donuts-nav">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-donut-tooltips">
   </head>
   <body>
     <header class="site-header">
@@ -155,7 +155,18 @@
           <strong id="needed-for-high">1x</strong>
           <small id="needed-for-high-note">Evidence burden</small>
         </article>
-        <article class="metric-card metric-donut-card" aria-live="polite" aria-label="Live audit pressure">
+        <article
+          class="metric-card metric-donut-card"
+          tabindex="0"
+          aria-live="polite"
+          aria-label="Live audit pressure"
+          aria-describedby="pressure-donut-help"
+        >
+          <span class="metric-tooltip" id="pressure-donut-help" role="tooltip">
+            Audit pressure is a warning score, not the probability that the claim is false. It rises
+            when the case leans heavily on fragile assumptions, weak alternatives, low independence,
+            or evidence that needs more support before high confidence is fair.
+          </span>
           <div
             class="score-ring compact-score-ring"
             id="floating-score-ring"
@@ -169,7 +180,18 @@
           </div>
           <span class="floating-donut-label">Pressure</span>
         </article>
-        <article class="metric-card metric-donut-card" aria-live="polite" aria-label="Live cause credence mix">
+        <article
+          class="metric-card metric-donut-card"
+          tabindex="0"
+          aria-live="polite"
+          aria-label="Live cause credence mix"
+          aria-describedby="credence-donut-help"
+        >
+          <span class="metric-tooltip" id="credence-donut-help" role="tooltip">
+            This graph separates the current probability into three buckets: the selected immaterial
+            claim, conceived material explanations, and the reserved space for unconceived causes.
+            The unknown bucket is a humility reserve rather than a material or immaterial verdict.
+          </span>
           <div
             class="credence-donut floating-credence-donut"
             id="floating-credence-donut"
@@ -576,6 +598,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260504-sticky-donuts-nav"></script>
+    <script src="./app.js?v=20260504-donut-tooltips"></script>
   </body>
 </html>
