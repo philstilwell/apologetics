@@ -2748,10 +2748,10 @@ body:has(.guided-resurrection) a:focus-visible {
 .guided-resurrection .selected-claim-display {
   margin: 0;
   padding: 14px 16px;
-  border: 1px solid #ffc17f;
+  border: 1px solid var(--selected-claim-orange);
   border-left: 5px solid var(--selected-claim-orange);
   border-radius: var(--radius);
-  background: #fff8ef;
+  background: #050505;
   color: var(--selected-claim-orange);
   font-size: clamp(1.1rem, 1.7vw, 1.45rem);
   font-weight: 850;
