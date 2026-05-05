@@ -1404,11 +1404,15 @@ function calculateAlternativeBf() {
   }, 1);
 }
 
+const MIN_UNKNOWN_CREDENCE = 0.000001; // 0.0001%
+
 function calculateCredenceMix(selectedClaim, unknownReserve) {
-  const claim = clamp(selectedClaim, 0, 1);
-  const remainder = 1 - claim;
-  const unknown = remainder * clamp(unknownReserve, 0, 1);
-  const material = Math.max(0, remainder - unknown);
+  const desiredClaim = clamp(selectedClaim, 0, 1);
+  const rawRemainder = 1 - desiredClaim;
+  const rawUnknown = rawRemainder * clamp(unknownReserve, 0, 1);
+  const unknown = Math.min(1, Math.max(rawUnknown, MIN_UNKNOWN_CREDENCE));
+  const claim = Math.min(desiredClaim, 1 - unknown);
+  const material = Math.max(0, 1 - unknown - claim);
   return {
     claim,
     material,
