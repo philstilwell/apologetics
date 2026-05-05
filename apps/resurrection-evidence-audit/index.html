@@ -9,7 +9,7 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260505-material-sliver">
+    <link rel="stylesheet" href="../../styles.css?v=20260505-floating-claim-strip">
   </head>
   <body>
     <header class="site-header">
@@ -205,6 +205,10 @@
           </div>
           <span class="floating-donut-label">Credence</span>
         </article>
+        <div class="floating-claim-strip" aria-live="polite" aria-label="Currently selected claim">
+          <span class="floating-claim-strip-label">Selected claim</span>
+          <span class="floating-claim-text-value" id="floating-claim-text">No claim selected</span>
+        </div>
       </section>
 
       <details class="annotation plain-help app-wide">
@@ -604,6 +608,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260505-material-sliver"></script>
+    <script src="./app.js?v=20260505-floating-claim-strip"></script>
   </body>
 </html>

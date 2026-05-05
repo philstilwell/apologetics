@@ -2701,6 +2701,41 @@ body:has(.guided-resurrection) a:focus-visible {
   text-transform: uppercase;
 }
 
+.floating-claim-strip {
+  display: grid;
+  min-width: 0;
+  min-height: 28px;
+  grid-column: 1 / -1;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px;
+  border: 1px solid var(--selected-claim-color);
+  border-left: 5px solid var(--selected-claim-color);
+  border-radius: 7px;
+  background: #050505;
+  color: var(--selected-claim-color);
+  line-height: 1.15;
+}
+
+.floating-claim-strip-label {
+  font-size: 0.62rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.floating-claim-text-value {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--selected-claim-color);
+  font-size: clamp(0.78rem, 1vw, 0.95rem);
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .audit-step {
   display: grid;
   grid-template-columns: minmax(220px, 0.36fr) minmax(0, 1fr);
@@ -2793,6 +2828,10 @@ body:has(.guided-resurrection) a:focus-visible {
 .plain-evidence-card {
   border-color: #a9c8b2;
   background: #fff;
+}
+
+.plain-evidence-card header {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
 }
 
 .plain-evidence-card .app-step {

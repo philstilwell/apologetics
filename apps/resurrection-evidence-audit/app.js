@@ -699,6 +699,7 @@ const els = {
   auditScore: document.querySelector("#audit-score"),
   auditSummary: document.querySelector("#audit-summary"),
   scoreRing: document.querySelector("#score-ring"),
+  floatingClaimText: document.querySelector("#floating-claim-text"),
   floatingAuditScore: document.querySelector("#floating-audit-score"),
   floatingScoreRing: document.querySelector("#floating-score-ring"),
   credenceDonut: document.querySelector("#credence-donut"),
@@ -889,6 +890,8 @@ function renderPresetText(preset) {
 
 function setClaimText(value) {
   els.claim.textContent = value;
+  els.floatingClaimText.textContent = value;
+  els.floatingClaimText.title = value;
 }
 
 function getClaimText() {
