@@ -9,7 +9,7 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-pressure-credence-fix">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-sticky-donuts-nav">
   </head>
   <body>
     <header class="site-header">
@@ -155,6 +155,34 @@
           <strong id="needed-for-high">1x</strong>
           <small id="needed-for-high-note">Evidence burden</small>
         </article>
+        <article class="metric-card metric-donut-card" aria-live="polite" aria-label="Live audit pressure">
+          <div
+            class="score-ring compact-score-ring"
+            id="floating-score-ring"
+            style="--score: 0%; --score-end: 0%; --unknown-slice: 0%; --score-color: #1f5a3a;"
+          >
+            <div class="score-ring-inner">
+              <div>
+                <strong id="floating-audit-score">0</strong>
+              </div>
+            </div>
+          </div>
+          <span class="floating-donut-label">Pressure</span>
+        </article>
+        <article class="metric-card metric-donut-card" aria-live="polite" aria-label="Live cause credence mix">
+          <div
+            class="credence-donut floating-credence-donut"
+            id="floating-credence-donut"
+            style="--claim-slice: 0%; --material-end: 0%;"
+          >
+            <div class="credence-donut-inner floating-credence-inner">
+              <span><strong id="floating-credence-claim">0%</strong> CL</span>
+              <span><strong id="floating-credence-material">0%</strong> MA</span>
+              <span><strong id="floating-credence-unknown">0%</strong> UN</span>
+            </div>
+          </div>
+          <span class="floating-donut-label">Credence</span>
+        </article>
       </section>
 
       <details class="annotation plain-help app-wide">
@@ -171,37 +199,6 @@
           If a small slider change causes a big swing, the claim is depending heavily on that assumption.
         </p>
       </details>
-
-      <aside class="floating-audit-donuts" aria-live="polite" aria-label="Live audit donuts">
-        <div class="floating-donut-item">
-          <div
-            class="score-ring compact-score-ring"
-            id="floating-score-ring"
-            style="--score: 0%; --score-end: 0%; --unknown-slice: 0%; --score-color: #1f5a3a;"
-          >
-            <div class="score-ring-inner">
-              <div>
-                <strong id="floating-audit-score">0</strong>
-              </div>
-            </div>
-          </div>
-          <span class="floating-donut-label">Pressure</span>
-        </div>
-        <div class="floating-donut-item">
-          <div
-            class="credence-donut floating-credence-donut"
-            id="floating-credence-donut"
-            style="--claim-slice: 0%; --material-end: 0%;"
-          >
-            <div class="credence-donut-inner floating-credence-inner">
-              <span><strong id="floating-credence-claim">0%</strong> CL</span>
-              <span><strong id="floating-credence-material">0%</strong> MA</span>
-              <span><strong id="floating-credence-unknown">0%</strong> UN</span>
-            </div>
-          </div>
-          <span class="floating-donut-label">Credence</span>
-        </div>
-      </aside>
 
       <section class="audit-step" id="claim-step" aria-labelledby="claim-title">
         <div class="step-copy">
@@ -579,6 +576,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260504-pressure-credence-fix"></script>
+    <script src="./app.js?v=20260504-sticky-donuts-nav"></script>
   </body>
 </html>

@@ -2524,7 +2524,7 @@ body:has(.guided-resurrection) a:focus-visible {
   top: 72px;
   z-index: 12;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 10px;
   padding: 10px;
   border: 1px solid rgba(21, 61, 40, 0.18);
@@ -2551,6 +2551,16 @@ body:has(.guided-resurrection) a:focus-visible {
 .plain-result-strip article:nth-child(4) {
   border-top-color: var(--plain-red);
   background: var(--plain-red-soft);
+}
+
+.plain-result-strip .metric-donut-card {
+  display: grid;
+  min-height: 98px;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  border-top-color: var(--plain-copper);
+  background: #fbfff9;
 }
 
 .plain-result-strip .metric-label,
@@ -2627,42 +2637,18 @@ body:has(.guided-resurrection) a:focus-visible {
   color: var(--plain-red);
 }
 
-.floating-audit-donuts {
-  position: fixed;
-  right: clamp(14px, 2vw, 28px);
-  bottom: 18px;
-  z-index: 40;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(86px, 1fr));
-  gap: 8px;
-  align-items: start;
-  width: min(214px, calc(100vw - 28px));
-  padding: 10px;
-  border: 1px solid #9fbea8;
-  border-radius: var(--radius);
-  background: rgba(251, 255, 249, 0.96);
-  box-shadow: 0 16px 42px rgba(21, 61, 40, 0.2);
-  backdrop-filter: blur(12px);
-}
-
-.floating-donut-item {
-  display: grid;
-  justify-items: center;
-  gap: 3px;
-  min-width: 0;
-}
-
-.floating-audit-donuts .score-ring,
-.floating-audit-donuts .credence-donut {
+.plain-result-strip .score-ring,
+.plain-result-strip .credence-donut {
   width: 76px;
 }
 
-.floating-audit-donuts .score-ring-inner,
-.floating-audit-donuts .credence-donut-inner {
+.plain-result-strip .score-ring-inner,
+.plain-result-strip .credence-donut-inner {
   width: 56px;
 }
 
-.floating-audit-donuts .score-ring strong {
+.plain-result-strip .score-ring strong {
+  margin: 0;
   font-size: 1.08rem;
 }
 
@@ -2671,7 +2657,7 @@ body:has(.guided-resurrection) a:focus-visible {
   gap: 1px;
 }
 
-.floating-audit-donuts .floating-credence-inner span {
+.plain-result-strip .floating-credence-inner span {
   display: flex;
   align-items: baseline;
   justify-content: center;
@@ -2686,8 +2672,9 @@ body:has(.guided-resurrection) a:focus-visible {
   white-space: nowrap;
 }
 
-.floating-audit-donuts .floating-credence-inner strong {
+.plain-result-strip .floating-credence-inner strong {
   display: inline;
+  margin: 0;
   color: var(--plain-ink);
   font-size: 0.5rem;
   line-height: 1;
@@ -2708,7 +2695,7 @@ body:has(.guided-resurrection) a:focus-visible {
   align-items: start;
   padding: 28px 0 8px;
   border-top: 1px solid rgba(31, 90, 58, 0.22);
-  scroll-margin-top: 170px;
+  scroll-margin-top: 230px;
 }
 
 .audit-step.full-step {
@@ -3344,7 +3331,7 @@ body:has(.guided-resurrection) a:focus-visible {
 
   .audit-step {
     grid-template-columns: 1fr;
-    scroll-margin-top: 220px;
+    scroll-margin-top: 430px;
   }
 
   .plain-result-body {
@@ -3423,39 +3410,6 @@ body:has(.guided-resurrection) a:focus-visible {
     padding-inline: 8px;
   }
 
-  .floating-audit-donuts {
-    right: 10px;
-    bottom: 10px;
-    left: 10px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: auto;
-    padding: 8px;
-  }
-
-  .floating-audit-donuts .score-ring,
-  .floating-audit-donuts .credence-donut {
-    width: 58px;
-  }
-
-  .floating-audit-donuts .score-ring-inner,
-  .floating-audit-donuts .credence-donut-inner {
-    width: 42px;
-  }
-
-  .floating-audit-donuts .score-ring strong {
-    font-size: 0.88rem;
-  }
-
-  .floating-audit-donuts .floating-credence-inner span {
-    max-width: 38px;
-    font-size: 0.3rem;
-    gap: 1px;
-  }
-
-  .floating-audit-donuts .floating-credence-inner strong {
-    font-size: 0.38rem;
-  }
-
   .guided-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -3474,7 +3428,7 @@ body:has(.guided-resurrection) a:focus-visible {
 
   .plain-result-strip {
     position: static;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: 0;
     border: 0;
     background: transparent;
@@ -3487,6 +3441,30 @@ body:has(.guided-resurrection) a:focus-visible {
 
   .plain-result-strip strong {
     font-size: 1.02rem;
+  }
+
+  .plain-result-strip .score-ring,
+  .plain-result-strip .credence-donut {
+    width: 64px;
+  }
+
+  .plain-result-strip .score-ring-inner,
+  .plain-result-strip .credence-donut-inner {
+    width: 46px;
+  }
+
+  .plain-result-strip .score-ring strong {
+    font-size: 0.92rem;
+  }
+
+  .plain-result-strip .floating-credence-inner span {
+    max-width: 42px;
+    font-size: 0.32rem;
+    gap: 1px;
+  }
+
+  .plain-result-strip .floating-credence-inner strong {
+    font-size: 0.4rem;
   }
 
   .range-top {

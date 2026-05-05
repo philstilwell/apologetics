@@ -745,6 +745,10 @@ function getInitialPresetId() {
 }
 
 function bindEvents() {
+  document.querySelectorAll(".top-nav a[href^='#']").forEach((link) => {
+    link.addEventListener("click", handleAnchorNavigation);
+  });
+
   els.preset.addEventListener("change", () => loadPreset(els.preset.value));
   els.claim.addEventListener("input", render);
   els.unknownNotes.addEventListener("input", render);
@@ -759,6 +763,29 @@ function bindEvents() {
   els.resetCurrent.addEventListener("click", () => loadPreset(state.presetId));
   els.copyReport.addEventListener("click", () => copyText(els.finalReport.value, els.copyReport));
   els.copyAiPrompt.addEventListener("click", () => copyText(els.aiPrompt.value, els.copyAiPrompt));
+}
+
+function handleAnchorNavigation(event) {
+  const hash = event.currentTarget.getAttribute("href");
+  const target = hash ? document.querySelector(hash) : null;
+  if (!target) return;
+
+  event.preventDefault();
+  const offset = getStickyAnchorOffset();
+  const targetTop = target.getBoundingClientRect().top + window.scrollY - offset;
+  history.pushState(null, "", hash);
+  window.scrollTo({
+    top: Math.max(0, targetTop),
+    behavior: "auto",
+  });
+}
+
+function getStickyAnchorOffset() {
+  const header = document.querySelector(".site-header");
+  const resultStrip = document.querySelector(".plain-result-strip");
+  const headerHeight = getComputedStyle(header).position === "sticky" ? header.offsetHeight : 0;
+  const stripHeight = getComputedStyle(resultStrip).position === "sticky" ? resultStrip.offsetHeight : 0;
+  return headerHeight + stripHeight + 18;
 }
 
 function getPresetById(presetId) {
