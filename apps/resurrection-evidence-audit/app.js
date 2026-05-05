@@ -1,5 +1,5 @@
 const MIN_UNKNOWN_DISPLAY_CREDENCE = 0.000001; // 0.0001%
-const MIN_CLAIM_DISPLAY_CREDENCE = 0.012; // Cosmetic sliver only.
+const MIN_CLAIM_DISPLAY_CREDENCE = 0.0035; // Cosmetic hairline only.
 
 const claimPresets = [
   {
