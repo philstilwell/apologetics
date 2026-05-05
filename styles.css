@@ -12,7 +12,7 @@
   --green: #5f5400;
   --amber: #b76600;
   --card: #fffaf0;
-  --brand-cross-color: #006dff;
+  --brand-cross-color: #97544d;
   --shadow: 0 18px 45px rgba(58, 32, 5, 0.18);
   --radius: 8px;
   font-family:
@@ -49,17 +49,17 @@ body.hub-landing {
   --green: #777;
   --amber: #444;
   --card: #fff;
-  --brand-cross-color: #ff4fc3;
+  --brand-cross-color: #97544d;
   --shadow: 0 22px 60px rgba(0, 0, 0, 0.08);
   background: #f7f7f5;
 }
 
 body.app-induction {
-  --brand-cross-color: #008cff;
+  --brand-cross-color: #97544d;
 }
 
 body.app-resurrection {
-  --brand-cross-color: #ff35c8;
+  --brand-cross-color: #97544d;
 }
 
 a {
@@ -2370,7 +2370,7 @@ body:has(.guided-resurrection) {
   --plain-green-soft: #eef2dc;
   --plain-copper: #8a4b18;
   --plain-copper-soft: #fff4e2;
-  --brand-cross-color: #ff35c8;
+  --brand-cross-color: #97544d;
   --selected-claim-color: #06da49;
   --plain-red: #7d2516;
   --plain-red-soft: #fff1ec;

@@ -9,9 +9,25 @@
       content="A Christianity-focused deism-to-theism gradient for rating confidence, substantiation, dependency tension, and divine-action claims."
     >
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./src/styles.css">
+    <link rel="stylesheet" href="./src/styles.css?v=20260505-theism-suite-header">
   </head>
-  <body>
+  <body class="app-page">
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
+        <span class="brand-mark" aria-hidden="true">X</span>
+        <span>
+          <strong><span class="brand-cross">Cross</span><span class="brand-hairs">hairs</span> Audit Lab</strong>
+          <small>Theism Gradient</small>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a class="hub-link" href="../../">Hub</a>
+        <a href="#claim-explorer-title">Start Claims</a>
+        <a href="#dashboard-title">Dashboard</a>
+        <a href="#report-title">Report</a>
+      </nav>
+    </header>
+
     <main class="app-shell">
       <section class="topbar" aria-labelledby="app-title">
         <div>
@@ -19,10 +35,6 @@
           <h1 id="app-title">Theism Gradient</h1>
         </div>
         <div class="toolbar" aria-label="Assessment controls">
-          <a class="nav-button" href="../../">Hub</a>
-          <a class="nav-button" href="#claim-explorer-title">Start Claims</a>
-          <a class="nav-button" href="#dashboard-title">Dashboard</a>
-          <a class="nav-button" href="#report-title">Report</a>
           <button id="copy-summary" type="button" title="Copy a text summary of the current profile">Copy Summary</button>
           <button id="seed-balanced" type="button" title="Load the Cautious Christian sample profile">Load Sample</button>
           <button id="reset" type="button" title="Clear all local responses">Reset</button>
