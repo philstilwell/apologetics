@@ -696,15 +696,17 @@ const els = {
   auditSummary: document.querySelector("#audit-summary"),
   scoreRing: document.querySelector("#score-ring"),
   floatingAuditScore: document.querySelector("#floating-audit-score"),
-  floatingAuditState: document.querySelector("#floating-audit-state"),
   floatingScoreRing: document.querySelector("#floating-score-ring"),
   unknownReserveRingNote: document.querySelector("#unknown-reserve-ring-note"),
-  floatingUnknownReserve: document.querySelector("#floating-unknown-reserve"),
   credenceDonut: document.querySelector("#credence-donut"),
   credenceClaimValue: document.querySelector("#credence-claim-value"),
   credenceClaimLabel: document.querySelector("#credence-claim-label"),
   credenceMaterialLabel: document.querySelector("#credence-material-label"),
   credenceUnknownLabel: document.querySelector("#credence-unknown-label"),
+  floatingCredenceDonut: document.querySelector("#floating-credence-donut"),
+  floatingCredenceClaim: document.querySelector("#floating-credence-claim"),
+  floatingCredenceMaterial: document.querySelector("#floating-credence-material"),
+  floatingCredenceUnknown: document.querySelector("#floating-credence-unknown"),
   pitfallList: document.querySelector("#pitfall-list"),
   repairList: document.querySelector("#repair-list"),
   mathStarting: document.querySelector("#math-starting"),
@@ -1052,10 +1054,8 @@ function renderResultStrip(assessment) {
   els.resultCopy.textContent = buildPressureCopy(assessment);
   renderPressureRing(els.scoreRing, assessment, scoreColor);
   els.floatingAuditScore.textContent = String(assessment.auditPressure);
-  els.floatingAuditState.textContent = summarizePressure(assessment.auditPressure);
   els.unknownReserveRingNote.textContent = `Unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}`;
-  els.floatingUnknownReserve.textContent = `Unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}`;
-  renderPressureRing(els.floatingScoreRing, assessment, scoreColor);
+  renderPressureRing(els.floatingScoreRing, assessment, scoreColor, { includeUnknown: false });
   renderCredenceMix(assessment);
 
   els.mathStarting.textContent = formatPercentWithRatio(assessment.prior);
@@ -1067,12 +1067,15 @@ function renderResultStrip(assessment) {
   els.mathRequired90.textContent = formatLift(assessment.required[90]);
 }
 
-function renderPressureRing(ring, assessment, scoreColor) {
-  const unknownSlice = assessment.priorParts.unknownReserve * 100;
+function renderPressureRing(ring, assessment, scoreColor, options = {}) {
+  const includeUnknown = options.includeUnknown ?? true;
+  const unknownSlice = includeUnknown ? assessment.priorParts.unknownReserve * 100 : 0;
   const scoreEnd = clamp(unknownSlice + assessment.auditPressure, unknownSlice, 100);
   ring.setAttribute(
     "aria-label",
-    `Audit pressure ${assessment.auditPressure} out of 100. Black slice: unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}.`,
+    includeUnknown
+      ? `Audit pressure ${assessment.auditPressure} out of 100. Black slice: unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}.`
+      : `Audit pressure ${assessment.auditPressure} out of 100.`,
   );
   ring.parentElement.style.setProperty("--score-color", scoreColor);
   ring.style.setProperty("--score", `${assessment.auditPressure}%`);
@@ -1094,6 +1097,15 @@ function renderCredenceMix(assessment) {
   els.credenceClaimLabel.textContent = formatPercent(assessment.credenceMix.claim);
   els.credenceMaterialLabel.textContent = formatPercent(assessment.credenceMix.material);
   els.credenceUnknownLabel.textContent = formatPercent(assessment.credenceMix.unknown);
+  els.floatingCredenceDonut.style.setProperty("--claim-slice", `${claimPct}%`);
+  els.floatingCredenceDonut.style.setProperty("--material-end", `${materialEnd}%`);
+  els.floatingCredenceDonut.setAttribute(
+    "aria-label",
+    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Conceived material alternatives ${formatPercent(assessment.credenceMix.material)}. Unconceived causes ${formatPercent(assessment.credenceMix.unknown)}.`,
+  );
+  els.floatingCredenceClaim.textContent = formatPercent(assessment.credenceMix.claim);
+  els.floatingCredenceMaterial.textContent = formatPercent(assessment.credenceMix.material);
+  els.floatingCredenceUnknown.textContent = formatPercent(assessment.credenceMix.unknown);
 }
 
 function renderWarnings(assessment) {

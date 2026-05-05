@@ -2627,16 +2627,16 @@ body:has(.guided-resurrection) a:focus-visible {
   color: var(--plain-red);
 }
 
-.floating-pressure-gauge {
+.floating-audit-donuts {
   position: fixed;
   right: clamp(14px, 2vw, 28px);
   bottom: 18px;
   z-index: 40;
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
-  width: min(268px, calc(100vw - 28px));
+  grid-template-columns: repeat(2, minmax(86px, 1fr));
+  gap: 8px;
+  align-items: start;
+  width: min(214px, calc(100vw - 28px));
   padding: 10px;
   border: 1px solid #9fbea8;
   border-radius: var(--radius);
@@ -2645,39 +2645,55 @@ body:has(.guided-resurrection) a:focus-visible {
   backdrop-filter: blur(12px);
 }
 
-.floating-pressure-gauge .score-ring {
+.floating-donut-item {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  min-width: 0;
+}
+
+.floating-audit-donuts .score-ring,
+.floating-audit-donuts .credence-donut {
   width: 76px;
 }
 
-.floating-pressure-gauge .score-ring-inner {
+.floating-audit-donuts .score-ring-inner,
+.floating-audit-donuts .credence-donut-inner {
   width: 56px;
 }
 
-.floating-pressure-gauge .score-ring strong {
+.floating-audit-donuts .score-ring strong {
   font-size: 1.08rem;
 }
 
-.floating-pressure-gauge .score-ring span {
-  font-size: 0.48rem;
+.floating-credence-inner {
+  align-content: center;
+  gap: 1px;
 }
 
-.floating-pressure-copy {
-  display: grid;
-  min-width: 0;
-  gap: 3px;
-}
-
-.floating-pressure-copy strong {
-  color: var(--plain-ink);
-  font-size: 0.95rem;
-  line-height: 1.12;
-}
-
-.floating-pressure-copy span {
+.floating-credence-inner span {
+  display: block;
+  max-width: 48px;
   color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 800;
-  line-height: 1.25;
+  font-size: 0.42rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.floating-credence-inner strong {
+  display: block;
+  color: var(--plain-ink);
+  font-size: 0.58rem;
+  line-height: 1;
+}
+
+.floating-donut-label {
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 950;
+  line-height: 1;
   text-transform: uppercase;
 }
 
@@ -3403,29 +3419,36 @@ body:has(.guided-resurrection) a:focus-visible {
     padding-inline: 8px;
   }
 
-  .floating-pressure-gauge {
+  .floating-audit-donuts {
     right: 10px;
     bottom: 10px;
     left: 10px;
-    grid-template-columns: 58px minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     width: auto;
     padding: 8px;
   }
 
-  .floating-pressure-gauge .score-ring {
+  .floating-audit-donuts .score-ring,
+  .floating-audit-donuts .credence-donut {
     width: 58px;
   }
 
-  .floating-pressure-gauge .score-ring-inner {
+  .floating-audit-donuts .score-ring-inner,
+  .floating-audit-donuts .credence-donut-inner {
     width: 42px;
   }
 
-  .floating-pressure-gauge .score-ring strong {
+  .floating-audit-donuts .score-ring strong {
     font-size: 0.88rem;
   }
 
-  .floating-pressure-gauge .score-ring span {
-    font-size: 0.42rem;
+  .floating-credence-inner span {
+    max-width: 36px;
+    font-size: 0.34rem;
+  }
+
+  .floating-credence-inner strong {
+    font-size: 0.46rem;
   }
 
   .guided-steps {

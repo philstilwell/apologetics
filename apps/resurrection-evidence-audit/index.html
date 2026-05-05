@@ -9,7 +9,7 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-credence-mix">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-floating-donuts">
   </head>
   <body>
     <header class="site-header">
@@ -172,23 +172,34 @@
         </p>
       </details>
 
-      <aside class="floating-pressure-gauge" aria-live="polite" aria-label="Live audit pressure">
-        <div
-          class="score-ring compact-score-ring"
-          id="floating-score-ring"
-          style="--score: 0%; --score-end: 0%; --unknown-slice: 0%; --score-color: #1f5a3a;"
-        >
-          <div class="score-ring-inner">
-            <div>
-              <strong id="floating-audit-score">0</strong>
-              <span>pressure</span>
+      <aside class="floating-audit-donuts" aria-live="polite" aria-label="Live audit donuts">
+        <div class="floating-donut-item">
+          <div
+            class="score-ring compact-score-ring"
+            id="floating-score-ring"
+            style="--score: 0%; --score-end: 0%; --unknown-slice: 0%; --score-color: #1f5a3a;"
+          >
+            <div class="score-ring-inner">
+              <div>
+                <strong id="floating-audit-score">0</strong>
+              </div>
             </div>
           </div>
+          <span class="floating-donut-label">Pressure</span>
         </div>
-        <div class="floating-pressure-copy">
-          <strong id="floating-audit-state">Low audit pressure</strong>
-          <span>Updates as assumptions change</span>
-          <span id="floating-unknown-reserve">Unknown reserve 0%</span>
+        <div class="floating-donut-item">
+          <div
+            class="credence-donut floating-credence-donut"
+            id="floating-credence-donut"
+            style="--claim-slice: 0%; --material-end: 0%;"
+          >
+            <div class="credence-donut-inner floating-credence-inner">
+              <span><strong id="floating-credence-claim">0%</strong> claim</span>
+              <span><strong id="floating-credence-material">0%</strong> material</span>
+              <span><strong id="floating-credence-unknown">0%</strong> unknown</span>
+            </div>
+          </div>
+          <span class="floating-donut-label">Credence</span>
         </div>
       </aside>
 
@@ -441,6 +452,19 @@
           </section>
         </div>
 
+        <details class="annotation plain-help app-wide">
+          <summary>How to read audit pressure</summary>
+          <p>
+            Audit pressure is a diagnostic warning. A higher score means the case may depend on a
+            high baseline, weak treatment of alternatives, repeated sources counted as separate,
+            or one evidence item doing too much work.
+          </p>
+          <p>
+            High pressure does not prove the claim false. It means the current case needs revision
+            before the confidence level is fair.
+          </p>
+        </details>
+
         <section class="credence-mix-panel" aria-labelledby="credence-mix-title">
           <div
             class="credence-donut"
@@ -481,19 +505,6 @@
             </div>
           </div>
         </section>
-
-        <details class="annotation plain-help app-wide">
-          <summary>How to read audit pressure</summary>
-          <p>
-            Audit pressure is a diagnostic warning. A higher score means the case may depend on a
-            high baseline, weak treatment of alternatives, repeated sources counted as separate,
-            or one evidence item doing too much work.
-          </p>
-          <p>
-            High pressure does not prove the claim false. It means the current case needs revision
-            before the confidence level is fair.
-          </p>
-        </details>
 
         <details class="math-details">
           <summary>Show math details</summary>
@@ -569,6 +580,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260504-credence-mix"></script>
+    <script src="./app.js?v=20260504-floating-donuts"></script>
   </body>
 </html>
