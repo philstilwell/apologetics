@@ -2878,6 +2878,101 @@ body:has(.guided-resurrection) a:focus-visible {
   background: #f7fbf6;
 }
 
+.credence-mix-panel {
+  display: grid;
+  grid-template-columns: minmax(150px, 190px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid #9ebaa5;
+  border-radius: 8px;
+  background: #f7fbf6;
+}
+
+.credence-donut {
+  --claim-slice: 0%;
+  --material-end: var(--claim-slice);
+  display: grid;
+  width: 170px;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    conic-gradient(
+      var(--plain-blue) 0 var(--claim-slice),
+      var(--plain-copper) var(--claim-slice) var(--material-end),
+      #111 var(--material-end) 100%
+    );
+}
+
+.credence-donut-inner {
+  display: grid;
+  width: 122px;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  text-align: center;
+}
+
+.credence-donut-inner strong {
+  color: var(--plain-blue);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.credence-donut-inner span {
+  max-width: 92px;
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.credence-mix-copy h3 {
+  color: var(--plain-ink);
+  font-size: 1.28rem;
+  line-height: 1.1;
+}
+
+.credence-mix-copy p:not(.card-kicker) {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.credence-legend {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.credence-legend span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.credence-legend strong {
+  color: var(--plain-ink);
+  min-width: 66px;
+}
+
+.selected-claim-swatch {
+  background: var(--plain-blue);
+}
+
+.material-cause-swatch {
+  background: var(--plain-copper);
+}
+
 .guided-resurrection .score-ring {
   background:
     conic-gradient(
@@ -3233,6 +3328,10 @@ body:has(.guided-resurrection) a:focus-visible {
   }
 
   .plain-result-body {
+    grid-template-columns: 1fr;
+  }
+
+  .credence-mix-panel {
     grid-template-columns: 1fr;
   }
 

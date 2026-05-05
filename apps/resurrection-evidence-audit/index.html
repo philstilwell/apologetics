@@ -9,7 +9,7 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260504-matched-alternatives">
+    <link rel="stylesheet" href="../../styles.css?v=20260504-credence-mix">
   </head>
   <body>
     <header class="site-header">
@@ -441,6 +441,47 @@
           </section>
         </div>
 
+        <section class="credence-mix-panel" aria-labelledby="credence-mix-title">
+          <div
+            class="credence-donut"
+            id="credence-donut"
+            style="--claim-slice: 0%; --material-end: 0%;"
+          >
+            <div class="credence-donut-inner">
+              <strong id="credence-claim-value">0%</strong>
+              <span>selected claim</span>
+            </div>
+          </div>
+          <div class="credence-mix-copy">
+            <p class="card-kicker">Cause credence mix</p>
+            <h3 id="credence-mix-title">Where the current probability is going</h3>
+            <p>
+              This chart separates the selected immaterial claim from conceived material
+              alternatives and the reserve for unconceived causes. The unknown bucket is not
+              labeled material or immaterial; it is the space left by epistemic humility.
+              The selected claim receives the current revised confidence, and the remaining
+              probability is split by the unknown-reserve setting.
+            </p>
+            <div class="credence-legend" aria-label="Cause credence mix legend">
+              <span>
+                <i class="legend-swatch selected-claim-swatch" aria-hidden="true"></i>
+                <strong id="credence-claim-label">0%</strong>
+                Selected immaterial claim
+              </span>
+              <span>
+                <i class="legend-swatch material-cause-swatch" aria-hidden="true"></i>
+                <strong id="credence-material-label">0%</strong>
+                Conceived material alternatives
+              </span>
+              <span>
+                <i class="legend-swatch unknown-swatch" aria-hidden="true"></i>
+                <strong id="credence-unknown-label">0%</strong>
+                Unconceived causes
+              </span>
+            </div>
+          </div>
+        </section>
+
         <details class="annotation plain-help app-wide">
           <summary>How to read audit pressure</summary>
           <p>
@@ -528,6 +569,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260504-matched-alternatives"></script>
+    <script src="./app.js?v=20260504-credence-mix"></script>
   </body>
 </html>

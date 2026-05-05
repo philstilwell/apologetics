@@ -700,6 +700,11 @@ const els = {
   floatingScoreRing: document.querySelector("#floating-score-ring"),
   unknownReserveRingNote: document.querySelector("#unknown-reserve-ring-note"),
   floatingUnknownReserve: document.querySelector("#floating-unknown-reserve"),
+  credenceDonut: document.querySelector("#credence-donut"),
+  credenceClaimValue: document.querySelector("#credence-claim-value"),
+  credenceClaimLabel: document.querySelector("#credence-claim-label"),
+  credenceMaterialLabel: document.querySelector("#credence-material-label"),
+  credenceUnknownLabel: document.querySelector("#credence-unknown-label"),
   pitfallList: document.querySelector("#pitfall-list"),
   repairList: document.querySelector("#repair-list"),
   mathStarting: document.querySelector("#math-starting"),
@@ -1051,6 +1056,7 @@ function renderResultStrip(assessment) {
   els.unknownReserveRingNote.textContent = `Unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}`;
   els.floatingUnknownReserve.textContent = `Unknown reserve ${formatPercent(assessment.priorParts.unknownReserve)}`;
   renderPressureRing(els.floatingScoreRing, assessment, scoreColor);
+  renderCredenceMix(assessment);
 
   els.mathStarting.textContent = formatPercentWithRatio(assessment.prior);
   els.mathUpdated.textContent = formatPercentWithRatio(assessment.posterior);
@@ -1073,6 +1079,21 @@ function renderPressureRing(ring, assessment, scoreColor) {
   ring.style.setProperty("--unknown-slice", `${unknownSlice}%`);
   ring.style.setProperty("--score-end", `${scoreEnd}%`);
   ring.style.setProperty("--score-color", scoreColor);
+}
+
+function renderCredenceMix(assessment) {
+  const claimPct = assessment.credenceMix.claim * 100;
+  const materialEnd = (assessment.credenceMix.claim + assessment.credenceMix.material) * 100;
+  els.credenceDonut.style.setProperty("--claim-slice", `${claimPct}%`);
+  els.credenceDonut.style.setProperty("--material-end", `${materialEnd}%`);
+  els.credenceDonut.setAttribute(
+    "aria-label",
+    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Conceived material alternatives ${formatPercent(assessment.credenceMix.material)}. Unconceived causes ${formatPercent(assessment.credenceMix.unknown)}.`,
+  );
+  els.credenceClaimValue.textContent = formatPercent(assessment.credenceMix.claim);
+  els.credenceClaimLabel.textContent = formatPercent(assessment.credenceMix.claim);
+  els.credenceMaterialLabel.textContent = formatPercent(assessment.credenceMix.material);
+  els.credenceUnknownLabel.textContent = formatPercent(assessment.credenceMix.unknown);
 }
 
 function renderWarnings(assessment) {
@@ -1129,6 +1150,7 @@ function assess() {
   const totalBf = Math.exp(totalLogBf);
   const posteriorOdds = priorOdds * totalBf;
   const posterior = posteriorOdds / (1 + posteriorOdds);
+  const credenceMix = calculateCredenceMix(posterior, priorParts.unknownReserve);
   const positiveLog = rawItems.reduce((sum, item) => sum + Math.max(0, item.adjustedLogBf), 0);
   const items = rawItems.map((item) => ({
     ...item,
@@ -1172,6 +1194,7 @@ function assess() {
     totalLogBf,
     totalBf,
     posterior,
+    credenceMix,
     posteriorOdds,
     required,
     shortfall90,
@@ -1369,6 +1392,18 @@ function calculateAlternativeBf() {
   }, 1);
 }
 
+function calculateCredenceMix(selectedClaim, unknownReserve) {
+  const claim = clamp(selectedClaim, 0, 1);
+  const remainder = 1 - claim;
+  const unknown = remainder * clamp(unknownReserve, 0, 1);
+  const material = Math.max(0, remainder - unknown);
+  return {
+    claim,
+    material,
+    unknown,
+  };
+}
+
 function requiredBfForTarget(priorOdds, target) {
   const targetOdds = target / (1 - target);
   return targetOdds / priorOdds;
@@ -1420,6 +1455,7 @@ function buildReport(assessment) {
     `Biggest mover: ${assessment.topDriver ? assessment.topDriver.title : "None"} (${formatPercentWithRatio(assessment.topDriver?.share || 0)} of positive movement)`,
     `${assessment.meta.alternativeReportLabel}: ${formatLift(assessment.alternativeBf)}`,
     `Audit pressure: ${assessment.auditPressure}/100 (${summarizePressure(assessment.auditPressure)})`,
+    `Cause credence mix: selected immaterial claim ${formatPercentWithRatio(assessment.credenceMix.claim)}, conceived material alternatives ${formatPercentWithRatio(assessment.credenceMix.material)}, unconceived causes ${formatPercentWithRatio(assessment.credenceMix.unknown)}`,
     "",
     "## Baseline Assumptions",
     `${assessment.meta.generalPriorLabel}: ${formatPercentWithRatio(assessment.priorParts.general)}`,
@@ -1433,6 +1469,12 @@ function buildReport(assessment) {
     "## Unconceived Explanations Reserve",
     `Reserved room for missing material or immaterial explanations: ${formatPercentWithRatio(assessment.priorParts.unknownReserve)}`,
     `User notes on what may be missing: ${assessment.unknownNotes || "None entered."}`,
+    "",
+    "## Cause Credence Mix",
+    "Calculation: selected claim = revised confidence; the remaining probability is split between conceived material alternatives and the unconceived reserve.",
+    `Selected immaterial claim: ${formatPercentWithRatio(assessment.credenceMix.claim)}`,
+    `Conceived material alternatives: ${formatPercentWithRatio(assessment.credenceMix.material)}`,
+    `Unconceived causes: ${formatPercentWithRatio(assessment.credenceMix.unknown)}`,
     "",
     "## Evidence Questions",
     ...assessment.items.map(
