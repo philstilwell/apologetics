@@ -1437,10 +1437,11 @@ function calculateAlternativeBf() {
 }
 
 function calculateCredenceMix(selectedClaim, unknownReserve) {
-  const claim = clamp(selectedClaim, 0, 1);
-  const remainder = 1 - claim;
-  const unknown = remainder * clamp(unknownReserve, 0, 1);
-  const material = Math.max(0, remainder - unknown);
+  const claimShareWithinKnownSpace = clamp(selectedClaim, 0, 1);
+  const unknown = clamp(unknownReserve, 0, 1);
+  const knownSpace = 1 - unknown;
+  const claim = claimShareWithinKnownSpace * knownSpace;
+  const material = Math.max(0, (1 - claimShareWithinKnownSpace) * knownSpace);
   return {
     claim,
     material,
@@ -1515,7 +1516,7 @@ function buildReport(assessment) {
     `User notes on what may be missing: ${assessment.unknownNotes || "None entered."}`,
     "",
     "## Cause Credence Mix",
-    "Calculation: selected immaterial claim = revised confidence; the remaining probability is split between known material alternatives and the unknown reserve.",
+    "Calculation: the unknown reserve is set aside first; the selected immaterial claim and known material alternatives split the remaining known space according to the revised confidence.",
     `Selected immaterial claim: ${formatPercentWithRatio(assessment.credenceMix.claim)}`,
     `Known material alternatives: ${formatPercentWithRatio(assessment.credenceMix.material)}`,
     `Unknown reserve: ${formatPercentWithRatio(assessment.credenceMix.unknown)}`,
