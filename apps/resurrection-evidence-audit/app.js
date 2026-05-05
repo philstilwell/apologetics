@@ -1085,27 +1085,31 @@ function renderPressureRing(ring, assessment, scoreColor, options = {}) {
 }
 
 function renderCredenceMix(assessment) {
-  const claimPct = assessment.credenceMix.claim * 100;
-  const materialEnd = (assessment.credenceMix.claim + assessment.credenceMix.material) * 100;
+  const displayUnknown = getCosmeticUnknownCredence(assessment.credenceMix.unknown);
+  const displayClaim = Math.min(assessment.credenceMix.claim, 1 - displayUnknown);
+  const displayMaterial = Math.max(0, 1 - displayUnknown - displayClaim);
+  const claimPct = displayClaim * 100;
+  const materialEnd = (displayClaim + displayMaterial) * 100;
+  const unknownLabel = formatCosmeticUnknownCredence(assessment.credenceMix.unknown);
   els.credenceDonut.style.setProperty("--claim-slice", `${claimPct}%`);
   els.credenceDonut.style.setProperty("--material-end", `${materialEnd}%`);
   els.credenceDonut.setAttribute(
     "aria-label",
-    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Conceived material alternatives ${formatPercent(assessment.credenceMix.material)}. Unconceived causes ${formatPercent(assessment.credenceMix.unknown)}.`,
+    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Conceived material alternatives ${formatPercent(assessment.credenceMix.material)}. Unconceived causes ${unknownLabel}.`,
   );
   els.credenceClaimValue.textContent = formatPercent(assessment.credenceMix.claim);
   els.credenceClaimLabel.textContent = formatPercent(assessment.credenceMix.claim);
   els.credenceMaterialLabel.textContent = formatPercent(assessment.credenceMix.material);
-  els.credenceUnknownLabel.textContent = formatPercent(assessment.credenceMix.unknown);
+  els.credenceUnknownLabel.textContent = unknownLabel;
   els.floatingCredenceDonut.style.setProperty("--claim-slice", `${claimPct}%`);
   els.floatingCredenceDonut.style.setProperty("--material-end", `${materialEnd}%`);
   els.floatingCredenceDonut.setAttribute(
     "aria-label",
-    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Conceived material alternatives ${formatPercent(assessment.credenceMix.material)}. Unconceived causes ${formatPercent(assessment.credenceMix.unknown)}.`,
+    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Conceived material alternatives ${formatPercent(assessment.credenceMix.material)}. Unconceived causes ${unknownLabel}.`,
   );
   els.floatingCredenceClaim.textContent = formatPercent(assessment.credenceMix.claim);
   els.floatingCredenceMaterial.textContent = formatPercent(assessment.credenceMix.material);
-  els.floatingCredenceUnknown.textContent = formatPercent(assessment.credenceMix.unknown);
+  els.floatingCredenceUnknown.textContent = unknownLabel;
 }
 
 function renderWarnings(assessment) {
@@ -1404,15 +1408,13 @@ function calculateAlternativeBf() {
   }, 1);
 }
 
-const MIN_UNKNOWN_CREDENCE = 0.000001; // 0.0001%
+const MIN_UNKNOWN_DISPLAY_CREDENCE = 0.000001; // 0.0001%
 
 function calculateCredenceMix(selectedClaim, unknownReserve) {
-  const desiredClaim = clamp(selectedClaim, 0, 1);
-  const rawRemainder = 1 - desiredClaim;
-  const rawUnknown = rawRemainder * clamp(unknownReserve, 0, 1);
-  const unknown = Math.min(1, Math.max(rawUnknown, MIN_UNKNOWN_CREDENCE));
-  const claim = Math.min(desiredClaim, 1 - unknown);
-  const material = Math.max(0, 1 - unknown - claim);
+  const claim = clamp(selectedClaim, 0, 1);
+  const remainder = 1 - claim;
+  const unknown = remainder * clamp(unknownReserve, 0, 1);
+  const material = Math.max(0, remainder - unknown);
   return {
     claim,
     material,
@@ -1576,6 +1578,14 @@ function formatPercent(value) {
 
 function formatPercentWithRatio(value) {
   return `${formatPercent(value)} (${formatProbabilityRatio(value)})`;
+}
+
+function getCosmeticUnknownCredence(value) {
+  return Math.max(clamp(value, 0, 1), MIN_UNKNOWN_DISPLAY_CREDENCE);
+}
+
+function formatCosmeticUnknownCredence(value) {
+  return formatPercent(getCosmeticUnknownCredence(value));
 }
 
 function formatProbabilityRatio(value) {
