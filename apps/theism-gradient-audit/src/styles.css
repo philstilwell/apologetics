@@ -13,6 +13,7 @@
   --red: #a5533f;
   --plum: #765377;
   --cream: #fff7df;
+  --brand-cross-color: #d84cff;
   --shadow: 0 16px 42px rgba(45, 55, 28, 0.12);
 }
 
@@ -137,6 +138,14 @@ button:hover {
   margin-top: 3px;
   color: var(--muted);
   font-size: 0.78rem;
+}
+
+.brand-cross {
+  color: var(--brand-cross-color);
+}
+
+.brand-hairs {
+  color: currentColor;
 }
 
 .top-nav {

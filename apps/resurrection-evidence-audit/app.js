@@ -651,6 +651,7 @@ const state = {
   presetId: claimPresets[0].id,
   evidence: [],
   featureWeights: new Map(resurrectionAlternativeFeatures.map((feature) => [feature.id, 1])),
+  baselineRefusalOpened: false,
 };
 
 const els = {
@@ -677,6 +678,11 @@ const els = {
   unknownNotesLabel: document.querySelector("#unknown-notes-label"),
   ledgerList: document.querySelector("#ledger-list"),
   featureGrid: document.querySelector("#feature-grid"),
+  baselineRefusalToggle: document.querySelector("#baseline-refusal-toggle"),
+  baselineRefusalResponse: document.querySelector("#baseline-refusal-response"),
+  useCautiousRange: document.querySelector("#use-cautious-range"),
+  useBelieverRange: document.querySelector("#use-believer-range"),
+  useTeachingParallelRange: document.querySelector("#use-teaching-parallel-range"),
   loadGenerous: document.querySelector("#load-generous"),
   loadCorrected: document.querySelector("#load-corrected"),
   loadTeachingParallel: document.querySelector("#load-teaching-parallel"),
@@ -759,12 +765,36 @@ function bindEvents() {
     input.addEventListener("input", render);
   });
 
+  els.baselineRefusalToggle.addEventListener("click", revealBaselineRefusalResponse);
+  els.useCautiousRange.addEventListener("click", () => {
+    applyPosture("corrected");
+    focusStartingPoint();
+  });
+  els.useBelieverRange.addEventListener("click", () => {
+    applyPosture("generous");
+    focusStartingPoint();
+  });
+  els.useTeachingParallelRange.addEventListener("click", () => {
+    loadPreset("car-crash-demon");
+    focusStartingPoint();
+  });
   els.loadGenerous.addEventListener("click", () => applyPosture("generous"));
   els.loadCorrected.addEventListener("click", () => applyPosture("corrected"));
   els.loadTeachingParallel.addEventListener("click", () => loadPreset("car-crash-demon"));
   els.resetCurrent.addEventListener("click", () => loadPreset(state.presetId));
   els.copyReport.addEventListener("click", () => copyText(els.finalReport.value, els.copyReport));
   els.copyAiPrompt.addEventListener("click", () => copyText(els.aiPrompt.value, els.copyAiPrompt));
+}
+
+function revealBaselineRefusalResponse() {
+  state.baselineRefusalOpened = true;
+  els.baselineRefusalResponse.hidden = false;
+  els.baselineRefusalToggle.setAttribute("aria-expanded", "true");
+  render();
+}
+
+function focusStartingPoint() {
+  document.querySelector("#starting-step")?.scrollIntoView({ block: "start" });
 }
 
 function handleAnchorNavigation(event) {
@@ -1232,6 +1262,7 @@ function assess() {
     required,
     shortfall90,
     unknownNotes: els.unknownNotes.value.trim(),
+    baselineRefusalOpened: state.baselineRefusalOpened,
   });
   const repairs = buildRepairs(flags, meta);
   const auditPressure = calculateAuditPressure(flags, shortfall90, topDriver, priorParts);
@@ -1241,6 +1272,7 @@ function assess() {
     meta,
     claim: getClaimText(),
     unknownNotes: els.unknownNotes.value.trim(),
+    baselineRefusalOpened: state.baselineRefusalOpened,
     unreservedPrior,
     unknownReserveDiscount,
     prior,
@@ -1274,6 +1306,14 @@ function buildFlags(context) {
     (item) => item.type === "testimony" && item.adjustedBf > 5,
   );
 
+  if (context.baselineRefusalOpened) {
+    flags.push({
+      title: "The starting probability must be stated",
+      body: "The reluctance prompt was opened, so the audit is marking this issue explicitly. If someone refuses to name a starting probability, the comparison has not become more objective; the starting point has simply become hidden. Use a defensible number or range, then let the evidence move from there.",
+      weight: 8,
+    });
+  }
+
   if (context.prior > 0.01) {
     flags.push({
       title: "The baseline may be too high",
@@ -1305,17 +1345,19 @@ function buildFlags(context) {
   }
 
   if (suppressed.length > 0) {
+    const count = formatSentenceCount(suppressed.length);
     flags.push({
       title: "Alternative explanations are treated as almost impossible",
-      body: `${suppressed.length} evidence item${suppressed.length === 1 ? "" : "s"} place the ${meta.suppressedPathName} below 3%. That is a very strong judgment. Before using it, ask whether ordinary explanations, sincere misinterpretation, source dependence, missing data, or later story-shaping have really been ruled down that far. If alternatives are pushed too low too quickly, the evidence can look more decisive than it actually is.`,
+      body: `${count} evidence item${suppressed.length === 1 ? "" : "s"} ${suppressed.length === 1 ? "places" : "place"} the ${meta.suppressedPathName} below 3%. That is a very strong judgment. Before using it, ask whether ordinary explanations, sincere misinterpretation, source dependence, missing data, or later story-shaping have really been ruled down that far. If alternatives are pushed too low too quickly, the evidence can look more decisive than it actually is.`,
       weight: 18,
     });
   }
 
   if (highDependence.length > 0) {
+    const count = formatSentenceCount(highDependence.length);
     flags.push({
       title: "Related evidence may be counted as separate",
-      body: `${highDependence.length} testimony, story, or social item${highDependence.length === 1 ? "" : "s"} are treated as highly independent even though they may come from overlapping people, memories, texts, communities, or retellings. Evidence is strongest when separate lines could have gone different ways. If several items trace back to the same stream, counting them as fully separate can multiply confidence without adding truly new support.`,
+      body: `${count} testimony, story, or social item${highDependence.length === 1 ? "" : "s"} ${highDependence.length === 1 ? "is" : "are"} treated as highly independent even though ${highDependence.length === 1 ? "it may" : "they may"} come from overlapping people, memories, texts, communities, or retellings. Evidence is strongest when separate lines could have gone different ways. If several items trace back to the same stream, counting them as fully separate can multiply confidence without adding truly new support.`,
       weight: 14,
     });
   }
@@ -1329,9 +1371,10 @@ function buildFlags(context) {
   }
 
   if (neutralRows.length > 0) {
+    const count = formatSentenceCount(neutralRows.length);
     flags.push({
       title: "Some evidence barely distinguishes the claim",
-      body: `${neutralRows.length} item${neutralRows.length === 1 ? " is" : "s are"} close to neutral, meaning it fits the selected claim and the alternatives at about the same level. Such evidence may still belong in the story, but it should not be sold as strong confirmation. Background facts, sincere emotion, or movement growth can be real without clearly selecting one explanation over another.`,
+      body: `${count} item${neutralRows.length === 1 ? " is" : "s are"} close to neutral, meaning ${neutralRows.length === 1 ? "it fits" : "they fit"} the selected claim and the alternatives at about the same level. Such evidence may still belong in the story, but it should not be sold as strong confirmation. Background facts, sincere emotion, or movement growth can be real without clearly selecting one explanation over another.`,
       weight: 8,
     });
   }
@@ -1396,6 +1439,13 @@ function buildRepairs(flags, meta) {
     repairs.push({
       title: "Show the exact claim step by step",
       body: `${meta.specificityRepairBody} Write the path from the broad belief to the exact claim in small steps. At each step, ask what new support is needed. This prevents a general belief from quietly turning into high confidence about a very detailed event.`,
+    });
+  }
+
+  if (titles.has("The starting probability must be stated")) {
+    repairs.push({
+      title: "Use a defensible starting range",
+      body: "Replace refusal with a stated range, even if it is broad. For example, compare a cautious starting point with a believer-friendly starting point and report both results. This keeps the debate inspectable: readers can see exactly how much the conclusion depends on the starting probability.",
     });
   }
 
@@ -1475,6 +1525,23 @@ function setText(element, value) {
   if (element) element.textContent = value;
 }
 
+function formatSentenceCount(value) {
+  const words = [
+    "Zero",
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+    "Six",
+    "Seven",
+    "Eight",
+    "Nine",
+    "Ten",
+  ];
+  return words[value] || String(value);
+}
+
 function summarizePressure(score) {
   if (score >= 75) return "Severe audit pressure";
   if (score >= 50) return "High audit pressure";
@@ -1522,6 +1589,12 @@ function buildReport(assessment) {
     `Room left for unconceived explanations: ${formatPercentWithRatio(assessment.priorParts.unknownReserve)}`,
     `Baseline confidence removed by this reserve: ${formatPercentWithRatio(assessment.unknownReserveDiscount)}`,
     `Baseline after unconceived-explanation reserve: ${formatPercentWithRatio(assessment.prior)}`,
+    "",
+    "## Starting Probability Visibility",
+    "A claim cannot be fairly compared with rival explanations unless its starting probability is stated before the evidence is added.",
+    `Starting probability entered: ${formatPercentWithRatio(assessment.prior)}`,
+    `Reluctance prompt opened: ${assessment.baselineRefusalOpened ? "yes" : "no"}`,
+    "Reviewer question: Is this starting probability defended, or is it merely assumed?",
     "",
     "## Unconceived Explanations Reserve",
     `Reserved room for missing material or immaterial explanations: ${formatPercentWithRatio(assessment.priorParts.unknownReserve)}`,
@@ -1578,6 +1651,7 @@ function buildAiPrompt(assessment) {
     "",
     "Challenge possible irrational stances, blunders, or oversights in the user's reasoning calculus:",
     "- Look for motivated reasoning, special pleading, confirmation bias, or protecting a conclusion by lowering rival explanations without a clear reason.",
+    "- Challenge any refusal to state a starting probability. Explain that refusing a probability does not remove the assumption; it hides the assumption and prevents a fair comparison.",
     "- Check for base-rate neglect, missing alternatives, false independence, sincerity treated as accuracy, and leaps from 'unexplained' to a specific miracle claim.",
     "- Name any modeling blunder directly: double counting, tiny 'expected if false' values, unjustified starting confidence, overconfident independence, or ignored unknown reserve.",
     "- Pay special attention to unconceived explanations: missing ordinary causes, missing records, unknown mechanisms, selection effects, and material or immaterial explanations the user did not name.",

@@ -9,14 +9,14 @@
       content="A structured Crosshairs self-audit for resurrection, miracle, and answered-prayer claims."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260505-result-explanations">
+    <link rel="stylesheet" href="../../styles.css?v=20260505-brand-cross-color">
   </head>
-  <body>
+  <body class="app-resurrection">
     <header class="site-header">
       <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
         <span class="brand-mark" aria-hidden="true">X</span>
         <span>
-          <strong>Crosshairs Audit Lab</strong>
+          <strong><span class="brand-cross">Cross</span><span class="brand-hairs">hairs</span> Audit Lab</strong>
           <small>Resurrection Evidence Audit</small>
         </span>
       </a>
@@ -305,6 +305,19 @@
           </p>
         </div>
         <div class="step-panel">
+          <section class="baseline-visibility-callout" aria-labelledby="baseline-visibility-title">
+            <p class="card-kicker">Starting probability</p>
+            <h3 id="baseline-visibility-title">No starting probability, no fair comparison</h3>
+            <p>
+              Refusing to name a starting probability does not avoid probability. It only hides
+              the starting point. Any claim that the evidence makes a resurrection, miracle, or
+              answered prayer likely already assumes some baseline before the evidence is counted.
+            </p>
+            <p>
+              You do not need perfect precision. A defensible range is enough. But if the baseline
+              is left unstated, the argument cannot be checked against rival explanations.
+            </p>
+          </section>
           <details class="annotation plain-help">
             <summary id="starting-help-title">How to calibrate these sliders</summary>
             <p id="starting-help-one">
@@ -316,6 +329,30 @@
               higher number. If the reason is only “I already believe this,” the slider may be too generous.
             </p>
           </details>
+          <section class="baseline-refusal-box" aria-labelledby="baseline-refusal-title">
+            <div>
+              <h3 id="baseline-refusal-title">Reluctant to assign a number?</h3>
+              <p>
+                That hesitation is understandable. Use a range if a single number feels too sharp,
+                but do not leave the starting point invisible.
+              </p>
+            </div>
+            <button type="button" id="baseline-refusal-toggle" aria-controls="baseline-refusal-response" aria-expanded="false">
+              I do not want to assign a probability
+            </button>
+          </section>
+          <div class="baseline-refusal-response" id="baseline-refusal-response" hidden>
+            <p>
+              The comparison still needs a starting point. If the baseline is left blank or hidden,
+              the calculation may quietly treat the claim as much more likely than its background
+              frequency warrants. Try a range, then ask whether a fair critic could defend it.
+            </p>
+            <div class="baseline-refusal-actions">
+              <button type="button" id="use-cautious-range">Use a cautious range</button>
+              <button type="button" id="use-believer-range">Use a believer-friendly range</button>
+              <button type="button" id="use-teaching-parallel-range">Return to teaching parallel</button>
+            </div>
+          </div>
           <div class="range-stack" id="prior-model">
             <div class="range-row plain-range">
               <div class="range-top">
@@ -342,6 +379,13 @@
               </div>
               <p id="act-type-rate-helper">Lower means events like this are rare even before this case is considered.</p>
               <input id="act-type-rate" type="range" min="0.001" max="20" step="0.001">
+              <div class="probability-ladder" aria-label="Human-readable probability ladder">
+                <span><strong>Common</strong> happens often</span>
+                <span><strong>Unusual</strong> happens sometimes</span>
+                <span><strong>Rare</strong> happens very rarely</span>
+                <span><strong>Extraordinary</strong> no confirmed ordinary examples</span>
+                <span><strong>Near-zero</strong> unless independently established</span>
+              </div>
             </div>
           </div>
         </div>
@@ -616,6 +660,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260505-result-explanations"></script>
+    <script src="./app.js?v=20260505-baseline-visibility"></script>
   </body>
 </html>
