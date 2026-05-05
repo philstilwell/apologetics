@@ -1123,7 +1123,7 @@ function renderCredenceMix(assessment) {
   els.credenceDonut.style.setProperty("--material-end", `${materialEnd}%`);
   els.credenceDonut.setAttribute(
     "aria-label",
-    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Conceived material alternatives ${formatPercent(assessment.credenceMix.material)}. Unconceived causes ${unknownLabel}.`,
+    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Known material alternatives ${formatPercent(assessment.credenceMix.material)}. Unknown reserve ${unknownLabel}.`,
   );
   els.credenceClaimValue.textContent = formatPercent(assessment.credenceMix.claim);
   els.credenceClaimLabel.textContent = formatPercent(assessment.credenceMix.claim);
@@ -1133,7 +1133,7 @@ function renderCredenceMix(assessment) {
   els.floatingCredenceDonut.style.setProperty("--material-end", `${materialEnd}%`);
   els.floatingCredenceDonut.setAttribute(
     "aria-label",
-    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Conceived material alternatives ${formatPercent(assessment.credenceMix.material)}. Unconceived causes ${unknownLabel}.`,
+    `Cause credence mix. Selected immaterial claim ${formatPercent(assessment.credenceMix.claim)}. Known material alternatives ${formatPercent(assessment.credenceMix.material)}. Unknown reserve ${unknownLabel}.`,
   );
   els.floatingCredenceClaim.textContent = formatPercent(assessment.credenceMix.claim);
   els.floatingCredenceMaterial.textContent = formatPercent(assessment.credenceMix.material);
@@ -1499,7 +1499,7 @@ function buildReport(assessment) {
     `Biggest mover: ${assessment.topDriver ? assessment.topDriver.title : "None"} (${formatPercentWithRatio(assessment.topDriver?.share || 0)} of positive movement)`,
     `${assessment.meta.alternativeReportLabel}: ${formatLift(assessment.alternativeBf)}`,
     `Audit pressure: ${assessment.auditPressure}/100 (${summarizePressure(assessment.auditPressure)})`,
-    `Cause credence mix: selected immaterial claim ${formatPercentWithRatio(assessment.credenceMix.claim)}, conceived material alternatives ${formatPercentWithRatio(assessment.credenceMix.material)}, unconceived causes ${formatPercentWithRatio(assessment.credenceMix.unknown)}`,
+    `Cause credence mix: selected immaterial claim ${formatPercentWithRatio(assessment.credenceMix.claim)}, known material alternatives ${formatPercentWithRatio(assessment.credenceMix.material)}, unknown reserve ${formatPercentWithRatio(assessment.credenceMix.unknown)}`,
     "",
     "## Baseline Assumptions",
     `${assessment.meta.generalPriorLabel}: ${formatPercentWithRatio(assessment.priorParts.general)}`,
@@ -1515,10 +1515,10 @@ function buildReport(assessment) {
     `User notes on what may be missing: ${assessment.unknownNotes || "None entered."}`,
     "",
     "## Cause Credence Mix",
-    "Calculation: selected claim = revised confidence; the remaining probability is split between conceived material alternatives and the unconceived reserve.",
+    "Calculation: selected immaterial claim = revised confidence; the remaining probability is split between known material alternatives and the unknown reserve.",
     `Selected immaterial claim: ${formatPercentWithRatio(assessment.credenceMix.claim)}`,
-    `Conceived material alternatives: ${formatPercentWithRatio(assessment.credenceMix.material)}`,
-    `Unconceived causes: ${formatPercentWithRatio(assessment.credenceMix.unknown)}`,
+    `Known material alternatives: ${formatPercentWithRatio(assessment.credenceMix.material)}`,
+    `Unknown reserve: ${formatPercentWithRatio(assessment.credenceMix.unknown)}`,
     "",
     "## Evidence Questions",
     ...assessment.items.map(
