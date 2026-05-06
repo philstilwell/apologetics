@@ -1005,7 +1005,7 @@ ${study.move}
 Outcome rules set before looking:
 ${outcomeRulesSummary(claim.id)}
 
-Concrete dataset leads:
+Concrete dataset leads (candidate record sources, not evidence by themselves):
 ${datasetSummary(claim.id)}
 
 User willingness settings:
@@ -1051,7 +1051,7 @@ Please give a comprehensive review that includes:
 4. Whether the outcome rules specify real wins, real losses, and neutral cases before results are known.
 5. How the selected escape hatches change the whole suite's falsifiability.
 6. Whether the total stance reflects belief in a personal God active in earthly life, or retreats toward protected interpretation.
-7. Concrete dataset and study-design improvements for every promise.
+7. Concrete dataset and study-design improvements for every promise, including which controls or comparisons would make each lead useful.
 8. A concise final judgment about the overall posture: open to robust science, mixed, or mostly insulated.`;
 }
 

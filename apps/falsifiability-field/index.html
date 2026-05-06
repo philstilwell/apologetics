@@ -230,11 +230,21 @@
           <section class="testing-layout" id="testing" aria-labelledby="testing-title">
             <section class="study-panel">
               <p class="app-step">Step 3</p>
-              <h2 id="testing-title">Choose a study</h2>
+              <div class="section-title-inline">
+                <h2 id="testing-title">Choose a study</h2>
+                <span class="ff-tip" tabindex="0">?
+                  <span class="ff-tooltip" role="tooltip">
+                    These studies are not meant to be impossible standards. They are ordinary
+                    ways to ask whether an earthly claim can survive records, comparison groups,
+                    hidden scoring, and visible misses.
+                  </span>
+                </span>
+              </div>
               <p class="scrutiny-question">Can the promise survive this degree of scrutiny?</p>
               <p class="panel-copy" id="study-intro">
                 These are intentionally ordinary starting points: logs, records, matched comparisons,
-                blinded review, and small pilots before large studies.
+                blinded review, and small pilots before large studies. The point is not to demand
+                perfection; it is to see whether the claim is allowed to meet normal public checks.
               </p>
               <div class="study-grid" id="study-grid"></div>
 
@@ -242,13 +252,27 @@
                 <div class="dataset-head">
                   <div>
                     <p class="app-step">Dataset leads</p>
-                    <h3 id="dataset-title">Concrete datasets</h3>
+                    <div class="section-title-inline compact-title-inline">
+                      <h3 id="dataset-title">Concrete datasets</h3>
+                      <span class="ff-tip" tabindex="0">?
+                        <span class="ff-tooltip" role="tooltip">
+                          These are leads for the kinds of records that could check the claim.
+                          A dataset lead is not proof by itself; it becomes useful when paired
+                          with clear outcomes, fair comparison groups, controls for ordinary causes,
+                          and a rule for what would count against the promise.
+                        </span>
+                      </span>
+                    </div>
                   </div>
                   <div class="dataset-active-promise" aria-live="polite">
                     <span>Active promise</span>
                     <strong id="dataset-active-promise">Answered prayer</strong>
                   </div>
                 </div>
+                <p class="dataset-note">
+                  Use these as places to look for measurable outcomes, baseline rates, matched
+                  comparison groups, and possible confounders before treating a story as evidence.
+                </p>
                 <div class="dataset-list" id="dataset-list"></div>
               </section>
             </section>
@@ -262,7 +286,16 @@
               </p>
 
               <div class="field-group">
-                <label for="claim-text">Claim wording</label>
+                <label for="claim-text">
+                  Claim wording
+                  <span class="ff-tip" tabindex="0">?
+                    <span class="ff-tooltip" role="tooltip">
+                      Write the promise as an earthly claim that could, in principle, disappoint
+                      you. Vague phrases such as "God works mysteriously" can be true as theology
+                      while still making the specific outcome hard to test.
+                    </span>
+                  </span>
+                </label>
                 <textarea id="claim-text"></textarea>
               </div>
 
@@ -369,7 +402,20 @@
 
               <section class="outcome-rules-panel" aria-labelledby="outcome-rules-title">
                 <p class="app-step">Outcome rules</p>
-                <h3 id="outcome-rules-title">Set the result rules first</h3>
+                <div class="section-title-inline compact-title-inline">
+                  <h3 id="outcome-rules-title">Set the result rules first</h3>
+                  <span class="ff-tip" tabindex="0">?
+                    <span class="ff-tooltip" role="tooltip">
+                      Result rules prevent after-the-fact rescue. Before seeing outcomes, say what
+                      would support the claim, what would count against it, and what would simply
+                      be too messy or underpowered to interpret.
+                    </span>
+                  </span>
+                </div>
+                <p class="panel-copy tight-copy">
+                  The more specific these rules are before the test, the harder it is to rename
+                  every result as a win after the data arrive.
+                </p>
                 <div class="outcome-rules-grid">
                   <div class="field-group">
                     <label for="outcome-for">Counts for the claim</label>
@@ -458,7 +504,16 @@
               <div class="summary-head compact-head">
                 <div>
                   <p class="app-step">All promises</p>
-                  <h3 id="all-stance-title">Suite-wide stance result</h3>
+                  <div class="section-title-inline compact-title-inline">
+                    <h3 id="all-stance-title">Suite-wide stance result</h3>
+                    <span class="ff-tip" tabindex="0">?
+                      <span class="ff-tooltip" role="tooltip">
+                        This aggregates every promise, not just the active one. It is useful when
+                        a person says many earthly promises are real, but only some are allowed
+                        to face robust checks or count clean failures.
+                      </span>
+                    </span>
+                  </div>
                 </div>
                 <button class="button secondary" type="button" id="build-all-result">
                   Build all-promises result
@@ -488,7 +543,16 @@
               <div class="summary-head">
                 <div>
                   <p class="app-step">AI review</p>
-                  <h3 id="ai-prompt-title">Comprehensive AI prompt</h3>
+                  <div class="section-title-inline compact-title-inline">
+                    <h3 id="ai-prompt-title">Comprehensive AI prompt</h3>
+                    <span class="ff-tip" tabindex="0">?
+                      <span class="ff-tooltip" role="tooltip">
+                        This prompt packages the current audit so another AI can critique the
+                        stance, look for hidden escape hatches, suggest stronger tests, and ask
+                        whether the user's position fits a personal God acting in earthly life.
+                      </span>
+                    </span>
+                  </div>
                 </div>
                 <div class="prompt-actions">
                   <span id="ai-prompt-mode" aria-live="polite">Prompt scope: Active promise</span>

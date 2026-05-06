@@ -4417,6 +4417,30 @@ body.app-falsifiability #summary {
   line-height: 1.48;
 }
 
+.tight-copy {
+  margin: 4px 0 10px;
+}
+
+.section-title-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.section-title-inline h2,
+.section-title-inline h3 {
+  min-width: 0;
+}
+
+.compact-title-inline {
+  gap: 7px;
+}
+
+.compact-title-inline .ff-tip {
+  flex: 0 0 auto;
+}
+
 .scrutiny-question {
   margin: 6px 0 8px;
   color: var(--ff-blue-dark);
@@ -4999,6 +5023,14 @@ body.app-falsifiability #summary {
   color: var(--ff-blue-dark);
   font-size: 0.84rem;
   font-weight: 950;
+}
+
+.dataset-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 690;
+  line-height: 1.42;
 }
 
 .compact-head {
