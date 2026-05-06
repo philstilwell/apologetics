@@ -953,7 +953,7 @@ function diagnosisFor(score) {
     return {
       title: "Protected from ordinary checks",
       body: "This claim is mostly being held away from tests that could make confidence go down.",
-      label: "Left side",
+      label: "Protected",
       detail: "Protected from ordinary checks.",
     };
   }
