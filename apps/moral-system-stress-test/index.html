@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crosshairs Audit Lab | Moral System Stress Test</title>
+    <meta
+      name="description"
+      content="A Crosshairs tool for testing whether a Christian moral claim supplies the elements of an actual moral system or collapses into emotion, obedience, or practical advice."
+    >
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260506-moral-system">
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
+  </head>
+  <body class="app-morality">
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
+        <span class="brand-mark" aria-hidden="true">X</span>
+        <span>
+          <strong><span class="brand-cross">Cross</span><span class="brand-hairs">hairs</span> Audit Lab</strong>
+          <small>Moral System Stress Test</small>
+        </span>
+      </a>
+      <a class="site-domain-link" href="https://xhairs.com" aria-label="Visit xhairs.com">
+        https://<strong class="site-domain-x">x</strong>hairs.com
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a class="hub-link" href="../../">Hub</a>
+        <a href="#claim-step">Claim</a>
+        <a href="#elements-step">Elements</a>
+        <a href="#boundary-step">Boundaries</a>
+        <a href="#challenge-step">Challenges</a>
+        <a href="#report-step">Report</a>
+      </nav>
+    </header>
+
+    <main class="app-shell morality-tool">
+      <section class="app-header">
+        <div class="app-title">
+          <p class="eyebrow">Coherence audit</p>
+          <h1>Moral System Stress Test</h1>
+          <p>
+            Test whether a Christian moral claim supplies the necessary and sufficient
+            elements of an actual moral system, or whether the claim thins out into emotion,
+            obedience, social strategy, or practical advice.
+          </p>
+        </div>
+        <aside class="source-note">
+          <strong>Diagnostic, not a final verdict.</strong>
+          The audit asks what a moral system would need in order to be unequivocally distinct
+          from feelings, commands, and useful recommendations. It then challenges the supplied
+          substantiation with counterfactuals drawn from the background material.
+        </aside>
+        <details class="annotation app-wide" open>
+          <summary>How to use this audit</summary>
+          <p>
+            State the moral claim, choose every element you think an actual moral system must
+            include, and explain how your own moral perspective substantiates each element.
+          </p>
+          <ul>
+            <li><strong>Step 1:</strong> state the claim under audit as precisely as possible.</li>
+            <li><strong>Step 2:</strong> select the elements you think are necessary and choose a substantiation route for each.</li>
+            <li><strong>Step 3:</strong> read the boundary tests for collapse into emotion, obedience, or practical advice.</li>
+            <li><strong>Step 4:</strong> review matched counterfactuals and cross-examination questions.</li>
+            <li><strong>Step 5:</strong> export the report or AI prompt for a fuller stress test.</li>
+          </ul>
+        </details>
+      </section>
+
+      <nav class="guided-steps moral-steps" aria-label="Audit steps">
+        <a href="#claim-step" aria-describedby="moral-step-claim-help">
+          <span class="step-number">1</span>
+          <span class="step-label">Claim</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="moral-step-claim-help" role="tooltip">
+            The tool works best when the claim is narrow enough to test: source, authority,
+            obligation, access, and scope should be visible.
+          </span>
+        </a>
+        <a href="#elements-step" aria-describedby="moral-step-elements-help">
+          <span class="step-number">2</span>
+          <span class="step-label">Elements</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="moral-step-elements-help" role="tooltip">
+            Select the pieces you think are required for a real moral system rather than
+            merely a strong feeling, command structure, or social strategy.
+          </span>
+        </a>
+        <a href="#boundary-step" aria-describedby="moral-step-boundary-help">
+          <span class="step-number">3</span>
+          <span class="step-label">Boundaries</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="moral-step-boundary-help" role="tooltip">
+            Boundary tests ask whether the selected account still differs from emotion,
+            obedience, practical advice, and vague guidance.
+          </span>
+        </a>
+        <a href="#challenge-step" aria-describedby="moral-step-challenge-help">
+          <span class="step-number">4</span>
+          <span class="step-label">Challenges</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="moral-step-challenge-help" role="tooltip">
+            Counterfactuals are matched to the selected elements and routes, so the hardest
+            pressure points rise first.
+          </span>
+        </a>
+        <a href="#dialogue-step" aria-describedby="moral-step-dialogue-help">
+          <span class="step-number">5</span>
+          <span class="step-label">Dialogue</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="moral-step-dialogue-help" role="tooltip">
+            Dialogue prompts turn the current audit into questions that can be used in a
+            conversation without needing to quote the whole report.
+          </span>
+        </a>
+        <a href="#report-step" aria-describedby="moral-step-report-help">
+          <span class="step-number">6</span>
+          <span class="step-label">Report</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="moral-step-report-help" role="tooltip">
+            Export a readable report, an AI stress-test prompt, or JSON state for later review.
+          </span>
+        </a>
+      </nav>
+
+      <section class="moral-dashboard" aria-label="Current moral-system audit status">
+        <article class="metric-card">
+          <span class="metric-label">Completeness</span>
+          <strong id="completenessScore">0%</strong>
+          <small>Core elements with route and substantiation</small>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Elements selected</span>
+          <strong id="selectedCount">0</strong>
+          <small id="selectedCountNote">No elements selected yet</small>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Boundary pressure</span>
+          <strong id="boundaryPressure">0</strong>
+          <small>Collapse risks currently flagged</small>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Matched challenges</span>
+          <strong id="matchedChallengeCount">0</strong>
+          <small>Counterfactuals triggered by selections</small>
+        </article>
+      </section>
+
+      <section class="moral-control-panel" id="claim-step" aria-labelledby="claim-title">
+        <div class="moral-claim-card">
+          <div class="section-title-inline">
+            <div>
+              <p class="app-step">Step 1</p>
+              <h2 id="claim-title">State the claim</h2>
+            </div>
+          </div>
+          <div class="field-group">
+            <label for="claimInput">Claim under audit</label>
+            <textarea
+              id="claimInput"
+              rows="4"
+              placeholder="Example: Christianity provides a coherent objective moral system grounded in God's nature."
+            ></textarea>
+          </div>
+          <div class="moral-actions">
+            <button class="primary" id="copySummaryButton" type="button">Copy Summary</button>
+            <button id="loadSampleButton" type="button">Load Sample</button>
+            <button class="secondary" id="resetButton" type="button">Reset</button>
+          </div>
+        </div>
+
+        <aside class="moral-lens-panel" aria-labelledby="lens-title">
+          <div class="section-title-inline compact-title-inline">
+            <div>
+              <p class="app-step">Preset lenses</p>
+              <h2 id="lens-title">Common starting postures</h2>
+            </div>
+          </div>
+          <p>
+            Apply a profile to see how different moral perspectives carry pressure before
+            you edit the details.
+          </p>
+          <div class="moral-lens-grid" id="presetButtons"></div>
+        </aside>
+      </section>
+
+      <section class="moral-workspace" id="elements-step" aria-labelledby="elements-title">
+        <div class="moral-main-panel">
+          <div class="moral-section-head">
+            <div>
+              <p class="app-step">Step 2</p>
+              <h2 id="elements-title">Necessary and sufficient candidates</h2>
+              <p>
+                Select the elements you think are required, then state how each one is grounded,
+                known, and applied.
+              </p>
+            </div>
+            <select id="elementFilter" aria-label="Element filter">
+              <option value="all">All elements</option>
+              <option value="core">Core only</option>
+              <option value="selected">Selected</option>
+              <option value="missing">Missing core</option>
+            </select>
+          </div>
+          <div class="element-grid" id="elementGrid"></div>
+        </div>
+
+        <aside class="moral-side-panel">
+          <section class="moral-static-status" aria-labelledby="coherence-status-title" aria-live="polite">
+            <div class="moral-static-head">
+              <div>
+                <p class="app-step">Static status</p>
+                <h2 id="coherence-status-title">Coherence ledger</h2>
+              </div>
+              <span id="statusCompleteness">0%</span>
+            </div>
+            <p id="coherenceStatusBody">
+              Select elements to see whether the attempted moral system has the necessary core components.
+            </p>
+            <div class="moral-static-factors" aria-label="Current coherence status factors">
+              <div>
+                <strong id="statusCoreCovered">0/11</strong>
+                <span>Core ready</span>
+              </div>
+              <div>
+                <strong id="statusBoundaryRisk">0</strong>
+                <span>Boundary risk</span>
+              </div>
+              <div>
+                <strong id="statusRouteCount">0</strong>
+                <span>Routes</span>
+              </div>
+            </div>
+            <div class="component-status-list" id="componentStatusList" aria-label="Necessary component status"></div>
+            <div class="top-pressure-list" id="topPressureList" aria-label="Top pressure points"></div>
+          </section>
+
+          <section class="moral-card" id="boundary-step" aria-labelledby="boundary-title">
+            <div class="section-title-inline compact-title-inline">
+              <div>
+                <p class="app-step">Step 3</p>
+                <h2 id="boundary-title">Boundary tests</h2>
+              </div>
+            </div>
+            <div class="boundary-list" id="boundaryList"></div>
+          </section>
+
+          <section class="moral-card">
+            <p class="app-step">Missing core</p>
+            <div class="missing-list" id="missingList"></div>
+          </section>
+
+          <section class="moral-card">
+            <p class="app-step">Selected routes</p>
+            <div class="route-list" id="routeList"></div>
+          </section>
+        </aside>
+      </section>
+
+      <section class="moral-challenge-panel" id="challenge-step" aria-labelledby="challenge-title">
+        <div class="moral-section-head">
+          <div>
+            <p class="app-step">Step 4</p>
+            <h2 id="challenge-title">Counterfactual repository</h2>
+            <p>
+              Challenges are sorted by match strength and pressure. Use them to test whether
+              the selected account survives hard cases.
+            </p>
+          </div>
+          <select id="challengeFilter" aria-label="Challenge filter">
+            <option value="matched">Matched</option>
+            <option value="all">All</option>
+            <option value="severe">Highest pressure</option>
+          </select>
+        </div>
+        <div class="challenge-list" id="challengeList"></div>
+      </section>
+
+      <section class="moral-dialogue-panel" id="dialogue-step" aria-labelledby="dialogue-title">
+        <div class="moral-section-head">
+          <div>
+            <p class="app-step">Step 5</p>
+            <h2 id="dialogue-title">Dialogue prompts</h2>
+            <p>Ready-to-use questions built from the current selections and challenge matches.</p>
+          </div>
+          <button id="copyPromptsButton" type="button">Copy Prompts</button>
+        </div>
+        <div class="prompt-board" id="promptBoard"></div>
+      </section>
+
+      <section class="moral-report-grid" id="report-step" aria-labelledby="report-title">
+        <article class="output-card">
+          <div class="output-card-head">
+            <div>
+              <p class="app-step">Step 6</p>
+              <h2 id="report-title">Audit report</h2>
+              <p>A readable export of the current claim, selected elements, boundary tests, and matched challenges.</p>
+            </div>
+            <label class="report-mode">
+              <span>Mode</span>
+              <select id="reportMode">
+                <option value="brief">Brief</option>
+                <option value="full" selected>Full</option>
+                <option value="skeptical">Skeptical audit</option>
+                <option value="ai">AI prompt only</option>
+              </select>
+            </label>
+          </div>
+          <textarea id="finalReport" class="export-box" rows="14" readonly></textarea>
+          <div class="moral-actions">
+            <button class="ghost" id="copyReportButton" type="button">Copy Report</button>
+            <button class="ghost" id="printReportButton" type="button">Print</button>
+          </div>
+        </article>
+
+        <article class="output-card ai-output-card">
+          <div class="output-card-head">
+            <div>
+              <p class="app-step">AI prompt</p>
+              <h2>Structured stress-test prompt</h2>
+              <p>Paste this into another AI assistant for a deeper critique of the current moral-system account.</p>
+            </div>
+            <button class="ghost" id="copyAiPromptButton" type="button">Copy AI Prompt</button>
+          </div>
+          <details class="annotation">
+            <summary>Using the AI prompt</summary>
+            <p>
+              The prompt asks for the strongest remaining tensions, a steelmanned Christian
+              response, counterfactual tests, repair options, and follow-up prompts.
+            </p>
+          </details>
+          <textarea id="aiPrompt" class="export-box" rows="14" readonly></textarea>
+        </article>
+
+        <article class="output-card moral-sources-card">
+          <div class="output-card-head">
+            <div>
+              <p class="app-step">Sources</p>
+              <h2>Background material</h2>
+              <p>Links used to seed the element list, boundary tests, and challenge repository.</p>
+            </div>
+          </div>
+          <div class="source-list" id="sourceList"></div>
+        </article>
+
+        <details class="output-card moral-share-card" aria-labelledby="share-title">
+          <summary>
+            <div>
+              <p class="app-step">State export</p>
+              <h2 id="share-title">Save or share this audit</h2>
+              <p>Copy a state link or JSON snapshot if you want to revisit the same configuration later.</p>
+            </div>
+          </summary>
+          <div class="moral-share-body">
+            <div class="moral-actions">
+              <button id="copyShareLinkButton" type="button">Copy State Link</button>
+              <button id="exportJsonButton" type="button">Show JSON</button>
+              <button id="loadJsonButton" type="button">Restore JSON</button>
+            </div>
+            <textarea id="shareStateOutput" class="export-box" rows="10"></textarea>
+            <p class="copy-status" id="copyStatus" role="status"></p>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <script src="app.js?v=20260506-moral-system"></script>
+  </body>
+</html>

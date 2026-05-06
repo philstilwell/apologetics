@@ -8,6 +8,7 @@ Static GitHub Pages suite for Crosshairs audits: compact tools that inspect Chri
 - Theism Gradient: a Christianity-focused assessment of confidence, substantiation gaps, dependency tensions, and divine-action claims.
 - Resurrection Evidence Audit: a Bayesian self-audit for resurrection and miracle claims, including explicit priors, likelihoods, dependence weights, required Bayes factors, pitfall flags, and a postdiction comparator.
 - Earthly Promise Test Field: a verification-willingness tool for testing whether earthly God-claims are exposed to ordinary checks or protected by escape hatches.
+- Moral System Stress Test: a coherence audit for testing whether Christian moral claims supply an actual moral system or collapse into emotion, obedience, practical advice, or vague guidance.
 
 ## GitHub Pages
 
@@ -34,3 +35,4 @@ Useful paths:
 - Theism Gradient: `http://localhost:8080/apps/theism-gradient-audit/app.html`
 - Resurrection Evidence Audit: `http://localhost:8080/apps/resurrection-evidence-audit/`
 - Earthly Promise Test Field: `http://localhost:8080/apps/falsifiability-field/`
+- Moral System Stress Test: `http://localhost:8080/apps/moral-system-stress-test/`

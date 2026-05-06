@@ -5955,3 +5955,732 @@ body.app-falsifiability #summary {
     gap: 10px;
   }
 }
+
+/* Moral System Stress Test */
+
+.hub-landing .hub-card-morality {
+  --app-accent: #7c2f47;
+  --app-accent-dark: #4d1729;
+  --app-tint: #fff0f4;
+  --app-line: #d6a7b6;
+}
+
+body.app-morality {
+  --brand-cross-color: #97544d;
+  --moral-ink: #231305;
+  --moral-muted: #5d4533;
+  --moral-line: #b89065;
+  --moral-soft: #fff2d2;
+  --moral-card: #fffaf0;
+  --moral-red: #9b2f27;
+  --moral-red-soft: #ffe8e3;
+  --moral-green: #2f6b49;
+  --moral-green-soft: #e8f6ed;
+  --moral-blue: #2f578f;
+  --moral-blue-soft: #e8f0ff;
+  --moral-gold: #8b610f;
+  --moral-gold-soft: #fff2c7;
+}
+
+body.app-morality #claim-step,
+body.app-morality #elements-step,
+body.app-morality #boundary-step,
+body.app-morality #challenge-step,
+body.app-morality #dialogue-step,
+body.app-morality #report-step {
+  scroll-margin-top: 92px;
+}
+
+.morality-tool {
+  display: grid;
+  gap: 16px;
+}
+
+.moral-dashboard {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.moral-dashboard .metric-card {
+  min-height: 124px;
+  padding: 14px;
+  border: 1px solid var(--moral-line);
+  border-top: 5px solid var(--moral-blue);
+  border-radius: var(--radius);
+  background: var(--moral-card);
+  box-shadow: 0 12px 28px rgba(58, 32, 5, 0.11);
+}
+
+.moral-dashboard .metric-card:nth-child(2) {
+  border-top-color: var(--moral-green);
+}
+
+.moral-dashboard .metric-card:nth-child(3) {
+  border-top-color: var(--moral-red);
+}
+
+.moral-dashboard .metric-card:nth-child(4) {
+  border-top-color: var(--moral-gold);
+}
+
+.moral-dashboard .metric-label,
+.moral-dashboard small {
+  display: block;
+  color: var(--moral-muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.moral-dashboard strong {
+  display: block;
+  margin: 8px 0 6px;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 0.9;
+}
+
+.moral-control-panel,
+.moral-workspace,
+.moral-report-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.moral-control-panel {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  align-items: stretch;
+}
+
+.moral-claim-card,
+.moral-lens-panel,
+.moral-main-panel,
+.moral-side-panel .moral-card,
+.moral-challenge-panel,
+.moral-dialogue-panel {
+  border: 1px solid var(--moral-line);
+  border-radius: var(--radius);
+  background: var(--moral-card);
+  box-shadow: var(--shadow);
+}
+
+.moral-claim-card,
+.moral-lens-panel,
+.moral-main-panel,
+.moral-side-panel .moral-card,
+.moral-challenge-panel,
+.moral-dialogue-panel {
+  padding: 14px;
+}
+
+.moral-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.moral-lens-panel > p {
+  margin: 0 0 12px;
+  color: var(--moral-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.moral-lens-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.moral-lens-button {
+  display: grid;
+  justify-content: stretch;
+  gap: 5px;
+  min-height: 76px;
+  padding: 10px;
+  border-color: var(--moral-line);
+  background: #fff7e4;
+  text-align: left;
+}
+
+.moral-lens-button:hover,
+.moral-lens-button:focus-visible {
+  background: var(--moral-gold-soft);
+}
+
+.moral-lens-button strong,
+.moral-lens-button span {
+  display: block;
+}
+
+.moral-lens-button span {
+  color: var(--moral-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.32;
+}
+
+.moral-workspace {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  align-items: start;
+}
+
+.moral-side-panel {
+  display: grid;
+  gap: 12px;
+  align-self: start;
+}
+
+.moral-static-status {
+  position: sticky;
+  top: 86px;
+  z-index: 11;
+  display: grid;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid var(--moral-line);
+  border-top: 5px solid var(--moral-blue);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(90deg, rgba(47, 87, 143, 0.12), rgba(255, 255, 255, 0) 62%),
+    var(--moral-card);
+  box-shadow: var(--shadow);
+}
+
+.moral-static-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.moral-static-head h2 {
+  color: var(--moral-blue);
+  font-size: 1.22rem;
+}
+
+.moral-static-head > span {
+  flex: 0 0 auto;
+  min-width: 64px;
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: var(--moral-blue);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 950;
+  line-height: 1;
+  text-align: center;
+}
+
+.moral-static-status > p {
+  margin: 0;
+  color: var(--moral-muted);
+  font-size: 0.84rem;
+  font-weight: 720;
+  line-height: 1.38;
+}
+
+.moral-static-factors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.moral-static-factors div {
+  min-width: 0;
+  padding: 7px 6px;
+  border: 1px solid rgba(184, 144, 101, 0.76);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.moral-static-factors strong,
+.moral-static-factors span {
+  display: block;
+}
+
+.moral-static-factors strong {
+  color: var(--moral-blue);
+  font-size: 0.86rem;
+  line-height: 1.05;
+}
+
+.moral-static-factors span {
+  margin-top: 4px;
+  color: var(--moral-muted);
+  font-size: 0.56rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.component-status-list {
+  display: grid;
+  gap: 5px;
+}
+
+.component-status {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 7px;
+  border: 1px solid rgba(184, 144, 101, 0.68);
+  border-left: 4px solid var(--moral-red);
+  border-radius: 7px;
+  background: #fff8e8;
+}
+
+.component-status.ready {
+  border-left-color: var(--moral-green);
+  background: var(--moral-green-soft);
+}
+
+.component-status.thin,
+.component-status.route {
+  border-left-color: var(--moral-gold);
+  background: var(--moral-gold-soft);
+}
+
+.component-status span,
+.component-status strong,
+.component-status small {
+  min-width: 0;
+  line-height: 1.12;
+}
+
+.component-status span {
+  color: var(--moral-ink);
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.component-status strong {
+  justify-self: end;
+  color: var(--moral-muted);
+  font-size: 0.62rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.component-status small {
+  grid-column: 1 / -1;
+  color: var(--moral-muted);
+  font-size: 0.66rem;
+  font-weight: 720;
+}
+
+.top-pressure-list {
+  display: grid;
+  gap: 6px;
+  padding-top: 2px;
+  border-top: 1px solid rgba(184, 144, 101, 0.64);
+}
+
+.top-pressure-list .app-step {
+  margin-bottom: 0;
+}
+
+.top-pressure-list article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 29px;
+  padding: 6px 7px;
+  border: 1px solid rgba(184, 144, 101, 0.68);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.top-pressure-list strong {
+  min-width: 0;
+  font-size: 0.76rem;
+  line-height: 1.15;
+}
+
+.top-pressure-list span {
+  flex: 0 0 auto;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: var(--moral-red);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.moral-section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.moral-section-head h2 {
+  font-size: clamp(1.55rem, 3vw, 2.4rem);
+}
+
+.moral-section-head p:not(.app-step) {
+  max-width: 760px;
+  margin: 8px 0 0;
+  color: var(--moral-muted);
+  line-height: 1.48;
+}
+
+.moral-section-head select {
+  min-width: 170px;
+}
+
+.element-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.element-card {
+  display: grid;
+  gap: 12px;
+  min-height: 246px;
+  padding: 12px;
+  border: 1px solid var(--moral-line);
+  border-radius: var(--radius);
+  background: #fff8e8;
+}
+
+.element-card.is-selected {
+  border-color: var(--moral-green);
+  box-shadow: inset 0 0 0 2px rgba(47, 107, 73, 0.36);
+}
+
+.element-head {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.element-head input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--moral-green);
+}
+
+.element-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.element-title strong {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.element-card p,
+.challenge-card p,
+.prompt-card p,
+.source-card p,
+.boundary-item p,
+.missing-item p {
+  margin: 0;
+  color: var(--moral-muted);
+  line-height: 1.45;
+}
+
+.pill,
+.tag,
+.pressure,
+.route-item span {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.pill.core {
+  background: var(--moral-red-soft);
+  color: var(--moral-red);
+}
+
+.pill.support {
+  background: var(--moral-blue-soft);
+  color: var(--moral-blue);
+}
+
+.substantiation {
+  display: grid;
+  gap: 8px;
+}
+
+.substantiation textarea {
+  min-height: 94px;
+}
+
+.boundary-list,
+.missing-list,
+.route-list,
+.challenge-list,
+.prompt-board,
+.source-list {
+  display: grid;
+  gap: 9px;
+}
+
+.boundary-item,
+.missing-item,
+.route-item,
+.challenge-card,
+.prompt-card,
+.source-card {
+  padding: 11px;
+  border: 1px solid var(--moral-line);
+  border-radius: var(--radius);
+  background: #fff8e8;
+}
+
+.boundary-item.pass {
+  border-color: #9fc5a9;
+  background: var(--moral-green-soft);
+}
+
+.boundary-item.warn,
+.missing-item {
+  border-color: #d8bf6f;
+  background: var(--moral-gold-soft);
+}
+
+.boundary-item.fail {
+  border-color: #dcaaa1;
+  background: var(--moral-red-soft);
+}
+
+.boundary-item strong,
+.missing-item strong,
+.route-item strong,
+.challenge-card strong,
+.prompt-card strong,
+.source-card strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.route-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.route-item span {
+  background: var(--moral-blue-soft);
+  color: var(--moral-blue);
+}
+
+.challenge-card {
+  display: grid;
+  gap: 10px;
+  background: var(--moral-card);
+}
+
+.challenge-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pressure.high {
+  background: var(--moral-red);
+  color: #fff;
+}
+
+.pressure.medium {
+  background: var(--moral-gold);
+  color: #fff;
+}
+
+.pressure.low {
+  background: var(--moral-blue);
+  color: #fff;
+}
+
+.question-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+}
+
+.question-list li {
+  padding: 9px;
+  border: 1px solid rgba(184, 144, 101, 0.7);
+  border-radius: var(--radius);
+  background: #fffaf0;
+  list-style: none;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  background: #f0e3d2;
+  color: var(--moral-muted);
+}
+
+.source-card a,
+.challenge-card a {
+  color: var(--moral-blue);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.source-card a:hover,
+.challenge-card a:hover {
+  text-decoration: underline;
+}
+
+.moral-report-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.moral-sources-card,
+.moral-share-card {
+  grid-column: 1 / -1;
+}
+
+.output-card-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.output-card-head h2 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.output-card-head p:not(.app-step) {
+  margin: 7px 0 0;
+  color: var(--moral-muted);
+  line-height: 1.45;
+}
+
+.report-mode {
+  display: grid;
+  gap: 5px;
+  min-width: 150px;
+}
+
+.moral-share-card > summary {
+  display: flex;
+  cursor: pointer;
+  list-style: none;
+}
+
+.moral-share-card > summary::-webkit-details-marker {
+  display: none;
+}
+
+.moral-share-body {
+  padding-top: 12px;
+}
+
+.copy-status {
+  min-height: 24px;
+  margin: 8px 0 0;
+  color: var(--moral-muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+@media (max-width: 1120px) {
+  .moral-dashboard,
+  .moral-report-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .moral-control-panel,
+  .moral-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .moral-static-status {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .moral-dashboard,
+  .element-grid,
+  .moral-report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .moral-steps .label-tooltip {
+    position: fixed;
+    top: 84px !important;
+    right: 16px !important;
+    bottom: auto !important;
+    left: 16px !important;
+    width: auto;
+    max-width: none;
+  }
+
+  .moral-section-head,
+  .output-card-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .route-item {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media print {
+  body.app-morality .site-header,
+  body.app-morality .guided-steps,
+  body.app-morality button,
+  body.app-morality .moral-control-panel,
+  body.app-morality .moral-workspace,
+  body.app-morality .moral-challenge-panel,
+  body.app-morality .moral-dialogue-panel,
+  body.app-morality .moral-sources-card,
+  body.app-morality .moral-share-card {
+    display: none !important;
+  }
+
+  body.app-morality .moral-report-grid {
+    display: block;
+  }
+
+  body.app-morality .export-box {
+    min-height: 80vh;
+  }
+}
