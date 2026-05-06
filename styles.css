@@ -577,9 +577,9 @@ main {
 
 .author-card {
   display: grid;
-  grid-template-columns: minmax(240px, 0.42fr) minmax(0, 1fr);
-  gap: clamp(22px, 5vw, 54px);
-  align-items: center;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(22px, 4vw, 42px);
+  align-items: start;
   padding: clamp(18px, 3vw, 30px);
   border: 1px solid #d0d0d0;
   border-top: 7px solid #111;
@@ -592,21 +592,24 @@ main {
 
 .author-photo-wrap {
   overflow: hidden;
-  border: 1px solid #d2d2d2;
-  border-radius: 8px;
+  width: clamp(124px, 18vw, 190px);
+  border: 3px solid #111;
+  border-radius: 50%;
   background: #f5f5f2;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.12);
 }
 
 .author-photo-wrap img {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 5;
+  height: 100%;
+  aspect-ratio: 1;
   object-fit: cover;
+  object-position: 50% 28%;
 }
 
 .author-copy {
-  max-width: 760px;
+  max-width: 860px;
 }
 
 .author-copy h2 {
@@ -622,6 +625,43 @@ main {
   color: #3f3f3f;
   font-size: clamp(1rem, 1.4vw, 1.16rem);
   line-height: 1.62;
+}
+
+.author-credentials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.author-credentials span,
+.author-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid #cfcfcf;
+  border-radius: 999px;
+  background: #f5f5f2;
+  color: #111;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  text-decoration: none;
+}
+
+.author-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.author-links a:hover,
+.author-links a:focus-visible {
+  border-color: #111;
+  background: #111;
+  color: #fff;
 }
 
 .hub-layout {
@@ -3494,7 +3534,7 @@ body:has(.guided-resurrection) a:focus-visible {
   }
 
   .author-photo-wrap {
-    max-width: 420px;
+    width: 156px;
   }
 
   .principle-grid {
