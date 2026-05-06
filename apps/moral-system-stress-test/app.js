@@ -798,38 +798,114 @@ function getBoundaryTests() {
 
   return [
     {
+      id: "emotion",
       title: "Emotion Boundary",
       status: !hasEmotionRoute ? "warn" : ontologyReady ? "pass" : "fail",
       body: !hasEmotionRoute
         ? "No conscience or flourishing route is currently carrying the system."
         : ontologyReady
           ? "The selected account attempts to ground moral terms beyond emotional force."
-          : "The selected account risks redescribing emotion, empathy, disgust, or preference as morality."
+          : "The selected account risks redescribing emotion, empathy, disgust, or preference as morality.",
+      help: [
+        {
+          label: "What this boundary tests",
+          body: "It asks whether the moral claim is doing more than reporting approval, disapproval, conscience, empathy, disgust, or a preferred vision of flourishing."
+        },
+        {
+          label: "Pass means",
+          body: "If emotion-adjacent routes are carrying the claim, Moral Meaning and Truth Maker support are strong enough to distinguish objective wrongness from felt aversion or preference."
+        },
+        {
+          label: "Warning means",
+          body: "No conscience or flourishing route is currently active, so this specific collapse risk is not the main pressure point under the present selections."
+        },
+        {
+          label: "Failure means",
+          body: "An emotion-adjacent route is active while stable moral meaning or truth-making support is incomplete, so the claim may be borrowing moral language from feeling."
+        }
+      ]
     },
     {
+      id: "obedience",
       title: "Obedience Boundary",
       status: !hasAuthorityRoute ? "warn" : authorityReady ? "pass" : "fail",
       body: !hasAuthorityRoute
         ? "No divine, scriptural, or spiritual authority route is currently carrying the system."
         : authorityReady
           ? "The selected account attempts to assess authority without simply submitting to it."
-          : "The selected account risks treating moral truth as obedience to an authority already assumed to be moral."
+          : "The selected account risks treating moral truth as obedience to an authority already assumed to be moral.",
+      help: [
+        {
+          label: "What this boundary tests",
+          body: "It asks whether the moral claim can evaluate authority as morally good rather than treating command, scripture, tradition, or spiritual authority as automatically moral."
+        },
+        {
+          label: "Pass means",
+          body: "Authority routes are active, but Authority Check and Moral Access are strong enough to explain how legitimate moral authority is recognized and disputed."
+        },
+        {
+          label: "Warning means",
+          body: "No divine, scriptural, spiritual, or church-authority route is currently active, so obedience is not the main current dependency."
+        },
+        {
+          label: "Failure means",
+          body: "An authority route is active without enough independent authority-checking or access, so the claim may collapse into obeying a source already assumed to be right."
+        }
+      ]
     },
     {
+      id: "practical",
       title: "Practical Boundary",
       status: !hasPracticalRoute ? "warn" : forceReady ? "pass" : "fail",
       body: !hasPracticalRoute
         ? "No flourishing route is currently carrying the system."
         : forceReady
           ? "The selected account attempts to separate obligation from useful advice or desired outcomes."
-          : "The selected account risks being a practical recommendation rather than a binding moral system."
+          : "The selected account risks being a practical recommendation rather than a binding moral system.",
+      help: [
+        {
+          label: "What this boundary tests",
+          body: "It asks whether the moral claim explains obligation itself, not merely what tends to help people flourish, cooperate, avoid harm, or get better outcomes."
+        },
+        {
+          label: "Pass means",
+          body: "A practical or flourishing route may be active, but Binding Force is strong enough to separate moral duty from useful strategy."
+        },
+        {
+          label: "Warning means",
+          body: "No flourishing route is currently active, so practical usefulness is not the main current dependency."
+        },
+        {
+          label: "Failure means",
+          body: "The claim leans on flourishing or usefulness while Binding Force is incomplete, so it may show that an action is advisable without showing that it is morally required."
+        }
+      ]
     },
     {
+      id: "guidance",
       title: "Guidance Boundary",
       status: clarityReady ? "pass" : "fail",
       body: clarityReady
         ? "The selected account includes case guidance and duty ranking."
-        : "The selected account lacks enough case-level guidance or duty ranking to decide hard cases."
+        : "The selected account lacks enough case-level guidance or duty ranking to decide hard cases.",
+      help: [
+        {
+          label: "What this boundary tests",
+          body: "It asks whether the moral claim can guide actual decisions, especially when principles conflict or hard cases pull in different directions."
+        },
+        {
+          label: "Pass means",
+          body: "Case Guidance is ready, so the account includes enough case application and duty ranking to attempt concrete judgments."
+        },
+        {
+          label: "Warning means",
+          body: "This boundary does not use a warning state because every attempted moral system needs action guidance, regardless of which route carries it."
+        },
+        {
+          label: "Failure means",
+          body: "Case Guidance is incomplete, so the claim may sound objective in abstraction while still lacking a method for deciding real disputes."
+        }
+      ]
     }
   ];
 }
@@ -923,6 +999,27 @@ function renderSubstantiationTooltip(element, tooltipId) {
       <span class="tooltip-intro">${escapeHtml(element.checkHelpIntro || "These checks ask whether this mandatory component is substantiated rather than merely named.")}</span>
       <span class="tooltip-check-list">${checkRows}</span>
       <span class="tooltip-coda">Mark a checkbox only when the chosen route and strength rating actually substantiate that requirement. Leave it unchecked when the point is merely asserted, assumed, or still needs an argument.</span>
+    </span>
+  `;
+}
+
+function renderBoundaryTooltip(test, tooltipId) {
+  const helpRows = test.help
+    .map(
+      (item) => `
+        <span class="tooltip-check-item">
+          <strong>${escapeHtml(item.label)}</strong>
+          <span>${escapeHtml(item.body)}</span>
+        </span>
+      `
+    )
+    .join("");
+  return `
+    <span class="section-tooltip boundary-tooltip" id="${tooltipId}" role="tooltip">
+      <strong>${escapeHtml(test.title)}</strong>
+      <span class="tooltip-intro">Boundary tests ask whether the current moral-system claim remains distinct from a nearby non-moral substitute.</span>
+      <span class="tooltip-check-list">${helpRows}</span>
+      <span class="tooltip-coda">The card text gives the current reading from your selections; this tooltip explains how to interpret that reading.</span>
     </span>
   `;
 }
@@ -1129,12 +1226,21 @@ function renderSummary() {
 
   refs.boundaryList.innerHTML = boundaryTests
     .map(
-      (test) => `
+      (test) => {
+        const tooltipId = `boundary-help-${test.id}`;
+        return `
         <article class="boundary-item ${test.status}">
-          <strong>${escapeHtml(test.title)}</strong>
+          <div class="boundary-item-head">
+            <strong>${escapeHtml(test.title)}</strong>
+            <button class="section-help boundary-help" type="button" aria-label="Explain ${escapeHtml(test.title)}" aria-describedby="${tooltipId}">
+              <span class="label-help-dot" aria-hidden="true">?</span>
+              ${renderBoundaryTooltip(test, tooltipId)}
+            </button>
+          </div>
           <p>${escapeHtml(test.body)}</p>
         </article>
-      `
+      `;
+      }
     )
     .join("");
 

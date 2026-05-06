@@ -6737,6 +6737,22 @@ body.app-morality #report-step {
   background: var(--moral-red-soft);
 }
 
+.boundary-item-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.boundary-item-head > strong {
+  margin: 0;
+}
+
+.boundary-help {
+  flex: 0 0 auto;
+}
+
 .boundary-item strong,
 .missing-item strong,
 .route-item strong,
@@ -6909,11 +6925,11 @@ body.app-morality #report-step {
 
   .substantiation-tooltip,
   .section-tooltip {
-    position: fixed;
-    top: 84px;
-    right: 16px;
-    left: 16px;
-    width: auto;
+    position: fixed !important;
+    top: 84px !important;
+    right: 16px !important;
+    left: 16px !important;
+    width: auto !important;
     max-width: none;
   }
 
