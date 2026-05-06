@@ -6044,6 +6044,7 @@ body.app-morality #report-step {
 
 .moral-control-panel,
 .moral-workspace,
+.moral-status-panels,
 .moral-report-grid {
   display: grid;
   gap: 14px;
@@ -6057,7 +6058,7 @@ body.app-morality #report-step {
 .moral-claim-card,
 .moral-lens-panel,
 .moral-main-panel,
-.moral-side-panel .moral-card,
+.moral-card,
 .moral-challenge-panel,
 .moral-dialogue-panel {
   border: 1px solid var(--moral-line);
@@ -6069,7 +6070,7 @@ body.app-morality #report-step {
 .moral-claim-card,
 .moral-lens-panel,
 .moral-main-panel,
-.moral-side-panel .moral-card,
+.moral-card,
 .moral-challenge-panel,
 .moral-dialogue-panel {
   padding: 14px;
@@ -6131,6 +6132,11 @@ body.app-morality #report-step {
   display: grid;
   gap: 12px;
   align-self: start;
+}
+
+.moral-status-panels {
+  grid-template-columns: minmax(0, 1.15fr) minmax(240px, 0.9fr) minmax(220px, 0.75fr);
+  align-items: start;
 }
 
 .moral-static-status {
@@ -6601,6 +6607,7 @@ body.app-morality #report-step {
 
 @media (max-width: 1120px) {
   .moral-dashboard,
+  .moral-status-panels,
   .moral-report-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -6618,6 +6625,7 @@ body.app-morality #report-step {
 @media (max-width: 760px) {
   .moral-dashboard,
   .element-grid,
+  .moral-status-panels,
   .moral-report-grid {
     grid-template-columns: 1fr;
   }
@@ -6650,6 +6658,7 @@ body.app-morality #report-step {
   body.app-morality button,
   body.app-morality .moral-control-panel,
   body.app-morality .moral-workspace,
+  body.app-morality .moral-status-panels,
   body.app-morality .moral-challenge-panel,
   body.app-morality .moral-dialogue-panel {
     display: none !important;
