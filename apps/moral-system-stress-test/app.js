@@ -1026,7 +1026,7 @@ function renderSummary() {
           `
         )
         .join("")
-    : `<article class="boundary-item pass"><strong>Required set covered</strong><p>Every required component has a route, supported strength, and completed checks.</p></article>`;
+    : `<article class="boundary-item pass"><strong>Required set covered</strong><p>Within this audit, none of the eight mandatory components is currently marked incomplete: each one has a chosen substantiation route, a supported strength rating, and all required checks completed.</p><p>This does not prove the moral system is coherent. It means the component checklist is filled out enough for the harder questions to move to boundary tests, route dependency, and counterfactual challenges.</p></article>`;
 
   const routeCounts = required.reduce((acc, element) => {
     const route = state.routes[element.id] || "none";
@@ -1164,7 +1164,10 @@ function buildReport(mode = state.reportMode) {
 
   lines.push("## Incomplete Required Components", "");
   if (!missing.length) {
-    lines.push("No incomplete required components.", "");
+    lines.push(
+      "No incomplete required components under the current selections. This means each mandatory component has a route, supported strength, and completed checks; it does not by itself prove the system is coherent.",
+      ""
+    );
   } else {
     missing.forEach((item) => lines.push(`- ${item.title}: ${item.reason}`));
     lines.push("");
