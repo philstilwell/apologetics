@@ -6623,7 +6623,7 @@ body.app-morality #report-step {
   top: calc(100% + 8px);
   left: -14px;
   z-index: 24;
-  width: min(360px, calc(100vw - 48px));
+  width: min(440px, calc(100vw - 48px));
   padding: 12px;
   border: 1px solid rgba(151, 84, 77, 0.55);
   border-radius: var(--radius);
@@ -6640,6 +6640,36 @@ body.app-morality #report-step {
   text-transform: none;
   transform: translateY(-4px);
   transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.substantiation-tooltip > strong,
+.section-tooltip > strong,
+.tooltip-intro,
+.tooltip-coda,
+.tooltip-check-list,
+.tooltip-check-item,
+.tooltip-check-item > span {
+  display: block;
+}
+
+.tooltip-intro,
+.tooltip-coda,
+.tooltip-check-item > span {
+  margin-top: 5px;
+  color: var(--moral-muted);
+}
+
+.tooltip-check-list {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(184, 144, 101, 0.45);
+}
+
+.tooltip-check-item {
+  padding-left: 10px;
+  border-left: 3px solid var(--moral-blue);
 }
 
 .section-help .section-tooltip {

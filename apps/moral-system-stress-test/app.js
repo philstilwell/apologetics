@@ -92,10 +92,23 @@ const elements = [
     axis: "clarity",
     description: "Defines what moral terms mean without merely repeating words such as right, wrong, good, or evil.",
     why: "Without stable moral meaning, the system never says what it is talking about. Moral language can then collapse into approval, disgust, usefulness, or authority-language instead of identifying an objective moral property.",
+    checkHelpIntro: "For Moral Meaning, the checks ask whether the claim gives moral language stable content before using that language to argue for objectivity.",
     checks: [
-      { id: "defines-terms", label: "Defines the key moral terms" },
-      { id: "objective-sense", label: "Distinguishes objective wrong from dislike" },
-      { id: "non-circular-language", label: "Avoids circular moral labels" }
+      {
+        id: "defines-terms",
+        label: "Defines the key moral terms",
+        help: "The account states what terms such as good, wrong, duty, evil, and obligation mean instead of relying on their emotional force."
+      },
+      {
+        id: "objective-sense",
+        label: "Distinguishes objective wrong from dislike",
+        help: "The account explains how a moral claim can remain true even when an individual, culture, or authority does not feel disapproval."
+      },
+      {
+        id: "non-circular-language",
+        label: "Avoids circular moral labels",
+        help: "The account does not define moral words by simply repeating moral words, such as saying good means good, moral means moral, or right means aligned with the right standard without explaining the standard."
+      }
     ]
   },
   {
@@ -105,10 +118,23 @@ const elements = [
     axis: "ontology",
     description: "Explains whether moral claims can be true and what makes them true beyond human preference.",
     why: "A coherent objective moral system needs moral claims to be truth-apt and needs something that makes them true. Otherwise moral claims function as attitudes, commands, or social signals rather than objective facts.",
+    checkHelpIntro: "For Truth Maker, the checks ask whether the account treats moral claims as real truth claims and identifies what in reality makes them true.",
     checks: [
-      { id: "truth-apt", label: "Treats moral claims as true or false" },
-      { id: "truth-maker", label: "Identifies what makes them true" },
-      { id: "preference-independent", label: "Grounds truth beyond preference or power" }
+      {
+        id: "truth-apt",
+        label: "Treats moral claims as true or false",
+        help: "The account treats statements like cruelty is wrong as claims that can be correct or incorrect, not merely as commands, approvals, social rules, or expressions of feeling."
+      },
+      {
+        id: "truth-maker",
+        label: "Identifies what makes them true",
+        help: "The account names the truth-making feature, fact, standard, relation, nature, or principle that explains why the moral claim is true."
+      },
+      {
+        id: "preference-independent",
+        label: "Grounds truth beyond preference or power",
+        help: "The account explains why moral truth does not change merely because a person wants it to, a group votes for it, or a powerful authority enforces it."
+      }
     ]
   },
   {
@@ -118,10 +144,23 @@ const elements = [
     axis: "access",
     description: "Explains how an authority is recognized as morally good without assuming its commands are already moral.",
     why: "If authority is accepted as moral only because it says so, the system becomes obedience rather than moral evaluation. A coherent system needs a way to identify moral authority without circularly assuming it.",
+    checkHelpIntro: "For Authority Check, the checks ask whether the account can recognize legitimate moral authority without treating authority itself as the definition of morality.",
     checks: [
-      { id: "independent-test", label: "Gives a test for moral authority" },
-      { id: "not-command-only", label: "Avoids good because commanded" },
-      { id: "can-detect-failure", label: "Could detect an immoral command" }
+      {
+        id: "independent-test",
+        label: "Gives a test for moral authority",
+        help: "The account supplies criteria for judging whether a claimed authority is morally trustworthy, rather than assuming the authority is moral from the start."
+      },
+      {
+        id: "not-command-only",
+        label: "Avoids good because commanded",
+        help: "The account explains why a command is morally good without reducing goodness to the bare fact that the command was issued."
+      },
+      {
+        id: "can-detect-failure",
+        label: "Could detect an immoral command",
+        help: "The account has a principled way to reject a false, mistaken, or immoral command claim instead of making every alleged command automatically binding."
+      }
     ]
   },
   {
@@ -131,10 +170,23 @@ const elements = [
     axis: "access",
     description: "Gives a reliable way accountable agents can know the standard and check disputed claims.",
     why: "Objective obligations cannot guide or fairly bind agents if agents have no reliable access to them. The system needs a method for knowing moral truth and resolving disagreement.",
+    checkHelpIntro: "For Moral Access, the checks ask whether accountable agents can know, compare, and dispute moral claims by a usable method.",
     checks: [
-      { id: "public-method", label: "Uses an explainable method" },
-      { id: "handles-disagreement", label: "Handles sincere disagreement" },
-      { id: "accessible", label: "Is accessible to those held accountable" }
+      {
+        id: "public-method",
+        label: "Uses an explainable method",
+        help: "The account provides a method that can be stated, examined, and applied, rather than relying only on private certainty or unexplained intuition."
+      },
+      {
+        id: "handles-disagreement",
+        label: "Handles sincere disagreement",
+        help: "The account gives a way to compare rival moral conclusions when sincere, informed people claim different answers."
+      },
+      {
+        id: "accessible",
+        label: "Is accessible to those held accountable",
+        help: "The account explains how the relevant moral standard is available enough to the people who are expected to obey it or be judged by it."
+      }
     ]
   },
   {
@@ -144,10 +196,23 @@ const elements = [
     axis: "force",
     description: "Explains why moral requirements bind agents rather than merely advising, rewarding, or threatening them.",
     why: "A moral system must explain why one ought to comply, not merely why compliance is useful, rewarded, or preferred. Without binding force, morality thins into prudence or strategy.",
+    checkHelpIntro: "For Binding Force, the checks ask whether the account explains obligation itself instead of only explaining incentives, consequences, threats, or benefits.",
     checks: [
-      { id: "obligation", label: "Explains obligation rather than benefit" },
-      { id: "not-prudence", label: "Distinguishes duty from prudence" },
-      { id: "accountability", label: "Explains blame or accountability" }
+      {
+        id: "obligation",
+        label: "Explains obligation rather than benefit",
+        help: "The account explains why an agent ought to do the moral thing even when it is costly, unrewarded, unpopular, or personally disadvantageous."
+      },
+      {
+        id: "not-prudence",
+        label: "Distinguishes duty from prudence",
+        help: "The account separates moral duty from wise strategy, self-interest, reward seeking, punishment avoidance, or social stability."
+      },
+      {
+        id: "accountability",
+        label: "Explains blame or accountability",
+        help: "The account explains why moral failure deserves criticism, guilt, blame, or accountability rather than merely counting as an impractical choice."
+      }
     ]
   },
   {
@@ -157,10 +222,23 @@ const elements = [
     axis: "clarity",
     description: "Produces determinate answers for actual cases and ranks duties when they conflict.",
     why: "A system that cannot decide concrete cases is not yet action-guiding. It needs principles that apply before the desired conclusion is chosen and rules for conflicts between duties.",
+    checkHelpIntro: "For Case Guidance, the checks ask whether the account can move from abstract moral claims to actual judgments without improvising after the desired answer is known.",
     checks: [
-      { id: "decides-cases", label: "Decides concrete cases" },
-      { id: "ranks-duties", label: "Ranks competing duties" },
-      { id: "predictive", label: "Works before the desired conclusion" }
+      {
+        id: "decides-cases",
+        label: "Decides concrete cases",
+        help: "The account can apply its standard to real cases and produce more than a slogan, impulse, or broad aspiration."
+      },
+      {
+        id: "ranks-duties",
+        label: "Ranks competing duties",
+        help: "The account explains what happens when duties collide, such as truth-telling, mercy, justice, loyalty, harm prevention, and promise keeping."
+      },
+      {
+        id: "predictive",
+        label: "Works before the desired conclusion",
+        help: "The account can be applied before the preferred answer is selected, so the method is not reverse engineered to protect a prior conclusion."
+      }
     ]
   },
   {
@@ -170,10 +248,23 @@ const elements = [
     axis: "scope",
     description: "Applies across persons, cultures, and time without ad hoc tribal or authority-favored exceptions.",
     why: "Objective morality must say who is bound and why like cases receive like treatment. Without consistent scope, exceptions can protect favored groups, eras, or authorities by special pleading.",
+    checkHelpIntro: "For Consistent Scope, the checks ask whether the account applies its moral standard across agents and situations without ad hoc exceptions.",
     checks: [
-      { id: "like-cases", label: "Treats like cases alike" },
-      { id: "scope", label: "Specifies who is bound" },
-      { id: "no-special-pleading", label: "Avoids special pleading" }
+      {
+        id: "like-cases",
+        label: "Treats like cases alike",
+        help: "The account applies the same judgment when the morally relevant facts are the same, even across different people, groups, cultures, or eras."
+      },
+      {
+        id: "scope",
+        label: "Specifies who is bound",
+        help: "The account identifies which agents are morally accountable under the standard and explains why they fall inside or outside its scope."
+      },
+      {
+        id: "no-special-pleading",
+        label: "Avoids special pleading",
+        help: "The account does not create exceptions for favored persons, traditions, authorities, or historical moments unless the exception rests on a relevant moral difference."
+      }
     ]
   },
   {
@@ -183,10 +274,23 @@ const elements = [
     axis: "stability",
     description: "Explains how mistaken moral interpretations are identified and repaired without ad hoc revision.",
     why: "Every moral community can misread, rationalize, or inherit bad norms. A coherent system needs a principled way to identify error and distinguish moral discovery from convenient revision.",
+    checkHelpIntro: "For Correction Method, the checks ask whether the account can identify and repair mistaken moral interpretation without simply redescribing change as correctness.",
     checks: [
-      { id: "detects-error", label: "Detects mistaken interpretation" },
-      { id: "learning-rule", label: "Distinguishes learning from moral change" },
-      { id: "repair-rule", label: "Has a rule for revising mistakes" }
+      {
+        id: "detects-error",
+        label: "Detects mistaken interpretation",
+        help: "The account gives criteria for recognizing when a person, institution, tradition, community, or interpretation has gotten a moral question wrong."
+      },
+      {
+        id: "learning-rule",
+        label: "Distinguishes learning from moral change",
+        help: "The account explains how to tell the difference between discovering a moral truth more accurately and changing the moral standard itself."
+      },
+      {
+        id: "repair-rule",
+        label: "Has a rule for revising mistakes",
+        help: "The account provides a principled repair process for revising moral beliefs, including cherished or inherited ones, without ad hoc convenience."
+      }
     ]
   }
 ];
@@ -802,6 +906,27 @@ function renderClaimPositions() {
     .join("");
 }
 
+function renderSubstantiationTooltip(element, tooltipId) {
+  const checkRows = element.checks
+    .map(
+      (check) => `
+        <span class="tooltip-check-item">
+          <strong>${escapeHtml(check.label)}</strong>
+          <span>${escapeHtml(check.help || "This checkbox should be marked only when the chosen route gives this part real support.")}</span>
+        </span>
+      `
+    )
+    .join("");
+  return `
+    <span class="substantiation-tooltip" id="${tooltipId}" role="tooltip">
+      <strong>${escapeHtml(element.title)} checks</strong>
+      <span class="tooltip-intro">${escapeHtml(element.checkHelpIntro || "These checks ask whether this mandatory component is substantiated rather than merely named.")}</span>
+      <span class="tooltip-check-list">${checkRows}</span>
+      <span class="tooltip-coda">Mark a checkbox only when the chosen route and strength rating actually substantiate that requirement. Leave it unchecked when the point is merely asserted, assumed, or still needs an argument.</span>
+    </span>
+  `;
+}
+
 function renderElements() {
   refs.claimInput.value = state.claim;
   const routeOptions = routes
@@ -816,6 +941,8 @@ function renderElements() {
           const note = state.notes[element.id] || "";
           const strength = strengthValue(element.id);
           const checkState = selectedChecks(element.id);
+          const tooltipId = `substantiation-help-${element.id}`;
+          const tooltip = renderSubstantiationTooltip(element, tooltipId);
           const checklist = element.checks
             .map((check) => {
               const checkId = `check-${element.id}-${check.id}`;
@@ -861,11 +988,9 @@ function renderElements() {
                 <fieldset class="substantiation-checks">
                   <legend class="substantiation-legend">
                     <span>Substantiation checks</span>
-                    <button class="substantiation-help" type="button" aria-label="Explain substantiation checks">
+                    <button class="substantiation-help" type="button" aria-label="Explain ${escapeHtml(element.title)} substantiation checks" aria-describedby="${tooltipId}">
                       <span class="label-help-dot" aria-hidden="true">?</span>
-                      <span class="substantiation-tooltip" role="tooltip">
-                        These boxes name the specific jobs this mandatory component must do in a coherent objective moral system. Check a box only when the account gives an actual substantiation, not just a label or assertion. A component is ready only when it has a primary route, has at least supported strength, and satisfies every check. Leave a box unchecked when that part still needs an argument.
-                      </span>
+                      ${tooltip}
                     </button>
                   </legend>
                   ${checklist}
