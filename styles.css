@@ -6093,6 +6093,13 @@ body.app-morality {
 }
 
 body.app-moral-particulars {
+  --ink: #2b1514;
+  --muted: #6d4241;
+  --line: #c9c9c6;
+  --paper: #efefed;
+  --soft: #deded9;
+  --card: #fafaf8;
+  --shadow: 0 18px 45px rgba(43, 21, 20, 0.1);
   --brand-cross-color: #b24c4a;
   --moral-ink: #2b1514;
   --moral-muted: #6d4241;
@@ -6107,6 +6114,13 @@ body.app-moral-particulars {
   --moral-blue-soft: #edf3ff;
   --moral-gold: #8a6518;
   --moral-gold-soft: #fff3cf;
+  background:
+    linear-gradient(180deg, #eeeeec 0, var(--paper) 280px, #e3e3df 100%);
+}
+
+body.app-moral-particulars .site-header {
+  border-bottom-color: rgba(43, 21, 20, 0.18);
+  background: rgba(239, 239, 237, 0.96);
 }
 
 body.app-morality #claim-step,
@@ -7726,6 +7740,13 @@ body.app-moral-particulars .challenge-card.challenge-medium::before {
 
 body.app-moral-particulars .challenge-card.challenge-low::before {
   background: var(--moral-blue);
+}
+
+body.app-moral-particulars .ai-output-card {
+  border-color: #b9b9b5;
+  background:
+    linear-gradient(135deg, rgba(178, 76, 74, 0.06), rgba(255, 255, 255, 0) 48%),
+    #f7f7f5;
 }
 
 .pattern-guide {
