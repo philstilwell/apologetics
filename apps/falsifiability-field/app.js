@@ -1531,6 +1531,7 @@ function renderAllStanceTable() {
     const score = scoreClaim(claim);
     const diagnosis = diagnosisFor(score);
     const row = document.createElement("tr");
+    row.className = score >= 50 ? "threshold-passed" : "";
     row.innerHTML = `
       <td>${escapeHtml(claim.title)}</td>
       <td>${score}/100</td>

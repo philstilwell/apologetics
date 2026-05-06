@@ -5612,6 +5612,16 @@ body.app-falsifiability #summary {
   font-weight: 760;
 }
 
+.stance-table tr.threshold-passed td {
+  border-bottom-color: #f7fff1;
+  background: #050b0a;
+  color: #f7fff1;
+}
+
+.stance-table tr.threshold-passed td:first-child {
+  box-shadow: inset 5px 0 0 var(--ff-green);
+}
+
 .stance-table tr:last-child td {
   border-bottom: 0;
 }
