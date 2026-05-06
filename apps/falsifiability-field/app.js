@@ -102,7 +102,7 @@ const claims = [
         effort: "Modest",
         rigor: 58,
         detail: "Compare similar requests, hide which cases received targeted prayer, and score outcomes with pre-set rules.",
-        move: "Moves near the threshold because ordinary comparison starts to matter.",
+        move: "Moves toward the benchmark because ordinary comparison starts to matter.",
       },
       {
         id: "prayer-hospital",
@@ -157,7 +157,7 @@ const claims = [
         effort: "Modest",
         rigor: 66,
         detail: "Track a clear condition, compare similar patients, and have clinicians score outcomes without knowing prayer status.",
-        move: "Crosses the threshold when misses are allowed to count.",
+        move: "Moves past the benchmark when misses are allowed to count.",
       },
       {
         id: "healing-terminal",
@@ -203,7 +203,7 @@ const claims = [
         effort: "Modest",
         rigor: 65,
         detail: "Submit predictions to a public log, score them with fixed rules, and include every forecast.",
-        move: "Crosses the threshold if vague or failed predictions are counted honestly.",
+        move: "Moves past the benchmark if vague or failed predictions are counted honestly.",
       },
       {
         id: "future-blind-judge",
@@ -249,7 +249,7 @@ const claims = [
         effort: "Modest",
         rigor: 64,
         detail: "Compare guidance from believers, non-believers, and experts without judges knowing who gave which advice.",
-        move: "Moves near or over the threshold because the guidance must outperform ordinary advice.",
+        move: "Moves toward or past the benchmark because the guidance must outperform ordinary advice.",
       },
       {
         id: "wisdom-decision-trial",
@@ -304,7 +304,7 @@ const claims = [
         effort: "Modest",
         rigor: 65,
         detail: "Compare similar communities on concrete outcomes such as giving, abuse response, restitution, and honesty checks.",
-        move: "Crosses the threshold if uncomfortable outcomes are kept in the count.",
+        move: "Moves past the benchmark if uncomfortable outcomes are kept in the count.",
       },
       {
         id: "behavior-secular-comparison",
@@ -405,7 +405,7 @@ const claims = [
         effort: "Modest",
         rigor: 66,
         detail: "Compare COVID infection, hospitalization, long COVID, and death among believers and similar non-believers while accounting for age, exposure, vaccination, care access, and region.",
-        move: "Crosses the threshold if the user agrees that worse or ordinary outcomes would count.",
+        move: "Moves past the benchmark if the user agrees that worse or ordinary outcomes would count.",
       },
       {
         id: "morbidity-record-cohort",
@@ -460,7 +460,7 @@ const claims = [
         effort: "Modest",
         rigor: 65,
         detail: "Compare verified ages by level of religious commitment while controlling for region, wealth, care, and lifestyle.",
-        move: "Crosses the threshold if all groups are counted fairly.",
+        move: "Moves past the benchmark if all groups are counted fairly.",
       },
       {
         id: "longevity-150",
@@ -506,7 +506,7 @@ const claims = [
         effort: "Modest",
         rigor: 60,
         detail: "Compare similar people facing similar needs, including community support and outside resources.",
-        move: "Moves near the threshold because the claim must beat ordinary support networks.",
+        move: "Moves toward the benchmark because the claim must beat ordinary support networks.",
       },
       {
         id: "provision-blind",
@@ -855,9 +855,10 @@ function diagnosisFor(score) {
   }
   if (score < 50) {
     return {
-      title: "Near the soft threshold",
-      body: "The claim has begun to face evidence, but a poor result can still be softened or avoided.",
-      label: "Near threshold",
+      title: "Near the practical benchmark",
+      body:
+        "The claim has begun to face evidence, but a poor result can still be softened or avoided. The exact cutoff is somewhat arbitrary, so treat this as a useful warning zone rather than a hard boundary.",
+      label: "Near benchmark",
       detail: "Some risk, not yet a clean test.",
     };
   }

@@ -4453,6 +4453,7 @@ body.app-falsifiability #summary {
 
 .claim-choice-icon,
 .claim-token-icon {
+  position: relative;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -4467,6 +4468,10 @@ body.app-falsifiability #summary {
 
 .claim-choice-icon svg,
 .claim-token-icon svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
   width: 23px;
   height: 23px;
   fill: none;
@@ -4474,6 +4479,7 @@ body.app-falsifiability #summary {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2;
+  transform: translate(-50%, -50%);
 }
 
 .claim-choice strong,
@@ -4537,7 +4543,7 @@ body.app-falsifiability #summary {
 .field-stage {
   --field-radius: calc(var(--radius) + 2px);
   position: relative;
-  min-height: 352px;
+  min-height: 456px;
   isolation: isolate;
   border: 1px solid #718775;
   border-radius: var(--field-radius);
@@ -4580,72 +4586,62 @@ body.app-falsifiability #summary {
 }
 
 .field-threshold-band {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  z-index: 1;
-  width: min(160px, 28%);
-  background:
-    linear-gradient(90deg, transparent 0, rgba(237, 214, 139, 0.18) 18%, rgba(232, 235, 178, 0.5) 43%, rgba(214, 237, 190, 0.6) 57%, rgba(132, 177, 121, 0.22) 82%, transparent 100%);
-  filter: blur(0.2px) saturate(1.08);
-  pointer-events: none;
-  transform: translateX(-50%);
+  display: none;
 }
 
 .field-threshold-line {
   position: absolute;
-  top: 48px;
-  bottom: 54px;
+  top: 0;
+  bottom: 0;
   left: 50%;
-  z-index: 2;
-  width: 12px;
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, transparent 0, rgba(239, 221, 145, 0.28) 8%, rgba(231, 235, 166, 0.86) 34%, rgba(213, 239, 189, 0.9) 66%, rgba(79, 124, 65, 0.34) 92%, transparent 100%);
-  box-shadow:
-    0 0 20px rgba(219, 239, 195, 0.66),
-    0 0 48px rgba(230, 220, 151, 0.28);
+  z-index: 4;
+  width: 2px;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: none;
   transform: translateX(-50%);
 }
 
 .field-axis {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 6;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  color: rgba(247, 255, 241, 0.92);
+  min-height: 48px;
+  align-items: center;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0 0 var(--field-radius) var(--field-radius);
+  background: #030504;
+  color: #f7fff1;
   font-size: 0.58rem;
   font-weight: 900;
   letter-spacing: 0.06em;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  text-shadow: none;
   text-transform: uppercase;
 }
 
 .field-axis span {
   width: fit-content;
   max-width: 100%;
-  padding: 4px 6px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.24);
+  padding: 0;
+  background: transparent;
 }
 
 .field-axis span:nth-child(2) {
   justify-self: center;
-  color: #102d1b;
-  background: rgba(225, 242, 208, 0.64);
+  color: #f7fff1;
   text-align: center;
-  text-shadow: 0 1px 3px rgba(239, 249, 233, 0.8);
+  text-shadow: none;
 }
 
 .field-axis span:nth-child(3) {
   justify-self: end;
-  color: #23442a;
-  background: rgba(244, 252, 240, 0.54);
+  color: #f7fff1;
   text-align: right;
   text-shadow: none;
 }
@@ -4676,7 +4672,7 @@ body.app-falsifiability #summary {
 
 .claim-token {
   position: absolute;
-  top: calc(58px + (var(--row) * 32px));
+  top: calc(68px + (var(--row) * 37px));
   left: clamp(22px, calc(var(--x) * 1%), calc(100% - 22px));
   z-index: 8;
   display: grid;
@@ -4718,6 +4714,13 @@ body.app-falsifiability #summary {
 .claim-token .claim-token-icon svg {
   width: 19px;
   height: 19px;
+}
+
+.claim-token-icon {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
 }
 
 .claim-token-tooltip {
@@ -5534,7 +5537,7 @@ body.app-falsifiability #summary {
   }
 
   .field-stage {
-    min-height: 470px;
+    min-height: 512px;
   }
 
   .claim-token {
@@ -5544,15 +5547,33 @@ body.app-falsifiability #summary {
   }
 
   .field-axis {
-    grid-template-columns: 1fr;
-    gap: 5px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    min-height: 54px;
+    padding: 8px 10px;
+    font-size: 0.48rem;
   }
 
   .field-axis span,
   .field-axis span:nth-child(2),
   .field-axis span:nth-child(3) {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .field-axis span {
     justify-self: start;
     text-align: left;
+  }
+
+  .field-axis span:nth-child(2) {
+    justify-self: center;
+    text-align: center;
+  }
+
+  .field-axis span:nth-child(3) {
+    justify-self: end;
+    text-align: right;
   }
 
   .threshold-label {
