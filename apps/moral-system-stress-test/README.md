@@ -5,14 +5,14 @@ Crosshairs audit for testing whether a Christian moral claim supplies the elemen
 ## Features
 
 - Crosshairs Hub header, domain link, guided steps, source note, and explanatory annotations.
-- Claim field with local persistence and shareable state links.
+- Claim field with local persistence.
 - Four preset lenses: divine command, scripture and Spirit, well-being ethic, and anti-realist control.
 - Fourteen candidate elements for a moral system, including meaning, truth aptness, ground, access, non-circular authority, obligation, guidance, consistency, universality, conflict resolution, convergence, correction, prudence distinction, and accountability.
 - Substantiation routes for each selected element.
 - Live completeness, boundary-pressure, selected-element, and matched-challenge metrics.
 - Boundary tests for collapse into emotion, obedience, practical advice, and vague guidance.
 - Seventeen counterfactual challenge cards with source links and cross-examination questions.
-- Dialogue prompt export, report modes, AI prompt export, print support, JSON export and restore.
+- Dialogue prompt export, report modes, AI prompt export, and print support.
 
 ## Local Preview
 

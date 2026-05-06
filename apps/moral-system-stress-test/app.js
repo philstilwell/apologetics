@@ -568,14 +568,10 @@ const refs = {
   copyAiPromptButton: document.querySelector("#copyAiPromptButton"),
   copyPromptsButton: document.querySelector("#copyPromptsButton"),
   copyReportButton: document.querySelector("#copyReportButton"),
-  copyShareLinkButton: document.querySelector("#copyShareLinkButton"),
-  copyStatus: document.querySelector("#copyStatus"),
   copySummaryButton: document.querySelector("#copySummaryButton"),
   elementFilter: document.querySelector("#elementFilter"),
   elementGrid: document.querySelector("#elementGrid"),
-  exportJsonButton: document.querySelector("#exportJsonButton"),
   finalReport: document.querySelector("#finalReport"),
-  loadJsonButton: document.querySelector("#loadJsonButton"),
   loadSampleButton: document.querySelector("#loadSampleButton"),
   matchedChallengeCount: document.querySelector("#matchedChallengeCount"),
   missingList: document.querySelector("#missingList"),
@@ -587,8 +583,6 @@ const refs = {
   routeList: document.querySelector("#routeList"),
   selectedCount: document.querySelector("#selectedCount"),
   selectedCountNote: document.querySelector("#selectedCountNote"),
-  shareStateOutput: document.querySelector("#shareStateOutput"),
-  sourceList: document.querySelector("#sourceList"),
   statusBoundaryRisk: document.querySelector("#statusBoundaryRisk"),
   statusCompleteness: document.querySelector("#statusCompleteness"),
   statusCoreCovered: document.querySelector("#statusCoreCovered"),
@@ -631,16 +625,6 @@ function loadStateFromHash() {
   } catch {
     return null;
   }
-}
-
-function encodeSharePayload(value) {
-  return window.btoa(unescape(encodeURIComponent(JSON.stringify(value))));
-}
-
-function shareLinkForState() {
-  const url = new URL(window.location.href);
-  url.hash = `state=${encodeSharePayload(state)}`;
-  return url.toString();
 }
 
 function escapeHtml(value) {
@@ -956,20 +940,6 @@ function renderPrompts() {
   `;
 }
 
-function renderSources() {
-  refs.sourceList.innerHTML = sources
-    .map(
-      (source) => `
-        <article class="source-card">
-          <strong>${escapeHtml(source.title)}</strong>
-          <p>${escapeHtml(source.note)}</p>
-          <p><a href="${source.url}" target="_blank" rel="noreferrer">${escapeHtml(source.url)}</a></p>
-        </article>
-      `
-    )
-    .join("");
-}
-
 function renderPresets() {
   refs.presetButtons.innerHTML = profilePresets
     .map(
@@ -1226,9 +1196,6 @@ function renderReports() {
   refs.reportMode.value = state.reportMode;
   refs.finalReport.value = buildReport(state.reportMode);
   refs.aiPrompt.value = buildAiPrompt();
-  if (refs.shareStateOutput && !document.activeElement?.isSameNode(refs.shareStateOutput)) {
-    refs.shareStateOutput.value = JSON.stringify(state, null, 2);
-  }
 }
 
 function generatePromptsText() {
@@ -1277,12 +1244,6 @@ async function copyText(text, button, resetLabel) {
       button.textContent = original;
     }, 1600);
   }
-  if (refs.copyStatus) {
-    refs.copyStatus.textContent = copied ? "Copied." : "Copy failed. Select the text and copy manually.";
-    window.setTimeout(() => {
-      refs.copyStatus.textContent = "";
-    }, 2200);
-  }
 }
 
 function applyPreset(presetId) {
@@ -1310,7 +1271,6 @@ function renderAll() {
   renderElements();
   renderChallenges();
   renderPrompts();
-  renderSources();
   renderSummary();
   renderReports();
 }
@@ -1388,29 +1348,6 @@ function bindEvents() {
   refs.copyReportButton.addEventListener("click", () => copyText(refs.finalReport.value, refs.copyReportButton, "Copy Report"));
   refs.copyAiPromptButton.addEventListener("click", () => copyText(refs.aiPrompt.value, refs.copyAiPromptButton, "Copy AI Prompt"));
   refs.printReportButton.addEventListener("click", () => window.print());
-
-  refs.copyShareLinkButton.addEventListener("click", () =>
-    copyText(shareLinkForState(), refs.copyShareLinkButton, "Copy State Link")
-  );
-  refs.exportJsonButton.addEventListener("click", () => {
-    refs.shareStateOutput.value = JSON.stringify(state, null, 2);
-    refs.shareStateOutput.focus();
-    refs.shareStateOutput.select();
-    refs.copyStatus.textContent = "JSON shown below. Copy it to save this audit state.";
-  });
-  refs.loadJsonButton.addEventListener("click", () => {
-    try {
-      state = normalizeState(JSON.parse(refs.shareStateOutput.value));
-      saveState();
-      renderAll();
-      refs.copyStatus.textContent = "Saved JSON restored.";
-    } catch {
-      refs.copyStatus.textContent = "Could not restore that JSON.";
-    }
-    window.setTimeout(() => {
-      refs.copyStatus.textContent = "";
-    }, 2200);
-  });
 }
 
 bindEvents();
