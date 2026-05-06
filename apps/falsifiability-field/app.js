@@ -632,6 +632,96 @@ const datasetSuggestions = {
   ],
 };
 
+const confounderSuggestions = {
+  "answered-prayer": [
+    "Natural recovery rates and regression to the mean.",
+    "Treatment, care quality, diagnosis severity, and prior health.",
+    "Selective memory of hits while ordinary misses disappear.",
+    "Family support, wealth, insurance, and access to clinicians.",
+  ],
+  "divine-healing": [
+    "Concurrent medical treatment, spontaneous remission, and misdiagnosis.",
+    "Different baseline severity or disease stage across groups.",
+    "Unverified testimony, missing scans, and changing endpoints.",
+    "Survivorship bias when only dramatic recoveries are submitted.",
+  ],
+  "future-knowledge": [
+    "Vague predictions that can fit many later events.",
+    "Hindsight editing, private timestamps, and forgotten misses.",
+    "Base rates, expert forecasts, and ordinary trend awareness.",
+    "Multiple guesses where only the best hit is publicized.",
+  ],
+  "wisdom-insight": [
+    "Expertise, education, coaching, and ordinary advice networks.",
+    "Outcome hindsight that makes a decision feel guided afterward.",
+    "Different risk tolerance, resources, or social support.",
+    "Selection bias when only successful guidance stories are repeated.",
+  ],
+  "prosocial-behavior": [
+    "Age, income, education, urbanization, reporting rates, and policing differences.",
+    "Culture, law, family structure, healthcare access, and social safety nets.",
+    "Self-report bias and pressure to protect the in-group.",
+    "Different definitions of crime, divorce, obesity, abuse, or restitution.",
+  ],
+  "divine-protection": [
+    "Different exposure levels, occupations, travel patterns, and risk choices.",
+    "Safety training, equipment, insurance, and local infrastructure.",
+    "Near-miss storytelling without counting comparable harms.",
+    "Disaster location, timing, evacuation access, and reporting quality.",
+  ],
+  "reduced-morbidity": [
+    "Age, vaccination, exposure, masking, occupation, and household density.",
+    "Healthcare access, baseline risk, region, testing rates, and record quality.",
+    "Different definitions of infection, hospitalization, death, and long COVID.",
+    "Survivorship and participation bias in church or community samples.",
+  ],
+  "unexpected-longevity": [
+    "Verified birth records, identity continuity, and age exaggeration.",
+    "Lifestyle, wealth, region, diet, genetics, and healthcare access.",
+    "Membership-roll survival bias and selective examples.",
+    "Migration, record gaps, and different mortality baselines.",
+  ],
+  provision: [
+    "Family, church, charity, public benefits, employment, and credit access.",
+    "Vague deadlines or needs that can be reinterpreted after help arrives.",
+    "Uncounted unmet needs and stories only from successful cases.",
+    "Different baseline income, debt, social networks, and local opportunity.",
+  ],
+};
+
+const claimPresets = [
+  {
+    id: "preset-healing",
+    title: "Healing",
+    description: "Medical improvement should exceed ordinary recovery, treatment, or misdiagnosis.",
+    claimId: "divine-healing",
+  },
+  {
+    id: "preset-protection",
+    title: "Protection",
+    description: "Believers should suffer fewer comparable harms, illnesses, or deaths.",
+    claimId: "divine-protection",
+  },
+  {
+    id: "preset-wisdom",
+    title: "Wisdom",
+    description: "Guidance should outperform ordinary advice, expertise, or public baselines.",
+    claimId: "wisdom-insight",
+  },
+  {
+    id: "preset-prophecy",
+    title: "Prophecy",
+    description: "Future claims should beat timestamped controls and ordinary forecasting.",
+    claimId: "future-knowledge",
+  },
+  {
+    id: "preset-morals",
+    title: "Moral transformation",
+    description: "Communities should show better behavior beyond self-report and in-group stories.",
+    claimId: "prosocial-behavior",
+  },
+];
+
 const sampleSizeOptions = {
   small: { label: "Under 25 cases", points: 4 },
   pilot: { label: "25-100 cases", points: 10 },
@@ -673,6 +763,10 @@ function defaultOutcomeRules(claim) {
   };
 }
 
+function defaultMindChange(claim) {
+  return `A fair, preregistered test showing no measurable advantage for ${claim.title.toLowerCase()} over matched comparison cases would lower my confidence in this earthly promise.`;
+}
+
 const state = Object.fromEntries(
   claims.map((claim) => [
     claim.id,
@@ -684,6 +778,7 @@ const state = Object.fromEntries(
       text: claim.promise,
       customStudy: defaultCustomStudy(claim),
       outcomeRules: defaultOutcomeRules(claim),
+      mindChange: defaultMindChange(claim),
     },
   ]),
 );
@@ -694,11 +789,14 @@ let allResultBuilt = false;
 let copyPromptResetTimer;
 
 const claimButtons = document.querySelector("#claim-buttons");
+const presetGrid = document.querySelector("#preset-grid");
 const claimTokens = document.querySelector("#claim-tokens");
 const fieldLegend = document.querySelector("#field-legend");
 const studyGrid = document.querySelector("#study-grid");
 const datasetList = document.querySelector("#dataset-list");
 const datasetActivePromise = document.querySelector("#dataset-active-promise");
+const confounderList = document.querySelector("#confounder-list");
+const confounderActivePromise = document.querySelector("#confounder-active-promise");
 const excuseGrid = document.querySelector("#excuse-grid");
 const claimText = document.querySelector("#claim-text");
 const willingnessRange = document.querySelector("#willingness-range");
@@ -717,6 +815,8 @@ const useCustomStudyButton = document.querySelector("#use-custom-study");
 const outcomeFor = document.querySelector("#outcome-for");
 const outcomeAgainst = document.querySelector("#outcome-against");
 const outcomeNeutral = document.querySelector("#outcome-neutral");
+const mindChangeText = document.querySelector("#mind-change-text");
+const mindChangeNote = document.querySelector("#mind-change-note");
 const aiPromptOutput = document.querySelector("#ai-prompt-output");
 const copyPromptButton = document.querySelector("#copy-ai-prompt");
 const copyStatus = document.querySelector("#copy-status");
@@ -731,6 +831,10 @@ const copyShareLinkButton = document.querySelector("#copy-share-link");
 const exportJsonButton = document.querySelector("#export-json");
 const loadJsonButton = document.querySelector("#load-json");
 const shareStatus = document.querySelector("#share-status");
+const reportOutput = document.querySelector("#report-output");
+const copyReportButton = document.querySelector("#copy-report");
+const printReportButton = document.querySelector("#print-report");
+const reportStatus = document.querySelector("#report-status");
 const activePromiseTitle = document.querySelector("#active-promise-title");
 const activePromiseScore = document.querySelector("#active-promise-score");
 const activePromiseDetail = document.querySelector("#active-promise-detail");
@@ -928,13 +1032,17 @@ function datasetSummary(claimId) {
   return (datasetSuggestions[claimId] || []).join("; ");
 }
 
+function confounderSummary(claimId) {
+  return (confounderSuggestions[claimId] || []).join("; ");
+}
+
 function claimSnapshotLine(claim) {
   const itemState = state[claim.id];
   const itemStudy = getStudy(claim);
   const itemScore = scoreClaim(claim);
   const itemDiagnosis = diagnosisFor(itemScore);
   const itemExcuses = selectedExcuseSummary(claim.id);
-  return `- ${claim.title}: score ${itemScore}/100 (${itemDiagnosis.title}); study "${itemStudy.title}" (${itemStudy.tier}, rigor ${itemStudy.rigor}/100); willingness to run ${itemState.willingness}%; clean failure counts ${itemState.failure}%; escape hatches: ${itemExcuses}; outcome rules: ${outcomeRulesSummary(claim.id)}; dataset leads: ${datasetSummary(claim.id)}.`;
+  return `- ${claim.title}: score ${itemScore}/100 (${itemDiagnosis.title}); study "${itemStudy.title}" (${itemStudy.tier}, rigor ${itemStudy.rigor}/100); willingness to run ${itemState.willingness}%; clean failure counts ${itemState.failure}%; what would change the user's mind: ${itemState.mindChange || "Not specified"}; escape hatches: ${itemExcuses}; outcome rules: ${outcomeRulesSummary(claim.id)}; dataset leads: ${datasetSummary(claim.id)}; confounders to control: ${confounderSummary(claim.id)}.`;
 }
 
 function allPromiseSnapshots() {
@@ -972,6 +1080,134 @@ function buildAllPromisesResult() {
   return `${overall} Average field position: ${average}/100. ${farRight} promise${farRight === 1 ? "" : "s"} are exposed to clean disconfirmation, ${partlyOpen} are meaningfully or partly testable, and ${protectedCount} remain near the protected side. Strongest current stance: ${strongest.claim.title} at ${strongest.score}/100 using "${strongest.study.title}". Most protected stance: ${weakest.claim.title} at ${weakest.score}/100 using "${weakest.study.title}". Total active escape hatches across the suite: ${totalExcuses}.`;
 }
 
+function buildReportText() {
+  const claim = getClaim();
+  const current = state[claim.id];
+  const study = getStudy(claim);
+  const score = scoreClaim(claim);
+  const diagnosis = diagnosisFor(score);
+  const personalAssessment = personalLifeAssessment(score, current, current.excuses.size);
+  const activeExcuses = selectedExcuseDetails(claim.id);
+  const stanceRows = claims
+    .map((item) => {
+      const itemScore = scoreClaim(item);
+      const itemStudy = getStudy(item);
+      return `${item.title}: ${itemScore}/100; ${diagnosisFor(itemScore).label}; study: ${itemStudy.tier}; clean failure: ${state[item.id].failure}%; excuses: ${state[item.id].excuses.size}`;
+    })
+    .join("\n");
+
+  return `Earthly Promise Test Field report
+
+Active promise:
+${claim.title}
+
+Claim wording:
+${current.text}
+
+Current result:
+${score}/100 - ${diagnosis.title}. ${diagnosis.body}
+
+Personal-and-active-God question:
+${personalAssessment.title}. ${personalAssessment.body}
+
+Selected study:
+${study.title} (${study.tier}, rigor ${study.rigor}/100, effort: ${study.effort})
+${study.detail}
+
+What result would change the user's mind:
+${current.mindChange || "Not specified"}
+
+Outcome rules:
+${outcomeRulesSummary(claim.id)}
+
+Dataset leads:
+${datasetSummary(claim.id)}
+
+Confounder checklist:
+${confounderSummary(claim.id)}
+
+Escape hatches:
+${activeExcuses.length === 0 ? "None selected" : activeExcuses.map((excuse) => `${excuse.title}: ${excuse.detail}`).join("\n")}
+
+Suite-wide result:
+${buildAllPromisesResult()}
+
+All-promise stance table:
+${stanceRows}
+
+Discussion questions:
+1. Is the stated mind-change result specific enough to matter?
+2. Which ordinary confounder most needs to be controlled?
+3. Would a clean failure lower confidence, or would an escape hatch absorb it?
+4. Does this stance fit a personal God acting in earthly life, or mostly protected interpretation?`;
+}
+
+function renderReport() {
+  if (!reportOutput) {
+    return;
+  }
+
+  const claim = getClaim();
+  const current = state[claim.id];
+  const study = getStudy(claim);
+  const score = scoreClaim(claim);
+  const diagnosis = diagnosisFor(score);
+  const activeExcuses = selectedExcuseDetails(claim.id);
+  const datasetItems = datasetSuggestions[claim.id] || [];
+  const confounderItems = confounderSuggestions[claim.id] || [];
+
+  reportOutput.innerHTML = `
+    <article class="print-report-card">
+      <header>
+        <p>Earthly Promise Test Field</p>
+        <h4>${escapeHtml(claim.title)} audit report</h4>
+        <span>${score}/100 - ${escapeHtml(diagnosis.title)}</span>
+      </header>
+      <section>
+        <h5>Claim wording</h5>
+        <p>${escapeHtml(current.text)}</p>
+      </section>
+      <section>
+        <h5>Study choice</h5>
+        <p>${escapeHtml(study.title)} (${escapeHtml(study.tier)}, ${study.rigor}/100 rigor). ${escapeHtml(study.detail)}</p>
+      </section>
+      <section>
+        <h5>What would change the user's mind?</h5>
+        <p>${escapeHtml(current.mindChange || "Not specified")}</p>
+      </section>
+      <section>
+        <h5>Outcome rules</h5>
+        <p>${escapeHtml(outcomeRulesSummary(claim.id))}</p>
+      </section>
+      <section>
+        <h5>Dataset leads</h5>
+        <ul>${datasetItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+      </section>
+      <section>
+        <h5>Confounders to control</h5>
+        <ul>${confounderItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+      </section>
+      <section>
+        <h5>Escape hatches</h5>
+        <p>${escapeHtml(activeExcuses.length === 0 ? "None selected" : activeExcuses.map((excuse) => excuse.title).join("; "))}</p>
+      </section>
+      <section>
+        <h5>Suite-wide result</h5>
+        <p>${escapeHtml(buildAllPromisesResult())}</p>
+      </section>
+      <section>
+        <h5>Class discussion</h5>
+        <ol>
+          <li>Is the mind-change result specific enough to matter?</li>
+          <li>Which ordinary confounder most needs to be controlled?</li>
+          <li>Would a clean failure lower confidence, or would an escape hatch absorb it?</li>
+          <li>Does this stance fit a personal God acting in earthly life?</li>
+        </ol>
+      </section>
+    </article>
+  `;
+}
+
 function buildSelectedAiPrompt() {
   const claim = getClaim();
   const current = state[claim.id];
@@ -1005,8 +1241,14 @@ ${study.move}
 Outcome rules set before looking:
 ${outcomeRulesSummary(claim.id)}
 
+What result would change the user's mind:
+${current.mindChange || "Not specified"}
+
 Concrete dataset leads (candidate record sources, not evidence by themselves):
 ${datasetSummary(claim.id)}
+
+Confounder checklist:
+${confounderSummary(claim.id)}
 
 User willingness settings:
 - Willingness to run the selected test: ${current.willingness}%
@@ -1027,7 +1269,7 @@ ${allClaimSummary}
 Please give a comprehensive review that includes:
 1. Whether the selected claim is currently falsifiable, partly falsifiable, or functionally protected from falsification.
 2. Whether the selected study is a fair and feasible test of the claim, and what confounders or design weaknesses should be controlled.
-3. What exact outcomes would count for the claim, against the claim, or as neutral.
+3. What exact outcomes would count for the claim, against the claim, or as neutral, and whether the stated mind-change result is clear enough.
 4. How the selected escape hatches affect falsifiability.
 5. Whether the user's willingness settings are consistent with treating the claim as an empirical claim.
 6. Whether the user's stance reflects the idea that this God is personal and active in the user's earthly life, or whether the stance retreats toward a protected, non-interventionist, or merely interpretive claim.
@@ -1048,7 +1290,7 @@ Please give a comprehensive review that includes:
 1. Which promises are most falsifiable, partly falsifiable, or functionally protected.
 2. Whether the user's standards are consistent across promises.
 3. Which selected studies are feasible and which need stronger controls.
-4. Whether the outcome rules specify real wins, real losses, and neutral cases before results are known.
+4. Whether the outcome rules and mind-change commitments specify real wins, real losses, and neutral cases before results are known.
 5. How the selected escape hatches change the whole suite's falsifiability.
 6. Whether the total stance reflects belief in a personal God active in earthly life, or retreats toward protected interpretation.
 7. Concrete dataset and study-design improvements for every promise, including which controls or comparisons would make each lead useful.
@@ -1112,6 +1354,28 @@ function renderClaims() {
   });
 }
 
+function renderPresets() {
+  if (!presetGrid) {
+    return;
+  }
+
+  presetGrid.innerHTML = "";
+  claimPresets.forEach((preset) => {
+    const targetClaim = getClaim(preset.claimId);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `preset-button${preset.claimId === selectedClaimId ? " active" : ""}`;
+    button.setAttribute("aria-pressed", String(preset.claimId === selectedClaimId));
+    button.style.setProperty("--claim-color", targetClaim.color);
+    button.innerHTML = `
+      <strong>${escapeHtml(preset.title)}</strong>
+      <span>${escapeHtml(preset.description)}</span>
+    `;
+    button.addEventListener("click", () => selectClaim(preset.claimId));
+    presetGrid.append(button);
+  });
+}
+
 function renderStudies() {
   const claim = getClaim();
   const current = state[claim.id];
@@ -1148,6 +1412,21 @@ function renderDatasets() {
     const pill = document.createElement("span");
     pill.textContent = item;
     datasetList.append(pill);
+  });
+}
+
+function renderConfounders() {
+  const claim = getClaim();
+  if (!confounderList || !confounderActivePromise) {
+    return;
+  }
+
+  confounderList.innerHTML = "";
+  confounderActivePromise.textContent = claim.title;
+  (confounderSuggestions[claim.id] || []).forEach((item) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = item;
+    confounderList.append(listItem);
   });
 }
 
@@ -1199,6 +1478,15 @@ function updateControls() {
   outcomeFor.value = rules.forClaim;
   outcomeAgainst.value = rules.againstClaim;
   outcomeNeutral.value = rules.neutral;
+  if (mindChangeText) {
+    mindChangeText.value = current.mindChange || "";
+  }
+  if (mindChangeNote) {
+    mindChangeNote.textContent =
+      current.mindChange && current.mindChange.trim().length >= 35
+        ? "This pre-commitment is now part of the report and AI prompt."
+        : "Make the result specific enough that it cannot be moved after the outcome is known.";
+  }
 }
 
 function warningForClaim(claim) {
@@ -1273,6 +1561,7 @@ function serializeState() {
             text: current.text,
             customStudy: current.customStudy,
             outcomeRules: current.outcomeRules,
+            mindChange: current.mindChange,
           },
         ];
       }),
@@ -1362,6 +1651,10 @@ function applySerializedState(payload) {
         current.outcomeRules[key] = defaultOutcomeRules(claim)[key];
       }
     });
+    current.mindChange =
+      typeof incoming.mindChange === "string" && incoming.mindChange.trim()
+        ? incoming.mindChange
+        : defaultMindChange(claim);
   });
 
   if (claims.some((claim) => claim.id === payload.selectedClaimId)) {
@@ -1466,6 +1759,7 @@ function updateMetrics() {
       : "Build a comprehensive result to review every promise at once.";
   }
   renderAllStanceTable();
+  renderReport();
   if (shareStateOutput) {
     shareStateOutput.value = JSON.stringify(serializeState(), null, 2);
   }
@@ -1491,8 +1785,10 @@ function showPromptCopiedLabel() {
 function update() {
   updateControls();
   renderClaims();
+  renderPresets();
   renderStudies();
   renderDatasets();
+  renderConfounders();
   renderExcuses();
   updateMetrics();
 }
@@ -1567,6 +1863,17 @@ outcomeNeutral.addEventListener("input", (event) => {
   updateMetrics();
 });
 
+mindChangeText?.addEventListener("input", (event) => {
+  state[selectedClaimId].mindChange = event.target.value;
+  if (mindChangeNote) {
+    mindChangeNote.textContent =
+      state[selectedClaimId].mindChange.trim().length >= 35
+        ? "This pre-commitment is now part of the report and AI prompt."
+        : "Make the result specific enough that it cannot be moved after the outcome is known.";
+  }
+  updateMetrics();
+});
+
 buildAllResultButton?.addEventListener("click", () => {
   promptMode = "all";
   allResultBuilt = true;
@@ -1600,6 +1907,27 @@ copyPromptButton?.addEventListener("click", async () => {
   window.setTimeout(() => {
     copyStatus.textContent = "";
   }, 2200);
+});
+
+copyReportButton?.addEventListener("click", async () => {
+  if (!reportStatus) {
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(buildReportText());
+    reportStatus.textContent = "Report copied.";
+  } catch {
+    reportStatus.textContent = "Copy failed. Select the report text or use Print.";
+  }
+
+  window.setTimeout(() => {
+    reportStatus.textContent = "";
+  }, 2200);
+});
+
+printReportButton?.addEventListener("click", () => {
+  window.print();
 });
 
 copyShareLinkButton?.addEventListener("click", async () => {

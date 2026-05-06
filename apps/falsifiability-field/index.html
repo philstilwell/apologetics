@@ -29,6 +29,7 @@
         <a href="#claims">Claims</a>
         <a href="#field">Field</a>
         <a href="#testing">Studies</a>
+        <a href="#mind-change">Commit</a>
         <a href="#excuses">Excuses</a>
         <a href="#summary">Summary</a>
       </nav>
@@ -91,17 +92,26 @@
             Simple pilots can still reveal whether the claim is allowed to face evidence.
           </span>
         </a>
-        <a href="#excuses" aria-describedby="excuses-step-help">
+        <a href="#mind-change" aria-describedby="mind-change-step-help">
           <span class="step-number">4</span>
+          <span class="step-label">Change your mind</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="mind-change-step-help" role="tooltip">
+            Before naming escape hatches, write the result that would honestly lower confidence.
+            This makes later explanations easier to judge.
+          </span>
+        </a>
+        <a href="#excuses" aria-describedby="excuses-step-help">
+          <span class="step-number">5</span>
           <span class="step-label">Name excuses</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="excuses-step-help" role="tooltip">
-            If a response would explain away every possible miss, the claim may sound bold while
-            functioning as non-testable.
+            Use this only after you have said what result would actually matter. If a response
+            explains away every possible miss, the claim may sound bold while functioning as non-testable.
           </span>
         </a>
         <a href="#summary" aria-describedby="summary-step-help">
-          <span class="step-number">5</span>
+          <span class="step-number">6</span>
           <span class="step-label">Read result</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="summary-step-help" role="tooltip">
@@ -212,6 +222,47 @@
               <p>Very large samples, independent teams, and repeated checks.</p>
             </article>
           </div>
+          <section class="study-comparison-panel" aria-labelledby="study-comparison-title">
+            <div class="section-title-inline compact-title-inline">
+              <h3 id="study-comparison-title">Bad study / better study</h3>
+              <span class="ff-tip" tabindex="0">?
+                <span class="ff-tooltip" role="tooltip">
+                  These pairs show why rigor matters. The better version does not need to be
+                  perfect; it simply makes hits, misses, ordinary causes, and comparison cases visible.
+                </span>
+              </span>
+            </div>
+            <div class="study-comparison-grid">
+              <article>
+                <span>Healing</span>
+                <strong>Bad: testimony after treatment</strong>
+                <p>Only the dramatic recovery is shown, with no original diagnosis, treatment history, or miss count.</p>
+                <strong>Better: consecutive case review</strong>
+                <p>Every submitted case includes records, baseline severity, treatment, prayer timing, and independent scoring.</p>
+              </article>
+              <article>
+                <span>Prayer</span>
+                <strong>Bad: one answered request</strong>
+                <p>A memorable hit is counted while similar unanswered requests disappear from the sample.</p>
+                <strong>Better: logged requests with controls</strong>
+                <p>Requests are timestamped, misses stay in, comparable cases are matched, and reviewers do not know prayer status.</p>
+              </article>
+              <article>
+                <span>Prophecy</span>
+                <strong>Bad: vague impressions after the event</strong>
+                <p>The meaning is settled after the outcome, so almost any later event can be made to fit.</p>
+                <strong>Better: locked prediction registry</strong>
+                <p>Predictions are dated, specific, scored by fixed rules, and compared against ordinary forecasting baselines.</p>
+              </article>
+              <article>
+                <span>Behavior</span>
+                <strong>Bad: changed-life stories</strong>
+                <p>The group reports its own best examples without checking comparable communities or public outcomes.</p>
+                <strong>Better: matched public records</strong>
+                <p>Crime, divorce, obesity, giving, safeguarding, and restitution are compared with controls for culture and demographics.</p>
+              </article>
+            </div>
+          </section>
         </div>
       </details>
 
@@ -225,6 +276,22 @@
               decide how much real-world testing it is allowed to face.
             </p>
             <div class="claim-buttons" id="claim-buttons"></div>
+            <section class="preset-panel" aria-labelledby="preset-title">
+              <div class="section-title-inline compact-title-inline">
+                <h3 id="preset-title">Claim-type presets</h3>
+                <span class="ff-tip" tabindex="0">?
+                  <span class="ff-tooltip" role="tooltip">
+                    These are quick ways to jump to common categories of earthly claims. A preset
+                    selects the nearest promise and leaves the details open for editing.
+                  </span>
+                </span>
+              </div>
+              <p class="panel-copy tight-copy">
+                Use a preset when the debate starts with a broad claim such as healing,
+                protection, wisdom, prophecy, or moral transformation.
+              </p>
+              <div class="preset-grid" id="preset-grid"></div>
+            </section>
           </aside>
 
           <section class="testing-layout" id="testing" aria-labelledby="testing-title">
@@ -274,6 +341,29 @@
                   comparison groups, and possible confounders before treating a story as evidence.
                 </p>
                 <div class="dataset-list" id="dataset-list"></div>
+              </section>
+
+              <section class="confounder-panel" aria-labelledby="confounder-title">
+                <div class="dataset-head">
+                  <div>
+                    <p class="app-step">Confounder checklist</p>
+                    <div class="section-title-inline compact-title-inline">
+                      <h3 id="confounder-title">Ordinary causes to control</h3>
+                      <span class="ff-tip" tabindex="0">?
+                        <span class="ff-tooltip" role="tooltip">
+                          A confounder is an ordinary factor that could produce the same pattern
+                          without the supernatural claim being true. A fair test tries to separate
+                          these before interpreting the result.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="dataset-active-promise" aria-live="polite">
+                    <span>Active promise</span>
+                    <strong id="confounder-active-promise">Answered prayer</strong>
+                  </div>
+                </div>
+                <ul class="confounder-list" id="confounder-list"></ul>
               </section>
             </section>
 
@@ -434,8 +524,32 @@
             </section>
           </section>
 
-          <section class="excuse-panel" id="excuses" aria-labelledby="excuses-title">
+          <section class="mind-change-panel" id="mind-change" aria-labelledby="mind-change-title">
             <p class="app-step">Step 4</p>
+            <div class="section-title-inline">
+              <h2 id="mind-change-title">Change your mind</h2>
+              <span class="ff-tip" tabindex="0">?
+                <span class="ff-tooltip" role="tooltip">
+                  This is the pre-commitment. Before escape hatches are selected, name the result
+                  that would actually lower confidence. Otherwise the claim can be protected after
+                  every disappointing outcome.
+                </span>
+              </span>
+            </div>
+            <p class="commitment-question">What result would change your mind?</p>
+            <p class="panel-copy">
+              Write this before choosing excuses. It should be concrete enough that another
+              person could tell whether the result happened.
+            </p>
+            <div class="field-group">
+              <label for="mind-change-text">Pre-commitment statement</label>
+              <textarea id="mind-change-text"></textarea>
+            </div>
+            <p class="mind-change-note" id="mind-change-note" aria-live="polite"></p>
+          </section>
+
+          <section class="excuse-panel" id="excuses" aria-labelledby="excuses-title">
+            <p class="app-step">Step 5</p>
             <h2 id="excuses-title">Name excuses</h2>
             <p class="panel-copy">
               Select the responses a defender could use after a poor result. The warning is simple:
@@ -448,7 +562,7 @@
           <section class="summary-panel" id="summary" aria-labelledby="summary-title">
             <div class="summary-head">
               <div>
-                <p class="app-step">Step 5</p>
+                <p class="app-step">Step 6</p>
                 <h2 id="summary-title">Read result</h2>
               </div>
               <span class="field-help" tabindex="0">?
@@ -537,6 +651,29 @@
                   <tbody id="all-stance-table"></tbody>
                 </table>
               </div>
+            </section>
+
+            <section class="report-panel" aria-labelledby="report-title">
+              <div class="summary-head">
+                <div>
+                  <p class="app-step">Printable report</p>
+                  <div class="section-title-inline compact-title-inline">
+                    <h3 id="report-title">Classroom / debate-prep report</h3>
+                    <span class="ff-tip" tabindex="0">?
+                      <span class="ff-tooltip" role="tooltip">
+                        This view turns the current audit into a concise handout. Use Print for a
+                        classroom copy, or Copy report to paste it into notes, email, or a shared document.
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="report-actions">
+                  <button class="button secondary" type="button" id="copy-report">Copy report</button>
+                  <button class="button secondary" type="button" id="print-report">Print report</button>
+                </div>
+              </div>
+              <div class="report-output" id="report-output" aria-live="polite"></div>
+              <p class="copy-status" id="report-status" role="status"></p>
             </section>
 
             <section class="ai-prompt-panel" aria-labelledby="ai-prompt-title">
