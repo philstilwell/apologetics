@@ -413,11 +413,13 @@ function normalizeState(source) {
   const issueStates = Object.fromEntries(
     issues.map((issue) => {
       const saved = source.issueStates?.[issue.id] || {};
+      const stance = stances.some((item) => item.id === saved.stance) ? saved.stance : "";
       return [
         issue.id,
         {
           ...defaultIssueState(),
           ...saved,
+          stance,
           grounders: { ...(saved.grounders || {}) },
           disagreement: { ...(saved.disagreement || {}) },
           notes: typeof saved.notes === "string" ? saved.notes : ""
@@ -468,7 +470,27 @@ function hasAnyWeight(group) {
 
 function issueIsMapped(issueId) {
   const item = state.issueStates[issueId];
-  return Boolean(item?.stance && hasAnyWeight(item.grounders) && hasAnyWeight(item.disagreement));
+  return Boolean(stanceById(item?.stance) && hasAnyWeight(item.grounders) && hasAnyWeight(item.disagreement));
+}
+
+function issueHasAnyInput(issueId) {
+  const item = state.issueStates[issueId];
+  return Boolean(
+    stanceById(item?.stance) ||
+      hasAnyWeight(item?.grounders) ||
+      hasAnyWeight(item?.disagreement) ||
+      (item?.notes || "").trim()
+  );
+}
+
+function issueStatus(issueId) {
+  if (issueIsMapped(issueId)) {
+    return { className: "mapped", label: "Mapped" };
+  }
+  if (issueHasAnyInput(issueId)) {
+    return { className: "partial", label: "Partial" };
+  }
+  return { className: "", label: "Open" };
 }
 
 function topWeighted(defs, group, count = 3) {
@@ -533,14 +555,20 @@ function renderIssueGrid() {
     .map((issue) => {
       const item = state.issueStates[issue.id];
       const stance = stanceById(item.stance);
-      const mapped = issueIsMapped(issue.id);
+      const status = issueStatus(issue.id);
       const active = issue.id === state.selectedIssueId;
       return `
-        <button class="particular-issue-card ${active ? "active" : ""} ${mapped ? "mapped" : ""}" type="button" data-issue="${escapeHtml(issue.id)}">
+        <button
+          class="particular-issue-card ${active ? "active" : ""} ${status.className}"
+          type="button"
+          data-issue="${escapeHtml(issue.id)}"
+          aria-current="${active ? "true" : "false"}"
+          aria-label="Case ${escapeHtml(issue.label)}: ${escapeHtml(issue.statement)} ${escapeHtml(stance?.short || "Unset")}, ${escapeHtml(status.label)}"
+        >
           <span class="particular-issue-number">${escapeHtml(issue.label)}</span>
           <span class="particular-issue-body">
             <strong>${escapeHtml(issue.statement)}</strong>
-            <small>${escapeHtml(stance?.short || "Unset")} - ${mapped ? "mapped" : "open"}</small>
+            <small>${escapeHtml(stance?.short || "Unset")} - ${escapeHtml(status.label)}</small>
           </span>
         </button>
       `;
@@ -619,7 +647,7 @@ function renderStances() {
 
 function sliderMarkup(kind, def, value) {
   return `
-    <article class="particular-slider-card">
+    <article class="particular-slider-card ${value > 0 ? "is-weighted" : ""}">
       <div class="particular-slider-head">
         <strong>${escapeHtml(def.label)}</strong>
         <span>${escapeHtml(labelForValue(value))} ${value}/10</span>
@@ -654,9 +682,12 @@ function renderSliders() {
       const target = input.dataset.kind === "grounder" ? itemData.grounders : itemData.disagreement;
       const value = Number(input.value);
       target[input.dataset.slider] = value;
-      const valueBadge = input.closest(".particular-slider-card")?.querySelector(".particular-slider-head span");
+      const sliderCard = input.closest(".particular-slider-card");
+      sliderCard?.classList.toggle("is-weighted", value > 0);
+      const valueBadge = sliderCard?.querySelector(".particular-slider-head span");
       if (valueBadge) valueBadge.textContent = `${labelForValue(value)} ${value}/10`;
       saveState();
+      renderIssueGrid();
       renderLedger();
       renderAttributionBoard();
       renderPrompts();
@@ -680,12 +711,13 @@ function renderLedger() {
     .map((issue) => {
       const item = state.issueStates[issue.id];
       const stance = stanceById(item.stance);
-      const statusClass = issueIsMapped(issue.id) ? "ready" : item.stance || hasAnyWeight(item.grounders) ? "thin" : "";
+      const status = issueStatus(issue.id);
+      const statusClass = status.className === "mapped" ? "ready" : status.className === "partial" ? "thin" : "";
       const top = topWeighted(grounders, item.grounders, 1)[0];
       return `
         <button class="component-status ledger-case ${statusClass}" type="button" data-ledger-issue="${escapeHtml(issue.id)}">
           <span>${escapeHtml(issue.label)}. ${escapeHtml(stance?.short || "Unset")}</span>
-          <strong>${issueIsMapped(issue.id) ? "mapped" : "open"}</strong>
+          <strong>${escapeHtml(status.label)}</strong>
           <small>${escapeHtml(top ? `${top.short} ${top.value}/10` : "No lead grounder")}</small>
         </button>
       `;
@@ -1170,17 +1202,38 @@ function buildAiPrompt() {
 }
 
 async function copyText(text, label) {
+  let copied = false;
   try {
-    await navigator.clipboard.writeText(text);
-    refs.copyStatus.textContent = `${label} copied.`;
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    }
   } catch {
-    refs.copyStatus.textContent = `Could not copy ${label.toLowerCase()}.`;
+    copied = false;
   }
+  if (!copied) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.top = "-1000px";
+    document.body.append(textarea);
+    textarea.select();
+    try {
+      copied = document.execCommand("copy");
+    } catch {
+      copied = false;
+    }
+    textarea.remove();
+  }
+  refs.copyStatus.textContent = copied ? `${label} copied.` : `Could not copy ${label.toLowerCase()}.`;
 }
 
 refs.caseNotes.addEventListener("input", () => {
   currentData().notes = refs.caseNotes.value;
   saveState();
+  renderIssueGrid();
+  renderLedger();
   renderReports();
 });
 

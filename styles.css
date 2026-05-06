@@ -7371,6 +7371,19 @@ body.app-moral-particulars #report-step {
   background: var(--moral-green-soft);
 }
 
+.particular-issue-card.partial {
+  border-left: 5px solid var(--moral-gold);
+  background: var(--moral-gold-soft);
+}
+
+.particular-issue-card.mapped .particular-issue-number {
+  background: var(--moral-green);
+}
+
+.particular-issue-card.partial .particular-issue-number {
+  background: var(--moral-gold);
+}
+
 .particular-issue-number {
   display: inline-grid;
   place-items: center;
@@ -7526,6 +7539,14 @@ body.app-moral-particulars #report-step {
   border: 1px solid rgba(223, 170, 168, 0.76);
   border-radius: var(--radius);
   background: #fff6f6;
+}
+
+.particular-slider-card.is-weighted {
+  border-color: rgba(178, 76, 74, 0.92);
+  background:
+    linear-gradient(135deg, rgba(178, 76, 74, 0.08), rgba(255, 250, 250, 0) 58%),
+    #fffafa;
+  box-shadow: inset 0 0 0 1px rgba(178, 76, 74, 0.14);
 }
 
 .particular-slider-head {
