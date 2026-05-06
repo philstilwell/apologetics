@@ -9,7 +9,7 @@
       content="A Crosshairs tool for testing whether a Christian moral claim supplies the required components of an objective moral system or collapses into emotion, obedience, or practical advice."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260506-moral-system-pressure-links">
+    <link rel="stylesheet" href="../../styles.css?v=20260506-moral-system-route-tooltip">
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body class="app-morality">
@@ -252,7 +252,15 @@
         </section>
 
         <section class="moral-card">
-          <p class="app-step">Chosen routes</p>
+          <div class="route-panel-heading">
+            <p class="app-step">Selected routes</p>
+            <button class="section-help" type="button" aria-label="Explain selected routes" aria-describedby="selected-routes-help">
+              <span class="label-help-dot" aria-hidden="true">?</span>
+              <span class="section-tooltip" id="selected-routes-help" role="tooltip">
+                This panel summarizes which substantiation routes are currently carrying the eight required moral-system components. The number beside each route is the count of components assigned to that route. The number is not a quality score; it shows dependency concentration, so a high count means that route needs especially clear support.
+              </span>
+            </button>
+          </div>
           <div class="route-list" id="routeList"></div>
         </section>
       </section>
@@ -334,6 +342,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260506-moral-system-pressure-links"></script>
+    <script src="app.js?v=20260506-moral-system-route-tooltip"></script>
   </body>
 </html>

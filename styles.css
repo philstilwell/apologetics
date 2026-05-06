@@ -6581,13 +6581,23 @@ body.app-morality #report-step {
   text-transform: uppercase;
 }
 
-.substantiation-legend {
+.substantiation-legend,
+.route-panel-heading {
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 
-.substantiation-help {
+.route-panel-heading {
+  margin-bottom: 8px;
+}
+
+.route-panel-heading .app-step {
+  margin: 0;
+}
+
+.substantiation-help,
+.section-help {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -6601,12 +6611,14 @@ body.app-morality #report-step {
   cursor: help;
 }
 
-.substantiation-help .label-help-dot {
+.substantiation-help .label-help-dot,
+.section-help .label-help-dot {
   position: static;
   transform: none;
 }
 
-.substantiation-tooltip {
+.substantiation-tooltip,
+.section-tooltip {
   position: absolute;
   top: calc(100% + 8px);
   left: -14px;
@@ -6630,8 +6642,17 @@ body.app-morality #report-step {
   transition: opacity 150ms ease, transform 150ms ease;
 }
 
+.section-help .section-tooltip {
+  right: -10px;
+  left: auto;
+}
+
 .substantiation-help:hover .substantiation-tooltip,
-.substantiation-help:focus-visible .substantiation-tooltip {
+.substantiation-help:focus-visible .substantiation-tooltip,
+.substantiation-help:focus .substantiation-tooltip,
+.section-help:hover .section-tooltip,
+.section-help:focus-visible .section-tooltip,
+.section-help:focus .section-tooltip {
   opacity: 1;
   transform: translateY(0);
 }
@@ -6856,7 +6877,8 @@ body.app-morality #report-step {
     max-width: none;
   }
 
-  .substantiation-tooltip {
+  .substantiation-tooltip,
+  .section-tooltip {
     position: fixed;
     top: 84px;
     right: 16px;
