@@ -1450,7 +1450,14 @@ function updateMetrics() {
     aiPromptOutput.value = buildAiPrompt();
   }
   if (aiPromptMode) {
-    aiPromptMode.textContent = promptMode === "all" ? "All-promises prompt" : "Selected promise prompt";
+    aiPromptMode.textContent =
+      promptMode === "all" ? "Prompt scope: All promises" : "Prompt scope: Active promise";
+  }
+  if (useSelectedPromptButton) {
+    const selectedMode = promptMode === "selected";
+    useSelectedPromptButton.textContent = selectedMode ? "Active promise in use" : "Use active promise";
+    useSelectedPromptButton.disabled = selectedMode;
+    useSelectedPromptButton.setAttribute("aria-pressed", selectedMode ? "true" : "false");
   }
   if (allPromisesResult) {
     allPromisesResult.textContent = allResultBuilt
