@@ -6350,7 +6350,8 @@ body.app-morality #report-step {
   margin-bottom: 0;
 }
 
-.top-pressure-list article {
+.top-pressure-list article,
+.top-pressure-list a {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6360,6 +6361,18 @@ body.app-morality #report-step {
   border: 1px solid rgba(184, 144, 101, 0.68);
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.68);
+}
+
+.top-pressure-list a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.top-pressure-list a:hover,
+.top-pressure-list a:focus-visible {
+  border-color: var(--moral-blue);
+  background: var(--moral-blue-soft);
+  outline: none;
 }
 
 .top-pressure-list strong {
@@ -6699,6 +6712,12 @@ body.app-morality #report-step {
   display: grid;
   gap: 10px;
   background: var(--moral-card);
+  scroll-margin-top: 104px;
+}
+
+.challenge-card:target {
+  border-color: var(--moral-blue);
+  box-shadow: inset 0 0 0 2px rgba(47, 87, 143, 0.26), var(--shadow);
 }
 
 .challenge-meta {

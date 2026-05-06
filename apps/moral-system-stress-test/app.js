@@ -893,7 +893,7 @@ function renderChallenges() {
     ? challengeItems
         .map((challenge) => {
           return `
-            <article class="challenge-card">
+            <article class="challenge-card" id="${challengeAnchor(challenge.id)}" tabindex="-1">
               <div class="challenge-meta">
                 <strong>${escapeHtml(challenge.title)}</strong>
                 <span class="pressure ${challenge.pressure}">${challenge.pressure}</span>
@@ -911,6 +911,30 @@ function renderChallenges() {
         })
         .join("")
     : `<article class="challenge-card"><strong>No matched challenges</strong><p>Choose routes or substantiation checks, or switch the filter to all challenges.</p></article>`;
+}
+
+function challengeAnchor(challengeId) {
+  return `challenge-${challengeId}`;
+}
+
+function openChallengeLink(link) {
+  const href = link.getAttribute("href") || "";
+  if (!href.startsWith("#challenge-")) return;
+  let target = document.getElementById(href.slice(1));
+  if (!target) {
+    state.challengeFilter = "matched";
+    saveState();
+    renderChallenges();
+    renderReports();
+    target = document.getElementById(href.slice(1));
+  }
+  if (!target) return;
+  window.history.pushState(null, "", href);
+  target.scrollIntoView({
+    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    block: "start"
+  });
+  target.focus({ preventScroll: true });
 }
 
 function renderPrompts() {
@@ -1081,10 +1105,10 @@ function renderStaticStatus({ boundaryRisk, completeness, matched, routeItems })
       ${topPressures
         .map(
           (challenge) => `
-            <article>
+            <a href="#${challengeAnchor(challenge.id)}" aria-label="View explanation for ${escapeHtml(challenge.title)}">
               <strong>${escapeHtml(challenge.title)}</strong>
               <span>${escapeHtml(challenge.pressure)}</span>
-            </article>
+            </a>
           `
         )
         .join("")}
@@ -1366,6 +1390,13 @@ function bindEvents() {
     saveState();
     renderChallenges();
     renderReports();
+  });
+
+  refs.topPressureList.addEventListener("click", (event) => {
+    const link = event.target.closest("a[href^='#challenge-']");
+    if (!link) return;
+    event.preventDefault();
+    openChallengeLink(link);
   });
 
   refs.reportMode.addEventListener("change", (event) => {
