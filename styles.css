@@ -6131,6 +6131,8 @@ body.app-morality #report-step {
 .moral-side-panel {
   display: grid;
   gap: 12px;
+  min-height: 100%;
+  height: 100%;
   align-self: stretch;
 }
 
@@ -6146,6 +6148,9 @@ body.app-morality #report-step {
   align-self: start;
   display: grid;
   gap: 10px;
+  max-height: calc(100vh - 108px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 13px;
   border: 1px solid var(--moral-line);
   border-top: 5px solid var(--moral-blue);
@@ -6620,6 +6625,8 @@ body.app-morality #report-step {
 
   .moral-static-status {
     position: static;
+    max-height: none;
+    overflow: visible;
   }
 }
 
