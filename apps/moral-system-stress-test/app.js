@@ -1113,19 +1113,35 @@ function renderChallenges() {
   refs.challengeFilter.value = state.challengeFilter;
   refs.challengeList.innerHTML = challengeItems.length
     ? challengeItems
-        .map((challenge) => {
+        .map((challenge, index) => {
+          const challengeNumber = String(index + 1).padStart(2, "0");
           return `
-            <article class="challenge-card" id="${challengeAnchor(challenge.id)}" tabindex="-1">
-              <div class="challenge-meta">
-                <strong>${escapeHtml(challenge.title)}</strong>
-                <span class="pressure ${challenge.pressure}">${challenge.pressure}</span>
+            <article class="challenge-card challenge-${challenge.pressure}" id="${challengeAnchor(challenge.id)}" tabindex="-1">
+              <div class="challenge-card-top">
+                <span class="challenge-number" aria-hidden="true">${challengeNumber}</span>
+                <div class="challenge-title-block">
+                  <div class="challenge-meta">
+                    <span class="challenge-type">Counterfactual challenge</span>
+                    <span class="pressure ${challenge.pressure}">${challenge.pressure}</span>
+                  </div>
+                  <h3>${escapeHtml(challenge.title)}</h3>
+                  <p class="challenge-summary">${escapeHtml(challenge.summary)}</p>
+                </div>
               </div>
-              <p>${escapeHtml(challenge.summary)}</p>
-              <p><strong>Counterfactual</strong> ${escapeHtml(challenge.counterfactual)}</p>
-              <ul class="question-list">
-                ${challenge.questions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}
-              </ul>
-              <div class="tag-row">
+              <section class="challenge-counterfactual" aria-label="Counterfactual test for ${escapeHtml(challenge.title)}">
+                <span class="challenge-kicker">Counterfactual test</span>
+                <p>${escapeHtml(challenge.counterfactual)}</p>
+              </section>
+              <div class="challenge-question-block" aria-label="Cross-examination prompts">
+                <div class="challenge-section-head">
+                  <span>Cross-examination</span>
+                  <span>${challenge.questions.length} prompts</span>
+                </div>
+                <ol class="question-list">
+                  ${challenge.questions.map((question) => `<li><span>${escapeHtml(question)}</span></li>`).join("")}
+                </ol>
+              </div>
+              <div class="tag-row" aria-label="Challenge tags">
                 ${challenge.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}
               </div>
             </article>
