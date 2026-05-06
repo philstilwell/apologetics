@@ -6361,7 +6361,7 @@ body.app-morality #report-step {
 .element-card {
   display: grid;
   gap: 12px;
-  min-height: 246px;
+  min-height: 268px;
   padding: 12px;
   border: 1px solid var(--moral-line);
   border-radius: var(--radius);
@@ -6375,16 +6375,7 @@ body.app-morality #report-step {
 
 .element-head {
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr);
-  gap: 10px;
-  align-items: start;
-}
-
-.element-head input {
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
-  accent-color: var(--moral-green);
+  gap: 8px;
 }
 
 .element-title {
@@ -6398,6 +6389,33 @@ body.app-morality #report-step {
 .element-title strong {
   font-size: 1rem;
   line-height: 1.2;
+}
+
+.requirement-toggle,
+.substantiation-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--moral-muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.requirement-toggle {
+  margin-left: auto;
+  padding: 5px 8px;
+  border: 1px solid rgba(184, 144, 101, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.requirement-toggle input,
+.substantiation-check input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--moral-green);
 }
 
 .element-card p,
@@ -6443,8 +6461,62 @@ body.app-morality #report-step {
   gap: 8px;
 }
 
-.substantiation textarea {
-  min-height: 94px;
+.strength-control {
+  display: grid;
+  gap: 5px;
+}
+
+.strength-control label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.strength-control input[type="range"] {
+  width: 100%;
+  accent-color: var(--moral-blue);
+}
+
+.strength-scale {
+  display: flex;
+  justify-content: space-between;
+  color: var(--moral-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.substantiation-checks {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 9px;
+  border: 1px solid rgba(184, 144, 101, 0.68);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.substantiation-checks legend {
+  padding: 0 5px;
+  color: var(--moral-muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.optional-note summary {
+  cursor: pointer;
+  color: var(--moral-blue);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.optional-note textarea {
+  min-height: 72px;
+  margin-top: 8px;
 }
 
 .boundary-list,

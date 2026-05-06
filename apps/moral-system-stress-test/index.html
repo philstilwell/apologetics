@@ -6,7 +6,7 @@
     <title>Crosshairs Audit Lab | Moral System Stress Test</title>
     <meta
       name="description"
-      content="A Crosshairs tool for testing whether a Christian moral claim supplies the elements of an actual moral system or collapses into emotion, obedience, or practical advice."
+      content="A Crosshairs tool for testing whether a Christian moral claim supplies the required components of an objective moral system or collapses into emotion, obedience, or practical advice."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../../styles.css?v=20260506-moral-system">
@@ -27,7 +27,7 @@
       <nav class="top-nav" aria-label="Primary">
         <a class="hub-link" href="../../">Hub</a>
         <a href="#claim-step">Claim</a>
-        <a href="#elements-step">Elements</a>
+        <a href="#elements-step">Components</a>
         <a href="#boundary-step">Boundaries</a>
         <a href="#challenge-step">Challenges</a>
         <a href="#report-step">Report</a>
@@ -40,26 +40,26 @@
           <p class="eyebrow">Coherence audit</p>
           <h1>Moral System Stress Test</h1>
           <p>
-            Test whether a Christian moral claim supplies the necessary and sufficient
-            elements of an actual moral system, or whether the claim thins out into emotion,
+            Test whether a Christian moral claim supplies the required components of an
+            objective moral system, or whether the claim thins out into emotion,
             obedience, social strategy, or practical advice.
           </p>
         </div>
         <aside class="source-note">
           <strong>Diagnostic, not a final verdict.</strong>
-          The audit asks what a moral system would need in order to be unequivocally distinct
-          from feelings, commands, and useful recommendations. It then challenges the supplied
-          substantiation with counterfactuals drawn from the background material.
+          The audit asks what an objective moral system would need in order to be unequivocally
+          distinct from feelings, commands, and useful recommendations. It then challenges the
+          selected routes, strength ratings, and checklist claims with focused counterfactuals.
         </aside>
         <details class="annotation app-wide" open>
           <summary>How to use this audit</summary>
           <p>
-            State the moral claim, choose every element you think an actual moral system must
-            include, and explain how your own moral perspective substantiates each element.
+            State the moral claim, choose the components you think an objective moral system
+            must include, and mark how your own view substantiates each one.
           </p>
           <ul>
             <li><strong>Step 1:</strong> state the claim under audit as precisely as possible.</li>
-            <li><strong>Step 2:</strong> select the elements you think are necessary and choose a substantiation route for each.</li>
+            <li><strong>Step 2:</strong> select the required components, choose a substantiation route, set support strength, and tick the checks that apply.</li>
             <li><strong>Step 3:</strong> read the boundary tests for collapse into emotion, obedience, or practical advice.</li>
             <li><strong>Step 4:</strong> review matched counterfactuals and cross-examination questions.</li>
             <li><strong>Step 5:</strong> export the report or AI prompt for a fuller stress test.</li>
@@ -79,10 +79,10 @@
         </a>
         <a href="#elements-step" aria-describedby="moral-step-elements-help">
           <span class="step-number">2</span>
-          <span class="step-label">Elements</span>
+          <span class="step-label">Components</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="moral-step-elements-help" role="tooltip">
-            Select the pieces you think are required for a real moral system rather than
+            Select the pieces you think are required for an objective moral system rather than
             merely a strong feeling, command structure, or social strategy.
           </span>
         </a>
@@ -100,7 +100,7 @@
           <span class="step-label">Challenges</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="moral-step-challenge-help" role="tooltip">
-            Counterfactuals are matched to the selected elements and routes, so the hardest
+            Counterfactuals are matched to the selected components and routes, so the hardest
             pressure points rise first.
           </span>
         </a>
@@ -127,12 +127,12 @@
         <article class="metric-card">
           <span class="metric-label">Completeness</span>
           <strong id="completenessScore">0%</strong>
-          <small>Core elements with route and substantiation</small>
+          <small>Required components with route, checks, and support strength</small>
         </article>
         <article class="metric-card">
-          <span class="metric-label">Elements selected</span>
+          <span class="metric-label">Components selected</span>
           <strong id="selectedCount">0</strong>
-          <small id="selectedCountNote">No elements selected yet</small>
+          <small id="selectedCountNote">No components selected yet</small>
         </article>
         <article class="metric-card">
           <span class="metric-label">Boundary pressure</span>
@@ -172,13 +172,12 @@
         <aside class="moral-lens-panel" aria-labelledby="lens-title">
           <div class="section-title-inline compact-title-inline">
             <div>
-              <p class="app-step">Preset lenses</p>
-              <h2 id="lens-title">Common starting postures</h2>
+              <p class="app-step">Preset profiles</p>
+              <h2 id="lens-title">Common Christian starts</h2>
             </div>
           </div>
           <p>
-            Apply a profile to see how different moral perspectives carry pressure before
-            you edit the details.
+            Apply a profile to seed the controls, then edit the details to match the actual claim.
           </p>
           <div class="moral-lens-grid" id="presetButtons"></div>
         </aside>
@@ -189,17 +188,17 @@
           <div class="moral-section-head">
             <div>
               <p class="app-step">Step 2</p>
-              <h2 id="elements-title">Necessary and sufficient candidates</h2>
+              <h2 id="elements-title">Required components</h2>
               <p>
-                Select the elements you think any actual moral system must include, then state
-                how each one is grounded, known, and applied.
+                Select what an objective moral system must include. For each component, choose
+                the main substantiation route, set the support strength, and tick the checks
+                the account satisfies.
               </p>
             </div>
-            <select id="elementFilter" aria-label="Element filter">
-              <option value="all">All elements</option>
-              <option value="core">Core only</option>
+            <select id="elementFilter" aria-label="Component filter">
+              <option value="all">All components</option>
               <option value="selected">Selected</option>
-              <option value="missing">Missing core</option>
+              <option value="missing">Incomplete</option>
             </select>
           </div>
           <div class="element-grid" id="elementGrid"></div>
@@ -215,12 +214,12 @@
               <span id="statusCompleteness">0%</span>
             </div>
             <p id="coherenceStatusBody">
-              Select elements to see whether the attempted moral system has the necessary core components.
+              Select components to see whether the attempted objective moral system has the required structure.
             </p>
             <div class="moral-static-factors" aria-label="Current coherence status factors">
               <div>
-                <strong id="statusCoreCovered">0/11</strong>
-                <span>Core ready</span>
+                <strong id="statusCoreCovered">0/8</strong>
+                <span>Ready</span>
               </div>
               <div>
                 <strong id="statusBoundaryRisk">0</strong>
@@ -249,7 +248,7 @@
         </section>
 
         <section class="moral-card">
-          <p class="app-step">Missing core</p>
+          <p class="app-step">Incomplete</p>
           <div class="missing-list" id="missingList"></div>
         </section>
 
@@ -296,7 +295,7 @@
             <div>
               <p class="app-step">Step 6</p>
               <h2 id="report-title">Audit report</h2>
-              <p>A readable export of the current claim, selected elements, boundary tests, and matched challenges.</p>
+              <p>A readable export of the current claim, selected components, boundary tests, and matched challenges.</p>
             </div>
             <label class="report-mode">
               <span>Mode</span>

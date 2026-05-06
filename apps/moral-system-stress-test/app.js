@@ -1,155 +1,122 @@
-const STORAGE_KEY = "moral-system-stress-test-v2";
+const STORAGE_KEY = "moral-system-stress-test-v3";
 
 const routes = [
   { id: "none", label: "Choose a route" },
-  { id: "scripture", label: "Scripture" },
   { id: "god-nature", label: "God's nature" },
   { id: "divine-command", label: "Divine command" },
+  { id: "scripture", label: "Scripture" },
   { id: "holy-spirit", label: "Holy Spirit guidance" },
-  { id: "moral-intuition", label: "Moral intuition" },
+  { id: "church-tradition", label: "Church tradition" },
+  { id: "conscience", label: "Conscience or moral intuition" },
   { id: "natural-law", label: "Reason or natural law" },
-  { id: "well-being", label: "Well-being or harm" },
-  { id: "social-contract", label: "Social contract" },
-  { id: "pro-social", label: "Pro-social behavior" },
-  { id: "hybrid", label: "Hybrid account" }
+  { id: "human-flourishing", label: "Human flourishing" },
+  { id: "hybrid", label: "Hybrid Christian account" }
+];
+
+const strengthLevels = [
+  { value: 0, label: "None" },
+  { value: 1, label: "Asserted" },
+  { value: 2, label: "Thin" },
+  { value: 3, label: "Supported" },
+  { value: 4, label: "Strong" }
 ];
 
 const elements = [
   {
-    id: "semantic-target",
-    title: "Stable Moral Meaning",
+    id: "moral-meaning",
+    title: "Moral Meaning",
     tier: "core",
     axis: "clarity",
-    description: "Defines what moral terms refer to without relying on undefined words such as right, wrong, good, or evil."
+    description: "Defines what moral terms mean without merely repeating words such as right, wrong, good, or evil.",
+    checks: [
+      { id: "defines-terms", label: "Defines the key moral terms" },
+      { id: "objective-sense", label: "Distinguishes objective wrong from dislike" },
+      { id: "non-circular-language", label: "Avoids circular moral labels" }
+    ]
   },
   {
-    id: "truth-aptness",
-    title: "Truth Aptness",
+    id: "truth-ground",
+    title: "Truth Maker",
     tier: "core",
     axis: "ontology",
-    description: "Explains whether moral claims can be true or false, and what would make them so."
+    description: "Explains whether moral claims can be true and what makes them true beyond human preference.",
+    checks: [
+      { id: "truth-apt", label: "Treats moral claims as true or false" },
+      { id: "truth-maker", label: "Identifies what makes them true" },
+      { id: "preference-independent", label: "Grounds truth beyond preference or power" }
+    ]
   },
   {
-    id: "ontological-ground",
-    title: "Ontological Ground",
-    tier: "core",
-    axis: "ontology",
-    description: "Identifies what exists beyond personal feeling, group preference, or command that grounds moral facts or obligations."
-  },
-  {
-    id: "epistemic-access",
-    title: "Epistemic Access",
+    id: "authority-check",
+    title: "Authority Check",
     tier: "core",
     axis: "access",
-    description: "Gives a method for discovering moral truths that sincere investigators can apply and check."
+    description: "Explains how an authority is recognized as morally good without assuming its commands are already moral.",
+    checks: [
+      { id: "independent-test", label: "Gives a test for moral authority" },
+      { id: "not-command-only", label: "Avoids good because commanded" },
+      { id: "can-detect-failure", label: "Could detect an immoral command" }
+    ]
   },
   {
-    id: "non-circular-authority",
-    title: "Non-Circular Authority",
+    id: "moral-access",
+    title: "Moral Access",
     tier: "core",
     axis: "access",
-    description: "Lets users assess the authority as moral before treating its commands as morally binding."
+    description: "Gives a reliable way accountable agents can know the standard and check disputed claims.",
+    checks: [
+      { id: "public-method", label: "Uses an explainable method" },
+      { id: "handles-disagreement", label: "Handles sincere disagreement" },
+      { id: "accessible", label: "Is accessible to those held accountable" }
+    ]
   },
   {
-    id: "normative-force",
-    title: "Obligatory Force",
+    id: "binding-force",
+    title: "Binding Force",
     tier: "core",
     axis: "force",
-    description: "Explains why one must comply, not merely why compliance is desired, rewarded, safer, or socially useful."
+    description: "Explains why moral requirements bind agents rather than merely advising, rewarding, or threatening them.",
+    checks: [
+      { id: "obligation", label: "Explains obligation rather than benefit" },
+      { id: "not-prudence", label: "Distinguishes duty from prudence" },
+      { id: "accountability", label: "Explains blame or accountability" }
+    ]
   },
   {
-    id: "action-guidance",
-    title: "Action Guidance",
+    id: "case-guidance",
+    title: "Case Guidance",
     tier: "core",
     axis: "clarity",
-    description: "Produces determinate answers for actual cases rather than only slogans, ideals, or retrospective rationalizations."
+    description: "Produces determinate answers for actual cases and ranks duties when they conflict.",
+    checks: [
+      { id: "decides-cases", label: "Decides concrete cases" },
+      { id: "ranks-duties", label: "Ranks competing duties" },
+      { id: "predictive", label: "Works before the desired conclusion" }
+    ]
   },
   {
-    id: "consistency",
-    title: "Consistency Over Time",
-    tier: "core",
-    axis: "stability",
-    description: "Keeps the same moral status for like cases unless a principled difference is supplied."
-  },
-  {
-    id: "universality",
-    title: "Universality Of Scope",
+    id: "consistent-scope",
+    title: "Consistent Scope",
     tier: "core",
     axis: "scope",
-    description: "Specifies who is bound and avoids tribal, historical, or authority-favored exceptions without a clear principle."
+    description: "Applies across persons, cultures, and time without ad hoc tribal or authority-favored exceptions.",
+    checks: [
+      { id: "like-cases", label: "Treats like cases alike" },
+      { id: "scope", label: "Specifies who is bound" },
+      { id: "no-special-pleading", label: "Avoids special pleading" }
+    ]
   },
   {
-    id: "conflict-resolution",
-    title: "Conflict Resolution",
+    id: "correction",
+    title: "Correction Method",
     tier: "core",
-    axis: "clarity",
-    description: "Ranks duties, values, or commands when they collide and explains why that ranking is not arbitrary."
-  },
-  {
-    id: "public-convergence",
-    title: "Public Convergence",
-    tier: "support",
-    axis: "access",
-    description: "Provides a process likely to reduce disagreement among competent, sincere users of the system."
-  },
-  {
-    id: "error-correction",
-    title: "Error Correction",
-    tier: "support",
     axis: "stability",
-    description: "Distinguishes moral discovery from cultural drift, reinterpretation, or changing emotional pressure."
-  },
-  {
-    id: "prudence-distinction",
-    title: "Prudence Distinction",
-    tier: "core",
-    axis: "force",
-    description: "Separates moral obligation from practical recommendations, incentives, personal goals, or strategies for happiness."
-  },
-  {
-    id: "accountability",
-    title: "Accountability",
-    tier: "support",
-    axis: "force",
-    description: "Explains why agents deserve praise, blame, punishment, or judgment rather than merely being managed."
-  }
-];
-
-const sources = [
-  {
-    id: "morality-games",
-    title: "Morality Games",
-    note: "Divine-command and moral anti-realist challenge framing."
-  },
-  {
-    id: "coherent-biblical-morality",
-    title: "The Absence of a Coherent Biblical Morality",
-    note: "Verification, circular authority, conflicting intuitions, Holy Spirit divergence, biblical ambiguity, and Christian moral disagreement."
-  },
-  {
-    id: "lawgiver-necessity",
-    title: "#43: Moral Lawgiver Necessity",
-    note: "Challenges the inference from emotional discomfort or social fears to objective morality or a moral lawgiver."
-  },
-  {
-    id: "christian-consensus",
-    title: "#41: Christian Moral Consensus",
-    note: "Tests clarity and consensus across marriage, sex, violence, slavery, generosity, suicide, and other disputed cases."
-  },
-  {
-    id: "changing-cultures",
-    title: "#06: Unchanging God Or Changing Cultures",
-    note: "Presses consistency, universality, precision, accessibility, and historical adaptation in biblical morality."
-  },
-  {
-    id: "juan",
-    title: "The Mirage of the Cosmic Rulebook",
-    note: "Cosmic-rulebook framing and anti-realist challenge material."
-  },
-  {
-    id: "moral-anti-realism",
-    title: "Moral Anti-Realism",
-    note: "Distinguishes emotion, moral language, obligation, and pro-social behavior."
+    description: "Explains how mistaken moral interpretations are identified and repaired without ad hoc revision.",
+    checks: [
+      { id: "detects-error", label: "Detects mistaken interpretation" },
+      { id: "learning-rule", label: "Distinguishes learning from moral change" },
+      { id: "repair-rule", label: "Has a rule for revising mistakes" }
+    ]
   }
 ];
 
@@ -158,55 +125,52 @@ const challenges = [
     id: "euthyphro-split",
     title: "The Euthyphro Split",
     pressure: "high",
-    elements: ["ontological-ground", "non-circular-authority", "normative-force"],
+    elements: ["truth-ground", "authority-check", "binding-force"],
     routes: ["divine-command", "god-nature", "scripture"],
     tags: ["authority", "grounding"],
-    summary: "If an act is moral only because God commands it, the command appears arbitrary. If God commands it because it is already moral, the standard appears independent of God.",
+    summary: "If an act is moral only because God commands it, the command appears arbitrary. If God commands it because it is already moral, the standard appears independent of command.",
     counterfactual: "Suppose God commanded cruelty, slavery, or the killing of infants. Would the command make the act moral, or would you judge the command by a prior standard?",
     questions: [
       "Is the command moral because God commands it, or does God command it because it is moral?",
-      "What standard lets you identify God's nature as moral before you submit to it?",
+      "What standard lets you identify God's nature as good before you submit to it?",
       "If the divine command changed tomorrow, would the moral fact change with it?"
-    ],
-    sourceIds: ["coherent-biblical-morality", "moral-anti-realism", "morality-games"]
+    ]
   },
   {
     id: "prior-assessment",
     title: "Prior Assessment Trap",
     pressure: "high",
-    elements: ["non-circular-authority", "epistemic-access", "truth-aptness"],
-    routes: ["scripture", "god-nature", "divine-command", "holy-spirit"],
+    elements: ["authority-check", "moral-access", "truth-ground"],
+    routes: ["scripture", "god-nature", "divine-command", "holy-spirit", "church-tradition"],
     tags: ["verification", "circularity"],
     summary: "A system cannot use God's commands as the only evidence that God is morally authoritative while using God's authority to validate those commands.",
-    counterfactual: "Imagine two alleged gods, each issuing incompatible commands and each claiming perfect goodness. What non-circular test selects one as morally authoritative?",
+    counterfactual: "Imagine two alleged divine authorities issuing incompatible commands while each claims perfect goodness. What non-circular test selects one as morally authoritative?",
     questions: [
       "What could count as evidence that a divine command is immoral?",
       "Can you evaluate God's moral character before accepting God's authority?",
       "If no independent assessment is allowed, how is this different from obedience?"
-    ],
-    sourceIds: ["coherent-biblical-morality"]
+    ]
   },
   {
-    id: "orphaned-terms",
-    title: "Orphaned Moral Terms",
+    id: "meaning-gap",
+    title: "Moral Meaning Gap",
     pressure: "high",
-    elements: ["semantic-target", "truth-aptness", "prudence-distinction"],
-    routes: ["moral-intuition", "well-being", "pro-social", "hybrid", "natural-law"],
-    tags: ["language", "emotion"],
-    summary: "Moral words can carry emotional force while remaining untethered from any clear ontology.",
-    counterfactual: "Replace every moral word in the claim with an affective or pragmatic term. If the argument still works, the moral vocabulary may be doing rhetorical work rather than explanatory work.",
+    elements: ["moral-meaning", "truth-ground", "binding-force"],
+    routes: ["conscience", "human-flourishing", "natural-law", "hybrid"],
+    tags: ["language", "objectivity"],
+    summary: "Moral language can sound objective while leaving the key terms undefined or interchangeable with approval, disgust, usefulness, or authority.",
+    counterfactual: "Replace every moral word in the claim with an affective or pragmatic term. If the argument still works, the moral vocabulary may be rhetorical rather than explanatory.",
     questions: [
-      "When you say wrong, do you mean objectively forbidden, socially harmful, emotionally abhorrent, or imprudent?",
-      "What does the moral word add beyond disapproval, fear, disgust, empathy, or a practical preference?",
-      "Could someone share your emotional reaction while rejecting your moral ontology?"
-    ],
-    sourceIds: ["moral-anti-realism"]
+      "When you say wrong, do you mean objectively forbidden, harmful, disapproved, or imprudent?",
+      "What does the moral word add beyond emotion, agreement, or usefulness?",
+      "Could someone share your reaction while rejecting your moral ontology?"
+    ]
   },
   {
     id: "holy-spirit-divergence",
     title: "Holy Spirit Divergence",
     pressure: "high",
-    elements: ["epistemic-access", "public-convergence", "action-guidance"],
+    elements: ["moral-access", "case-guidance", "correction"],
     routes: ["holy-spirit"],
     tags: ["access", "disagreement"],
     summary: "Appeals to inner divine guidance do not by themselves produce public, reproducible convergence among sincere believers.",
@@ -215,30 +179,28 @@ const challenges = [
       "What prevents Holy Spirit guidance from being indistinguishable from intuition, culture, or bias?",
       "What test resolves two incompatible claims of divine guidance?",
       "Should a non-Christian be culpable for not detecting this private guidance?"
-    ],
-    sourceIds: ["coherent-biblical-morality", "christian-consensus"]
+    ]
   },
   {
     id: "scripture-ambiguity",
     title: "Scripture Ambiguity Matrix",
     pressure: "high",
-    elements: ["action-guidance", "public-convergence", "epistemic-access"],
-    routes: ["scripture", "hybrid"],
+    elements: ["case-guidance", "moral-access", "correction"],
+    routes: ["scripture", "church-tradition", "hybrid"],
     tags: ["clarity", "interpretation"],
     summary: "If an objective moral source is clear, competent users should not routinely produce incompatible answers on core conduct.",
     counterfactual: "Give separated Christians the same Bible and ask for answers on divorce, remarriage, slavery, corporal punishment, sex acts, violence, and generosity. The spread of answers tests the method.",
     questions: [
       "Which interpretive rule decides the disputed case, and why is that rule itself authoritative?",
-      "Why would a perfectly clear moral source require so many expert mediators?",
+      "Why would a clear moral source require so many expert mediators?",
       "Would the same interpretive method have condemned slavery before culture shifted against it?"
-    ],
-    sourceIds: ["christian-consensus", "coherent-biblical-morality", "changing-cultures"]
+    ]
   },
   {
     id: "slavery-shift",
     title: "The Slavery Shift",
     pressure: "high",
-    elements: ["consistency", "universality", "error-correction"],
+    elements: ["consistent-scope", "correction", "case-guidance"],
     routes: ["scripture", "divine-command", "god-nature", "natural-law", "hybrid"],
     tags: ["history", "scope"],
     summary: "A system that permits a practice under one covenant or culture while condemning it under another needs a principled account of what changed.",
@@ -247,14 +209,13 @@ const challenges = [
       "Was the most severe biblical slavery morally permissible when regulated by scripture?",
       "If the answer is no, why did the moral source fail to prohibit it clearly?",
       "If the answer is yes, what makes the same practice impermissible now?"
-    ],
-    sourceIds: ["changing-cultures", "coherent-biblical-morality", "christian-consensus"]
+    ]
   },
   {
     id: "infant-killing-command",
     title: "Infant Killing Command",
     pressure: "high",
-    elements: ["universality", "consistency", "non-circular-authority", "normative-force"],
+    elements: ["consistent-scope", "authority-check", "binding-force"],
     routes: ["scripture", "divine-command", "god-nature"],
     tags: ["violence", "authority"],
     summary: "Commands to kill infants or entire populations pressure the claim that divine command delivers a stable, universal moral standard.",
@@ -262,31 +223,14 @@ const challenges = [
     questions: [
       "Can intentional killing of infants be morally required by divine command?",
       "If yes, what remains of universal moral prohibitions?",
-      "If no, what standard lets you reject the biblical command as immoral?"
-    ],
-    sourceIds: ["changing-cultures", "coherent-biblical-morality"]
+      "If no, what standard lets you reject the command as immoral?"
+    ]
   },
   {
-    id: "cultural-adaptation",
-    title: "Cultural Adaptation Problem",
-    pressure: "medium",
-    elements: ["consistency", "error-correction", "universality"],
-    routes: ["scripture", "god-nature", "natural-law", "hybrid"],
-    tags: ["history", "progress"],
-    summary: "Moral rules that shift alongside culture may reflect human adaptation rather than an unchanging divine standard.",
-    counterfactual: "Compare tribal warfare, harsh penalties, slavery regulation, mercy teachings, and modern rights language. The trajectory resembles cultural movement unless a stable principle explains the shifts.",
-    questions: [
-      "Which moral facts remained fixed while the commands changed?",
-      "How do you distinguish progressive revelation from cultural updating?",
-      "Could the same explanation defend any future reversal?"
-    ],
-    sourceIds: ["changing-cultures"]
-  },
-  {
-    id: "rahab-exception",
+    id: "favored-exception",
     title: "Favored Exception Test",
     pressure: "medium",
-    elements: ["universality", "conflict-resolution", "consistency"],
+    elements: ["case-guidance", "consistent-scope"],
     routes: ["scripture", "divine-command", "god-nature", "hybrid"],
     tags: ["exception", "scope"],
     summary: "A rule that admits exceptions for favored persons, tribes, or outcomes needs a principled conflict hierarchy.",
@@ -295,15 +239,14 @@ const challenges = [
       "What general principle permits the exception?",
       "Would that same principle apply to outsiders with rival loyalties?",
       "How do users know when the ordinary rule has been overridden?"
-    ],
-    sourceIds: ["changing-cultures"]
+    ]
   },
   {
     id: "accessibility",
     title: "Accessibility Problem",
     pressure: "medium",
-    elements: ["epistemic-access", "universality", "public-convergence"],
-    routes: ["scripture", "holy-spirit", "god-nature", "natural-law"],
+    elements: ["moral-access", "consistent-scope"],
+    routes: ["scripture", "holy-spirit", "church-tradition", "god-nature", "natural-law"],
     tags: ["access", "fairness"],
     summary: "A universally binding moral system should be accessible enough for accountable agents to discover what binds them.",
     counterfactual: "Consider people before the Bible, outside Israel, outside Christianity, or without reliable teachers. If they are bound, what access did they have?",
@@ -311,120 +254,52 @@ const challenges = [
       "Can people be culpable for violating rules they could not reasonably know?",
       "Why would objective moral guidance be filtered through history, translation, and contested interpretation?",
       "What public method allows outsiders to check the alleged standard?"
-    ],
-    sourceIds: ["changing-cultures", "christian-consensus"]
+    ]
   },
   {
     id: "intuition-fragmentation",
     title: "Intuition Fragmentation",
-    pressure: "high",
-    elements: ["epistemic-access", "truth-aptness", "public-convergence"],
-    routes: ["moral-intuition", "natural-law", "hybrid", "god-nature"],
-    tags: ["intuition", "emotion"],
+    pressure: "medium",
+    elements: ["moral-access", "truth-ground"],
+    routes: ["conscience", "natural-law", "hybrid", "god-nature"],
+    tags: ["intuition", "disagreement"],
     summary: "Moral intuitions vary across people, cultures, and eras, so intuition alone struggles to verify objective moral facts.",
     counterfactual: "If one culture intuits a practice as honorable and another intuits it as horrific, the system needs more than intensity of feeling.",
     questions: [
       "What makes one intuition truth-tracking and another merely emotional?",
       "How do you detect when an intuition was formed by culture rather than moral reality?",
-      "If God designed moral intuitions, why do they diverge so sharply among sincere believers?"
-    ],
-    sourceIds: ["coherent-biblical-morality", "moral-anti-realism", "christian-consensus"]
+      "If God designed moral intuitions, why do they diverge among sincere believers?"
+    ]
   },
   {
-    id: "is-ought-gap",
-    title: "Is-Ought Gap",
-    pressure: "high",
-    elements: ["normative-force", "prudence-distinction", "ontological-ground"],
-    routes: ["well-being", "pro-social", "social-contract", "natural-law", "hybrid"],
+    id: "practical-advice-boundary",
+    title: "Practical Advice Boundary",
+    pressure: "medium",
+    elements: ["binding-force", "truth-ground", "moral-meaning"],
+    routes: ["human-flourishing", "natural-law", "hybrid"],
     tags: ["obligation", "prudence"],
-    summary: "Facts about flourishing, harm, cooperation, or happiness do not by themselves entail an obligation unless a value premise is added.",
-    counterfactual: "Assume an action increases total well-being but violates someone's deep preference. Why must that person accept well-being as the binding standard?",
+    summary: "Facts about flourishing, harm, cooperation, or happiness do not by themselves entail obligation unless the system supplies a binding value premise.",
+    counterfactual: "Assume an action increases total flourishing but violates someone's deep preference. Why must that person accept flourishing as morally binding?",
     questions: [
-      "Why is well-being morally binding rather than personally or socially preferred?",
-      "What bridges the move from this promotes flourishing to therefore one must do it?",
-      "Could the framework be a strong practical recommendation without being a moral system?"
-    ],
-    sourceIds: ["lawgiver-necessity", "moral-anti-realism"]
-  },
-  {
-    id: "goal-without-obligation",
-    title: "Goal Without Obligation",
-    pressure: "medium",
-    elements: ["prudence-distinction", "normative-force", "semantic-target"],
-    routes: ["pro-social", "well-being", "social-contract", "moral-intuition"],
-    tags: ["goals", "anti-realism"],
-    summary: "A chosen goal can explain intentional action without implying any objective or prescriptive must.",
-    counterfactual: "A person may value compassion and pursue it consistently while denying that anyone is morally obligated to do the same.",
-    questions: [
-      "Does your framework show an obligation, or only a goal you strongly endorse?",
-      "If someone lacks the goal, what makes them incorrect rather than different or dangerous?",
-      "Can the same behavior be explained by emotion-derived preference alone?"
-    ],
-    sourceIds: ["moral-anti-realism", "lawgiver-necessity", "juan"]
-  },
-  {
-    id: "lawgiver-non-sequitur",
-    title: "Lawgiver Non Sequitur",
-    pressure: "medium",
-    elements: ["ontological-ground", "normative-force", "truth-aptness"],
-    routes: ["god-nature", "divine-command", "scripture", "hybrid"],
-    tags: ["lawgiver", "necessity"],
-    summary: "Finding an amoral universe emotionally unacceptable does not logically entail that objective morality or a moral lawgiver exists.",
-    counterfactual: "A universe without objective morality could still contain empathy, cooperation, laws, affection, punishment, and stable societies.",
-    questions: [
-      "Does the argument infer existence from emotional need?",
-      "What contradiction follows from a universe containing no objective moral facts?",
-      "Could pro-social behavior arise from psychology, incentives, and culture without moral realism?"
-    ],
-    sourceIds: ["lawgiver-necessity", "moral-anti-realism"]
-  },
-  {
-    id: "consensus-benchmark",
-    title: "Consensus Benchmark",
-    pressure: "medium",
-    elements: ["public-convergence", "action-guidance", "epistemic-access"],
-    routes: ["scripture", "holy-spirit", "moral-intuition", "god-nature", "hybrid"],
-    tags: ["consensus", "method"],
-    summary: "A reliable moral method should reduce disagreement among careful users, especially on central cases.",
-    counterfactual: "If sincere ministers or churches sharply disagree after using the same alleged sources, the method may not be publicly reliable.",
-    questions: [
-      "What level of disagreement would count against the claimed method?",
-      "Are disagreements blamed on human sin only after the method fails?",
-      "Can the same method predict answers before culture settles them?"
-    ],
-    sourceIds: ["christian-consensus", "coherent-biblical-morality"]
-  },
-  {
-    id: "accountability-desert",
-    title: "Desert Or Management",
-    pressure: "medium",
-    elements: ["accountability", "normative-force", "truth-aptness"],
-    routes: ["social-contract", "well-being", "pro-social", "divine-command", "god-nature"],
-    tags: ["accountability", "punishment"],
-    summary: "Punishment can be justified pragmatically as deterrence or containment, but moral desert requires a further account.",
-    counterfactual: "A society may imprison dangerous people to protect others without showing those people cosmically deserve suffering.",
-    questions: [
-      "Does punishment express deserved blame or practical risk management?",
-      "If desert is real, what makes it real?",
-      "If desert is divine, how can humans verify the divine judgment is moral?"
-    ],
-    sourceIds: ["moral-anti-realism", "coherent-biblical-morality"]
+      "Why is flourishing morally binding rather than personally or socially preferred?",
+      "What bridges the move from this helps to therefore one must do it?",
+      "Could the framework be strong practical advice without being an objective moral system?"
+    ]
   },
   {
     id: "sufficiency-collapse",
     title: "Sufficiency Collapse",
     pressure: "high",
-    elements: ["semantic-target", "ontological-ground", "epistemic-access", "normative-force", "action-guidance"],
+    elements: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
     routes: ["none"],
     tags: ["architecture", "sufficiency"],
-    summary: "A list of moral claims is not yet a moral system unless it supplies meaning, ground, access, force, guidance, and conflict handling.",
-    counterfactual: "A rulebook can command, a preference can motivate, and a policy can help. None alone establishes an actual moral system.",
+    summary: "A list of moral claims is not yet a moral system unless it supplies meaning, truth ground, authority, access, force, guidance, scope, and correction.",
+    counterfactual: "A rulebook can command, a preference can motivate, and a policy can help. None alone establishes an objective moral system.",
     questions: [
-      "Which selected elements are necessary, and together are they sufficient?",
-      "What would still be missing after all your selected elements are granted?",
-      "Which element prevents collapse into emotion, obedience, or practical advice?"
-    ],
-    sourceIds: ["coherent-biblical-morality", "moral-anti-realism"]
+      "Which selected components are necessary, and together are they sufficient?",
+      "What would still be missing after all your selected components are granted?",
+      "Which component prevents collapse into emotion, obedience, or practical advice?"
+    ]
   }
 ];
 
@@ -432,104 +307,74 @@ const profilePresets = [
   {
     id: "divine-command",
     label: "Divine command",
-    description: "Treats God's command and nature as the main moral ground.",
-    claim: "Christianity provides a coherent objective moral system because moral obligations are grounded in God's nature and expressed through divine commands.",
+    description: "Starts with God's commands as the primary moral route.",
+    claim: "Christianity provides a coherent objective moral system because moral obligations are grounded in God's authority and expressed through divine commands.",
     route: "divine-command",
-    selected: [
-      "semantic-target",
-      "truth-aptness",
-      "ontological-ground",
-      "epistemic-access",
-      "non-circular-authority",
-      "normative-force",
-      "action-guidance",
-      "consistency",
-      "universality",
-      "conflict-resolution"
-    ],
+    strength: 3,
+    selected: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
+    routeOverrides: {
+      "truth-ground": "god-nature",
+      "moral-access": "scripture",
+      "correction": "scripture"
+    },
     notes: {
-      "ontological-ground": "Moral facts are grounded in God's perfectly good nature rather than in human preference or social agreement.",
-      "non-circular-authority": "God is treated as morally authoritative because perfect goodness belongs to God's nature, not merely because God has power.",
-      "normative-force": "Obligation is explained as accountability before the creator and moral lawgiver, not just fear of consequences."
+      "truth-ground": "Moral facts are grounded in God's perfectly good nature rather than in human preference.",
+      "binding-force": "Obligation is treated as accountability before the creator and moral lawgiver."
+    }
+  },
+  {
+    id: "god-nature",
+    label: "God's nature",
+    description: "Grounds moral truth in God's character rather than command alone.",
+    claim: "Christian morality is objective because goodness is grounded in God's unchanging nature and commands express that nature.",
+    route: "god-nature",
+    strength: 3,
+    selected: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
+    routeOverrides: {
+      "moral-access": "scripture",
+      "case-guidance": "scripture",
+      "correction": "church-tradition"
+    },
+    notes: {
+      "authority-check": "The account must still explain how humans identify God's nature as good without circularity.",
+      "case-guidance": "Commands and principles are interpreted as expressions of God's character."
     }
   },
   {
     id: "scripture-spirit",
     label: "Scripture and Spirit",
-    description: "Uses biblical revelation, interpretation, and inner guidance.",
+    description: "Uses revelation, interpretation, and spiritual guidance.",
     claim: "Christian morality is coherent because scripture, interpreted with the guidance of the Holy Spirit, reveals God's binding moral will.",
     route: "scripture",
-    selected: [
-      "semantic-target",
-      "truth-aptness",
-      "ontological-ground",
-      "epistemic-access",
-      "non-circular-authority",
-      "normative-force",
-      "action-guidance",
-      "consistency",
-      "universality",
-      "conflict-resolution",
-      "public-convergence",
-      "error-correction"
-    ],
+    strength: 3,
+    selected: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
     routeOverrides: {
-      "epistemic-access": "holy-spirit",
-      "public-convergence": "holy-spirit",
-      "error-correction": "scripture"
+      "moral-access": "holy-spirit",
+      "case-guidance": "scripture",
+      "correction": "church-tradition"
     },
     notes: {
-      "epistemic-access": "Moral knowledge is accessed through scripture, church teaching, conscience, prayer, and Spirit-guided discernment.",
-      "action-guidance": "Biblical commands and moral principles are applied to cases through interpretation and Christian formation.",
-      "public-convergence": "The church is expected to converge through shared scripture, communal correction, and spiritual maturity."
+      "moral-access": "Moral knowledge is accessed through scripture, prayer, conscience, and communal discernment.",
+      "correction": "The church is expected to correct interpretation through shared scripture and spiritual maturity."
     }
   },
   {
-    id: "well-being",
-    label: "Well-being ethic",
-    description: "Leans on harm, flourishing, empathy, and social repair.",
-    claim: "A coherent moral system should be grounded in the well-being of conscious creatures, not in obedience to authority.",
-    route: "well-being",
-    selected: [
-      "semantic-target",
-      "truth-aptness",
-      "ontological-ground",
-      "epistemic-access",
-      "normative-force",
-      "action-guidance",
-      "consistency",
-      "universality",
-      "conflict-resolution",
-      "public-convergence",
-      "error-correction",
-      "prudence-distinction"
-    ],
+    id: "natural-law",
+    label: "Natural law",
+    description: "Uses reason, human nature, and created purposes.",
+    claim: "Christian morality is coherent because reason can discern moral truths built into human nature and the created order.",
+    route: "natural-law",
+    strength: 3,
+    selected: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
+    routeOverrides: {
+      "truth-ground": "god-nature",
+      "moral-access": "natural-law",
+      "case-guidance": "natural-law",
+      "correction": "hybrid"
+    },
     notes: {
-      "semantic-target": "Moral terms refer to patterns of avoidable harm, flourishing, fairness, and the treatment of conscious agents.",
-      "epistemic-access": "Evidence about harm, empathy, flourishing, and social outcomes gives public access to moral evaluation.",
-      "prudence-distinction": "The framework must still explain why well-being is binding rather than merely preferred or useful."
-    }
-  },
-  {
-    id: "anti-realist",
-    label: "Anti-realist control",
-    description: "Tests whether moral talk can be useful without objective moral facts.",
-    claim: "Moral language may express emotion-shaped goals and social commitments without describing objective moral facts.",
-    route: "pro-social",
-    selected: [
-      "semantic-target",
-      "epistemic-access",
-      "action-guidance",
-      "consistency",
-      "conflict-resolution",
-      "public-convergence",
-      "error-correction",
-      "prudence-distinction"
-    ],
-    notes: {
-      "semantic-target": "Moral language can name shared values, aversions, commitments, and social expectations without positing objective moral properties.",
-      "action-guidance": "Action guidance can come from negotiated goals, empathy, law, norms, and practical strategies for reducing harm.",
-      "prudence-distinction": "This route intentionally tests whether the system is candidly practical rather than pretending to supply objective obligation."
+      "moral-access": "Reason and conscience are treated as public ways to identify moral truths.",
+      "consistent-scope": "The standard is expected to apply to all humans because it is tied to human nature."
     }
   }
 ];
@@ -539,13 +384,14 @@ function defaultState() {
     claim: "",
     selected: {},
     routes: {},
+    strength: {},
+    checks: {},
     notes: {},
     challengeFilter: "matched",
     elementFilter: "all",
     reportMode: "full"
   };
 }
-
 let state = loadState();
 
 const refs = {
@@ -602,6 +448,8 @@ function normalizeState(source) {
     ...source,
     selected: { ...base.selected, ...(source.selected || {}) },
     routes: { ...base.routes, ...(source.routes || {}) },
+    strength: { ...base.strength, ...(source.strength || {}) },
+    checks: { ...base.checks, ...(source.checks || {}) },
     notes: { ...base.notes, ...(source.notes || {}) }
   };
 }
@@ -633,8 +481,33 @@ function routeLabel(routeId) {
   return routes.find((route) => route.id === routeId)?.label || "Choose a route";
 }
 
-function sourceLabel(sourceId) {
-  return sources.find((source) => source.id === sourceId)?.title || sourceId;
+function strengthLabel(value) {
+  const numeric = Number(value) || 0;
+  return strengthLevels.find((level) => level.value === numeric)?.label || "None";
+}
+
+function strengthValue(elementId) {
+  return Math.max(0, Math.min(4, Number(state.strength[elementId]) || 0));
+}
+
+function getElementById(elementId) {
+  return elements.find((element) => element.id === elementId);
+}
+
+function selectedChecks(elementId) {
+  return state.checks[elementId] || {};
+}
+
+function checkCompletion(element) {
+  if (!element?.checks?.length) return 1;
+  const selected = selectedChecks(element.id);
+  const checkedCount = element.checks.filter((check) => selected[check.id]).length;
+  return checkedCount / element.checks.length;
+}
+
+function missingChecks(element) {
+  const selected = selectedChecks(element.id);
+  return (element?.checks || []).filter((check) => !selected[check.id]);
 }
 
 function pressureRank(pressure) {
@@ -652,20 +525,28 @@ function getSelectedRoutes() {
   return [...new Set(selected)];
 }
 
-function noteIsSubstantial(elementId) {
-  return (state.notes[elementId] || "").trim().length >= 40;
-}
-
 function routeIsChosen(elementId) {
   return Boolean(state.routes[elementId] && state.routes[elementId] !== "none");
 }
 
 function elementScore(elementId) {
   if (!state.selected[elementId]) return 0;
-  let score = 0.38;
-  if (routeIsChosen(elementId)) score += 0.24;
-  if (noteIsSubstantial(elementId)) score += 0.38;
+  const element = getElementById(elementId);
+  let score = 0.25;
+  if (routeIsChosen(elementId)) score += 0.25;
+  score += Math.min(strengthValue(elementId) / 3, 1) * 0.25;
+  score += checkCompletion(element) * 0.25;
   return Math.min(1, score);
+}
+
+function elementIsReady(elementId) {
+  const element = getElementById(elementId);
+  return Boolean(
+    state.selected[elementId] &&
+      routeIsChosen(elementId) &&
+      strengthValue(elementId) >= 3 &&
+      checkCompletion(element) === 1
+  );
 }
 
 function averageScores(ids) {
@@ -692,7 +573,7 @@ function getMatchedChallenges() {
   });
 
   const fallback = scored.filter((challenge) =>
-    ["sufficiency-collapse", "orphaned-terms", "prior-assessment", "is-ought-gap", "scripture-ambiguity"].includes(challenge.id)
+    ["sufficiency-collapse", "meaning-gap", "prior-assessment", "scripture-ambiguity"].includes(challenge.id)
   );
 
   return scored
@@ -714,26 +595,26 @@ function getChallengesForFilter() {
 function getBoundaryTests() {
   const selectedRoutes = getSelectedRoutes();
   const hasEmotionRoute = selectedRoutes.some((routeId) =>
-    ["moral-intuition", "well-being", "social-contract", "pro-social"].includes(routeId)
+    ["conscience", "human-flourishing"].includes(routeId)
   );
   const hasAuthorityRoute = selectedRoutes.some((routeId) =>
-    ["scripture", "god-nature", "divine-command", "holy-spirit"].includes(routeId)
+    ["scripture", "god-nature", "divine-command", "holy-spirit", "church-tradition"].includes(routeId)
   );
   const hasPracticalRoute = selectedRoutes.some((routeId) =>
-    ["well-being", "social-contract", "pro-social"].includes(routeId)
+    ["human-flourishing"].includes(routeId)
   );
 
-  const ontologyReady = elementScore("ontological-ground") >= 0.85 && elementScore("truth-aptness") >= 0.6;
-  const forceReady = elementScore("normative-force") >= 0.85 && elementScore("prudence-distinction") >= 0.6;
-  const authorityReady = elementScore("non-circular-authority") >= 0.85 && elementScore("epistemic-access") >= 0.6;
-  const clarityReady = elementScore("action-guidance") >= 0.6 && elementScore("conflict-resolution") >= 0.6;
+  const ontologyReady = elementIsReady("truth-ground") && elementScore("moral-meaning") >= 0.75;
+  const forceReady = elementIsReady("binding-force");
+  const authorityReady = elementIsReady("authority-check") && elementScore("moral-access") >= 0.75;
+  const clarityReady = elementIsReady("case-guidance");
 
   return [
     {
       title: "Emotion Boundary",
       status: !hasEmotionRoute ? "warn" : ontologyReady ? "pass" : "fail",
       body: !hasEmotionRoute
-        ? "No intuition, well-being, social-contract, or pro-social route is currently carrying the system."
+        ? "No conscience or flourishing route is currently carrying the system."
         : ontologyReady
           ? "The selected account attempts to ground moral terms beyond emotional force."
           : "The selected account risks redescribing emotion, empathy, disgust, or preference as morality."
@@ -751,7 +632,7 @@ function getBoundaryTests() {
       title: "Practical Boundary",
       status: !hasPracticalRoute ? "warn" : forceReady ? "pass" : "fail",
       body: !hasPracticalRoute
-        ? "No well-being, contract, or pro-social route is currently carrying the system."
+        ? "No flourishing route is currently carrying the system."
         : forceReady
           ? "The selected account attempts to separate obligation from useful advice or desired outcomes."
           : "The selected account risks being a practical recommendation rather than a binding moral system."
@@ -760,7 +641,7 @@ function getBoundaryTests() {
       title: "Guidance Boundary",
       status: clarityReady ? "pass" : "fail",
       body: clarityReady
-        ? "The selected account includes action guidance and conflict handling."
+        ? "The selected account includes case guidance and duty ranking."
         : "The selected account lacks enough case-level guidance or duty ranking to decide hard cases."
     }
   ];
@@ -769,11 +650,12 @@ function getBoundaryTests() {
 function getMissingCore() {
   return elements
     .filter((element) => element.tier === "core")
-    .filter((element) => !state.selected[element.id] || !routeIsChosen(element.id) || !noteIsSubstantial(element.id))
+    .filter((element) => !elementIsReady(element.id))
     .map((element) => {
       if (!state.selected[element.id]) return { ...element, reason: "Not selected." };
       if (!routeIsChosen(element.id)) return { ...element, reason: "No substantiation route chosen." };
-      return { ...element, reason: "Substantiation is too thin." };
+      if (strengthValue(element.id) < 3) return { ...element, reason: "Support strength is below supported." };
+      return { ...element, reason: "Checklist is incomplete." };
     });
 }
 
@@ -796,23 +678,30 @@ function getComponentStatus(element) {
       detail: "No substantiation route"
     };
   }
-  if (!noteIsSubstantial(element.id)) {
+  if (strengthValue(element.id) < 3) {
     return {
       state: "thin",
       label: "Thin",
-      detail: "Substantiation too thin"
+      detail: `${strengthLabel(strengthValue(element.id))} support`
+    };
+  }
+  const unchecked = missingChecks(element);
+  if (unchecked.length) {
+    return {
+      state: "thin",
+      label: "Checks needed",
+      detail: `${unchecked.length} substantiation check${unchecked.length === 1 ? "" : "s"} missing`
     };
   }
   return {
     state: "ready",
     label: "Ready",
-    detail: routeLabel(state.routes[element.id])
+    detail: `${routeLabel(state.routes[element.id])}, ${strengthLabel(strengthValue(element.id))}`
   };
 }
 
 function filteredElements() {
   const missingIds = new Set(getMissingCore().map((element) => element.id));
-  if (state.elementFilter === "core") return elements.filter((element) => element.tier === "core");
   if (state.elementFilter === "selected") return elements.filter((element) => state.selected[element.id]);
   if (state.elementFilter === "missing") return elements.filter((element) => missingIds.has(element.id));
   return elements;
@@ -832,14 +721,31 @@ function renderElements() {
           const checked = state.selected[element.id] ? "checked" : "";
           const selectedClass = checked ? " is-selected" : "";
           const note = state.notes[element.id] || "";
+          const strength = strengthValue(element.id);
+          const checkState = selectedChecks(element.id);
+          const checklist = element.checks
+            .map((check) => {
+              const checkId = `check-${element.id}-${check.id}`;
+              const isChecked = checkState[check.id] ? "checked" : "";
+              return `
+                <label class="substantiation-check" for="${checkId}">
+                  <input id="${checkId}" type="checkbox" ${isChecked} data-check-element="${element.id}" data-check-id="${check.id}">
+                  <span>${escapeHtml(check.label)}</span>
+                </label>
+              `;
+            })
+            .join("");
           return `
             <article class="element-card${selectedClass}" data-element-card="${element.id}">
               <div class="element-head">
-                <input type="checkbox" ${checked} data-element-toggle="${element.id}" aria-label="${escapeHtml(element.title)}">
                 <div>
                   <div class="element-title">
                     <strong>${escapeHtml(element.title)}</strong>
-                    <span class="pill ${element.tier}">${element.tier}</span>
+                    <span class="pill ${element.tier}">required</span>
+                    <label class="requirement-toggle">
+                      <input type="checkbox" ${checked} data-element-toggle="${element.id}" aria-label="${escapeHtml(element.title)} required">
+                      <span>Include</span>
+                    </label>
                   </div>
                   <p>${escapeHtml(element.description)}</p>
                 </div>
@@ -849,14 +755,30 @@ function renderElements() {
                 <select id="route-${element.id}" data-route="${element.id}">
                   ${routeOptions}
                 </select>
-                <label for="note-${element.id}">Substantiation claim</label>
-                <textarea id="note-${element.id}" data-note="${element.id}" rows="4" placeholder="State how this element is grounded, known, and applied.">${escapeHtml(note)}</textarea>
+                <div class="strength-control">
+                  <label for="strength-${element.id}">
+                    Support strength <strong>${escapeHtml(strengthLabel(strength))}</strong>
+                  </label>
+                  <input id="strength-${element.id}" type="range" min="0" max="4" step="1" value="${strength}" data-strength="${element.id}">
+                  <div class="strength-scale" aria-hidden="true">
+                    <span>None</span>
+                    <span>Strong</span>
+                  </div>
+                </div>
+                <fieldset class="substantiation-checks">
+                  <legend>Substantiation checks</legend>
+                  ${checklist}
+                </fieldset>
+                <details class="optional-note">
+                  <summary>Optional note</summary>
+                  <textarea id="note-${element.id}" data-note="${element.id}" rows="3" placeholder="Add a short clarification only if needed.">${escapeHtml(note)}</textarea>
+                </details>
               </div>
             </article>
           `;
         })
         .join("")
-    : `<article class="element-card"><strong>No elements in this view</strong><p>Change the filter or select more elements.</p></article>`;
+    : `<article class="element-card"><strong>No components in this view</strong><p>Change the filter or select more components.</p></article>`;
 
   refs.elementGrid.querySelectorAll("[data-route]").forEach((select) => {
     select.value = state.routes[select.dataset.route] || "none";
@@ -869,11 +791,6 @@ function renderChallenges() {
   refs.challengeList.innerHTML = challengeItems.length
     ? challengeItems
         .map((challenge) => {
-          const sourceNames = challenge.sourceIds
-            .map((sourceId) => sources.find((source) => source.id === sourceId))
-            .filter(Boolean)
-            .map((source) => escapeHtml(source.title))
-            .join(" | ");
           return `
             <article class="challenge-card">
               <div class="challenge-meta">
@@ -888,12 +805,11 @@ function renderChallenges() {
               <div class="tag-row">
                 ${challenge.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}
               </div>
-              <p><strong>Background themes</strong> ${sourceNames}</p>
             </article>
           `;
         })
         .join("")
-    : `<article class="challenge-card"><strong>No matched challenges</strong><p>Select elements or choose all challenges.</p></article>`;
+    : `<article class="challenge-card"><strong>No matched challenges</strong><p>Select components or choose all challenges.</p></article>`;
 }
 
 function renderPrompts() {
@@ -902,12 +818,14 @@ function renderPrompts() {
   const claim = state.claim.trim() || "Christianity provides a coherent objective moral system.";
   const opening = [
     `You claim: ${claim}`,
-    "Please identify every element you consider necessary for an actual moral system and explain how each is substantiated without collapsing into emotion, obedience, or practical advice."
+    "Please identify which required components of an objective moral system are supported, which are only asserted, and which remain missing."
   ].join("\n\n");
 
   const selectedText = selected.length
-    ? selected.map((element) => `${element.title}: ${routeLabel(state.routes[element.id] || "none")}`).join("; ")
-    : "No elements selected yet.";
+    ? selected
+        .map((element) => `${element.title}: ${routeLabel(state.routes[element.id] || "none")}, ${strengthLabel(strengthValue(element.id))}`)
+        .join("; ")
+    : "No components selected yet.";
 
   refs.promptBoard.innerHTML = `
     <article class="prompt-card">
@@ -955,7 +873,7 @@ function renderSummary() {
   const boundaryRisk = failures * 2 + warnings;
   const matched = getMatchedChallenges();
   refs.selectedCount.textContent = String(selected.length);
-  refs.selectedCountNote.textContent = selected.length === 1 ? "1 element selected" : `${selected.length} elements selected`;
+  refs.selectedCountNote.textContent = selected.length === 1 ? "1 component selected" : `${selected.length} components selected`;
   refs.completenessScore.textContent = `${completeness}%`;
   refs.boundaryPressure.textContent = String(boundaryRisk);
   refs.matchedChallengeCount.textContent = String(matched.length);
@@ -984,7 +902,7 @@ function renderSummary() {
           `
         )
         .join("")
-    : `<article class="boundary-item pass"><strong>Core covered</strong><p>All core elements have a route and a substantive claim.</p></article>`;
+    : `<article class="boundary-item pass"><strong>Required set covered</strong><p>Every required component has a route, supported strength, and completed checks.</p></article>`;
 
   const routeCounts = selected.reduce((acc, element) => {
     const route = state.routes[element.id] || "none";
@@ -1032,16 +950,16 @@ function renderStaticStatus({ boundaryRisk, completeness, matched, routeItems })
 
   if (readyCount === coreElements.length && boundaryRisk === 0) {
     refs.coherenceStatusBody.textContent =
-      "The attempted system currently covers every core component and has no active boundary failures in the tool.";
-  } else if (readyCount >= 8) {
+      "The attempted system currently covers every required component and has no active boundary failures in the tool.";
+  } else if (readyCount >= Math.max(1, coreElements.length - 2)) {
     refs.coherenceStatusBody.textContent =
-      `The attempted system is partly built: ${readyCount} core components are ready, ${thinCount} need stronger substantiation, and ${missingCount} are missing.`;
+      `The attempted system is partly built: ${readyCount} required components are ready, ${thinCount} need stronger substantiation, and ${missingCount} are missing.`;
   } else if (readyCount > 0) {
     refs.coherenceStatusBody.textContent =
-      `The attempted system is still incomplete: ${readyCount} core components are ready, with ${coreElements.length - readyCount} not yet fully supported.`;
+      `The attempted system is still incomplete: ${readyCount} required components are ready, with ${coreElements.length - readyCount} not yet fully supported.`;
   } else {
     refs.coherenceStatusBody.textContent =
-      "Select elements to see whether the attempted moral system has the necessary core components.";
+      "Select components to see whether the attempted objective moral system has the required structure.";
   }
 
   refs.componentStatusList.innerHTML = componentRows
@@ -1075,13 +993,21 @@ function renderStaticStatus({ boundaryRisk, completeness, matched, routeItems })
 
 function selectedElementsLines() {
   const selected = getSelectedElements();
-  if (!selected.length) return ["No elements selected."];
-  return selected.flatMap((element) => [
-    `### ${element.title}`,
-    `Route: ${routeLabel(state.routes[element.id] || "none")}`,
-    `Substantiation: ${(state.notes[element.id] || "").trim() || "None supplied."}`,
-    ""
-  ]);
+  if (!selected.length) return ["No components selected."];
+  return selected.flatMap((element) => {
+    const checked = element.checks.filter((check) => selectedChecks(element.id)[check.id]).map((check) => check.label);
+    const unchecked = missingChecks(element).map((check) => check.label);
+    const note = (state.notes[element.id] || "").trim();
+    return [
+      `### ${element.title}`,
+      `Route: ${routeLabel(state.routes[element.id] || "none")}`,
+      `Support: ${strengthLabel(strengthValue(element.id))} (${strengthValue(element.id)}/4)`,
+      `Checks satisfied: ${checked.length ? checked.join("; ") : "None"}`,
+      `Checks missing: ${unchecked.length ? unchecked.join("; ") : "None"}`,
+      note ? `Optional note: ${note}` : "",
+      ""
+    ].filter((line) => line !== "");
+  });
 }
 
 function buildReport(mode = state.reportMode) {
@@ -1095,7 +1021,7 @@ function buildReport(mode = state.reportMode) {
     "",
     `Claim: ${claim}`,
     `Completeness: ${calculateCompleteness()}%`,
-    `Selected elements: ${selected.length} / ${elements.length}`,
+    `Selected components: ${selected.length} / ${elements.length}`,
     ""
   ];
 
@@ -1103,16 +1029,16 @@ function buildReport(mode = state.reportMode) {
     return buildAiPrompt();
   }
 
-  lines.push("## Selected Elements", "", ...selectedElementsLines());
+  lines.push("## Selected Components", "", ...selectedElementsLines());
   lines.push("## Boundary Tests", "");
   boundaryTests.forEach((test) => {
     lines.push(`- ${test.title}: ${test.status.toUpperCase()} - ${test.body}`);
   });
   lines.push("");
 
-  lines.push("## Missing Core", "");
+  lines.push("## Incomplete Required Components", "");
   if (!missing.length) {
-    lines.push("No missing core elements.", "");
+    lines.push("No incomplete required components.", "");
   } else {
     missing.forEach((item) => lines.push(`- ${item.title}: ${item.reason}`));
     lines.push("");
@@ -1128,16 +1054,11 @@ function buildReport(mode = state.reportMode) {
 
   if (mode === "skeptical") {
     lines.push("## Skeptical Follow-up", "");
-    lines.push("- Identify which selected element prevents collapse into emotion, obedience, or practical advice.");
+    lines.push("- Identify which selected component prevents collapse into emotion, obedience, or practical advice.");
     lines.push("- Ask whether the same standard would be accepted if a rival religion used it.");
     lines.push("- Test whether hard cases are decided before or after the preferred conclusion is protected.");
-    lines.push("- Require a repair move for every missing core element.");
+    lines.push("- Require a repair move for every incomplete required component.");
     lines.push("");
-  }
-
-  if (mode !== "brief") {
-    lines.push("## Background Themes", "");
-    sources.forEach((source) => lines.push(`- ${source.title}: ${source.note}`));
   }
 
   return lines.join("\n");
@@ -1150,7 +1071,16 @@ function buildAiPrompt() {
   const selectedData = selected
     .map((element) => {
       const note = (state.notes[element.id] || "").trim() || "No substantiation supplied.";
-      return `${element.title} | route: ${routeLabel(state.routes[element.id] || "none")} | claim: ${note}`;
+      const checked = element.checks.filter((check) => selectedChecks(element.id)[check.id]).map((check) => check.label);
+      const unchecked = missingChecks(element).map((check) => check.label);
+      return [
+        `${element.title}`,
+        `route: ${routeLabel(state.routes[element.id] || "none")}`,
+        `support: ${strengthLabel(strengthValue(element.id))} (${strengthValue(element.id)}/4)`,
+        `checks satisfied: ${checked.length ? checked.join("; ") : "none"}`,
+        `checks missing: ${unchecked.length ? unchecked.join("; ") : "none"}`,
+        `note: ${note}`
+      ].join(" | ");
     })
     .join("\n");
   const challengeData = matched
@@ -1163,25 +1093,24 @@ function buildAiPrompt() {
   return [
     "Copy/paste this entire prompt into an AI assistant.",
     "",
-    "I am stress-testing a claimed moral system for coherence. The goal is to assess whether it supplies the necessary and sufficient elements of an actual moral system, rather than collapsing into emotion, obedience, or practical advice.",
+    "I am stress-testing a claimed moral system for coherence. The goal is to assess whether it supplies the required components of an objective moral system, rather than collapsing into emotion, obedience, or practical advice.",
     "",
     `Claim under audit: ${claim}`,
     "",
     `Completeness score from the tool: ${calculateCompleteness()}%`,
     "",
-    "Selected elements and substantiation:",
-    selectedData || "No elements selected.",
+    "Selected components and substantiation controls:",
+    selectedData || "No components selected.",
     "",
     "Matched counterfactuals and questions:",
     challengeData || "No challenges matched.",
     "",
-    "Please do six things:",
+    "Please do five things:",
     "1. Steelman the strongest coherent version of this moral-system account.",
-    "2. Identify the top unresolved tensions, prioritizing circular authority, access, obligation, guidance, consistency, universality, and conflict resolution.",
+    "2. Identify the top unresolved tensions, prioritizing circular authority, access, obligation, guidance, scope, and correction.",
     "3. Explain where the account risks collapsing into emotion, obedience, or practical advice.",
     "4. Suggest the strongest possible repair moves and state what each repair would need to substantiate.",
-    "5. Provide cross-examination questions that a Christian defender must answer directly.",
-    "6. Generate follow-up prompts for deeper analysis, including one image-generation prompt for a quantified dashboard-style depiction of the selected elements, routes, boundary risks, and counterfactual pressure."
+    "5. Provide cross-examination questions that a Christian defender must answer directly."
   ].join("\n");
 }
 
@@ -1198,7 +1127,7 @@ function generatePromptsText() {
     `Claim: ${claim}`,
     "",
     "Challenge frame:",
-    "Please identify every element you consider necessary for an actual moral system and explain how each is substantiated without collapsing into emotion, obedience, or practical advice.",
+    "Please identify which required components of an objective moral system are supported and which remain unsubstantiated.",
     ""
   ];
   matched.forEach((challenge, index) => {
@@ -1244,11 +1173,17 @@ function applyPreset(presetId) {
   state = defaultState();
   state.claim = preset.claim;
   preset.selected.forEach((elementId) => {
+    const element = getElementById(elementId);
     state.selected[elementId] = true;
     state.routes[elementId] = preset.routeOverrides?.[elementId] || preset.route;
+    state.strength[elementId] = preset.strengthOverrides?.[elementId] || preset.strength || 3;
+    state.checks[elementId] = {};
+    element?.checks?.forEach((check) => {
+      state.checks[elementId][check.id] = true;
+    });
     state.notes[elementId] =
       preset.notes[elementId] ||
-      `This preset treats ${routeLabel(state.routes[elementId])} as the route for substantiating ${elements.find((element) => element.id === elementId)?.title || elementId}. Edit this claim to make the actual argument precise.`;
+      "";
   });
   saveState();
   renderAll();
@@ -1257,6 +1192,7 @@ function applyPreset(presetId) {
 function updateElementSelection(elementId, selected) {
   state.selected[elementId] = selected;
   if (selected && !state.routes[elementId]) state.routes[elementId] = "none";
+  if (selected && !state.strength[elementId]) state.strength[elementId] = 1;
 }
 
 function renderAll() {
@@ -1279,6 +1215,9 @@ function bindEvents() {
   refs.elementGrid.addEventListener("change", (event) => {
     const toggleId = event.target.dataset.elementToggle;
     const routeId = event.target.dataset.route;
+    const strengthId = event.target.dataset.strength;
+    const checkElementId = event.target.dataset.checkElement;
+    const checkId = event.target.dataset.checkId;
     if (toggleId) {
       updateElementSelection(toggleId, event.target.checked);
       saveState();
@@ -1288,6 +1227,23 @@ function bindEvents() {
     if (routeId) {
       state.routes[routeId] = event.target.value;
       if (event.target.value !== "none") state.selected[routeId] = true;
+      saveState();
+      renderAll();
+      return;
+    }
+    if (strengthId) {
+      state.strength[strengthId] = Number(event.target.value);
+      if (Number(event.target.value) > 0) state.selected[strengthId] = true;
+      saveState();
+      renderAll();
+      return;
+    }
+    if (checkElementId && checkId) {
+      state.checks[checkElementId] = {
+        ...(state.checks[checkElementId] || {}),
+        [checkId]: event.target.checked
+      };
+      if (event.target.checked) state.selected[checkElementId] = true;
       saveState();
       renderAll();
     }
