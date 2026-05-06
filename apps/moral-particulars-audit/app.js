@@ -352,7 +352,7 @@ function defaultState() {
   return {
     selectedIssueId: issues[0].id,
     issueStates: Object.fromEntries(issues.map((issue) => [issue.id, defaultIssueState()])),
-    reportMode: "current"
+    reportMode: "all"
   };
 }
 
@@ -429,7 +429,7 @@ function normalizeState(source) {
     ...base,
     selectedIssueId,
     issueStates,
-    reportMode: ["current", "all", "patterns"].includes(source.reportMode) ? source.reportMode : "current"
+    reportMode: ["all", "patterns"].includes(source.reportMode) ? source.reportMode : "all"
   };
 }
 
@@ -1053,88 +1053,115 @@ function renderReports() {
 
 function buildReport() {
   const mode = state.reportMode;
-  if (mode === "patterns") return buildPatternReport();
-  if (mode === "all") return buildAllCasesReport();
-  return buildCurrentCaseReport();
+  if (mode === "patterns") return buildFullReportWithPatterns();
+  return buildAllCasesReport();
 }
 
 function formatIssueSummary(issue) {
   const item = state.issueStates[issue.id];
   const stance = stanceById(item.stance)?.label || "Unset";
-  const topGrounders = topWeighted(grounders, item.grounders, 4)
-    .map((grounder) => `${grounder.label} ${grounder.value}/10`)
-    .join("; ") || "None";
-  const topDisagreement = topWeighted(disagreementSources, item.disagreement, 4)
-    .map((source) => `${source.label} ${source.value}/10`)
-    .join("; ") || "None";
+  const status = issueIsMapped(issue.id)
+    ? "Mapped"
+    : item.stance || hasAnyWeight(item.grounders) || hasAnyWeight(item.disagreement) || item.notes.trim()
+      ? "Partial"
+      : "No input";
+  const grounderLines = grounders
+    .map((grounder) => `  - ${grounder.label}: ${sliderValue(item.grounders, grounder.id)}/10`)
+    .join("\n");
+  const disagreementLines = disagreementSources
+    .map((source) => `  - ${source.label} (${source.family}): ${sliderValue(item.disagreement, source.id)}/10`)
+    .join("\n");
   return [
     `${issue.label}. ${issue.statement}`,
+    `Input status: ${status}`,
     `Judgment: ${stance}`,
-    `Lead grounders: ${topGrounders}`,
-    `Disagreement diagnosis: ${topDisagreement}`,
-    item.notes.trim() ? `Qualifiers: ${item.notes.trim()}` : ""
+    "Grounder weights:",
+    grounderLines,
+    "Disagreement-diagnosis weights:",
+    disagreementLines,
+    `Qualifiers: ${item.notes.trim() || "None"}`
   ]
     .filter(Boolean)
     .join("\n");
 }
 
-function buildCurrentCaseReport() {
-  const issue = currentIssue();
-  const item = currentData();
-  const prompts = promptsForIssue(issue, item).map((prompt) => `- ${prompt.title}: ${prompt.body}`).join("\n");
-  return [
-    "Moral Particulars Audit - Current Case",
-    "",
-    formatIssueSummary(issue),
-    "",
-    `Case tension: ${issue.tension}`,
-    "",
-    "Pressure prompts:",
-    prompts
-  ].join("\n");
-}
-
 function buildAllCasesReport() {
   const mapped = issues.filter((issue) => issueIsMapped(issue.id));
-  const cases = (mapped.length ? mapped : issues)
-    .map((issue) => formatIssueSummary(issue))
-    .join("\n\n---\n\n");
+  const cases = issues.map((issue) => formatIssueSummary(issue)).join("\n\n---\n\n");
   return [
-    "Moral Particulars Audit - Case Ledger",
+    "Moral Particulars Audit - Full Input Ledger",
     "",
     `Mapped cases: ${mapped.length}/${issues.length}`,
+    `Selected case: ${currentIssue().label}`,
     "",
     cases
   ].join("\n");
 }
 
-function buildPatternReport() {
+function buildPatternReportSection() {
   const patterns = buildPatterns()
-    .map((pattern, index) => `${index + 1}. ${pattern.title} [${pattern.pressure}]\n${pattern.summary}\nCheck: ${pattern.check}\nQuestion: ${pattern.question}`)
+    .map((pattern, index) => {
+      return [
+        `${index + 1}. ${pattern.title} [${pattern.pressure}]`,
+        pattern.summary,
+        `Why this appeared: ${pattern.basis || "The current ledger crossed this check's trigger threshold."}`,
+        `Check: ${pattern.check}`,
+        `Question: ${pattern.question}`,
+        `Next comparison: ${pattern.nextStep || "Compare similar cases and decide whether the same grounder should carry the same kind of judgment."}`
+      ].join("\n");
+    })
     .join("\n\n");
   return [
-    "Moral Particulars Audit - Pattern Report",
-    "",
-    `Mapped cases: ${issues.filter((issue) => issueIsMapped(issue.id)).length}/${issues.length}`,
-    "",
     patterns || "No patterns yet."
   ].join("\n");
 }
 
+function buildFullReportWithPatterns() {
+  return [
+    buildAllCasesReport(),
+    "",
+    "===",
+    "",
+    "Cross-case Pattern Audit",
+    "",
+    buildPatternReportSection()
+  ].join("\n");
+}
+
 function buildAiPrompt() {
+  const allCaseInputs = issues.map((issue) => {
+    const issueState = state.issueStates[issue.id];
+    return {
+      issue,
+      input: {
+        stance: issueState.stance,
+        stanceLabel: stanceById(issueState.stance)?.label || "Unset",
+        isMapped: issueIsMapped(issue.id),
+        grounderWeights: grounders.map((grounder) => ({
+          id: grounder.id,
+          label: grounder.label,
+          value: sliderValue(issueState.grounders, grounder.id)
+        })),
+        disagreementWeights: disagreementSources.map((source) => ({
+          id: source.id,
+          label: source.label,
+          family: source.family,
+          value: sliderValue(issueState.disagreement, source.id)
+        })),
+        notes: issueState.notes
+      }
+    };
+  });
   const payload = {
-    selectedIssue: currentIssue(),
-    selectedIssueState: currentData(),
-    mappedCases: issues
-      .filter((issue) => issueIsMapped(issue.id))
-      .map((issue) => ({
-        issue,
-        state: state.issueStates[issue.id]
-      })),
+    selectedIssueId: currentIssue().id,
+    mappedCaseCount: issues.filter((issue) => issueIsMapped(issue.id)).length,
+    totalCaseCount: issues.length,
+    allCaseInputs,
     patterns: buildPatterns()
   };
   return [
     "You are stress-testing a Christian moral-particulars map. Do not merely restate the user's view.",
+    "Use the full allCaseInputs ledger below, not only the currently selected issue.",
     "Identify the strongest grounding gaps, inconsistent case distinctions, missing limiting principles, and disagreement-diagnosis problems.",
     "For each critique, also give the strongest fair Christian repair attempt.",
     "",

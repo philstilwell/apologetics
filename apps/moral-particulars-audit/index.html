@@ -227,7 +227,7 @@
           <div class="section-title-inline compact-title-inline">
             <div>
               <p class="app-step">Disagreement diagnosis</p>
-              <h2 id="disagreement-title">Why would someone disagree?</h2>
+              <h2 id="disagreement-title">Why would someone disagree with your stance?</h2>
             </div>
           </div>
           <p class="particular-disagreement-statement" id="disagreementIssueText"></p>
@@ -279,14 +279,13 @@
             <div>
               <p class="app-step">Export</p>
               <h2 id="report-title">Particulars report</h2>
-              <p>Readable summary of the selected case plus the cross-case pattern ledger.</p>
+              <p>Readable export of every stance, slider weight, qualifier, and pattern flag.</p>
             </div>
             <label class="report-mode">
               <span>Mode</span>
               <select id="reportMode">
-                <option value="current" selected>Current case</option>
-                <option value="all">All mapped cases</option>
-                <option value="patterns">Pattern audit</option>
+                <option value="all" selected>All data input</option>
+                <option value="patterns">All data + patterns</option>
               </select>
             </label>
           </div>
@@ -303,7 +302,7 @@
             <div>
               <p class="app-step">AI prompt</p>
               <h2>Structured stress-test prompt</h2>
-              <p>Prompt another assistant to critique the current moral-particulars map.</p>
+              <p>Prompt your favorite AI (LLM) to critique the current moral-particulars map.</p>
             </div>
             <button class="ghost" id="copyAiPromptButton" type="button">Copy AI Prompt</button>
           </div>

@@ -7246,6 +7246,7 @@ body.app-moral-particulars #report-step {
 
 .particular-issue-card.mapped {
   border-left: 5px solid var(--moral-green);
+  background: var(--moral-green-soft);
 }
 
 .particular-issue-number {
