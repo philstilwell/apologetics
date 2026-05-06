@@ -4,14 +4,14 @@ Crosshairs audit for testing whether a Christian moral claim supplies the elemen
 
 ## Features
 
-- Crosshairs Hub header, domain link, guided steps, source note, and explanatory annotations.
+- Crosshairs Hub header, domain link, guided steps, diagnostic note, and explanatory annotations.
 - Claim field with local persistence.
 - Four preset lenses: divine command, scripture and Spirit, well-being ethic, and anti-realist control.
 - Fourteen candidate elements for a moral system, including meaning, truth aptness, ground, access, non-circular authority, obligation, guidance, consistency, universality, conflict resolution, convergence, correction, prudence distinction, and accountability.
 - Substantiation routes for each selected element.
 - Live completeness, boundary-pressure, selected-element, and matched-challenge metrics.
 - Boundary tests for collapse into emotion, obedience, practical advice, and vague guidance.
-- Seventeen counterfactual challenge cards with source links and cross-examination questions.
+- Seventeen counterfactual challenge cards with background-theme references and cross-examination questions.
 - Dialogue prompt export, report modes, AI prompt export, and print support.
 
 ## Local Preview
@@ -28,12 +28,6 @@ Then open:
 http://localhost:8080/apps/moral-system-stress-test/
 ```
 
-## Background Sources
+## Background Themes
 
-- https://freeoffaith.com/2025/03/25/%e2%9c%93-morality-games/
-- https://freeoffaith.com/morality/
-- https://freeoffaith.com/2024/11/20/43/
-- https://freeoffaith.com/2024/11/19/41/
-- https://freeoffaith.com/2024/11/06/06/
-- https://freeoffaith.com/juan/
-- https://freeoffaith.com/2025/04/12/%E2%9C%93-moral-anti-realism/
+The app incorporates the supplied background material as internal challenge themes. Public source URLs are intentionally omitted from the tool, challenge cards, and exports.

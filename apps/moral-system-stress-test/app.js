@@ -119,43 +119,36 @@ const sources = [
   {
     id: "morality-games",
     title: "Morality Games",
-    url: "https://freeoffaith.com/2025/03/25/%e2%9c%93-morality-games/",
     note: "Divine-command and moral anti-realist challenge framing."
   },
   {
     id: "coherent-biblical-morality",
     title: "The Absence of a Coherent Biblical Morality",
-    url: "https://freeoffaith.com/morality/",
     note: "Verification, circular authority, conflicting intuitions, Holy Spirit divergence, biblical ambiguity, and Christian moral disagreement."
   },
   {
     id: "lawgiver-necessity",
     title: "#43: Moral Lawgiver Necessity",
-    url: "https://freeoffaith.com/2024/11/20/43/",
     note: "Challenges the inference from emotional discomfort or social fears to objective morality or a moral lawgiver."
   },
   {
     id: "christian-consensus",
     title: "#41: Christian Moral Consensus",
-    url: "https://freeoffaith.com/2024/11/19/41/",
     note: "Tests clarity and consensus across marriage, sex, violence, slavery, generosity, suicide, and other disputed cases."
   },
   {
     id: "changing-cultures",
     title: "#06: Unchanging God Or Changing Cultures",
-    url: "https://freeoffaith.com/2024/11/06/06/",
     note: "Presses consistency, universality, precision, accessibility, and historical adaptation in biblical morality."
   },
   {
     id: "juan",
     title: "The Mirage of the Cosmic Rulebook",
-    url: "https://freeoffaith.com/juan/",
     note: "Cosmic-rulebook framing and anti-realist challenge material."
   },
   {
     id: "moral-anti-realism",
     title: "Moral Anti-Realism",
-    url: "https://freeoffaith.com/2025/04/12/%E2%9C%93-moral-anti-realism/",
     note: "Distinguishes emotion, moral language, obligation, and pro-social behavior."
   }
 ];
@@ -876,10 +869,10 @@ function renderChallenges() {
   refs.challengeList.innerHTML = challengeItems.length
     ? challengeItems
         .map((challenge) => {
-          const sourceLinks = challenge.sourceIds
+          const sourceNames = challenge.sourceIds
             .map((sourceId) => sources.find((source) => source.id === sourceId))
             .filter(Boolean)
-            .map((source) => `<a href="${source.url}" target="_blank" rel="noreferrer">${escapeHtml(source.title)}</a>`)
+            .map((source) => escapeHtml(source.title))
             .join(" | ");
           return `
             <article class="challenge-card">
@@ -895,7 +888,7 @@ function renderChallenges() {
               <div class="tag-row">
                 ${challenge.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}
               </div>
-              <p>${sourceLinks}</p>
+              <p><strong>Background themes</strong> ${sourceNames}</p>
             </article>
           `;
         })
@@ -1143,8 +1136,8 @@ function buildReport(mode = state.reportMode) {
   }
 
   if (mode !== "brief") {
-    lines.push("## Sources", "");
-    sources.forEach((source) => lines.push(`- ${source.title}: ${source.url}`));
+    lines.push("## Background Themes", "");
+    sources.forEach((source) => lines.push(`- ${source.title}: ${source.note}`));
   }
 
   return lines.join("\n");
