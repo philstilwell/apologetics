@@ -6420,7 +6420,7 @@ body.app-morality #report-step {
   background: #fff8e8;
 }
 
-.element-card.is-selected {
+.element-card.is-ready {
   border-color: var(--moral-green);
   box-shadow: inset 0 0 0 2px rgba(47, 107, 73, 0.36);
 }
@@ -6443,7 +6443,25 @@ body.app-morality #report-step {
   line-height: 1.2;
 }
 
-.requirement-toggle,
+.component-necessity {
+  display: grid;
+  gap: 4px;
+  margin-top: 9px;
+  padding: 9px;
+  border-left: 4px solid var(--moral-blue);
+  border-radius: 7px;
+  background: var(--moral-blue-soft);
+}
+
+.component-necessity strong {
+  color: var(--moral-blue);
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
 .substantiation-check {
   display: inline-flex;
   align-items: center;
@@ -6454,15 +6472,6 @@ body.app-morality #report-step {
   line-height: 1.2;
 }
 
-.requirement-toggle {
-  margin-left: auto;
-  padding: 5px 8px;
-  border: 1px solid rgba(184, 144, 101, 0.72);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-}
-
-.requirement-toggle input,
 .substantiation-check input {
   width: 16px;
   height: 16px;

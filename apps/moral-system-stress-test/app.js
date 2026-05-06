@@ -91,6 +91,7 @@ const elements = [
     tier: "core",
     axis: "clarity",
     description: "Defines what moral terms mean without merely repeating words such as right, wrong, good, or evil.",
+    why: "Without stable moral meaning, the system never says what it is talking about. Moral language can then collapse into approval, disgust, usefulness, or authority-language instead of identifying an objective moral property.",
     checks: [
       { id: "defines-terms", label: "Defines the key moral terms" },
       { id: "objective-sense", label: "Distinguishes objective wrong from dislike" },
@@ -103,6 +104,7 @@ const elements = [
     tier: "core",
     axis: "ontology",
     description: "Explains whether moral claims can be true and what makes them true beyond human preference.",
+    why: "A coherent objective moral system needs moral claims to be truth-apt and needs something that makes them true. Otherwise moral claims function as attitudes, commands, or social signals rather than objective facts.",
     checks: [
       { id: "truth-apt", label: "Treats moral claims as true or false" },
       { id: "truth-maker", label: "Identifies what makes them true" },
@@ -115,6 +117,7 @@ const elements = [
     tier: "core",
     axis: "access",
     description: "Explains how an authority is recognized as morally good without assuming its commands are already moral.",
+    why: "If authority is accepted as moral only because it says so, the system becomes obedience rather than moral evaluation. A coherent system needs a way to identify moral authority without circularly assuming it.",
     checks: [
       { id: "independent-test", label: "Gives a test for moral authority" },
       { id: "not-command-only", label: "Avoids good because commanded" },
@@ -127,6 +130,7 @@ const elements = [
     tier: "core",
     axis: "access",
     description: "Gives a reliable way accountable agents can know the standard and check disputed claims.",
+    why: "Objective obligations cannot guide or fairly bind agents if agents have no reliable access to them. The system needs a method for knowing moral truth and resolving disagreement.",
     checks: [
       { id: "public-method", label: "Uses an explainable method" },
       { id: "handles-disagreement", label: "Handles sincere disagreement" },
@@ -139,6 +143,7 @@ const elements = [
     tier: "core",
     axis: "force",
     description: "Explains why moral requirements bind agents rather than merely advising, rewarding, or threatening them.",
+    why: "A moral system must explain why one ought to comply, not merely why compliance is useful, rewarded, or preferred. Without binding force, morality thins into prudence or strategy.",
     checks: [
       { id: "obligation", label: "Explains obligation rather than benefit" },
       { id: "not-prudence", label: "Distinguishes duty from prudence" },
@@ -151,6 +156,7 @@ const elements = [
     tier: "core",
     axis: "clarity",
     description: "Produces determinate answers for actual cases and ranks duties when they conflict.",
+    why: "A system that cannot decide concrete cases is not yet action-guiding. It needs principles that apply before the desired conclusion is chosen and rules for conflicts between duties.",
     checks: [
       { id: "decides-cases", label: "Decides concrete cases" },
       { id: "ranks-duties", label: "Ranks competing duties" },
@@ -163,6 +169,7 @@ const elements = [
     tier: "core",
     axis: "scope",
     description: "Applies across persons, cultures, and time without ad hoc tribal or authority-favored exceptions.",
+    why: "Objective morality must say who is bound and why like cases receive like treatment. Without consistent scope, exceptions can protect favored groups, eras, or authorities by special pleading.",
     checks: [
       { id: "like-cases", label: "Treats like cases alike" },
       { id: "scope", label: "Specifies who is bound" },
@@ -175,6 +182,7 @@ const elements = [
     tier: "core",
     axis: "stability",
     description: "Explains how mistaken moral interpretations are identified and repaired without ad hoc revision.",
+    why: "Every moral community can misread, rationalize, or inherit bad norms. A coherent system needs a principled way to identify error and distinguish moral discovery from convenient revision.",
     checks: [
       { id: "detects-error", label: "Detects mistaken interpretation" },
       { id: "learning-rule", label: "Distinguishes learning from moral change" },
@@ -359,8 +367,8 @@ const challenges = [
     summary: "A list of moral claims is not yet a moral system unless it supplies meaning, truth ground, authority, access, force, guidance, scope, and correction.",
     counterfactual: "A rulebook can command, a preference can motivate, and a policy can help. None alone establishes an objective moral system.",
     questions: [
-      "Which selected components are necessary, and together are they sufficient?",
-      "What would still be missing after all your selected components are granted?",
+      "Which mandatory components are substantiated, and together are they sufficient?",
+      "What would still be missing after every mandatory component is granted?",
       "Which component prevents collapse into emotion, obedience, or practical advice?"
     ]
   }
@@ -374,7 +382,7 @@ const profilePresets = [
     claim: "Christianity provides a coherent objective moral system because moral obligations are grounded in God's authority and expressed through divine commands.",
     route: "divine-command",
     strength: 3,
-    selected: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
+    components: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
     routeOverrides: {
       "truth-ground": "god-nature",
       "moral-access": "scripture",
@@ -392,7 +400,7 @@ const profilePresets = [
     claim: "Christian morality is objective because goodness is grounded in God's unchanging nature and commands express that nature.",
     route: "god-nature",
     strength: 3,
-    selected: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
+    components: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
     routeOverrides: {
       "moral-access": "scripture",
       "case-guidance": "scripture",
@@ -410,7 +418,7 @@ const profilePresets = [
     claim: "Christian morality is coherent because scripture, interpreted with the guidance of the Holy Spirit, reveals God's binding moral will.",
     route: "scripture",
     strength: 3,
-    selected: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
+    components: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
     routeOverrides: {
       "moral-access": "holy-spirit",
       "case-guidance": "scripture",
@@ -428,7 +436,7 @@ const profilePresets = [
     claim: "Christian morality is coherent because reason can discern moral truths built into human nature and the created order.",
     route: "natural-law",
     strength: 3,
-    selected: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
+    components: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
     routeOverrides: {
       "truth-ground": "god-nature",
       "moral-access": "natural-law",
@@ -445,7 +453,6 @@ const profilePresets = [
 function defaultState() {
   return {
     claim: "",
-    selected: {},
     routes: {},
     strength: {},
     checks: {},
@@ -509,7 +516,6 @@ function normalizeState(source) {
   return {
     ...base,
     ...source,
-    selected: { ...base.selected, ...(source.selected || {}) },
     routes: { ...base.routes, ...(source.routes || {}) },
     strength: { ...base.strength, ...(source.strength || {}) },
     checks: { ...base.checks, ...(source.checks || {}) },
@@ -583,7 +589,17 @@ function pressureRank(pressure) {
 }
 
 function getSelectedElements() {
-  return elements.filter((element) => state.selected[element.id]);
+  return elements;
+}
+
+function getAttemptedElements() {
+  return elements.filter((element) => {
+    const hasRoute = routeIsChosen(element.id);
+    const hasStrength = strengthValue(element.id) > 0;
+    const hasChecks = Object.values(selectedChecks(element.id)).some(Boolean);
+    const hasNote = Boolean((state.notes[element.id] || "").trim());
+    return hasRoute || hasStrength || hasChecks || hasNote;
+  });
 }
 
 function getSelectedRoutes() {
@@ -598,20 +614,18 @@ function routeIsChosen(elementId) {
 }
 
 function elementScore(elementId) {
-  if (!state.selected[elementId]) return 0;
   const element = getElementById(elementId);
-  let score = 0.25;
-  if (routeIsChosen(elementId)) score += 0.25;
-  score += Math.min(strengthValue(elementId) / 3, 1) * 0.25;
-  score += checkCompletion(element) * 0.25;
+  let score = 0;
+  if (routeIsChosen(elementId)) score += 0.3;
+  score += Math.min(strengthValue(elementId) / 3, 1) * 0.3;
+  score += checkCompletion(element) * 0.4;
   return Math.min(1, score);
 }
 
 function elementIsReady(elementId) {
   const element = getElementById(elementId);
   return Boolean(
-    state.selected[elementId] &&
-      routeIsChosen(elementId) &&
+    routeIsChosen(elementId) &&
       strengthValue(elementId) >= 3 &&
       checkCompletion(element) === 1
   );
@@ -628,7 +642,8 @@ function calculateCompleteness() {
 }
 
 function getMatchedChallenges() {
-  const selectedIds = getSelectedElements().map((element) => element.id);
+  const attempted = getAttemptedElements();
+  const selectedIds = attempted.map((element) => element.id);
   const selectedRoutes = getSelectedRoutes();
   const scored = challenges.map((challenge) => {
     const elementHits = challenge.elements.filter((id) => selectedIds.includes(id)).length;
@@ -647,7 +662,7 @@ function getMatchedChallenges() {
   return scored
     .filter((challenge) => challenge.matchScore > 0)
     .sort((a, b) => b.matchScore - a.matchScore || pressureRank(b.pressure) - pressureRank(a.pressure))
-    .concat(selectedIds.length ? [] : fallback);
+    .concat(attempted.length ? [] : fallback);
 }
 
 function getChallengesForFilter() {
@@ -720,7 +735,6 @@ function getMissingCore() {
     .filter((element) => element.tier === "core")
     .filter((element) => !elementIsReady(element.id))
     .map((element) => {
-      if (!state.selected[element.id]) return { ...element, reason: "Not selected." };
       if (!routeIsChosen(element.id)) return { ...element, reason: "No substantiation route chosen." };
       if (strengthValue(element.id) < 3) return { ...element, reason: "Support strength is below supported." };
       return { ...element, reason: "Checklist is incomplete." };
@@ -732,11 +746,11 @@ function getCoreElements() {
 }
 
 function getComponentStatus(element) {
-  if (!state.selected[element.id]) {
+  if (!routeIsChosen(element.id) && strengthValue(element.id) === 0 && checkCompletion(element) === 0) {
     return {
       state: "missing",
-      label: "Missing",
-      detail: "Not selected"
+      label: "Not started",
+      detail: "No substantiation selected"
     };
   }
   if (!routeIsChosen(element.id)) {
@@ -798,8 +812,7 @@ function renderElements() {
   refs.elementGrid.innerHTML = items.length
     ? items
         .map((element) => {
-          const checked = state.selected[element.id] ? "checked" : "";
-          const selectedClass = checked ? " is-selected" : "";
+          const readyClass = elementIsReady(element.id) ? " is-ready" : "";
           const note = state.notes[element.id] || "";
           const strength = strengthValue(element.id);
           const checkState = selectedChecks(element.id);
@@ -816,18 +829,18 @@ function renderElements() {
             })
             .join("");
           return `
-            <article class="element-card${selectedClass}" data-element-card="${element.id}">
+            <article class="element-card${readyClass}" data-element-card="${element.id}">
               <div class="element-head">
                 <div>
                   <div class="element-title">
                     <strong>${escapeHtml(element.title)}</strong>
                     <span class="pill ${element.tier}">required</span>
-                    <label class="requirement-toggle">
-                      <input type="checkbox" ${checked} data-element-toggle="${element.id}" aria-label="${escapeHtml(element.title)} required">
-                      <span>Include</span>
-                    </label>
                   </div>
                   <p>${escapeHtml(element.description)}</p>
+                  <section class="component-necessity" aria-label="Why ${escapeHtml(element.title)} is necessary">
+                    <strong>Why necessary</strong>
+                    <p>${escapeHtml(element.why)}</p>
+                  </section>
                 </div>
               </div>
               <div class="substantiation">
@@ -851,7 +864,7 @@ function renderElements() {
                     <button class="substantiation-help" type="button" aria-label="Explain substantiation checks">
                       <span class="label-help-dot" aria-hidden="true">?</span>
                       <span class="substantiation-tooltip" role="tooltip">
-                        These boxes name the specific jobs this component must do in a coherent objective moral system. Check a box only when the account gives an actual substantiation, not just a label or assertion. A component is ready only when it is included, has a substantiation route, has at least supported strength, and satisfies every check. Leave a box unchecked when that part still needs an argument.
+                        These boxes name the specific jobs this mandatory component must do in a coherent objective moral system. Check a box only when the account gives an actual substantiation, not just a label or assertion. A component is ready only when it has a primary route, has at least supported strength, and satisfies every check. Leave a box unchecked when that part still needs an argument.
                       </span>
                     </button>
                   </legend>
@@ -897,23 +910,21 @@ function renderChallenges() {
           `;
         })
         .join("")
-    : `<article class="challenge-card"><strong>No matched challenges</strong><p>Select components or choose all challenges.</p></article>`;
+    : `<article class="challenge-card"><strong>No matched challenges</strong><p>Choose routes or substantiation checks, or switch the filter to all challenges.</p></article>`;
 }
 
 function renderPrompts() {
   const matched = getMatchedChallenges().slice(0, 8);
-  const selected = getSelectedElements();
+  const required = getCoreElements();
   const claim = state.claim.trim() || "Christianity provides a coherent objective moral system.";
   const opening = [
     `You claim: ${claim}`,
     "Please identify which required components of an objective moral system are supported, which are only asserted, and which remain missing."
   ].join("\n\n");
 
-  const selectedText = selected.length
-    ? selected
-        .map((element) => `${element.title}: ${routeLabel(state.routes[element.id] || "none")}, ${strengthLabel(strengthValue(element.id))}`)
-        .join("; ")
-    : "No components selected yet.";
+  const selectedText = required
+    .map((element) => `${element.title}: ${routeLabel(state.routes[element.id] || "none")}, ${strengthLabel(strengthValue(element.id))}`)
+    .join("; ");
 
   refs.promptBoard.innerHTML = `
     <article class="prompt-card">
@@ -921,7 +932,7 @@ function renderPrompts() {
       <p>${escapeHtml(opening)}</p>
     </article>
     <article class="prompt-card">
-      <strong>Current selections</strong>
+      <strong>Current substantiation choices</strong>
       <p>${escapeHtml(selectedText)}</p>
     </article>
     ${matched
@@ -953,15 +964,16 @@ function renderPresets() {
 }
 
 function renderSummary() {
-  const selected = getSelectedElements();
+  const required = getCoreElements();
+  const readyCount = required.filter((element) => elementIsReady(element.id)).length;
   const completeness = calculateCompleteness();
   const boundaryTests = getBoundaryTests();
   const failures = boundaryTests.filter((test) => test.status === "fail").length;
   const warnings = boundaryTests.filter((test) => test.status === "warn").length;
   const boundaryRisk = failures * 2 + warnings;
   const matched = getMatchedChallenges();
-  refs.selectedCount.textContent = String(selected.length);
-  refs.selectedCountNote.textContent = selected.length === 1 ? "1 component selected" : `${selected.length} components selected`;
+  refs.selectedCount.textContent = String(readyCount);
+  refs.selectedCountNote.textContent = `${readyCount} of ${required.length} mandatory components ready`;
   refs.completenessScore.textContent = `${completeness}%`;
   refs.boundaryPressure.textContent = String(boundaryRisk);
   refs.matchedChallengeCount.textContent = String(matched.length);
@@ -992,8 +1004,9 @@ function renderSummary() {
         .join("")
     : `<article class="boundary-item pass"><strong>Required set covered</strong><p>Every required component has a route, supported strength, and completed checks.</p></article>`;
 
-  const routeCounts = selected.reduce((acc, element) => {
+  const routeCounts = required.reduce((acc, element) => {
     const route = state.routes[element.id] || "none";
+    if (route === "none") return acc;
     acc[route] = (acc[route] || 0) + 1;
     return acc;
   }, {});
@@ -1010,7 +1023,7 @@ function renderSummary() {
           `
         )
         .join("")
-    : `<article class="route-item"><strong>No routes selected</strong><span>0</span></article>`;
+    : `<article class="route-item"><strong>No routes chosen</strong><span>0</span></article>`;
 
   renderStaticStatus({
     boundaryRisk,
@@ -1047,7 +1060,7 @@ function renderStaticStatus({ boundaryRisk, completeness, matched, routeItems })
       `The attempted system is still incomplete: ${readyCount} required components are ready, with ${coreElements.length - readyCount} not yet fully supported.`;
   } else {
     refs.coherenceStatusBody.textContent =
-      "Select components to see whether the attempted objective moral system has the required structure.";
+      "Choose substantiation options to see whether the attempted objective moral system has the required structure.";
   }
 
   refs.componentStatusList.innerHTML = componentRows
@@ -1080,9 +1093,8 @@ function renderStaticStatus({ boundaryRisk, completeness, matched, routeItems })
 }
 
 function selectedElementsLines() {
-  const selected = getSelectedElements();
-  if (!selected.length) return ["No components selected."];
-  return selected.flatMap((element) => {
+  const required = getCoreElements();
+  return required.flatMap((element) => {
     const checked = element.checks.filter((check) => selectedChecks(element.id)[check.id]).map((check) => check.label);
     const unchecked = missingChecks(element).map((check) => check.label);
     const note = (state.notes[element.id] || "").trim();
@@ -1099,7 +1111,8 @@ function selectedElementsLines() {
 }
 
 function buildReport(mode = state.reportMode) {
-  const selected = getSelectedElements();
+  const required = getCoreElements();
+  const readyCount = required.filter((element) => elementIsReady(element.id)).length;
   const missing = getMissingCore();
   const matched = getMatchedChallenges().slice(0, mode === "brief" ? 5 : 10);
   const boundaryTests = getBoundaryTests();
@@ -1109,7 +1122,8 @@ function buildReport(mode = state.reportMode) {
     "",
     `Claim: ${claim}`,
     `Completeness: ${calculateCompleteness()}%`,
-    `Selected components: ${selected.length} / ${elements.length}`,
+    `Required components: ${required.length}`,
+    `Components ready: ${readyCount} / ${required.length}`,
     ""
   ];
 
@@ -1117,7 +1131,7 @@ function buildReport(mode = state.reportMode) {
     return buildAiPrompt();
   }
 
-  lines.push("## Selected Components", "", ...selectedElementsLines());
+  lines.push("## Required Components", "", ...selectedElementsLines());
   lines.push("## Boundary Tests", "");
   boundaryTests.forEach((test) => {
     lines.push(`- ${test.title}: ${test.status.toUpperCase()} - ${test.body}`);
@@ -1142,7 +1156,7 @@ function buildReport(mode = state.reportMode) {
 
   if (mode === "skeptical") {
     lines.push("## Skeptical Follow-up", "");
-    lines.push("- Identify which selected component prevents collapse into emotion, obedience, or practical advice.");
+    lines.push("- Identify which mandatory component prevents collapse into emotion, obedience, or practical advice.");
     lines.push("- Ask whether the same standard would be accepted if a rival religion used it.");
     lines.push("- Test whether hard cases are decided before or after the preferred conclusion is protected.");
     lines.push("- Require a repair move for every incomplete required component.");
@@ -1153,10 +1167,10 @@ function buildReport(mode = state.reportMode) {
 }
 
 function buildAiPrompt() {
-  const selected = getSelectedElements();
+  const required = getCoreElements();
   const matched = getMatchedChallenges().slice(0, 10);
   const claim = state.claim.trim() || "Christianity provides a coherent objective moral system.";
-  const selectedData = selected
+  const selectedData = required
     .map((element) => {
       const note = (state.notes[element.id] || "").trim() || "No substantiation supplied.";
       const checked = element.checks.filter((check) => selectedChecks(element.id)[check.id]).map((check) => check.label);
@@ -1187,8 +1201,8 @@ function buildAiPrompt() {
     "",
     `Completeness score from the tool: ${calculateCompleteness()}%`,
     "",
-    "Selected components and substantiation controls:",
-    selectedData || "No components selected.",
+    "Mandatory components and substantiation controls:",
+    selectedData,
     "",
     "Matched counterfactuals and questions:",
     challengeData || "No challenges matched.",
@@ -1261,9 +1275,8 @@ function applyPreset(presetId) {
   state = defaultState();
   state.claim = preset.claim;
   state.claimPosition = claimPositionForClaim(preset.claim);
-  preset.selected.forEach((elementId) => {
+  preset.components.forEach((elementId) => {
     const element = getElementById(elementId);
-    state.selected[elementId] = true;
     state.routes[elementId] = preset.routeOverrides?.[elementId] || preset.route;
     state.strength[elementId] = preset.strengthOverrides?.[elementId] || preset.strength || 3;
     state.checks[elementId] = {};
@@ -1276,12 +1289,6 @@ function applyPreset(presetId) {
   });
   saveState();
   renderAll();
-}
-
-function updateElementSelection(elementId, selected) {
-  state.selected[elementId] = selected;
-  if (selected && !state.routes[elementId]) state.routes[elementId] = "none";
-  if (selected && !state.strength[elementId]) state.strength[elementId] = 1;
 }
 
 function renderAll() {
@@ -1317,27 +1324,18 @@ function bindEvents() {
   });
 
   refs.elementGrid.addEventListener("change", (event) => {
-    const toggleId = event.target.dataset.elementToggle;
     const routeId = event.target.dataset.route;
     const strengthId = event.target.dataset.strength;
     const checkElementId = event.target.dataset.checkElement;
     const checkId = event.target.dataset.checkId;
-    if (toggleId) {
-      updateElementSelection(toggleId, event.target.checked);
-      saveState();
-      renderAll();
-      return;
-    }
     if (routeId) {
       state.routes[routeId] = event.target.value;
-      if (event.target.value !== "none") state.selected[routeId] = true;
       saveState();
       renderAll();
       return;
     }
     if (strengthId) {
       state.strength[strengthId] = Number(event.target.value);
-      if (Number(event.target.value) > 0) state.selected[strengthId] = true;
       saveState();
       renderAll();
       return;
@@ -1347,7 +1345,6 @@ function bindEvents() {
         ...(state.checks[checkElementId] || {}),
         [checkId]: event.target.checked
       };
-      if (event.target.checked) state.selected[checkElementId] = true;
       saveState();
       renderAll();
     }
@@ -1357,7 +1354,6 @@ function bindEvents() {
     const noteId = event.target.dataset.note;
     if (!noteId) return;
     state.notes[noteId] = event.target.value;
-    if (event.target.value.trim()) state.selected[noteId] = true;
     saveState();
     renderSummary();
     renderChallenges();

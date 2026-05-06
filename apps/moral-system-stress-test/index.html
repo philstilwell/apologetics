@@ -9,7 +9,7 @@
       content="A Crosshairs tool for testing whether a Christian moral claim supplies the required components of an objective moral system or collapses into emotion, obedience, or practical advice."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260506-moral-system-claim-radios">
+    <link rel="stylesheet" href="../../styles.css?v=20260506-moral-system-mandatory">
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body class="app-morality">
@@ -49,17 +49,17 @@
           <strong>Diagnostic, not a final verdict.</strong>
           The audit asks what an objective moral system would need in order to be unequivocally
           distinct from feelings, commands, and useful recommendations. It then challenges the
-          selected routes, strength ratings, and checklist claims with focused counterfactuals.
+          chosen routes, strength ratings, and checklist claims with focused counterfactuals.
         </aside>
         <details class="annotation app-wide" open>
           <summary>How to use this audit</summary>
           <p>
-            State the moral claim, choose the components you think an objective moral system
-            must include, and mark how your own view substantiates each one.
+            State the moral claim, then mark how your own view substantiates each mandatory
+            component of an objective moral system.
           </p>
           <ul>
             <li><strong>Step 1:</strong> state the claim under audit as precisely as possible.</li>
-            <li><strong>Step 2:</strong> select the required components, choose a substantiation route, set support strength, and tick the checks that apply.</li>
+            <li><strong>Step 2:</strong> review why each required component is mandatory, choose a substantiation route, set support strength, and tick the checks that apply.</li>
             <li><strong>Step 3:</strong> read the boundary tests for collapse into emotion, obedience, or practical advice.</li>
             <li><strong>Step 4:</strong> review matched counterfactuals and cross-examination questions.</li>
             <li><strong>Step 5:</strong> export the report or AI prompt for a fuller stress test.</li>
@@ -100,7 +100,7 @@
           <span class="step-label">Challenges</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="moral-step-challenge-help" role="tooltip">
-            Counterfactuals are matched to the selected components and routes, so the hardest
+            Counterfactuals are matched to the chosen routes and substantiation controls, so the hardest
             pressure points rise first.
           </span>
         </a>
@@ -130,9 +130,9 @@
           <small>Required components with route, checks, and support strength</small>
         </article>
         <article class="metric-card">
-          <span class="metric-label">Components selected</span>
+          <span class="metric-label">Components ready</span>
           <strong id="selectedCount">0</strong>
-          <small id="selectedCountNote">No components selected yet</small>
+          <small id="selectedCountNote">0 of 8 mandatory components ready</small>
         </article>
         <article class="metric-card">
           <span class="metric-label">Boundary pressure</span>
@@ -194,9 +194,9 @@
               <p class="app-step">Step 2</p>
               <h2 id="elements-title">Required components</h2>
               <p>
-                Select what an objective moral system must include. For each component, choose
-                the main substantiation route, set the support strength, and tick the checks
-                the account satisfies.
+                These eight components are mandatory for a coherent objective moral system.
+                For each one, review why it is necessary, then choose the route, support
+                strength, and checks that substantiate it.
               </p>
             </div>
           </div>
@@ -213,7 +213,7 @@
               <span id="statusCompleteness">0%</span>
             </div>
             <p id="coherenceStatusBody">
-              Select components to see whether the attempted objective moral system has the required structure.
+              Choose substantiation options to see whether the attempted objective moral system has the required structure.
             </p>
             <div class="moral-static-factors" aria-label="Current coherence status factors">
               <div>
@@ -252,7 +252,7 @@
         </section>
 
         <section class="moral-card">
-          <p class="app-step">Selected routes</p>
+          <p class="app-step">Chosen routes</p>
           <div class="route-list" id="routeList"></div>
         </section>
       </section>
@@ -294,7 +294,7 @@
             <div>
               <p class="app-step">Step 6</p>
               <h2 id="report-title">Audit report</h2>
-              <p>A readable export of the current claim, selected components, boundary tests, and matched challenges.</p>
+              <p>A readable export of the current claim, mandatory components, boundary tests, and matched challenges.</p>
             </div>
             <label class="report-mode">
               <span>Mode</span>
@@ -334,6 +334,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260506-moral-system-claim-radios"></script>
+    <script src="app.js?v=20260506-moral-system-mandatory"></script>
   </body>
 </html>
