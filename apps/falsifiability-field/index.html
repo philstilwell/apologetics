@@ -288,62 +288,72 @@
                 <p>Move this right only if a fair miss would genuinely count against the claim.</p>
               </div>
 
-              <section class="custom-study-builder" aria-labelledby="custom-study-title">
-                <div class="summary-head compact-head">
+              <details class="custom-study-builder accordion-panel custom-study-details" aria-labelledby="custom-study-title">
+                <summary>
                   <div>
                     <p class="app-step">Custom study</p>
                     <h3 id="custom-study-title">Build a test protocol</h3>
+                    <p>Open this when the prepared studies miss the exact earthly claim being tested.</p>
                   </div>
-                  <button class="button secondary" type="button" id="use-custom-study">
-                    Use custom
-                  </button>
+                  <span class="accordion-toggle-label" aria-hidden="true"></span>
+                </summary>
+                <div class="custom-study-body">
+                  <div class="summary-head compact-head">
+                    <p class="panel-copy">
+                      Define the outcome, comparison, miss rule, and rigor details before using this
+                      as the active study.
+                    </p>
+                    <button class="button secondary" type="button" id="use-custom-study">
+                      Use custom
+                    </button>
+                  </div>
+                  <div class="custom-study-grid">
+                    <div class="field-group">
+                      <label for="custom-outcome">Outcome</label>
+                      <input id="custom-outcome" type="text" placeholder="Hospitalization, remission, verified prediction...">
+                    </div>
+                    <div class="field-group">
+                      <label for="custom-comparison">Comparison group</label>
+                      <input id="custom-comparison" type="text" placeholder="Matched non-believers, non-prayer cases...">
+                    </div>
+                    <div class="field-group">
+                      <label for="custom-sample-size">Sample size</label>
+                      <select id="custom-sample-size">
+                        <option value="small">Under 25 cases</option>
+                        <option value="pilot">25-100 cases</option>
+                        <option value="large">100-1,000 cases</option>
+                        <option value="very-large">1,000+ cases</option>
+                      </select>
+                    </div>
+                    <div class="field-group">
+                      <label for="custom-blinding">Blinding</label>
+                      <select id="custom-blinding">
+                        <option value="open">Open review</option>
+                        <option value="blind-review">Blind outcome review</option>
+                        <option value="double-blind">Double blind</option>
+                        <option value="triple-blind">Triple blind</option>
+                      </select>
+                    </div>
+                    <label class="custom-check">
+                      <input id="custom-preregistered" type="checkbox">
+                      <span>Preregistered rules</span>
+                    </label>
+                    <div class="field-group">
+                      <label for="custom-replication">Replication</label>
+                      <select id="custom-replication">
+                        <option value="single">Single site</option>
+                        <option value="multi-site">Multi-site</option>
+                        <option value="independent">Independent replication</option>
+                      </select>
+                    </div>
+                    <div class="field-group wide-field">
+                      <label for="custom-miss-rule">What would count as a miss?</label>
+                      <input id="custom-miss-rule" type="text" placeholder="No difference from matched controls by the preregistered deadline...">
+                    </div>
+                  </div>
+                  <div class="custom-study-score" id="custom-study-score">Custom rigor: 18 / 100</div>
                 </div>
-                <div class="custom-study-grid">
-                  <div class="field-group">
-                    <label for="custom-outcome">Outcome</label>
-                    <input id="custom-outcome" type="text" placeholder="Hospitalization, remission, verified prediction...">
-                  </div>
-                  <div class="field-group">
-                    <label for="custom-comparison">Comparison group</label>
-                    <input id="custom-comparison" type="text" placeholder="Matched non-believers, non-prayer cases...">
-                  </div>
-                  <div class="field-group">
-                    <label for="custom-sample-size">Sample size</label>
-                    <select id="custom-sample-size">
-                      <option value="small">Under 25 cases</option>
-                      <option value="pilot">25-100 cases</option>
-                      <option value="large">100-1,000 cases</option>
-                      <option value="very-large">1,000+ cases</option>
-                    </select>
-                  </div>
-                  <div class="field-group">
-                    <label for="custom-blinding">Blinding</label>
-                    <select id="custom-blinding">
-                      <option value="open">Open review</option>
-                      <option value="blind-review">Blind outcome review</option>
-                      <option value="double-blind">Double blind</option>
-                      <option value="triple-blind">Triple blind</option>
-                    </select>
-                  </div>
-                  <label class="custom-check">
-                    <input id="custom-preregistered" type="checkbox">
-                    <span>Preregistered rules</span>
-                  </label>
-                  <div class="field-group">
-                    <label for="custom-replication">Replication</label>
-                    <select id="custom-replication">
-                      <option value="single">Single site</option>
-                      <option value="multi-site">Multi-site</option>
-                      <option value="independent">Independent replication</option>
-                    </select>
-                  </div>
-                  <div class="field-group wide-field">
-                    <label for="custom-miss-rule">What would count as a miss?</label>
-                    <input id="custom-miss-rule" type="text" placeholder="No difference from matched controls by the preregistered deadline...">
-                  </div>
-                </div>
-                <div class="custom-study-score" id="custom-study-score">Custom rigor: 18 / 100</div>
-              </section>
+              </details>
 
               <section class="outcome-rules-panel" aria-labelledby="outcome-rules-title">
                 <p class="app-step">Outcome rules</p>
@@ -462,22 +472,6 @@
               </div>
             </section>
 
-            <section class="share-panel" aria-labelledby="share-title">
-              <div class="summary-head compact-head">
-                <div>
-                  <p class="app-step">Share state</p>
-                  <h3 id="share-title">Export or reload this audit</h3>
-                </div>
-                <div class="share-actions">
-                  <button class="button secondary" type="button" id="copy-share-link">Copy state link</button>
-                  <button class="button secondary" type="button" id="export-json">Export JSON</button>
-                  <button class="button secondary" type="button" id="load-json">Load JSON</button>
-                </div>
-              </div>
-              <textarea id="share-state-output" spellcheck="false"></textarea>
-              <p class="copy-status" id="share-status" role="status"></p>
-            </section>
-
             <section class="ai-prompt-panel" aria-labelledby="ai-prompt-title">
               <div class="summary-head">
                 <div>
@@ -501,6 +495,33 @@
               <textarea id="ai-prompt-output" readonly></textarea>
               <p class="copy-status" id="copy-status" role="status"></p>
             </section>
+
+            <details class="share-panel accordion-panel share-details" aria-labelledby="share-title">
+              <summary>
+                <div>
+                  <p class="app-step">Audit JSON</p>
+                  <h3 id="share-title">Export or reload this audit</h3>
+                  <p>
+                    Use this JSON to save the current settings, compare audits, or give another AI
+                    the exact promise, study, slider, outcome-rule, and excuse data behind the review.
+                  </p>
+                </div>
+                <span class="accordion-toggle-label" aria-hidden="true"></span>
+              </summary>
+              <div class="share-body">
+                <p class="panel-copy">
+                  Export JSON when you want a portable record of the audit. Load JSON to restore a
+                  previous audit state before revising it or running a fresh AI review.
+                </p>
+                <div class="share-actions">
+                  <button class="button secondary" type="button" id="copy-share-link">Copy state link</button>
+                  <button class="button secondary" type="button" id="export-json">Export JSON</button>
+                  <button class="button secondary" type="button" id="load-json">Load JSON</button>
+                </div>
+                <textarea id="share-state-output" spellcheck="false"></textarea>
+                <p class="copy-status" id="share-status" role="status"></p>
+              </div>
+            </details>
           </section>
         </div>
 
@@ -517,6 +538,7 @@
               Prayer changes outcomes beyond ordinary timing, recovery, or coincidence.
             </p>
             <small id="active-promise-study">Current test: Anecdote</small>
+            <a class="active-promise-link" href="#claims">Choose a promise</a>
             <div class="active-promise-factors" aria-label="Current score drivers">
               <span>
                 <strong id="active-study-rigor">8/100</strong>
