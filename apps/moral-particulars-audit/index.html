@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crosshairs Audit Lab | Moral Particulars Audit</title>
+    <meta
+      name="description"
+      content="A Crosshairs audit for mapping Christian moral judgments on concrete cases to their stated grounders and disagreement diagnoses."
+    >
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260506-moral-particulars">
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
+  </head>
+  <body class="app-moral-particulars">
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
+        <span class="brand-mark" aria-hidden="true">X</span>
+        <span>
+          <strong><span class="brand-cross">Cross</span><span class="brand-hairs">hairs</span> Audit Lab</strong>
+          <small>Moral Particulars Audit</small>
+        </span>
+      </a>
+      <a class="site-domain-link" href="https://xhairs.com" aria-label="Visit xhairs.com">
+        https://<strong class="site-domain-x">x</strong>hairs.com
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a class="hub-link" href="../../">Hub</a>
+        <a href="#issue-step">Issue</a>
+        <a href="#judgment-step">Judgment</a>
+        <a href="#disagreement-step">Disagreement</a>
+        <a href="#patterns-step">Patterns</a>
+        <a href="#report-step">Report</a>
+      </nav>
+    </header>
+
+    <main class="app-shell morality-tool particulars-tool">
+      <section class="app-header">
+        <div class="app-title">
+          <p class="eyebrow">Particular judgment audit</p>
+          <h1>Moral Particulars Audit</h1>
+          <p>
+            Map concrete Christian moral judgments to the grounders carrying them, then compare
+            those grounders with the way disagreement is diagnosed.
+          </p>
+        </div>
+        <aside class="source-note">
+          <strong>Diagnostic, not authorization.</strong>
+          The audit treats severe claims, including lethal-force claims, as objects of moral
+          reflection only. It does not supply permission, planning guidance, or practical advice.
+        </aside>
+      </section>
+
+      <nav class="guided-steps moral-steps" aria-label="Audit steps">
+        <a href="#issue-step" aria-describedby="particular-step-issue-help">
+          <span class="step-number">1</span>
+          <span class="step-label">Issue</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="particular-step-issue-help" role="tooltip">
+            Choose one moral particular from the case list, then return to the list to compare
+            patterns across cases.
+          </span>
+        </a>
+        <a href="#judgment-step" aria-describedby="particular-step-judgment-help">
+          <span class="step-number">2</span>
+          <span class="step-label">Judgment</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="particular-step-judgment-help" role="tooltip">
+            Mark whether you support or oppose the statement as written before weighting the
+            sources that carry that judgment.
+          </span>
+        </a>
+        <a href="#grounders-step" aria-describedby="particular-step-grounders-help">
+          <span class="step-number">3</span>
+          <span class="step-label">Grounders</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="particular-step-grounders-help" role="tooltip">
+            The sliders show the relative strength of scripture, conscience, Holy Spirit guidance,
+            social norms, and other routes in the current judgment.
+          </span>
+        </a>
+        <a href="#disagreement-step" aria-describedby="particular-step-disagreement-help">
+          <span class="step-number">4</span>
+          <span class="step-label">Disagreement</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="particular-step-disagreement-help" role="tooltip">
+            Rate why someone might disagree with your judgment: spiritual, interpretive,
+            intellectual, social, experiential, or evidential causes.
+          </span>
+        </a>
+        <a href="#report-step" aria-describedby="particular-step-report-help">
+          <span class="step-number">5</span>
+          <span class="step-label">Report</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="particular-step-report-help" role="tooltip">
+            Export the current case, the cross-case pattern summary, or an AI-ready stress-test
+            prompt.
+          </span>
+        </a>
+      </nav>
+
+      <section class="moral-dashboard particulars-dashboard" aria-label="Current moral-particulars audit status">
+        <article class="metric-card">
+          <span class="metric-label">Cases mapped</span>
+          <strong id="completedCases">0/13</strong>
+          <small>Judgment plus at least one grounder and disagreement rating</small>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Current judgment</span>
+          <strong id="currentJudgment">Unset</strong>
+          <small id="currentJudgmentNote">No stance selected</small>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Lead grounder</span>
+          <strong id="leadGrounder">None</strong>
+          <small id="leadGrounderNote">No grounder weighted yet</small>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Disagreement lens</span>
+          <strong id="disagreementLens">Blank</strong>
+          <small id="disagreementLensNote">No diagnosis weighted yet</small>
+        </article>
+      </section>
+
+      <section class="moral-control-panel" id="issue-step" aria-labelledby="issue-title">
+        <div class="moral-claim-card">
+          <div class="section-title-inline">
+            <div>
+              <p class="app-step">Case list</p>
+              <h2 id="issue-title">Choose a moral particular</h2>
+            </div>
+          </div>
+          <div class="particular-issue-grid" id="issueGrid"></div>
+        </div>
+
+        <aside class="moral-lens-panel particulars-preset-panel" aria-labelledby="preset-title">
+          <div class="section-title-inline compact-title-inline">
+            <div>
+              <p class="app-step">Starter profiles</p>
+              <h2 id="preset-title">Seed the sliders</h2>
+            </div>
+          </div>
+          <p>
+            Apply a profile to the selected case, then revise it until the weighting matches
+            your actual judgment.
+          </p>
+          <div class="moral-lens-grid" id="presetButtons"></div>
+        </aside>
+      </section>
+
+      <section class="moral-workspace" id="judgment-step" aria-labelledby="judgment-title">
+        <div class="moral-main-panel">
+          <div class="moral-section-head">
+            <div>
+              <p class="app-step">Selected case</p>
+              <h2 id="judgment-title">Judgment and grounders</h2>
+              <p id="selectedIssueText"></p>
+            </div>
+          </div>
+
+          <fieldset class="particular-stance-panel" aria-labelledby="stance-title">
+            <legend id="stance-title">Position on the statement as written</legend>
+            <div class="particular-stance-grid" id="stanceGrid"></div>
+          </fieldset>
+
+          <section class="particular-grounders" id="grounders-step" aria-labelledby="grounders-title">
+            <div class="particular-subhead">
+              <div>
+                <p class="app-step">Grounding weights</p>
+                <h3 id="grounders-title">What carries your judgment?</h3>
+              </div>
+              <button class="ghost" id="clearCurrentButton" type="button">Clear Case</button>
+            </div>
+            <div class="particular-slider-grid" id="grounderGrid"></div>
+          </section>
+
+          <div class="field-group particulars-note-field">
+            <label for="caseNotes">Case-specific qualifiers</label>
+            <textarea
+              id="caseNotes"
+              rows="4"
+              placeholder="State distinctions, exceptions, verses, interpretive rules, or factual assumptions that matter for this case."
+            ></textarea>
+          </div>
+        </div>
+
+        <aside class="moral-side-panel">
+          <section class="moral-static-status" aria-labelledby="particular-ledger-title" aria-live="polite">
+            <div class="moral-static-head">
+              <div>
+                <p class="app-step">Cross-case ledger</p>
+                <h2 id="particular-ledger-title">Pattern watch</h2>
+              </div>
+              <span id="ledgerPercent">0%</span>
+            </div>
+            <p id="ledgerStatusBody">
+              Map several cases to see whether the same moral grounders and disagreement diagnoses
+              are being applied consistently.
+            </p>
+            <div class="moral-static-factors" aria-label="Current moral-particulars factors">
+              <div>
+                <strong id="supportCount">0</strong>
+                <span>Support</span>
+              </div>
+              <div>
+                <strong id="opposeCount">0</strong>
+                <span>Oppose</span>
+              </div>
+              <div>
+                <strong id="unsureCount">0</strong>
+                <span>Unsure</span>
+              </div>
+            </div>
+            <div class="component-status-list" id="caseLedger" aria-label="Case completion ledger"></div>
+            <div class="top-pressure-list" id="topGrounderList" aria-label="Most used grounders"></div>
+          </section>
+        </aside>
+      </section>
+
+      <section class="moral-status-panels particulars-status-panels" id="disagreement-step" aria-labelledby="disagreement-title">
+        <section class="moral-card">
+          <div class="section-title-inline compact-title-inline">
+            <div>
+              <p class="app-step">Disagreement diagnosis</p>
+              <h2 id="disagreement-title">Why would someone disagree?</h2>
+            </div>
+          </div>
+          <div class="particular-slider-grid disagreement-grid" id="disagreementGrid"></div>
+        </section>
+
+        <section class="moral-card">
+          <p class="app-step">Attribution balance</p>
+          <div class="particular-balance-board" id="attributionBoard"></div>
+        </section>
+
+        <section class="moral-card">
+          <p class="app-step">Case prompts</p>
+          <div class="prompt-board compact-prompt-board" id="casePromptBoard"></div>
+        </section>
+      </section>
+
+      <section class="moral-challenge-panel" id="patterns-step" aria-labelledby="patterns-title">
+        <div class="moral-section-head">
+          <div>
+            <p class="app-step">Cross-case patterns</p>
+            <h2 id="patterns-title">Consistency checks</h2>
+            <p>
+              These checks compare judgments, grounders, and disagreement diagnoses across
+              the mapped particulars.
+            </p>
+          </div>
+        </div>
+        <div class="challenge-list" id="patternList"></div>
+      </section>
+
+      <section class="moral-report-grid" id="report-step" aria-labelledby="report-title">
+        <article class="output-card">
+          <div class="output-card-head">
+            <div>
+              <p class="app-step">Export</p>
+              <h2 id="report-title">Particulars report</h2>
+              <p>Readable summary of the selected case plus the cross-case pattern ledger.</p>
+            </div>
+            <label class="report-mode">
+              <span>Mode</span>
+              <select id="reportMode">
+                <option value="current" selected>Current case</option>
+                <option value="all">All mapped cases</option>
+                <option value="patterns">Pattern audit</option>
+              </select>
+            </label>
+          </div>
+          <textarea id="finalReport" class="export-box" rows="14" readonly></textarea>
+          <div class="moral-actions">
+            <button class="ghost" id="copyReportButton" type="button">Copy Report</button>
+            <button class="ghost" id="printReportButton" type="button">Print</button>
+            <button class="secondary" id="resetButton" type="button">Reset All</button>
+          </div>
+        </article>
+
+        <article class="output-card ai-output-card">
+          <div class="output-card-head">
+            <div>
+              <p class="app-step">AI prompt</p>
+              <h2>Structured stress-test prompt</h2>
+              <p>Prompt another assistant to critique the current moral-particulars map.</p>
+            </div>
+            <button class="ghost" id="copyAiPromptButton" type="button">Copy AI Prompt</button>
+          </div>
+          <textarea id="aiPrompt" class="export-box" rows="14" readonly></textarea>
+          <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
+        </article>
+      </section>
+    </main>
+
+    <script src="app.js?v=20260506-moral-particulars"></script>
+  </body>
+</html>
