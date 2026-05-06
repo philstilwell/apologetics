@@ -6125,13 +6125,13 @@ body.app-morality #report-step {
 
 .moral-workspace {
   grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
-  align-items: start;
+  align-items: stretch;
 }
 
 .moral-side-panel {
   display: grid;
   gap: 12px;
-  align-self: start;
+  align-self: stretch;
 }
 
 .moral-status-panels {
@@ -6143,6 +6143,7 @@ body.app-morality #report-step {
   position: sticky;
   top: 86px;
   z-index: 11;
+  align-self: start;
   display: grid;
   gap: 10px;
   padding: 13px;
