@@ -101,22 +101,46 @@
 
       <section class="moral-dashboard particulars-dashboard" aria-label="Current moral-particulars audit status">
         <article class="metric-card">
-          <span class="metric-label">Cases mapped</span>
+          <span class="metric-label" tabindex="0" aria-describedby="particular-cases-mapped-help">
+            <span class="metric-label-text">Cases mapped</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="particular-cases-mapped-help" role="tooltip">
+            A case counts as mapped after it has a stance, at least one grounder weight, and at least one disagreement-diagnosis weight.
+          </span>
           <strong id="completedCases">0/13</strong>
           <small>Judgment plus at least one grounder and disagreement rating</small>
         </article>
         <article class="metric-card">
-          <span class="metric-label">Current judgment</span>
+          <span class="metric-label" tabindex="0" aria-describedby="particular-current-judgment-help">
+            <span class="metric-label-text">Current judgment</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="particular-current-judgment-help" role="tooltip">
+            The stance selected for the currently active moral particular, from strongly support through strongly oppose.
+          </span>
           <strong id="currentJudgment">Unset</strong>
           <small id="currentJudgmentNote">No stance selected</small>
         </article>
         <article class="metric-card">
-          <span class="metric-label">Lead grounder</span>
+          <span class="metric-label" tabindex="0" aria-describedby="particular-lead-grounder-help">
+            <span class="metric-label-text">Lead grounder</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="particular-lead-grounder-help" role="tooltip">
+            The highest-weighted source currently carrying your stance, such as Scripture, conscience, Holy Spirit, or social norms.
+          </span>
           <strong id="leadGrounder">None</strong>
           <small id="leadGrounderNote">No grounder weighted yet</small>
         </article>
         <article class="metric-card">
-          <span class="metric-label">Disagreement lens</span>
+          <span class="metric-label" tabindex="0" aria-describedby="particular-disagreement-lens-help">
+            <span class="metric-label-text">Disagreement lens</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="particular-disagreement-lens-help" role="tooltip">
+            The dominant family of reasons you assign to someone who disagrees: soul-coded, method-heavy, socially formed, affective, or mixed.
+          </span>
           <strong id="disagreementLens">Blank</strong>
           <small id="disagreementLensNote">No diagnosis weighted yet</small>
         </article>
