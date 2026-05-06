@@ -1,7 +1,7 @@
 const STORAGE_KEY = "moral-system-stress-test-v3";
 
 const routes = [
-  { id: "none", label: "Choose a route" },
+  { id: "none", label: "Choose a primary route" },
   { id: "god-nature", label: "God's nature" },
   { id: "divine-command", label: "Divine command" },
   { id: "scripture", label: "Scripture" },
@@ -476,7 +476,7 @@ function escapeHtml(value) {
 }
 
 function routeLabel(routeId) {
-  return routes.find((route) => route.id === routeId)?.label || "Choose a route";
+  return routes.find((route) => route.id === routeId)?.label || "Choose a primary route";
 }
 
 function strengthLabel(value) {
