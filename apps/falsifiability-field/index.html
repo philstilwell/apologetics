@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crosshairs Audit Lab | Earthly Promise Test Field</title>
+    <meta
+      name="description"
+      content="A Crosshairs tool for testing whether earthly God-claims are open to ordinary verification or protected by escape hatches."
+    >
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260505-promise-field">
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
+  </head>
+  <body class="app-falsifiability">
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
+        <span class="brand-mark" aria-hidden="true">X</span>
+        <span>
+          <strong><span class="brand-cross">Cross</span><span class="brand-hairs">hairs</span> Audit Lab</strong>
+          <small>Earthly Promise Test Field</small>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a class="hub-link" href="../../">Hub</a>
+        <a href="#claims">Claims</a>
+        <a href="#field">Field</a>
+        <a href="#testing">Studies</a>
+        <a href="#excuses">Excuses</a>
+        <a href="#summary">Summary</a>
+      </nav>
+    </header>
+
+    <main class="app-shell promise-tool">
+      <section class="app-header">
+        <div class="app-title">
+          <p class="eyebrow">Verification willingness audit</p>
+          <h1>Earthly Promise Test Field</h1>
+          <p>
+            Put concrete God-claims on a field and see whether they are actually being
+            exposed to ordinary checks, or kept safe by flexible explanations after the fact.
+          </p>
+        </div>
+        <aside class="source-note">
+          <strong>Not a verdict on God.</strong>
+          This tool asks a narrower question: if a claim says something happens here on earth,
+          are you willing to let a clear test count for or against it?
+        </aside>
+        <details class="annotation app-wide">
+          <summary>How to use this field</summary>
+          <p>
+            Choose a claim, pick the strongest test you would actually allow, then set whether
+            a clean failure would lower your confidence. The icon moves right when the claim is
+            made clear, risky, public, and checkable.
+          </p>
+          <p>
+            Select escape hatches only if you would really use them. Each one moves the claim
+            back left because it makes the claim harder to lose.
+          </p>
+        </details>
+      </section>
+
+      <nav class="promise-steps" aria-label="Tool sections">
+        <a href="#claims" aria-describedby="claims-step-help">
+          <span class="step-number">1</span>
+          <span class="step-label">Choose a promise</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="claims-step-help" role="tooltip">
+            Start with an earthly promise: healing, protection, prayer, future knowledge, unusual
+            wisdom, better behavior, or longer life.
+          </span>
+        </a>
+        <a href="#field" aria-describedby="field-step-help">
+          <span class="step-number">2</span>
+          <span class="step-label">Watch the field</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="field-step-help" role="tooltip">
+            Left means the claim is mostly protected from testing. Right means the claim is
+            exposed to public checks that could make confidence go down.
+          </span>
+        </a>
+        <a href="#testing" aria-describedby="testing-step-help">
+          <span class="step-number">3</span>
+          <span class="step-label">Choose a study</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="testing-step-help" role="tooltip">
+            The studies are meant to be plausible starting points, not perfect final protocols.
+            Simple pilots can still reveal whether the claim is allowed to face evidence.
+          </span>
+        </a>
+        <a href="#excuses" aria-describedby="excuses-step-help">
+          <span class="step-number">4</span>
+          <span class="step-label">Name excuses</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="excuses-step-help" role="tooltip">
+            If a response would explain away every possible miss, the claim may sound bold while
+            functioning as non-testable.
+          </span>
+        </a>
+        <a href="#summary" aria-describedby="summary-step-help">
+          <span class="step-number">5</span>
+          <span class="step-label">Read result</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="summary-step-help" role="tooltip">
+            The result is a mirror of the selected commitments. It says how testable the current
+            claim is, not whether the claim is already true or false.
+          </span>
+        </a>
+      </nav>
+
+      <section class="promise-dashboard" aria-label="Current verification status">
+        <article class="promise-metric">
+          <span class="promise-metric-label">
+            Selected claim
+            <span class="ff-tip" tabindex="0">?
+              <span class="ff-tooltip" role="tooltip">
+                This is the icon and promise currently being edited. Other icons keep their own
+                settings, so you can compare different claims at once.
+              </span>
+            </span>
+          </span>
+          <strong id="metric-claim">Answered prayer</strong>
+          <small id="metric-claim-detail">Prayer produces outcomes beyond ordinary timing and recovery.</small>
+        </article>
+        <article class="promise-metric">
+          <span class="promise-metric-label">
+            Test strength
+            <span class="ff-tip" tabindex="0">?
+              <span class="ff-tooltip" role="tooltip">
+                Stronger tests use public records, clear outcomes, comparison groups, blinding,
+                pre-set rules, or repeated trials.
+              </span>
+            </span>
+          </span>
+          <strong id="metric-test">Anecdote</strong>
+          <small id="metric-test-detail">Barely moves the claim.</small>
+        </article>
+        <article class="promise-metric">
+          <span class="promise-metric-label">
+            Escape hatches
+            <span class="ff-tip" tabindex="0">?
+              <span class="ff-tooltip" role="tooltip">
+                Escape hatches are reasons that make misses unable to count. They may be sincere,
+                but they reduce the claim's exposure to evidence.
+              </span>
+            </span>
+          </span>
+          <strong id="metric-excuses">0 active</strong>
+          <small id="metric-excuse-detail">No protective responses selected.</small>
+        </article>
+        <article class="promise-metric">
+          <span class="promise-metric-label">
+            Field position
+            <span class="ff-tip" tabindex="0">?
+              <span class="ff-tooltip" role="tooltip">
+                This shows how far right the selected icon has moved. The middle band is a soft
+                threshold where a claim begins to risk real disconfirmation.
+              </span>
+            </span>
+          </span>
+          <strong id="metric-position">Left side</strong>
+          <small id="metric-position-detail">Protected from ordinary checks.</small>
+        </article>
+      </section>
+
+      <details class="evidence-gradient-panel evidence-gradient-details">
+        <summary aria-labelledby="evidence-gradient-title">
+          <div class="gradient-copy">
+            <p class="app-step">Evidence gradient</p>
+            <h2 id="evidence-gradient-title">From story to robust science</h2>
+            <p>
+              The field moves right as the claim accepts clearer outcomes, full miss-counting,
+              comparison groups, blinding, preregistration, replication, and large samples.
+            </p>
+          </div>
+          <span class="evidence-toggle-label" aria-hidden="true"></span>
+        </summary>
+        <div class="evidence-gradient-body">
+          <div class="evidence-gradient-track" aria-label="Evidence strength gradient">
+            <article>
+              <span>01</span>
+              <strong>Anecdote</strong>
+              <p>Memorable hit, little visibility into misses.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <strong>Complete log</strong>
+              <p>Requests, dates, outcomes, and misses are kept.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <strong>Records</strong>
+              <p>Medical, public, or timestamped data replace memory.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <strong>Matched comparison</strong>
+              <p>Similar cases are compared instead of isolated.</p>
+            </article>
+            <article>
+              <span>05</span>
+              <strong>Blinded rules</strong>
+              <p>Outcomes and scoring are set before results are known.</p>
+            </article>
+            <article>
+              <span>06</span>
+              <strong>Large replicated study</strong>
+              <p>Very large samples, independent teams, and repeated checks.</p>
+            </article>
+          </div>
+        </div>
+      </details>
+
+      <section class="promise-workbench" id="claims" aria-labelledby="claims-title">
+        <div class="workbench-controls">
+          <aside class="claim-picker">
+            <p class="app-step">Step 1</p>
+            <h2 id="claims-title">Choose a promise</h2>
+            <p class="panel-copy">
+              Each icon represents a common earthly claim about a personal God. Select one, then
+              decide how much real-world testing it is allowed to face.
+            </p>
+            <div class="claim-buttons" id="claim-buttons"></div>
+          </aside>
+
+          <section class="testing-layout" id="testing" aria-labelledby="testing-title">
+            <section class="study-panel">
+              <p class="app-step">Step 3</p>
+              <h2 id="testing-title">Choose a study</h2>
+              <p class="scrutiny-question">Can the promise survive this degree of scrutiny?</p>
+              <p class="panel-copy" id="study-intro">
+                These are intentionally ordinary starting points: logs, records, matched comparisons,
+                blinded review, and small pilots before large studies.
+              </p>
+              <div class="study-grid" id="study-grid"></div>
+
+              <section class="dataset-panel" aria-labelledby="dataset-title">
+                <p class="app-step">Dataset leads</p>
+                <h3 id="dataset-title">Concrete datasets</h3>
+                <div class="dataset-list" id="dataset-list"></div>
+              </section>
+            </section>
+
+            <section class="commitment-panel" aria-labelledby="commitment-title">
+              <p class="app-step">Commitment</p>
+              <h2 id="commitment-title">How much risk will the claim take?</h2>
+              <p class="panel-copy">
+                A test only matters if the claim is allowed to be clear beforehand and disappointed
+                afterward.
+              </p>
+
+              <div class="field-group">
+                <label for="claim-text">Claim wording</label>
+                <textarea id="claim-text"></textarea>
+              </div>
+
+              <div class="range-row promise-range">
+                <div class="range-top">
+                  <label for="willingness-range">
+                    Willingness to run the selected test
+                    <span class="ff-tip" tabindex="0">?
+                      <span class="ff-tooltip" role="tooltip">
+                        This is not whether you like the test. It is whether you would actually let the
+                        claim be checked this way.
+                      </span>
+                    </span>
+                  </label>
+                  <span class="range-value" id="willingness-value">35%</span>
+                </div>
+                <input id="willingness-range" type="range" min="0" max="100" step="5">
+                <p>Low values keep the icon left even if a strong study is listed.</p>
+              </div>
+
+              <div class="range-row promise-range">
+                <div class="range-top">
+                  <label for="failure-range">
+                    Would a clean failure count?
+                    <span class="ff-tip" tabindex="0">?
+                      <span class="ff-tooltip" role="tooltip">
+                        If no possible result would lower confidence, the claim is being insulated from
+                        the test.
+                      </span>
+                    </span>
+                  </label>
+                  <span class="range-value" id="failure-value">25%</span>
+                </div>
+                <input id="failure-range" type="range" min="0" max="100" step="5">
+                <p>Move this right only if a fair miss would genuinely count against the claim.</p>
+              </div>
+
+              <section class="custom-study-builder" aria-labelledby="custom-study-title">
+                <div class="summary-head compact-head">
+                  <div>
+                    <p class="app-step">Custom study</p>
+                    <h3 id="custom-study-title">Build a test protocol</h3>
+                  </div>
+                  <button class="button secondary" type="button" id="use-custom-study">
+                    Use custom
+                  </button>
+                </div>
+                <div class="custom-study-grid">
+                  <div class="field-group">
+                    <label for="custom-outcome">Outcome</label>
+                    <input id="custom-outcome" type="text" placeholder="Hospitalization, remission, verified prediction...">
+                  </div>
+                  <div class="field-group">
+                    <label for="custom-comparison">Comparison group</label>
+                    <input id="custom-comparison" type="text" placeholder="Matched non-believers, non-prayer cases...">
+                  </div>
+                  <div class="field-group">
+                    <label for="custom-sample-size">Sample size</label>
+                    <select id="custom-sample-size">
+                      <option value="small">Under 25 cases</option>
+                      <option value="pilot">25-100 cases</option>
+                      <option value="large">100-1,000 cases</option>
+                      <option value="very-large">1,000+ cases</option>
+                    </select>
+                  </div>
+                  <div class="field-group">
+                    <label for="custom-blinding">Blinding</label>
+                    <select id="custom-blinding">
+                      <option value="open">Open review</option>
+                      <option value="blind-review">Blind outcome review</option>
+                      <option value="double-blind">Double blind</option>
+                      <option value="triple-blind">Triple blind</option>
+                    </select>
+                  </div>
+                  <label class="custom-check">
+                    <input id="custom-preregistered" type="checkbox">
+                    <span>Preregistered rules</span>
+                  </label>
+                  <div class="field-group">
+                    <label for="custom-replication">Replication</label>
+                    <select id="custom-replication">
+                      <option value="single">Single site</option>
+                      <option value="multi-site">Multi-site</option>
+                      <option value="independent">Independent replication</option>
+                    </select>
+                  </div>
+                  <div class="field-group wide-field">
+                    <label for="custom-miss-rule">What would count as a miss?</label>
+                    <input id="custom-miss-rule" type="text" placeholder="No difference from matched controls by the preregistered deadline...">
+                  </div>
+                </div>
+                <div class="custom-study-score" id="custom-study-score">Custom rigor: 18 / 100</div>
+              </section>
+
+              <section class="outcome-rules-panel" aria-labelledby="outcome-rules-title">
+                <p class="app-step">Outcome rules</p>
+                <h3 id="outcome-rules-title">Set the result rules first</h3>
+                <div class="outcome-rules-grid">
+                  <div class="field-group">
+                    <label for="outcome-for">Counts for the claim</label>
+                    <textarea id="outcome-for" placeholder="A clear, preregistered advantage over matched controls..."></textarea>
+                  </div>
+                  <div class="field-group">
+                    <label for="outcome-against">Counts against the claim</label>
+                    <textarea id="outcome-against" placeholder="No advantage, worse outcomes, or ordinary baseline results..."></textarea>
+                  </div>
+                  <div class="field-group">
+                    <label for="outcome-neutral">Counts as neutral</label>
+                    <textarea id="outcome-neutral" placeholder="Ambiguous data, underpowered sample, broken protocol..."></textarea>
+                  </div>
+                </div>
+              </section>
+            </section>
+          </section>
+
+          <section class="excuse-panel" id="excuses" aria-labelledby="excuses-title">
+            <p class="app-step">Step 4</p>
+            <h2 id="excuses-title">Name excuses</h2>
+            <p class="panel-copy">
+              Select the responses a defender could use after a poor result. The warning is simple:
+              if every result can be explained away, the claim has left the field.
+            </p>
+            <div class="excuse-grid" id="excuse-grid"></div>
+            <div class="warning-box" id="excuse-warning" role="status"></div>
+          </section>
+
+          <section class="summary-panel" id="summary" aria-labelledby="summary-title">
+            <div class="summary-head">
+              <div>
+                <p class="app-step">Step 5</p>
+                <h2 id="summary-title">Read result</h2>
+              </div>
+              <span class="field-help" tabindex="0">?
+                <span class="field-tooltip" role="tooltip">
+                  The summary uses your current choices. Change the study, sliders, or escape hatches
+                  and the diagnosis will update immediately.
+                </span>
+              </span>
+            </div>
+
+            <div class="diagnosis-box" aria-live="polite">
+              <strong id="diagnosis-title">Protected from ordinary checks</strong>
+              <p id="diagnosis-body">
+                This claim is mostly being held away from tests that could make confidence go down.
+              </p>
+            </div>
+
+            <div class="personal-life-box" aria-live="polite">
+              <strong id="personal-life-title">Personal and active in earthly life?</strong>
+              <p id="personal-life-body">
+                This result asks whether the current stance treats the promise as a real-world
+                claim about a personal God acting in earthly life, or keeps it insulated from
+                ordinary feedback.
+              </p>
+            </div>
+
+            <div class="audit-sentence" id="audit-sentence"></div>
+
+            <div class="claim-mini-ledger" aria-label="Selected claim ledger">
+              <div>
+                <span>Study</span>
+                <strong id="ledger-study">Anecdote</strong>
+              </div>
+              <div>
+                <span>Willingness</span>
+                <strong id="ledger-willingness">35%</strong>
+              </div>
+              <div>
+                <span>Clean failure</span>
+                <strong id="ledger-failure">25%</strong>
+              </div>
+              <div>
+                <span>Excuse drag</span>
+                <strong id="ledger-excuses">0</strong>
+              </div>
+              <div>
+                <span>Position</span>
+                <strong id="ledger-score">0 / 100</strong>
+              </div>
+            </div>
+
+            <section class="all-stance-panel" aria-labelledby="all-stance-title">
+              <div class="summary-head compact-head">
+                <div>
+                  <p class="app-step">All promises</p>
+                  <h3 id="all-stance-title">Suite-wide stance result</h3>
+                </div>
+                <button class="button secondary" type="button" id="build-all-result">
+                  Build all-promises result
+                </button>
+              </div>
+              <div class="all-promises-result" id="all-promises-result" aria-live="polite">
+                Build a comprehensive result to review every promise at once.
+              </div>
+              <div class="stance-table-wrap">
+                <table class="stance-table">
+                  <thead>
+                    <tr>
+                      <th>Promise</th>
+                      <th>Score</th>
+                      <th>Study</th>
+                      <th>Miss</th>
+                      <th>Excuses</th>
+                      <th>Stance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="all-stance-table"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="share-panel" aria-labelledby="share-title">
+              <div class="summary-head compact-head">
+                <div>
+                  <p class="app-step">Share state</p>
+                  <h3 id="share-title">Export or reload this audit</h3>
+                </div>
+                <div class="share-actions">
+                  <button class="button secondary" type="button" id="copy-share-link">Copy state link</button>
+                  <button class="button secondary" type="button" id="export-json">Export JSON</button>
+                  <button class="button secondary" type="button" id="load-json">Load JSON</button>
+                </div>
+              </div>
+              <textarea id="share-state-output" spellcheck="false"></textarea>
+              <p class="copy-status" id="share-status" role="status"></p>
+            </section>
+
+            <section class="ai-prompt-panel" aria-labelledby="ai-prompt-title">
+              <div class="summary-head">
+                <div>
+                  <p class="app-step">AI review</p>
+                  <h3 id="ai-prompt-title">Comprehensive AI prompt</h3>
+                </div>
+                <div class="prompt-actions">
+                  <span id="ai-prompt-mode">Selected promise prompt</span>
+                  <button class="button secondary copy-prompt-button" type="button" id="use-selected-prompt">
+                    Selected
+                  </button>
+                  <button class="button secondary copy-prompt-button" type="button" id="copy-ai-prompt">
+                    Copy prompt
+                  </button>
+                </div>
+              </div>
+              <p class="panel-copy">
+                Use this prompt with another AI to ask for a deeper analysis of the current
+                claim, study choice, willingness settings, and escape hatches.
+              </p>
+              <textarea id="ai-prompt-output" readonly></textarea>
+              <p class="copy-status" id="copy-status" role="status"></p>
+            </section>
+          </section>
+        </div>
+
+        <aside class="sticky-field-wrap">
+          <section class="active-promise-card" aria-labelledby="active-promise-title" aria-live="polite">
+            <div class="active-promise-head">
+              <div>
+                <p class="app-step">Active promise</p>
+                <h2 id="active-promise-title">Answered prayer</h2>
+              </div>
+              <span class="active-promise-score" id="active-promise-score">9 / 100</span>
+            </div>
+            <p id="active-promise-detail">
+              Prayer changes outcomes beyond ordinary timing, recovery, or coincidence.
+            </p>
+            <small id="active-promise-study">Current test: Anecdote</small>
+            <div class="active-promise-factors" aria-label="Current score drivers">
+              <span>
+                <strong id="active-study-rigor">8/100</strong>
+                <span>Study</span>
+              </span>
+              <span>
+                <strong id="active-run-setting">35%</strong>
+                <span>Run</span>
+              </span>
+              <span>
+                <strong id="active-failure-setting">25%</strong>
+                <span>Miss</span>
+              </span>
+              <span>
+                <strong id="active-excuse-drag">0</strong>
+                <span>Drag</span>
+              </span>
+            </div>
+          </section>
+
+          <section class="field-panel" id="field" aria-labelledby="field-title">
+            <div class="field-head">
+              <div>
+                <p class="app-step">Step 2</p>
+                <h2 id="field-title">Watch the field</h2>
+              </div>
+              <span class="field-help" tabindex="0">?
+                <span class="field-tooltip" role="tooltip">
+                  The faded center band is the soft threshold. Crossing it does not prove a claim
+                  true; it means the claim is now being allowed to face a test that could disappoint it.
+                </span>
+              </span>
+            </div>
+
+            <div class="field-stage" aria-label="Falsifiability field">
+              <div class="field-threshold-band" aria-hidden="true"></div>
+              <div class="field-threshold-line" aria-hidden="true"></div>
+              <div class="threshold-label">Falsifiability threshold</div>
+              <div id="claim-tokens"></div>
+              <div class="field-axis" aria-hidden="true">
+                <span>Protected claim</span>
+                <span>Falsifiability threshold</span>
+                <span>Open to robust science</span>
+              </div>
+            </div>
+
+            <div class="field-legend" id="field-legend"></div>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
