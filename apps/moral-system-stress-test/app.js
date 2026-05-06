@@ -388,7 +388,6 @@ function defaultState() {
     checks: {},
     notes: {},
     challengeFilter: "matched",
-    elementFilter: "all",
     reportMode: "full"
   };
 }
@@ -408,7 +407,6 @@ const refs = {
   copyPromptsButton: document.querySelector("#copyPromptsButton"),
   copyReportButton: document.querySelector("#copyReportButton"),
   copySummaryButton: document.querySelector("#copySummaryButton"),
-  elementFilter: document.querySelector("#elementFilter"),
   elementGrid: document.querySelector("#elementGrid"),
   finalReport: document.querySelector("#finalReport"),
   loadSampleButton: document.querySelector("#loadSampleButton"),
@@ -701,15 +699,11 @@ function getComponentStatus(element) {
 }
 
 function filteredElements() {
-  const missingIds = new Set(getMissingCore().map((element) => element.id));
-  if (state.elementFilter === "selected") return elements.filter((element) => state.selected[element.id]);
-  if (state.elementFilter === "missing") return elements.filter((element) => missingIds.has(element.id));
   return elements;
 }
 
 function renderElements() {
   refs.claimInput.value = state.claim;
-  refs.elementFilter.value = state.elementFilter;
   const routeOptions = routes
     .map((route) => `<option value="${route.id}">${escapeHtml(route.label)}</option>`)
     .join("");
@@ -1259,12 +1253,6 @@ function bindEvents() {
     renderChallenges();
     renderPrompts();
     renderReports();
-  });
-
-  refs.elementFilter.addEventListener("change", (event) => {
-    state.elementFilter = event.target.value;
-    saveState();
-    renderElements();
   });
 
   refs.challengeFilter.addEventListener("change", (event) => {
