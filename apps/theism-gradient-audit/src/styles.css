@@ -148,6 +148,39 @@ button:hover {
   color: currentColor;
 }
 
+.site-domain-link {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid rgba(151, 84, 77, 0.34);
+  border-radius: 999px;
+  background: rgba(255, 254, 248, 0.9);
+  color: var(--ink);
+  font-size: 0.94rem;
+  font-weight: 760;
+  line-height: 1;
+  text-decoration: none;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.site-domain-link:hover,
+.site-domain-link:focus-visible {
+  border-color: var(--brand-cross-color);
+  background: #fff;
+  text-decoration: none;
+}
+
+.site-domain-x {
+  color: var(--brand-cross-color);
+  font-weight: 950;
+}
+
 .top-nav {
   display: flex;
   flex-wrap: wrap;
@@ -1236,8 +1269,14 @@ textarea {
   }
 
   .site-header {
+    display: flex;
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .site-domain-link {
+    position: static;
+    transform: none;
   }
 
   .scatter-legend {

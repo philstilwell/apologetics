@@ -691,12 +691,14 @@ const state = Object.fromEntries(
 let selectedClaimId = claims[0].id;
 let promptMode = "selected";
 let allResultBuilt = false;
+let copyPromptResetTimer;
 
 const claimButtons = document.querySelector("#claim-buttons");
 const claimTokens = document.querySelector("#claim-tokens");
 const fieldLegend = document.querySelector("#field-legend");
 const studyGrid = document.querySelector("#study-grid");
 const datasetList = document.querySelector("#dataset-list");
+const datasetActivePromise = document.querySelector("#dataset-active-promise");
 const excuseGrid = document.querySelector("#excuse-grid");
 const claimText = document.querySelector("#claim-text");
 const willingnessRange = document.querySelector("#willingness-range");
@@ -718,6 +720,7 @@ const outcomeNeutral = document.querySelector("#outcome-neutral");
 const aiPromptOutput = document.querySelector("#ai-prompt-output");
 const copyPromptButton = document.querySelector("#copy-ai-prompt");
 const copyStatus = document.querySelector("#copy-status");
+const copyPromptDefaultLabel = copyPromptButton?.textContent.trim() || "Copy prompt";
 const useSelectedPromptButton = document.querySelector("#use-selected-prompt");
 const aiPromptMode = document.querySelector("#ai-prompt-mode");
 const buildAllResultButton = document.querySelector("#build-all-result");
@@ -1138,6 +1141,7 @@ function renderStudies() {
 function renderDatasets() {
   const claim = getClaim();
   datasetList.innerHTML = "";
+  datasetActivePromise.textContent = claim.title;
 
   (datasetSuggestions[claim.id] || []).forEach((item) => {
     const pill = document.createElement("span");
@@ -1464,6 +1468,18 @@ function selectClaim(claimId) {
   update();
 }
 
+function showPromptCopiedLabel() {
+  if (!copyPromptButton) {
+    return;
+  }
+
+  copyPromptButton.textContent = "Copied";
+  window.clearTimeout(copyPromptResetTimer);
+  copyPromptResetTimer = window.setTimeout(() => {
+    copyPromptButton.textContent = copyPromptDefaultLabel;
+  }, 5000);
+}
+
 function update() {
   updateControls();
   renderClaims();
@@ -1561,11 +1577,15 @@ copyPromptButton?.addEventListener("click", async () => {
 
   try {
     await navigator.clipboard.writeText(aiPromptOutput.value);
+    showPromptCopiedLabel();
     copyStatus.textContent = "Prompt copied.";
   } catch {
     aiPromptOutput.focus();
     aiPromptOutput.select();
     const copied = document.execCommand("copy");
+    if (copied) {
+      showPromptCopiedLabel();
+    }
     copyStatus.textContent = copied ? "Prompt copied." : "Select the prompt text and copy it manually.";
   }
 
@@ -1599,7 +1619,7 @@ exportJsonButton?.addEventListener("click", () => {
   shareStateOutput.value = JSON.stringify(serializeState(), null, 2);
   shareStateOutput.focus();
   shareStateOutput.select();
-  shareStatus.textContent = "JSON ready.";
+  shareStatus.textContent = "JSON shown below. Copy it to save or share this audit state.";
 });
 
 loadJsonButton?.addEventListener("click", () => {
@@ -1609,10 +1629,10 @@ loadJsonButton?.addEventListener("click", () => {
 
   try {
     applySerializedState(JSON.parse(shareStateOutput.value));
-    shareStatus.textContent = "Audit state loaded.";
+    shareStatus.textContent = "Saved JSON restored.";
     update();
   } catch {
-    shareStatus.textContent = "Could not load that JSON.";
+    shareStatus.textContent = "Could not restore that JSON. Check that the full saved JSON is pasted below.";
   }
 });
 

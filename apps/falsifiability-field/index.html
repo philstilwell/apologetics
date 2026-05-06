@@ -9,7 +9,7 @@
       content="A Crosshairs tool for testing whether earthly God-claims are open to ordinary verification or protected by escape hatches."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260505-promise-field">
+    <link rel="stylesheet" href="../../styles.css?v=20260505-xhairs-url">
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body class="app-falsifiability">
@@ -20,6 +20,9 @@
           <strong><span class="brand-cross">Cross</span><span class="brand-hairs">hairs</span> Audit Lab</strong>
           <small>Earthly Promise Test Field</small>
         </span>
+      </a>
+      <a class="site-domain-link" href="https://xhairs.com" aria-label="Visit xhairs.com">
+        https://<strong class="site-domain-x">x</strong>hairs.com
       </a>
       <nav class="top-nav" aria-label="Primary">
         <a class="hub-link" href="../../">Hub</a>
@@ -235,8 +238,16 @@
               <div class="study-grid" id="study-grid"></div>
 
               <section class="dataset-panel" aria-labelledby="dataset-title">
-                <p class="app-step">Dataset leads</p>
-                <h3 id="dataset-title">Concrete datasets</h3>
+                <div class="dataset-head">
+                  <div>
+                    <p class="app-step">Dataset leads</p>
+                    <h3 id="dataset-title">Concrete datasets</h3>
+                  </div>
+                  <div class="dataset-active-promise" aria-live="polite">
+                    <span>Active promise</span>
+                    <strong id="dataset-active-promise">Answered prayer</strong>
+                  </div>
+                </div>
                 <div class="dataset-list" id="dataset-list"></div>
               </section>
             </section>
@@ -510,13 +521,22 @@
               </summary>
               <div class="share-body">
                 <p class="panel-copy">
-                  Export JSON when you want a portable record of the audit. Load JSON to restore a
-                  previous audit state before revising it or running a fresh AI review.
+                  Use these controls only when you want to save, share, or restore the exact settings
+                  behind this audit.
                 </p>
                 <div class="share-actions">
-                  <button class="button secondary" type="button" id="copy-share-link">Copy state link</button>
-                  <button class="button secondary" type="button" id="export-json">Export JSON</button>
-                  <button class="button secondary" type="button" id="load-json">Load JSON</button>
+                  <div class="share-action">
+                    <button class="button secondary" type="button" id="copy-share-link">Copy link</button>
+                    <p>Copies a URL that reopens this audit with the current settings.</p>
+                  </div>
+                  <div class="share-action">
+                    <button class="button secondary" type="button" id="export-json">Show JSON</button>
+                    <p>Displays the raw audit data below so it can be saved or pasted into another AI.</p>
+                  </div>
+                  <div class="share-action">
+                    <button class="button secondary" type="button" id="load-json">Restore JSON</button>
+                    <p>After pasting saved JSON into the box, restores those earlier audit settings.</p>
+                  </div>
                 </div>
                 <textarea id="share-state-output" spellcheck="false"></textarea>
                 <p class="copy-status" id="share-status" role="status"></p>
@@ -540,22 +560,50 @@
             <small id="active-promise-study">Current test: Anecdote</small>
             <a class="active-promise-link" href="#claims">Choose a promise</a>
             <div class="active-promise-factors" aria-label="Current score drivers">
-              <span>
+              <div class="active-factor">
                 <strong id="active-study-rigor">8/100</strong>
-                <span>Study</span>
-              </span>
-              <span>
+                <span class="active-factor-label">Study
+                  <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-study-tip">?
+                    <span class="ff-tooltip active-factor-tooltip" id="active-study-tip" role="tooltip">
+                      The scientific rigor of the selected study. Stronger samples, blinding,
+                      preregistration, and replication push this number higher.
+                    </span>
+                  </span>
+                </span>
+              </div>
+              <div class="active-factor">
                 <strong id="active-run-setting">35%</strong>
-                <span>Run</span>
-              </span>
-              <span>
+                <span class="active-factor-label">Run
+                  <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-run-tip">?
+                    <span class="ff-tooltip active-factor-tooltip" id="active-run-tip" role="tooltip">
+                      How willing the user is to actually submit this promise to the selected test.
+                      Lower values keep even a strong study from moving the claim very far.
+                    </span>
+                  </span>
+                </span>
+              </div>
+              <div class="active-factor">
                 <strong id="active-failure-setting">25%</strong>
-                <span>Miss</span>
-              </span>
-              <span>
+                <span class="active-factor-label">Miss
+                  <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-miss-tip">?
+                    <span class="ff-tooltip active-factor-tooltip" id="active-miss-tip" role="tooltip">
+                      Whether a clean, fair failure would count against the promise. If no miss
+                      would matter, the claim is being protected from falsification.
+                    </span>
+                  </span>
+                </span>
+              </div>
+              <div class="active-factor">
                 <strong id="active-excuse-drag">0</strong>
-                <span>Drag</span>
-              </span>
+                <span class="active-factor-label">Drag
+                  <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-drag-tip">?
+                    <span class="ff-tooltip active-factor-tooltip" id="active-drag-tip" role="tooltip">
+                      The leftward pull from selected escape hatches. More excuses mean poor results
+                      are easier to dismiss, so the claim becomes less testable.
+                    </span>
+                  </span>
+                </span>
+              </div>
             </div>
           </section>
 
