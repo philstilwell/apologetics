@@ -4535,18 +4535,48 @@ body.app-falsifiability #summary {
 }
 
 .field-stage {
+  --field-radius: calc(var(--radius) + 2px);
   position: relative;
   min-height: 352px;
-  border: 1px solid #7f9783;
-  border-radius: var(--radius);
+  isolation: isolate;
+  border: 1px solid #718775;
+  border-radius: var(--field-radius);
   background:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 40px),
-    linear-gradient(90deg, #050807 0, #101713 35%, #314b34 50%, #cfe7c8 70%, #eff9e9 100%);
+    radial-gradient(circle at 18% 18%, rgba(56, 86, 67, 0.28), transparent 36%),
+    radial-gradient(circle at 84% 34%, rgba(255, 255, 255, 0.42), transparent 36%),
+    radial-gradient(circle at 88% 78%, rgba(154, 207, 142, 0.22), transparent 30%),
+    linear-gradient(90deg, #060908 0, #0d1512 31%, #243821 47%, #8caf83 63%, #d8edcf 82%, #f3fbef 100%);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.22),
-    inset 36px 0 70px rgba(0, 0, 0, 0.28),
-    inset -30px 0 56px rgba(255, 255, 255, 0.24);
+    inset 0 24px 52px rgba(255, 255, 255, 0.1),
+    inset 42px 0 82px rgba(0, 0, 0, 0.34),
+    inset -42px 0 72px rgba(255, 255, 255, 0.3),
+    0 16px 34px rgba(20, 38, 24, 0.15);
   overflow: visible;
+}
+
+.field-stage::before,
+.field-stage::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+
+.field-stage::before {
+  z-index: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.075) 0 1px, transparent 1px 40px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.1));
+  mix-blend-mode: screen;
+}
+
+.field-stage::after {
+  z-index: 5;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 0 38px rgba(4, 8, 6, 0.18);
 }
 
 .field-threshold-band {
@@ -4554,26 +4584,28 @@ body.app-falsifiability #summary {
   top: 0;
   bottom: 0;
   left: 50%;
-  width: min(118px, 24%);
+  z-index: 1;
+  width: min(160px, 28%);
   background:
-    linear-gradient(90deg, transparent 0, rgba(242, 222, 150, 0.24) 24%, rgba(222, 237, 198, 0.72) 50%, rgba(151, 188, 137, 0.3) 76%, transparent 100%);
-  filter: saturate(1.1);
+    linear-gradient(90deg, transparent 0, rgba(237, 214, 139, 0.18) 18%, rgba(232, 235, 178, 0.5) 43%, rgba(214, 237, 190, 0.6) 57%, rgba(132, 177, 121, 0.22) 82%, transparent 100%);
+  filter: blur(0.2px) saturate(1.08);
   pointer-events: none;
   transform: translateX(-50%);
 }
 
 .field-threshold-line {
   position: absolute;
-  top: 32px;
-  bottom: 42px;
+  top: 48px;
+  bottom: 54px;
   left: 50%;
-  width: 8px;
+  z-index: 2;
+  width: 12px;
   border-radius: 999px;
   background:
-    linear-gradient(180deg, transparent 0, rgba(239, 221, 145, 0.46) 13%, rgba(216, 236, 190, 0.98) 50%, rgba(78, 122, 60, 0.5) 87%, transparent 100%);
+    linear-gradient(180deg, transparent 0, rgba(239, 221, 145, 0.28) 8%, rgba(231, 235, 166, 0.86) 34%, rgba(213, 239, 189, 0.9) 66%, rgba(79, 124, 65, 0.34) 92%, transparent 100%);
   box-shadow:
-    0 0 18px rgba(216, 236, 190, 0.72),
-    0 0 36px rgba(239, 221, 145, 0.24);
+    0 0 20px rgba(219, 239, 195, 0.66),
+    0 0 48px rgba(230, 220, 151, 0.28);
   transform: translateX(-50%);
 }
 
@@ -4582,25 +4614,38 @@ body.app-falsifiability #summary {
   right: 10px;
   bottom: 10px;
   left: 10px;
+  z-index: 6;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  color: rgba(247, 255, 241, 0.86);
+  color: rgba(247, 255, 241, 0.92);
   font-size: 0.58rem;
   font-weight: 900;
   letter-spacing: 0.06em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.42);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
   text-transform: uppercase;
 }
 
+.field-axis span {
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.24);
+}
+
 .field-axis span:nth-child(2) {
-  color: #0d2416;
+  justify-self: center;
+  color: #102d1b;
+  background: rgba(225, 242, 208, 0.64);
   text-align: center;
   text-shadow: 0 1px 3px rgba(239, 249, 233, 0.8);
 }
 
 .field-axis span:nth-child(3) {
+  justify-self: end;
   color: #23442a;
+  background: rgba(244, 252, 240, 0.54);
   text-align: right;
   text-shadow: none;
 }
@@ -4609,16 +4654,21 @@ body.app-falsifiability #summary {
   position: absolute;
   top: 10px;
   left: 50%;
-  width: min(260px, 62%);
-  padding: 6px 8px;
-  border: 1px solid rgba(36, 70, 42, 0.38);
+  z-index: 7;
+  width: min(252px, 58%);
+  padding: 7px 10px;
+  border: 1px solid rgba(79, 110, 75, 0.54);
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(247, 231, 168, 0.94), rgba(225, 242, 208, 0.94));
+  background:
+    linear-gradient(90deg, rgba(238, 220, 145, 0.95), rgba(225, 242, 208, 0.96)),
+    rgba(255, 255, 255, 0.9);
   color: #12351f;
   font-size: 0.6rem;
   font-weight: 950;
   letter-spacing: 0.06em;
-  box-shadow: 0 8px 18px rgba(5, 8, 7, 0.18);
+  box-shadow:
+    0 10px 22px rgba(5, 8, 7, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
   text-align: center;
   text-transform: uppercase;
   transform: translateX(-50%);
@@ -4628,15 +4678,21 @@ body.app-falsifiability #summary {
   position: absolute;
   top: calc(58px + (var(--row) * 32px));
   left: clamp(22px, calc(var(--x) * 1%), calc(100% - 22px));
+  z-index: 8;
   display: grid;
   width: 38px;
   height: 38px;
   place-items: center;
   border: 2px solid var(--claim-color);
   border-radius: 50%;
-  background: #fff;
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.98), rgba(248, 251, 247, 0.88) 70%),
+    #fff;
   color: var(--claim-color);
-  box-shadow: 0 10px 24px rgba(18, 24, 23, 0.16);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.28),
+    0 0 0 4px rgba(255, 255, 255, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transform: translate(-50%, -50%);
   transition:
@@ -4648,7 +4704,10 @@ body.app-falsifiability #summary {
 .claim-token:hover,
 .claim-token:focus-visible,
 .claim-token.active {
-  box-shadow: 0 16px 34px rgba(18, 24, 23, 0.22);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.3),
+    0 0 0 5px color-mix(in srgb, var(--claim-color) 18%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   transform: translate(-50%, -50%) scale(1.06);
 }
 
@@ -5492,6 +5551,7 @@ body.app-falsifiability #summary {
   .field-axis span,
   .field-axis span:nth-child(2),
   .field-axis span:nth-child(3) {
+    justify-self: start;
     text-align: left;
   }
 
