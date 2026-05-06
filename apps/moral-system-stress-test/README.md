@@ -5,7 +5,7 @@ Crosshairs audit for testing whether a Christian moral claim supplies the requir
 ## Features
 
 - Crosshairs Hub header, domain link, guided steps, diagnostic note, and explanatory annotations.
-- Claim field with local persistence.
+- Claim field with local persistence and twelve common-position radio buttons.
 - Four Christian preset profiles: divine command, God's nature, scripture and Spirit, and natural law.
 - Eight required components: moral meaning, truth maker, authority check, moral access, binding force, case guidance, consistent scope, and correction method.
 - Substantiation route, support-strength slider, checklist controls, and optional notes for each selected component.

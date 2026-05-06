@@ -21,6 +21,69 @@ const strengthLevels = [
   { value: 4, label: "Strong" }
 ];
 
+const claimPositions = [
+  {
+    id: "divine-command",
+    label: "Divine command",
+    claim: "Christianity provides a coherent objective moral system because moral obligations are grounded in God's authority and expressed through divine commands."
+  },
+  {
+    id: "god-nature",
+    label: "God's nature",
+    claim: "Christian morality is objective because goodness is grounded in God's unchanging nature and commands express that nature."
+  },
+  {
+    id: "scripture-authority",
+    label: "Scripture authority",
+    claim: "Christian morality is coherent because scripture reveals God's binding moral will with sufficient authority for moral knowledge and guidance."
+  },
+  {
+    id: "scripture-spirit",
+    label: "Scripture and Spirit",
+    claim: "Christian morality is coherent because scripture, interpreted with the guidance of the Holy Spirit, reveals God's binding moral will."
+  },
+  {
+    id: "natural-law",
+    label: "Natural law",
+    claim: "Christian morality is coherent because reason can discern moral truths built into human nature and the created order."
+  },
+  {
+    id: "conscience",
+    label: "God-given conscience",
+    claim: "Christian morality is coherent because God gives humans conscience and moral intuition that can recognize objective moral truths."
+  },
+  {
+    id: "church-tradition",
+    label: "Church tradition",
+    claim: "Christian morality is coherent because scripture is authoritatively interpreted through the church's tradition, teaching, and communal correction."
+  },
+  {
+    id: "great-commandments",
+    label: "Love commandments",
+    claim: "Christian morality is coherent because all moral duties are grounded in love of God and love of neighbor."
+  },
+  {
+    id: "virtue-character",
+    label: "Christlike virtue",
+    claim: "Christian morality is coherent because moral goodness is formed by Christlike character, virtues, and conformity to God's purposes."
+  },
+  {
+    id: "kingdom-ethic",
+    label: "Kingdom ethic",
+    claim: "Christian morality is coherent because Jesus' kingdom teachings provide the binding pattern for moral life and human community."
+  },
+  {
+    id: "flourishing-in-god",
+    label: "Flourishing in God",
+    claim: "Christian morality is coherent because human flourishing is grounded in God's design for persons, relationships, and creation."
+  },
+  {
+    id: "moral-lawgiver",
+    label: "Moral lawgiver",
+    claim: "Christianity best explains objective moral obligations because binding moral law requires a personal moral lawgiver."
+  }
+];
+
 const elements = [
   {
     id: "moral-meaning",
@@ -387,6 +450,7 @@ function defaultState() {
     strength: {},
     checks: {},
     notes: {},
+    claimPosition: "",
     challengeFilter: "matched",
     reportMode: "full"
   };
@@ -400,6 +464,7 @@ const refs = {
   challengeFilter: document.querySelector("#challengeFilter"),
   challengeList: document.querySelector("#challengeList"),
   claimInput: document.querySelector("#claimInput"),
+  claimPositionGrid: document.querySelector("#claimPositionGrid"),
   coherenceStatusBody: document.querySelector("#coherenceStatusBody"),
   componentStatusList: document.querySelector("#componentStatusList"),
   completenessScore: document.querySelector("#completenessScore"),
@@ -477,6 +542,11 @@ function escapeHtml(value) {
 
 function routeLabel(routeId) {
   return routes.find((route) => route.id === routeId)?.label || "Choose a primary route";
+}
+
+function claimPositionForClaim(claim) {
+  const normalized = (claim || "").trim();
+  return claimPositions.find((position) => position.claim === normalized)?.id || "";
 }
 
 function strengthLabel(value) {
@@ -700,6 +770,22 @@ function getComponentStatus(element) {
 
 function filteredElements() {
   return elements;
+}
+
+function renderClaimPositions() {
+  const selectedPosition = state.claimPosition || claimPositionForClaim(state.claim);
+  refs.claimPositionGrid.innerHTML = claimPositions
+    .map((position) => {
+      const inputId = `claim-position-${position.id}`;
+      const checked = position.id === selectedPosition ? "checked" : "";
+      return `
+        <label class="claim-position-option" for="${inputId}">
+          <input id="${inputId}" type="radio" name="claim-position" value="${escapeHtml(position.id)}" ${checked}>
+          <span>${escapeHtml(position.label)}</span>
+        </label>
+      `;
+    })
+    .join("");
 }
 
 function renderElements() {
@@ -1174,6 +1260,7 @@ function applyPreset(presetId) {
   const preset = profilePresets.find((item) => item.id === presetId) || profilePresets[0];
   state = defaultState();
   state.claim = preset.claim;
+  state.claimPosition = claimPositionForClaim(preset.claim);
   preset.selected.forEach((elementId) => {
     const element = getElementById(elementId);
     state.selected[elementId] = true;
@@ -1198,6 +1285,7 @@ function updateElementSelection(elementId, selected) {
 }
 
 function renderAll() {
+  renderClaimPositions();
   renderPresets();
   renderElements();
   renderChallenges();
@@ -1209,7 +1297,21 @@ function renderAll() {
 function bindEvents() {
   refs.claimInput.addEventListener("input", (event) => {
     state.claim = event.target.value;
+    state.claimPosition = claimPositionForClaim(state.claim);
     saveState();
+    renderClaimPositions();
+    renderPrompts();
+    renderReports();
+  });
+
+  refs.claimPositionGrid.addEventListener("change", (event) => {
+    const position = claimPositions.find((item) => item.id === event.target.value);
+    if (!position) return;
+    state.claim = position.claim;
+    state.claimPosition = position.id;
+    saveState();
+    refs.claimInput.value = state.claim;
+    renderClaimPositions();
     renderPrompts();
     renderReports();
   });

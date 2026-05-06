@@ -6083,6 +6083,58 @@ body.app-morality #report-step {
   margin-top: 12px;
 }
 
+.claim-position-fieldset {
+  margin: 12px 0 0;
+  padding: 10px;
+  border: 1px solid rgba(184, 144, 101, 0.72);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.claim-position-fieldset legend {
+  padding: 0 5px;
+  color: var(--moral-muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.claim-position-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.claim-position-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 7px 8px;
+  border: 1px solid rgba(184, 144, 101, 0.55);
+  border-radius: 7px;
+  background: #fff8e8;
+  color: var(--moral-ink);
+  font-size: 0.8rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.claim-position-option:has(input:checked) {
+  border-color: var(--moral-green);
+  background: var(--moral-green-soft);
+  box-shadow: inset 0 0 0 1px rgba(47, 107, 73, 0.24);
+}
+
+.claim-position-option input {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--moral-green);
+}
+
 .moral-lens-panel > p {
   margin: 0 0 12px;
   color: var(--moral-muted);
@@ -6759,6 +6811,7 @@ body.app-morality #report-step {
 
 @media (max-width: 760px) {
   .moral-dashboard,
+  .claim-position-grid,
   .element-grid,
   .moral-status-panels,
   .moral-report-grid {

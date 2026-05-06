@@ -9,7 +9,7 @@
       content="A Crosshairs tool for testing whether a Christian moral claim supplies the required components of an objective moral system or collapses into emotion, obedience, or practical advice."
     >
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260506-moral-system-checks-help">
+    <link rel="stylesheet" href="../../styles.css?v=20260506-moral-system-claim-radios">
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body class="app-morality">
@@ -162,6 +162,10 @@
               placeholder="Example: Christianity provides a coherent objective moral system grounded in God's nature."
             ></textarea>
           </div>
+          <fieldset class="claim-position-fieldset" aria-labelledby="claim-position-title">
+            <legend id="claim-position-title">Common positions</legend>
+            <div class="claim-position-grid" id="claimPositionGrid"></div>
+          </fieldset>
           <div class="moral-actions">
             <button class="primary" id="copySummaryButton" type="button">Copy Summary</button>
             <button id="loadSampleButton" type="button">Load Sample</button>
@@ -330,6 +334,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260506-moral-system-checks-help"></script>
+    <script src="app.js?v=20260506-moral-system-claim-radios"></script>
   </body>
 </html>
