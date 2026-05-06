@@ -371,6 +371,7 @@ const refs = {
   copyStatus: document.querySelector("#copyStatus"),
   currentJudgment: document.querySelector("#currentJudgment"),
   currentJudgmentNote: document.querySelector("#currentJudgmentNote"),
+  disagreementIssueText: document.querySelector("#disagreementIssueText"),
   disagreementGrid: document.querySelector("#disagreementGrid"),
   disagreementLens: document.querySelector("#disagreementLens"),
   disagreementLensNote: document.querySelector("#disagreementLensNote"),
@@ -587,6 +588,10 @@ function renderSelectedIssue() {
     <span class="particular-selected-label">Case ${escapeHtml(issue.label)}</span>
     ${escapeHtml(issue.statement)}
   `;
+  refs.disagreementIssueText.innerHTML = `
+    <span class="particular-selected-label">Case ${escapeHtml(issue.label)}</span>
+    ${escapeHtml(issue.statement)}
+  `;
   refs.caseNotes.value = currentData().notes || "";
 }
 
@@ -740,20 +745,47 @@ function updateMetrics() {
 function renderAttributionBoard() {
   const profile = disagreementProfile(currentData());
   const groups = [
-    { label: "Soul diagnosis", value: profile.soul },
-    { label: "Method diagnosis", value: profile.method },
-    { label: "Social diagnosis", value: profile.social },
-    { label: "Affective diagnosis", value: profile.affective }
+    {
+      id: "soul",
+      label: "Soul diagnosis",
+      value: profile.soul,
+      help: "Disagreement is attributed to spiritual posture or condition: rebellion, resistance to God, or lack of regeneration."
+    },
+    {
+      id: "method",
+      label: "Method diagnosis",
+      value: profile.method,
+      help: "Disagreement is attributed to reasoning, information, interpretation, factual assumptions, or competing moral principles."
+    },
+    {
+      id: "social",
+      label: "Social diagnosis",
+      value: profile.social,
+      help: "Disagreement is attributed to formation by denomination, church culture, politics, family norms, era, or social incentives."
+    },
+    {
+      id: "affective",
+      label: "Affective diagnosis",
+      value: profile.affective,
+      help: "Disagreement is attributed to lived experience, trauma, fear, compassion, empathy, self-interest, or emotional salience."
+    }
   ];
 
   refs.attributionBoard.innerHTML = groups
     .map((group) => {
       const width = profile.total ? Math.round((group.value / profile.total) * 100) : 0;
+      const tooltipId = `attribution-${group.id}-help`;
       return `
         <article class="particular-balance-row">
-          <div>
-            <strong>${escapeHtml(group.label)}</strong>
-            <span>${group.value} total weight</span>
+          <div class="particular-balance-heading">
+            <span class="particular-balance-title">
+              <strong>${escapeHtml(group.label)}</strong>
+              <button class="particular-balance-help" type="button" aria-label="Explain ${escapeHtml(group.label)}" aria-describedby="${tooltipId}">
+                <span class="label-help-dot" aria-hidden="true">?</span>
+                <span class="particular-balance-tooltip" id="${tooltipId}" role="tooltip">${escapeHtml(group.help)}</span>
+              </button>
+            </span>
+            <span class="particular-balance-weight">${group.value} total weight</span>
           </div>
           <div class="particular-balance-track" aria-hidden="true">
             <span style="width: ${width}%"></span>
@@ -844,7 +876,13 @@ function renderPatterns() {
   const patterns = buildPatterns();
   refs.patternList.innerHTML = patterns
     .map(
-      (pattern, index) => `
+      (pattern, index) => {
+        const pressureNote = {
+          high: "High pressure: this pattern can change the moral map unless a clear limiting principle is supplied.",
+          medium: "Medium pressure: this pattern is worth checking before treating the ledger as stable.",
+          low: "Low pressure: this is mainly a dependency note, useful for seeing what is doing the most work."
+        }[pattern.pressure] || "Review pressure: use this card to check whether the pattern is intentional.";
+        return `
         <article class="challenge-card challenge-${escapeHtml(pattern.pressure)}">
           <div class="challenge-card-top">
             <span class="challenge-number">${index + 1}</span>
@@ -857,12 +895,27 @@ function renderPatterns() {
               <p class="challenge-summary">${escapeHtml(pattern.summary)}</p>
             </div>
           </div>
+          <div class="pattern-explanation-grid">
+            <div>
+              <span>Why this appeared</span>
+              <p>${escapeHtml(pattern.basis || "The current case ledger crossed this check's trigger threshold.")}</p>
+            </div>
+            <div>
+              <span>Pressure meaning</span>
+              <p>${escapeHtml(pressureNote)}</p>
+            </div>
+            <div>
+              <span>What to compare next</span>
+              <p>${escapeHtml(pattern.nextStep || "Compare similar cases and decide whether the same grounder should carry the same kind of judgment.")}</p>
+            </div>
+          </div>
           <div class="challenge-counterfactual">
             <strong>${escapeHtml(pattern.check)}</strong>
             <p>${escapeHtml(pattern.question)}</p>
           </div>
         </article>
-      `
+      `;
+      }
     )
     .join("");
 }
@@ -889,8 +942,10 @@ function buildPatterns() {
       pressure: "medium",
       title: "Thin sample",
       summary: "Fewer than three cases are fully mapped, so cross-case patterns may be accidental.",
+      basis: `${mapped.length} of ${issues.length} cases are fully mapped. A case counts as mapped after it has a stance, at least one grounder weight, and at least one disagreement weight.`,
       check: "Map more cases before treating the ledger as stable.",
-      question: "Would the same grounders carry judgments in easy, hard, private, public, sexual, violent, and generosity cases?"
+      question: "Would the same grounders carry judgments in easy, hard, private, public, sexual, violent, and generosity cases?",
+      nextStep: "Complete several different kinds of cases before drawing a conclusion from the pattern list."
     });
   }
 
@@ -901,8 +956,10 @@ function buildPatterns() {
       pressure: "high",
       title: "Social norms are doing visible work",
       summary: `${socialHeavy.map((issue) => issue.label).join(", ")} give social norms strong weight.`,
+      basis: "At least one mapped case gives Social norms a weight of 7/10 or higher.",
       check: "Norm sensitivity test",
-      question: "If the surrounding Christian culture changed, would the moral judgment survive by the same stated grounders?"
+      question: "If the surrounding Christian culture changed, would the moral judgment survive by the same stated grounders?",
+      nextStep: "Compare those cases with ones where Scripture, reason, conscience, or harm is supposed to carry the judgment without social reinforcement."
     });
   }
 
@@ -916,8 +973,10 @@ function buildPatterns() {
       pressure: "high",
       title: "Disagreement is being spiritualized",
       summary: `${soulDominant.map((issue) => issue.label).join(", ")} diagnose disagreement mainly through rebellion or regeneration categories.`,
+      basis: "The soul-diagnosis total is at least 10 and greater than method, social, and affective explanations combined.",
       check: "Charity and falsifiability test",
-      question: "What would count as a sincere, informed, non-rebellious disagreement on those cases?"
+      question: "What would count as a sincere, informed, non-rebellious disagreement on those cases?",
+      nextStep: "Name what evidence would move the diagnosis from spiritual failure to interpretation, facts, experience, or principle."
     });
   }
 
@@ -929,8 +988,10 @@ function buildPatterns() {
       pressure: "high",
       title: "Obligation without permission",
       summary: "Case 1a is supported while case 1b is opposed.",
+      basis: "The ledger says it would be immoral not to kill abortion doctors, but also denies that killing them is morally permissible.",
       check: "Deontic consistency test",
-      question: "If not killing abortion doctors would be immoral, how would killing them fail to be at least morally permissible?"
+      question: "If not killing abortion doctors would be immoral, how would killing them fail to be at least morally permissible?",
+      nextStep: "Clarify whether the difference is obligation versus permission, certainty threshold, private authority, intended effect, or some other limiting rule."
     });
   }
 
@@ -941,8 +1002,10 @@ function buildPatterns() {
       pressure: "high",
       title: "Lethal-force support needs a limiting rule",
       summary: `${lethalSupported.join(", ")} support statements involving killing.`,
+      basis: "One or more statements involving killing has a supportive stance.",
       check: "Limiting-principle test",
-      question: "What rule prevents the same reasoning from authorizing rival groups, private actors, or states to kill under their own contested moral premises?"
+      question: "What rule prevents the same reasoning from authorizing rival groups, private actors, or states to kill under their own contested moral premises?",
+      nextStep: "State who has authority to use force, what evidence threshold is required, and why opposing moral communities cannot use the same structure."
     });
   }
 
@@ -955,8 +1018,10 @@ function buildPatterns() {
       pressure: dominantGrounder.value >= mapped.length * 7 ? "medium" : "low",
       title: `${dominantGrounder.label} is the dominant dependency`,
       summary: `${dominantGrounder.label} has ${dominantGrounder.value} total weight across the ledger.`,
+      basis: `${dominantGrounder.label} has the largest combined slider total across all cases, mapped or partially mapped.`,
       check: "Dependency concentration test",
-      question: "If this grounder were disputed, how many judgments would still be justified by independent routes?"
+      question: "If this grounder were disputed, how many judgments would still be justified by independent routes?",
+      nextStep: "Pick one case carried by this grounder and see whether another grounder can independently reach the same judgment."
     });
   }
 
@@ -970,8 +1035,10 @@ function buildPatterns() {
       pressure: "medium",
       title: "Some stances have missing support structure",
       summary: `${unmappedWithStance.map((issue) => issue.label).join(", ")} have a judgment but lack grounder or disagreement weights.`,
+      basis: "These cases have a stance selected, but the grounding or disagreement sliders have not both been filled in.",
       check: "Support completion test",
-      question: "Is the judgment being asserted faster than its grounding and disagreement explanation can be named?"
+      question: "Is the judgment being asserted faster than its grounding and disagreement explanation can be named?",
+      nextStep: "Add the missing weights or mark the case unsure until the support structure is clear."
     });
   }
 
