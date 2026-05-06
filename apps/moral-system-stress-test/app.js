@@ -760,7 +760,15 @@ function renderElements() {
                   </div>
                 </div>
                 <fieldset class="substantiation-checks">
-                  <legend>Substantiation checks</legend>
+                  <legend class="substantiation-legend">
+                    <span>Substantiation checks</span>
+                    <button class="substantiation-help" type="button" aria-label="Explain substantiation checks">
+                      <span class="label-help-dot" aria-hidden="true">?</span>
+                      <span class="substantiation-tooltip" role="tooltip">
+                        These boxes name the specific jobs this component must do in a coherent objective moral system. Check a box only when the account gives an actual substantiation, not just a label or assertion. A component is ready only when it is included, has a substantiation route, has at least supported strength, and satisfies every check. Leave a box unchecked when that part still needs an argument.
+                      </span>
+                    </button>
+                  </legend>
                   ${checklist}
                 </fieldset>
                 <details class="optional-note">

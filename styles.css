@@ -6507,6 +6507,61 @@ body.app-morality #report-step {
   text-transform: uppercase;
 }
 
+.substantiation-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.substantiation-help {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: help;
+}
+
+.substantiation-help .label-help-dot {
+  position: static;
+  transform: none;
+}
+
+.substantiation-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -14px;
+  z-index: 24;
+  width: min(360px, calc(100vw - 48px));
+  padding: 12px;
+  border: 1px solid rgba(151, 84, 77, 0.55);
+  border-radius: var(--radius);
+  background: #fffaf0;
+  box-shadow: 0 16px 34px rgba(35, 19, 5, 0.18);
+  color: var(--moral-ink);
+  font-size: 0.82rem;
+  font-weight: 750;
+  letter-spacing: 0;
+  line-height: 1.42;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  text-transform: none;
+  transform: translateY(-4px);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.substantiation-help:hover .substantiation-tooltip,
+.substantiation-help:focus-visible .substantiation-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .optional-note summary {
   cursor: pointer;
   color: var(--moral-blue);
@@ -6716,6 +6771,15 @@ body.app-morality #report-step {
     right: 16px !important;
     bottom: auto !important;
     left: 16px !important;
+    width: auto;
+    max-width: none;
+  }
+
+  .substantiation-tooltip {
+    position: fixed;
+    top: 84px;
+    right: 16px;
+    left: 16px;
     width: auto;
     max-width: none;
   }
