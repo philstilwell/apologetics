@@ -1534,13 +1534,9 @@ function applyPreset(presetId) {
   state.claim = preset.claim;
   state.claimPosition = claimPositionForClaim(preset.claim);
   preset.components.forEach((elementId) => {
-    const element = getElementById(elementId);
     state.routes[elementId] = preset.routeOverrides?.[elementId] || preset.route;
     state.strength[elementId] = preset.strengthOverrides?.[elementId] || preset.strength || 3;
     state.checks[elementId] = {};
-    element?.checks?.forEach((check) => {
-      state.checks[elementId][check.id] = true;
-    });
     state.notes[elementId] =
       preset.notes[elementId] ||
       "";
