@@ -606,6 +606,39 @@
         </aside>
       </section>
 
+      <section class="overreach-card summary-panel" id="summary-step" aria-labelledby="summary-title">
+        <p class="app-step">Summary</p>
+        <h2 id="summary-title">What this setting is showing</h2>
+
+        <div class="summary-grid">
+          <article class="summary-card">
+            <span>Die lesson</span>
+            <h3 id="dieSummaryTitle">Faith is already worsening the decision.</h3>
+            <p id="dieSummaryText">
+              Before a roll even happens, your current confidence is budgeting for more sixes than
+              the evidence line supports.
+            </p>
+          </article>
+          <article class="summary-card">
+            <span>Faith lesson</span>
+            <h3 id="transferSummaryTitle">The selected claim is being carried by a large measure of faith.</h3>
+            <p id="transferSummaryText">
+              The current claim posture is using more confidence than the support rating provides,
+              then leaning real commitments onto that extra confidence.
+            </p>
+          </article>
+        </div>
+
+        <div class="report-box">
+          <label class="slider-label" for="summaryOutput">Copyable summary</label>
+          <textarea id="summaryOutput" readonly spellcheck="false"></textarea>
+          <div class="report-actions">
+            <button type="button" class="secondary" id="copySummary">Copy summary</button>
+            <span class="copy-status" id="copyStatus" aria-live="polite"></span>
+          </div>
+        </div>
+      </section>
+
       <section class="overreach-card" id="religion-step" aria-labelledby="religion-title">
         <p class="app-step">Religious pressure</p>
         <h2 id="religion-title">Why praising faith is intrinsically irrational</h2>
@@ -660,39 +693,6 @@
           already present in the method itself: any instruction to believe beyond perceived support,
           even for the sake of hope, is a standing instruction to reason less honestly.
         </p>
-      </section>
-
-      <section class="overreach-card summary-panel" id="summary-step" aria-labelledby="summary-title">
-        <p class="app-step">Summary</p>
-        <h2 id="summary-title">What this setting is showing</h2>
-
-        <div class="summary-grid">
-          <article class="summary-card">
-            <span>Die lesson</span>
-            <h3 id="dieSummaryTitle">Faith is already worsening the decision.</h3>
-            <p id="dieSummaryText">
-              Before a roll even happens, your current confidence is budgeting for more sixes than
-              the evidence line supports.
-            </p>
-          </article>
-          <article class="summary-card">
-            <span>Faith lesson</span>
-            <h3 id="transferSummaryTitle">The selected claim is being carried by a large measure of faith.</h3>
-            <p id="transferSummaryText">
-              The current claim posture is using more confidence than the support rating provides,
-              then leaning real commitments onto that extra confidence.
-            </p>
-          </article>
-        </div>
-
-        <div class="report-box">
-          <label class="slider-label" for="summaryOutput">Copyable summary</label>
-          <textarea id="summaryOutput" readonly spellcheck="false"></textarea>
-          <div class="report-actions">
-            <button type="button" class="secondary" id="copySummary">Copy summary</button>
-            <span class="copy-status" id="copyStatus" aria-live="polite"></span>
-          </div>
-        </div>
       </section>
     </main>
 

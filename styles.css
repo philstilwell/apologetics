@@ -8005,7 +8005,7 @@ body.app-overreach #summary-step {
 }
 
 .stakes-grid {
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  grid-template-columns: minmax(250px, 0.66fr) minmax(0, 1.34fr);
 }
 
 .transfer-grid {
@@ -8540,6 +8540,22 @@ body.app-overreach #summary-step {
   gap: 14px;
 }
 
+.simulation-panel {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  align-content: start;
+}
+
+.simulation-panel > .simulation-metrics {
+  display: contents;
+}
+
+.simulation-panel > .roll-panel,
+.simulation-panel > .consequence-panel,
+.simulation-panel > .simulation-caption {
+  grid-column: 1 / -1;
+}
+
 .mean-panel {
   display: grid;
   gap: 12px;
@@ -8625,6 +8641,26 @@ body.app-overreach #summary-step {
   margin: 8px 0 6px;
   font-size: clamp(1.5rem, 4vw, 2.6rem);
   line-height: 0.95;
+}
+
+.simulation-panel .sim-stat {
+  padding: 10px;
+}
+
+.simulation-panel .sim-stat span {
+  font-size: 0.64rem;
+  line-height: 1.2;
+}
+
+.simulation-panel .sim-stat strong {
+  margin: 6px 0 4px;
+  font-size: clamp(1.25rem, 2.5vw, 1.95rem);
+}
+
+.simulation-panel .sim-stat small {
+  margin-top: 4px;
+  font-size: 0.76rem;
+  line-height: 1.35;
 }
 
 .roll-strip-head {
@@ -8817,7 +8853,17 @@ body.app-overreach #summary-step {
     grid-template-columns: 1fr;
   }
 
+  .simulation-panel {
+    grid-template-columns: 1fr;
+  }
+
   .overreach-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) and (min-width: 821px) {
+  .simulation-panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
