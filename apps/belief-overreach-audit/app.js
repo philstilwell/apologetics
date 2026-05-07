@@ -3,7 +3,7 @@ const EVIDENCE_PROBABILITY = 1 / 6;
 const EVIDENCE_PERCENT = Number((EVIDENCE_PROBABILITY * 100).toFixed(1));
 const DICE_PER_BATCH = 10;
 const MAX_BATCHES = 30;
-const LOSS_PER_SHORTFALL = 100;
+const STAKE_PER_COMMITMENT = 100;
 
 const severityOptions = [
   {
@@ -702,21 +702,21 @@ function getComparisonView(simulation, severity) {
   const longRunDifference =
     expectedShortfall(simulation.totalDice, plannerB.plannedHits, EVIDENCE_PROBABILITY) -
     expectedShortfall(simulation.totalDice, plannerA.plannedHits, EVIDENCE_PROBABILITY);
-  const lossSeries = buildCumulativeLossSeries(simulation, plannerA.confidence, plannerB.confidence);
-  const currentExtraLoss = lossSeries.length > 0 ? lossSeries[lossSeries.length - 1].loss : 0;
+  const netSeries = buildCumulativeNetSeries(simulation, plannerA.confidence, plannerB.confidence);
+  const currentNetResult = netSeries.length > 0 ? netSeries[netSeries.length - 1].net : 0;
 
   return {
     plannerA,
     plannerB,
     severity,
-    lossSeries,
-    currentExtraLoss,
+    netSeries,
+    currentNetResult,
     longRunDifference: Math.abs(longRunDifference) <= 0.05 ? 0 : longRunDifference,
     longRunCostDifference: Math.abs(longRunDifference) <= 0.05 ? 0 : longRunDifference * severity.weight
   };
 }
 
-function buildCumulativeLossSeries(simulation, plannerAConfidence, plannerBConfidence) {
+function buildCumulativeNetSeries(simulation, plannerAConfidence, plannerBConfidence) {
   return simulation.cumulativeRates.map((point) => {
     const plannerA = getPlannerScenario(
       {
@@ -734,12 +734,17 @@ function buildCumulativeLossSeries(simulation, plannerAConfidence, plannerBConfi
       },
       plannerBConfidence
     );
-    const extraShortfall = Math.max(0, plannerB.realizedShortfall - plannerA.realizedShortfall);
+    const plannerANet = getPlannerNet(plannerA, point.hits);
+    const plannerBNet = getPlannerNet(plannerB, point.hits);
     return {
       round: point.round,
-      loss: extraShortfall * LOSS_PER_SHORTFALL
+      net: plannerBNet - plannerANet
     };
   });
+}
+
+function getPlannerNet(planner, actualHits) {
+  return (2 * Math.min(actualHits, planner.plannedHits) - planner.plannedHits) * STAKE_PER_COMMITMENT;
 }
 
 function describeConfidenceGap(gap) {
