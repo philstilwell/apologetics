@@ -8134,7 +8134,44 @@ body.app-overreach #summary-step {
 .scenario-facts article,
 .sim-stat,
 .summary-card {
+  position: relative;
   padding: 12px;
+}
+
+.fact-label {
+  margin-bottom: 8px;
+  color: var(--overreach-ink);
+  font-size: 0.98rem;
+  font-weight: 900;
+  line-height: 1.2;
+  cursor: help;
+}
+
+.fact-label .label-help-dot {
+  margin-left: 6px;
+}
+
+.scenario-facts .metric-tooltip {
+  top: calc(100% + 9px);
+  bottom: auto;
+  border-color: rgba(110, 74, 31, 0.24);
+  color: var(--overreach-ink);
+}
+
+.scenario-facts article:hover .metric-tooltip,
+.scenario-facts article:focus-within .metric-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.scenario-facts article:last-child .metric-tooltip {
+  right: 0;
+  left: auto;
+}
+
+.scenario-facts .metric-tooltip code {
+  font-size: 0.86em;
 }
 
 .scenario-facts p,
@@ -8332,6 +8369,89 @@ body.app-overreach #summary-step {
   display: grid;
   gap: 16px;
   margin-top: 14px;
+}
+
+.bridge-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 10px;
+}
+
+.bridge-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--overreach-muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.legend-swatch {
+  width: 28px;
+  height: 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(110, 74, 31, 0.22);
+}
+
+.legend-supported {
+  background:
+    linear-gradient(90deg, rgba(47, 109, 73, 0.98), rgba(101, 176, 129, 0.98)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.15) 0,
+      rgba(255, 255, 255, 0.15) 10px,
+      rgba(255, 255, 255, 0.05) 10px,
+      rgba(255, 255, 255, 0.05) 20px
+    );
+}
+
+.legend-overhang {
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(242, 197, 116, 0.95) 0,
+      rgba(242, 197, 116, 0.95) 12px,
+      rgba(250, 226, 173, 0.98) 12px,
+      rgba(250, 226, 173, 0.98) 24px
+    );
+}
+
+.legend-marker-chip {
+  position: relative;
+  width: 18px;
+  height: 16px;
+}
+
+.legend-marker-chip::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--overreach-deep);
+  transform: translateX(-50%);
+}
+
+.legend-marker-chip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--overreach-deep);
+  transform: translateX(-50%);
+}
+
+.legend-marker-chip-evidence::before,
+.legend-marker-chip-evidence::after {
+  background: var(--overreach-green);
 }
 
 .bridge-readout {

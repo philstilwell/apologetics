@@ -24,7 +24,7 @@
     <meta name="twitter:description" content="Use a fair die, a bridge metaphor, and a transfer panel to see what happens when belief outruns support.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260507-belief-overreach-trace">
+    <link rel="stylesheet" href="../../styles.css?v=20260507-belief-overreach-legend">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -184,22 +184,22 @@
         </article>
         <article class="metric-card">
           <span class="metric-label" tabindex="0" aria-describedby="overreach-gap-help">
-            <span class="metric-label-text">Faith gap</span>
+            <span class="metric-label-text">Measure of faith</span>
             <span class="label-help-dot" aria-hidden="true">?</span>
           </span>
           <span class="metric-tooltip" id="overreach-gap-help" role="tooltip">
-            Under this audit's definition, the faith gap is the portion of confidence that exceeds the evidence you perceive.
+            Under this audit's definition, the measure of faith is whatever degree of belief exceeds the warranted degree of belief.
           </span>
           <strong id="metricGap">41.3 pts</strong>
-          <small id="metricGapNote">Everything above 16.7% is confidence above the support line.</small>
+          <small id="metricGapNote">Everything above 16.7% is belief above the warranted degree of belief.</small>
         </article>
         <article class="metric-card">
           <span class="metric-label" tabindex="0" aria-describedby="overreach-exposure-help">
-            <span class="metric-label-text">Exposure mode</span>
+          <span class="metric-label-text">Exposure mode</span>
             <span class="label-help-dot" aria-hidden="true">?</span>
           </span>
           <span class="metric-tooltip" id="overreach-exposure-help" role="tooltip">
-            This combines the current faith gap with the selected consequence setting to show how
+            This combines the current measure of faith with the selected consequence setting to show how
             dangerous the current posture becomes when something important rides on it.
           </span>
           <strong id="metricExposure">Exposed</strong>
@@ -231,15 +231,47 @@
 
           <div class="scenario-facts">
             <article>
-              <strong>Deductive symmetry</strong>
+              <span class="metric-label fact-label" tabindex="0" aria-describedby="overreach-deduction-help">
+                <span class="metric-label-text">Deductive symmetry</span>
+                <span class="label-help-dot" aria-hidden="true">?</span>
+              </span>
+              <span class="metric-tooltip" id="overreach-deduction-help" role="tooltip">
+                This is the mathematical argument. If the die is fair, each face has the same
+                probability. Call that probability <code>p</code>. The six faces exhaust all
+                possible outcomes, so <code>p + p + p + p + p + p = 1</code>. That gives
+                <code>6p = 1</code>, so <code>p = 1/6 = 0.1667 = 16.67%</code>. Under the fairness
+                assumption, the next roll being a six is fixed by symmetry and probability
+                arithmetic, not by hope, intuition, or preference.
+              </span>
               <p>No side of a fair die has a privileged route to the next roll.</p>
             </article>
             <article>
-              <strong>Inductive experience</strong>
+              <span class="metric-label fact-label" tabindex="0" aria-describedby="overreach-induction-help">
+                <span class="metric-label-text">Inductive experience</span>
+                <span class="label-help-dot" aria-hidden="true">?</span>
+              </span>
+              <span class="metric-tooltip" id="overreach-induction-help" role="tooltip">
+                This is the empirical check. If you throw the die <code>n</code> times and get
+                <code>k</code> sixes, the observed rate is <code>k / n</code>. In short runs that
+                rate can swing high or low, but across longer runs it keeps settling near
+                <code>1/6</code>. Induction does not prove the next throw deductively. It shows
+                repeated experience converging on the same value that symmetry predicts.
+              </span>
               <p>Long runs keep settling around one six in every six throws.</p>
             </article>
             <article>
-              <strong>Honest credence</strong>
+              <span class="metric-label fact-label" tabindex="0" aria-describedby="overreach-credence-help">
+                <span class="metric-label-text">Honest credence</span>
+                <span class="label-help-dot" aria-hidden="true">?</span>
+              </span>
+              <span class="metric-tooltip" id="overreach-credence-help" role="tooltip">
+                This is the norm for belief. If the support you perceive is
+                <code>1/6 = 16.67%</code>, then honest credence stops there. On this tool's
+                definition, faith begins when belief rises above that line. For example, if you
+                choose <code>40%</code>, the measure of faith is <code>40 - 16.7 = 23.3</code> points.
+                Core rationality here is simply: <code>belief = perceived support</code>, not
+                <code>belief &gt; perceived support</code>.
+              </span>
               <p>If you stop at 16.7%, belief stays inside the support you perceive.</p>
             </article>
           </div>
@@ -289,11 +321,11 @@
               <div class="gauge-pointer" id="gaugePointer"></div>
             </div>
             <div class="gauge-label-row">
-              <span>Confidence above support</span>
+              <span>Measure of faith</span>
               <span id="gaugeGapLabel">41.3 points</span>
             </div>
             <p class="confidence-caption" id="gaugeGapNote">
-              The gold segment is the faith gap: the part of your confidence that extends beyond the green support line.
+              The gold striped segment is the measure of faith: whatever degree of belief exceeds the warranted degree of belief marked by the green support line.
             </p>
           </div>
 
@@ -319,9 +351,14 @@
               <div class="bridge-marker bridge-marker-evidence" id="bridgeEvidenceMarker"></div>
               <div class="bridge-marker bridge-marker-belief" id="bridgeBeliefMarker"></div>
             </div>
+            <div class="bridge-legend" aria-label="Bridge legend">
+              <span><span class="legend-swatch legend-supported" aria-hidden="true"></span>Supported span</span>
+              <span><span class="legend-swatch legend-overhang" aria-hidden="true"></span>Measure of faith</span>
+              <span><span class="legend-marker-chip legend-marker-chip-evidence" aria-hidden="true"></span>Support line</span>
+              <span><span class="legend-marker-chip legend-marker-chip-belief" aria-hidden="true"></span>Confidence line</span>
+            </div>
             <div class="bridge-scale-row">
               <span>0%</span>
-              <span>Support line</span>
               <span>100%</span>
             </div>
           </div>
@@ -333,9 +370,9 @@
               <p>The planks the die really gives you.</p>
             </article>
             <article>
-              <span>Unsupported overhang</span>
+              <span>Measure of faith</span>
               <strong id="bridgeOverhangLabel">41.3%</strong>
-              <p>The portion this tool labels faith.</p>
+              <p>Whatever degree of belief exceeds the warranted degree of belief.</p>
             </article>
             <article>
               <span>Inside your own position</span>
@@ -544,11 +581,11 @@
               <div class="gauge-pointer" id="transferPointer"></div>
             </div>
             <div class="gauge-label-row">
-              <span>Confidence above support</span>
+              <span>Measure of faith</span>
               <span id="transferGapReadout">46 points</span>
             </div>
             <p class="confidence-caption" id="transferGapNote">
-              The gold segment is the faith gap: the part of your confidence that extends beyond the support line you entered.
+              The gold striped segment is the measure of faith: whatever degree of belief exceeds the warranted degree of belief you entered.
             </p>
           </div>
 
@@ -565,9 +602,10 @@
         <p class="overreach-lead">
           Many religions do not merely permit confidence to outrun perceived support. They praise
           it. They treat trust, surrender, loyalty, or obedience beyond what the believer thinks
-          they can really show as spiritually admirable. Under this audit's definition, that is
-          intrinsically irrational because it tells belief to exceed the very support the believer
-          themselves perceives.
+          they can really show as spiritually admirable. They also often recruit motives such as
+          hope, comfort, longing, fear, or the desire for meaning to push confidence upward.
+          Under this audit's definition, that is intrinsically irrational because none of those
+          motives increases the actual degree of evidence the believer perceives.
         </p>
 
         <div class="summary-grid">
@@ -577,6 +615,15 @@
             <p>
               Core rationality says confidence should stop at the support line. A religion that
               praises faith asks the person to cross that line on purpose.
+            </p>
+          </article>
+          <article class="summary-card">
+            <span>Hope pressure</span>
+            <h3>Hope can motivate belief without supporting it.</h3>
+            <p>
+              Hope for healing, rescue, justice, purpose, reunion, or eternal life can make a
+              higher confidence setting feel attractive. But hope changes what a person wants to
+              be true, not how much support they actually perceive.
             </p>
           </article>
           <article class="summary-card">
@@ -600,8 +647,8 @@
 
         <p class="bridge-caption">
           On this view, the problem is not only that faith sometimes ends badly. The problem is
-          already present in the method itself: any instruction to believe beyond perceived support
-          is a standing instruction to reason less honestly.
+          already present in the method itself: any instruction to believe beyond perceived support,
+          even for the sake of hope, is a standing instruction to reason less honestly.
         </p>
       </section>
 
@@ -620,7 +667,7 @@
           </article>
           <article class="summary-card">
             <span>Faith lesson</span>
-            <h3 id="transferSummaryTitle">The selected claim is being carried by a large faith gap.</h3>
+            <h3 id="transferSummaryTitle">The selected claim is being carried by a large measure of faith.</h3>
             <p id="transferSummaryText">
               The current claim posture is using more confidence than the support rating provides,
               then leaning real commitments onto that extra confidence.

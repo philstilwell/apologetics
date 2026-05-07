@@ -380,7 +380,7 @@ function render() {
   elements.longRunCostNote.textContent =
     plannerComparison.averageExtraShortfall > 0
       ? `If repeated many times, the faith-driven planner pays about ${formatNumber(plannerComparison.averageExtraShortfall)} more setbacks on average.`
-      : "If repeated many times, both planners perform the same because there is no faith gap.";
+      : "If repeated many times, both planners perform the same because there is no measure of faith.";
   renderSimulation(simulation, severity);
   renderLastRoll(simulation.lastRoll);
 
@@ -592,7 +592,7 @@ function describeConfidenceGap(gap) {
   if (gap <= 10) {
     return {
       brief: "Confidence is leaning slightly beyond the support line.",
-      detail: "A small faith gap is already present under this audit's definition.",
+      detail: "A small measure of faith is already present under this audit's definition.",
       caption:
         "The die is still only giving you 16.7%. The extra confidence is small, but it adds no new information. It only lets the decision outrun the support."
     };
@@ -650,15 +650,15 @@ function buildBridgeCaption(gap, share) {
     return "The belief marker is still standing on supported planks. No overhang is being asked to carry weight.";
   }
 
-  return `At this setting, ${formatPercent(share)} of your current confidence stands beyond the support line. That is the portion this tool labels faith.`;
+  return `At this setting, ${formatPercent(share)} of your current confidence stands beyond the warranted degree of belief. That striped overhang is the measure of faith.`;
 }
 
 function buildGapNote(gap, supportLineLabel) {
   if (gap <= 0.05) {
-    return `No faith gap is present here. Your confidence is staying inside the ${supportLineLabel}.`;
+    return `No measure of faith is present here. Your confidence is staying inside the warranted degree of belief marked by the ${supportLineLabel}.`;
   }
 
-  return `The gold segment is the faith gap: the part of your confidence that extends beyond the ${supportLineLabel}.`;
+  return `The gold striped segment is the measure of faith: whatever degree of belief exceeds the warranted degree of belief marked by the ${supportLineLabel}.`;
 }
 
 function buildRegressionCaption(simulation) {
@@ -725,27 +725,27 @@ function describeTransferRisk(gap, commitmentWeight) {
 
   if (score <= 30) {
     return {
-      title: "A modest faith gap is present.",
+      title: "A modest measure of faith is present.",
       band: "Light overreach"
     };
   }
 
   if (score <= 80) {
     return {
-      title: "The selected claim is carrying a visible faith gap.",
+      title: "The selected claim is carrying a visible measure of faith.",
       band: "Live overreach"
     };
   }
 
   if (score <= 150) {
     return {
-      title: "The selected claim is carrying a large faith gap.",
+      title: "The selected claim is carrying a large measure of faith.",
       band: "Serious overreach"
     };
   }
 
   return {
-    title: "The selected claim is carrying a very heavy faith gap.",
+    title: "The selected claim is carrying a very heavy measure of faith.",
     band: "Severe overreach"
   };
 }
@@ -800,7 +800,7 @@ function buildSummaryOutput(simulation, severity, claim, transferRisk) {
     "Fair-die drill",
     `- Evidence support for the next roll being a six: ${formatPercent(EVIDENCE_PERCENT)}`,
     `- Chosen confidence: ${formatPercent(state.confidence)}`,
-    `- Faith gap (confidence above perceived support): ${formatNumber(Math.max(0, state.confidence - EVIDENCE_PERCENT))} points`,
+    `- Measure of faith (belief above warranted belief): ${formatNumber(Math.max(0, state.confidence - EVIDENCE_PERCENT))} points`,
     `- Tracked throws of 10 dice: ${simulation.roundsCount} of ${MAX_BATCHES}`,
     `- Total dice tracked: ${simulation.totalDice}`,
     `- Evidence-based hits across tracked dice: ${formatNumber(simulation.evidenceHits)}`,
@@ -816,12 +816,12 @@ function buildSummaryOutput(simulation, severity, claim, transferRisk) {
     `- Claim: ${claim.title}`,
     `- Perceived support: ${formatPercent(state.transferEvidence)}`,
     `- Confidence anyway: ${formatPercent(state.transferBelief)}`,
-    `- Faith gap (confidence above perceived support): ${formatNumber(transferGap)} points`,
+    `- Measure of faith (belief above warranted belief): ${formatNumber(transferGap)} points`,
     `- Commitments riding on the claim: ${commitmentList}`,
     `- Current overreach band: ${transferRisk.band}`,
     "",
     "Plain reading",
-    "The die section shows that faith adds no value to the decision. It licenses extra commitments beyond perceived support, which lowers expected success and raises long-run cost. Across longer runs, the observed share of sixes tends to regress toward the same 16.7% mean rather than toward your preferred confidence level. The transfer section applies the same point to religious choices, including which god, if any, to worship. When a religion praises this very overreach as virtue, the method itself is irrational on this audit's definition because it tells belief to exceed perceived support on purpose."
+    "The die section shows that faith adds no value to the decision. It licenses extra commitments beyond perceived support, which lowers expected success and raises long-run cost. Across longer runs, the observed share of sixes tends to regress toward the same 16.7% mean rather than toward your preferred confidence level. The transfer section applies the same point to religious choices, including which god, if any, to worship. Hope, comfort, longing, or fear may explain why people raise confidence above perceived support, but those motives do not increase evidential support. When a religion praises this very overreach as virtue, the method itself is irrational on this audit's definition because it tells belief to exceed perceived support on purpose."
   ].join("\n");
 }
 
