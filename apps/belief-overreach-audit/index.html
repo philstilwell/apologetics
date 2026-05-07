@@ -261,7 +261,7 @@
             type="range"
             min="0"
             max="100"
-            step="1"
+            step="0.1"
             value="58"
           >
           <div class="slider-scale" aria-hidden="true">
@@ -271,7 +271,7 @@
             <span>100%</span>
           </div>
           <div class="quick-picks" id="quickConfidenceButtons" aria-label="Common confidence presets">
-            <button type="button" data-confidence="17">16.7%</button>
+            <button type="button" data-confidence="16.7">16.7%</button>
             <button type="button" data-confidence="33">33%</button>
             <button type="button" data-confidence="50">50%</button>
             <button type="button" data-confidence="75">75%</button>
@@ -289,9 +289,12 @@
               <div class="gauge-pointer" id="gaugePointer"></div>
             </div>
             <div class="gauge-label-row">
-              <span>Faith gap</span>
+              <span>Confidence above support</span>
               <span id="gaugeGapLabel">41.3 points</span>
             </div>
+            <p class="confidence-caption" id="gaugeGapNote">
+              The gold segment is the faith gap: the part of your confidence that extends beyond the green support line.
+            </p>
           </div>
 
           <p class="confidence-caption" id="confidenceCaption">
@@ -520,9 +523,12 @@
               <div class="gauge-pointer" id="transferPointer"></div>
             </div>
             <div class="gauge-label-row">
-              <span>Faith gap</span>
+              <span>Confidence above support</span>
               <span id="transferGapReadout">46 points</span>
             </div>
+            <p class="confidence-caption" id="transferGapNote">
+              The gold segment is the faith gap: the part of your confidence that extends beyond the support line you entered.
+            </p>
           </div>
 
           <fieldset class="option-fieldset">
@@ -530,6 +536,52 @@
             <div class="commitment-grid" id="commitmentGrid"></div>
           </fieldset>
         </aside>
+      </section>
+
+      <section class="overreach-card" id="religion-step" aria-labelledby="religion-title">
+        <p class="app-step">Religious pressure</p>
+        <h2 id="religion-title">Why praising faith is intrinsically irrational</h2>
+        <p class="overreach-lead">
+          Many religions do not merely permit confidence to outrun perceived support. They praise
+          it. They treat trust, surrender, loyalty, or obedience beyond what the believer thinks
+          they can really show as spiritually admirable. Under this audit's definition, that is
+          intrinsically irrational because it tells belief to exceed the very support the believer
+          themselves perceives.
+        </p>
+
+        <div class="summary-grid">
+          <article class="summary-card">
+            <span>Rule change</span>
+            <h3>It treats overbelief as a virtue.</h3>
+            <p>
+              Core rationality says confidence should stop at the support line. A religion that
+              praises faith asks the person to cross that line on purpose.
+            </p>
+          </article>
+          <article class="summary-card">
+            <span>Error control</span>
+            <h3>It weakens self-correction.</h3>
+            <p>
+              Once doubt is framed as weakness or disloyalty, evidence loses authority. That makes
+              bad beliefs harder to reduce when the support is thin.
+            </p>
+          </article>
+          <article class="summary-card">
+            <span>Worship choice</span>
+            <h3>It worsens high-stakes religious decisions.</h3>
+            <p>
+              If several religions or gods compete for allegiance, a method that rewards confidence
+              beyond perceived support makes it more likely that worship, obedience, and identity
+              attach to the wrong object or path.
+            </p>
+          </article>
+        </div>
+
+        <p class="bridge-caption">
+          On this view, the problem is not only that faith sometimes ends badly. The problem is
+          already present in the method itself: any instruction to believe beyond perceived support
+          is a standing instruction to reason less honestly.
+        </p>
       </section>
 
       <section class="overreach-card summary-panel" id="summary-step" aria-labelledby="summary-title">

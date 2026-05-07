@@ -1,6 +1,6 @@
 const STORAGE_KEY = "belief-overreach-audit-v1";
 const EVIDENCE_PROBABILITY = 1 / 6;
-const EVIDENCE_PERCENT = EVIDENCE_PROBABILITY * 100;
+const EVIDENCE_PERCENT = Number((EVIDENCE_PROBABILITY * 100).toFixed(1));
 const TRIAL_OPTIONS = [6, 18, 60];
 
 const severityOptions = [
@@ -163,6 +163,7 @@ const elements = {
   gaugeEvidenceBar: document.querySelector("#gaugeEvidenceBar"),
   gaugeFaithBar: document.querySelector("#gaugeFaithBar"),
   gaugePointer: document.querySelector("#gaugePointer"),
+  gaugeGapNote: document.querySelector("#gaugeGapNote"),
   confidenceCaption: document.querySelector("#confidenceCaption"),
   bridgeSupported: document.querySelector("#bridgeSupported"),
   bridgeOverhang: document.querySelector("#bridgeOverhang"),
@@ -205,6 +206,7 @@ const elements = {
   transferFaithBar: document.querySelector("#transferFaithBar"),
   transferPointer: document.querySelector("#transferPointer"),
   transferGapReadout: document.querySelector("#transferGapReadout"),
+  transferGapNote: document.querySelector("#transferGapNote"),
   commitmentGrid: document.querySelector("#commitmentGrid"),
   dieSummaryTitle: document.querySelector("#dieSummaryTitle"),
   dieSummaryText: document.querySelector("#dieSummaryText"),
@@ -227,7 +229,7 @@ render();
 
 function bindEvents() {
   elements.confidenceRange.addEventListener("input", (event) => {
-    state.confidence = clampNumber(Number(event.target.value), 0, 100, defaultState.confidence);
+    state.confidence = normalizeConfidence(clampNumber(Number(event.target.value), 0, 100, defaultState.confidence));
     persistState();
     render();
   });
@@ -238,7 +240,7 @@ function bindEvents() {
       return;
     }
 
-    state.confidence = clampNumber(Number(button.dataset.confidence), 0, 100, defaultState.confidence);
+    state.confidence = normalizeConfidence(clampNumber(Number(button.dataset.confidence), 0, 100, defaultState.confidence));
     persistState();
     render();
   });
@@ -360,6 +362,7 @@ function render() {
   setBarWidth(elements.gaugeEvidenceBar, EVIDENCE_PERCENT);
   setBarSegment(elements.gaugeFaithBar, EVIDENCE_PERCENT, confidenceGap);
   setPointer(elements.gaugePointer, state.confidence);
+  elements.gaugeGapNote.textContent = buildGapNote(confidenceGap, "green support line");
   elements.confidenceCaption.textContent = confidenceMessage.caption;
 
   setBarWidth(elements.bridgeSupported, EVIDENCE_PERCENT);
@@ -402,6 +405,7 @@ function render() {
   setBarSegment(elements.transferFaithBar, state.transferEvidence, transferGap);
   setPointer(elements.transferPointer, state.transferBelief);
   elements.transferGapReadout.textContent = `${formatNumber(transferGap)} points`;
+  elements.transferGapNote.textContent = buildGapNote(transferGap, "support line you entered");
   renderCommitmentOptions();
 
   elements.dieSummaryTitle.textContent = buildDieSummaryTitle(confidenceGap, simulation.unsupportedPlans);
@@ -599,6 +603,14 @@ function buildBridgeCaption(gap, share) {
   return `At this setting, ${formatPercent(share)} of your current confidence stands beyond the support line. That is the portion this tool labels faith.`;
 }
 
+function buildGapNote(gap, supportLineLabel) {
+  if (gap <= 0.05) {
+    return `No faith gap is present here. Your confidence is staying inside the ${supportLineLabel}.`;
+  }
+
+  return `The gold segment is the faith gap: the part of your confidence that extends beyond the ${supportLineLabel}.`;
+}
+
 function describeStakesCaption(gap, severity) {
   if (gap <= 0.5) {
     return `With the slider at or below the evidence line, ${severity.label.toLowerCase()} still matters, but you are not adding extra belief beyond what the die supports.`;
@@ -742,7 +754,7 @@ function buildSummaryOutput(simulation, severity, claim, transferRisk) {
     `- Current overreach band: ${transferRisk.band}`,
     "",
     "Plain reading",
-    "The die section shows that faith adds no value to the decision. It licenses extra commitments beyond perceived support, which lowers expected success and raises long-run cost. The transfer section applies the same point to religious choices, including which god, if any, to worship."
+    "The die section shows that faith adds no value to the decision. It licenses extra commitments beyond perceived support, which lowers expected success and raises long-run cost. The transfer section applies the same point to religious choices, including which god, if any, to worship. When a religion praises this very overreach as virtue, the method itself is irrational on this audit's definition because it tells belief to exceed perceived support on purpose."
   ].join("\n");
 }
 
@@ -786,7 +798,7 @@ function expectedExtraShortfall(trials, evidenceHits, plannedHits, probability) 
 function highlightQuickButtons() {
   const buttons = Array.from(elements.quickConfidenceButtons.querySelectorAll("button[data-confidence]"));
   buttons.forEach((button) => {
-    button.classList.toggle("active", Number(button.dataset.confidence) === state.confidence);
+    button.classList.toggle("active", Math.abs(Number(button.dataset.confidence) - state.confidence) < 0.05);
   });
 }
 
@@ -863,9 +875,10 @@ function loadState() {
   try {
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
     const claim = getClaim(raw.transferClaim || defaultState.transferClaim);
+    const savedConfidence = normalizeConfidence(clampNumber(raw.confidence, 0, 100, defaultState.confidence));
 
     return {
-      confidence: clampNumber(raw.confidence, 0, 100, defaultState.confidence),
+      confidence: savedConfidence,
       trials: validateTrials(raw.trials),
       severity: validateSeverity(raw.severity),
       transferClaim: claim.id,
@@ -892,6 +905,10 @@ function persistState() {
 function clampNumber(value, min, max, fallback) {
   const numeric = Number.isFinite(value) ? value : fallback;
   return Math.min(max, Math.max(min, numeric));
+}
+
+function normalizeConfidence(value) {
+  return value === 17 ? EVIDENCE_PERCENT : value;
 }
 
 function formatPercent(value) {
