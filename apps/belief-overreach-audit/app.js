@@ -8,37 +8,46 @@ const severityOptions = [
     id: "minor",
     label: "Minor inconvenience",
     weight: 1,
-    detail: "Each collapsed plan wastes a little time or creates a small embarrassment.",
-    singularUnit: "small miss",
-    pluralUnit: "small misses"
+    detail: "Each shortfall wastes a little time or creates a small inconvenience.",
+    singularUnit: "minor setback",
+    pluralUnit: "minor setbacks"
   },
   {
     id: "money",
-    label: "Resource loss",
+    label: "Budget strain",
     weight: 2.3,
-    detail: "Each collapsed plan costs real money, effort, or emotional bandwidth.",
-    singularUnit: "costly miss",
-    pluralUnit: "costly misses"
+    detail: "Each shortfall costs money, effort, or emotional bandwidth.",
+    singularUnit: "costly setback",
+    pluralUnit: "costly setbacks"
   },
   {
     id: "safety",
-    label: "Safety margin",
+    label: "Safety margin loss",
     weight: 4.2,
-    detail: "Each collapsed plan removes backup room and leaves you more exposed.",
-    singularUnit: "safety gap",
-    pluralUnit: "safety gaps"
+    detail: "Each shortfall removes backup room and leaves you more exposed.",
+    singularUnit: "safety loss",
+    pluralUnit: "safety losses"
   },
   {
     id: "catastrophic",
-    label: "Single-point failure",
+    label: "Single-point exposure",
     weight: 7,
-    detail: "Each collapsed plan lands on something you cannot casually replace.",
-    singularUnit: "critical failure",
-    pluralUnit: "critical failures"
+    detail: "Each shortfall lands on something you cannot easily replace or retry.",
+    singularUnit: "critical setback",
+    pluralUnit: "critical setbacks"
   }
 ];
 
 const transferClaims = [
+  {
+    id: "worship",
+    title: "Which god, if any, should I worship?",
+    prompt: "One god or one religious path deserves worship strongly enough to justify allegiance, ritual, obedience, and identity.",
+    tension:
+      "If the support is thinner than the confidence, faith can push a person to worship one god, reject rivals, or reject no-worship paths without enough evidence to license that choice.",
+    suggestedEvidence: 24,
+    suggestedBelief: 76
+  },
   {
     id: "prayer",
     title: "Answered prayer",
@@ -79,6 +88,18 @@ const transferClaims = [
 
 const commitments = [
   {
+    id: "worship",
+    label: "Give worship, obedience, or loyalty to it",
+    detail: "Let the claim direct prayer, ritual, obedience, or identity.",
+    weight: 3.1
+  },
+  {
+    id: "exclude",
+    label: "Reject rival gods or no-god paths",
+    detail: "Use the claim to rule out alternative worship options or non-worship entirely.",
+    weight: 2.5
+  },
+  {
     id: "share",
     label: "Tell others the claim is settled",
     detail: "Present the conclusion as already established rather than still under live review.",
@@ -114,10 +135,10 @@ const defaultState = {
   confidence: 58,
   trials: 18,
   severity: "money",
-  transferClaim: "prayer",
-  transferEvidence: 28,
-  transferBelief: 74,
-  commitments: ["share", "decide", "delay"],
+  transferClaim: "worship",
+  transferEvidence: 24,
+  transferBelief: 76,
+  commitments: ["worship", "exclude", "decide"],
   simulation: {
     rolls: []
   }
@@ -165,6 +186,12 @@ const elements = {
   consequenceSummary: document.querySelector("#consequenceSummary"),
   consequenceStrip: document.querySelector("#consequenceStrip"),
   simulationCaption: document.querySelector("#simulationCaption"),
+  evidencePlannerPlan: document.querySelector("#evidencePlannerPlan"),
+  faithPlannerPlan: document.querySelector("#faithPlannerPlan"),
+  decisionPenalty: document.querySelector("#decisionPenalty"),
+  decisionPenaltyNote: document.querySelector("#decisionPenaltyNote"),
+  longRunCost: document.querySelector("#longRunCost"),
+  longRunCostNote: document.querySelector("#longRunCostNote"),
   claimButtons: document.querySelector("#claimButtons"),
   claimTitle: document.querySelector("#claimTitle"),
   claimPrompt: document.querySelector("#claimPrompt"),
@@ -310,6 +337,7 @@ function render() {
   const confidenceMessage = describeConfidenceGap(confidenceGap);
   const exposure = describeExposure(confidenceGap, severity.weight);
   const simulation = getSimulationNumbers();
+  const plannerComparison = getPlannerComparison(simulation, severity);
   const transferGap = Math.max(0, state.transferBelief - state.transferEvidence);
   const transferCommitmentWeight = getCommitmentWeight(state.commitments);
   const transferRisk = describeTransferRisk(transferGap, transferCommitmentWeight);
@@ -346,6 +374,18 @@ function render() {
   highlightTrialButtons();
   highlightSeverityButtons();
   elements.stakesCaption.textContent = describeStakesCaption(confidenceGap, severity);
+  elements.evidencePlannerPlan.textContent = `${simulation.evidenceHits} hits`;
+  elements.faithPlannerPlan.textContent = `${simulation.plannedHits} hits`;
+  elements.decisionPenalty.textContent = simulation.unsupportedPlans > 0 ? `+${simulation.unsupportedPlans}` : "0";
+  elements.decisionPenaltyNote.textContent =
+    simulation.unsupportedPlans > 0
+      ? `${simulation.unsupportedPlans} extra planned hits are already being licensed before any roll happens.`
+      : "No extra commitments are being licensed beyond the support line.";
+  elements.longRunCost.textContent = plannerComparison.averageExtraCost > 0 ? `+${formatNumber(plannerComparison.averageExtraCost)}` : "0";
+  elements.longRunCostNote.textContent =
+    plannerComparison.averageExtraShortfall > 0
+      ? `If repeated many times, the faith-driven planner pays about ${formatNumber(plannerComparison.averageExtraShortfall)} more setbacks on average.`
+      : "If repeated many times, both planners perform the same because there is no faith gap.";
   renderSimulation(simulation, severity);
   renderLastRoll(simulation.lastRoll);
 
@@ -498,26 +538,26 @@ function describeConfidenceGap(gap) {
   if (gap <= 10) {
     return {
       brief: "Confidence is leaning slightly beyond the support line.",
-      detail: "A small faith gap is already present, even if it feels modest.",
+      detail: "A small faith gap is already present under this audit's definition.",
       caption:
-        "The die is still only giving you 16.7%. The extra confidence is small, but it is not coming from the evidence line itself."
+        "The die is still only giving you 16.7%. The extra confidence is small, but it adds no new information. It only lets the decision outrun the support."
     };
   }
 
   if (gap <= 30) {
     return {
-      brief: "A substantial slice of confidence is unsupported.",
+      brief: "A substantial slice of confidence is above the support line.",
       detail: "This setting is asking the die to carry much more than one honest chance in six.",
       caption:
-        "This is no longer a minor lean. A noticeable chunk of your certainty is coming from faith rather than the support you perceive."
+        "This is no longer a minor lean. A noticeable chunk of your certainty lies above the support you perceive. This tool labels that excess confidence faith, and it worsens the decision rather than improving it."
     };
   }
 
   return {
-    brief: "Most of the current posture is overhang.",
+    brief: "Most of the current confidence is above the support line.",
     detail: "The larger part of this confidence setting no longer rests on what the die supplies.",
     caption:
-      "At this level, the overhang dominates the position. The die has not strengthened. Only the confidence has."
+      "At this level, the overhang dominates the position. The die has not strengthened. Only the confidence has, so the decision quality is now being driven mostly by faith."
   };
 }
 
@@ -533,21 +573,21 @@ function describeExposure(gap, severityWeight) {
 
   if (score <= 45) {
     return {
-      label: "Leaning",
-      detail: "Some commitment is already being placed on confidence the evidence does not supply."
+      label: "Strained",
+      detail: "Some commitment is already being placed on a worse-than-evidence decision posture."
     };
   }
 
   if (score <= 110) {
     return {
       label: "Exposed",
-      detail: "Real costs now ride on unsupported belief rather than on the evidence line alone."
+      detail: "Real costs now ride on confidence the evidence would not license."
     };
   }
 
   return {
-    label: "Ruin-prone",
-    detail: "At this combination of gap and stakes, overreach is poised to become costly fast."
+    label: "Acute",
+    detail: "At this combination of gap and stakes, even a modest run of misses can become costly fast."
   };
 }
 
@@ -556,7 +596,7 @@ function buildBridgeCaption(gap, share) {
     return "The belief marker is still standing on supported planks. No overhang is being asked to carry weight.";
   }
 
-  return `At this setting, ${formatPercent(share)} of your current confidence stands beyond the support line. That is the portion being carried by faith rather than perceived evidence.`;
+  return `At this setting, ${formatPercent(share)} of your current confidence stands beyond the support line. That is the portion this tool labels faith.`;
 }
 
 function describeStakesCaption(gap, severity) {
@@ -564,12 +604,12 @@ function describeStakesCaption(gap, severity) {
     return `With the slider at or below the evidence line, ${severity.label.toLowerCase()} still matters, but you are not adding extra belief beyond what the die supports.`;
   }
 
-  return `${severity.label} does not make the die kinder. It just makes each unsupported plan more expensive when the world fails to cooperate.`;
+  return `${severity.label} does not make the die kinder. Faith does not improve the decision. It changes how expensive each overreach-driven shortfall becomes when the world fails to cooperate.`;
 }
 
 function describeConsequenceSummary(collapsed, severity) {
   if (collapsed <= 0) {
-    return "No collapsed plans in this run.";
+    return "No costly shortfall in this run.";
   }
 
   return `${collapsed} ${formatSeverityUnit(severity, collapsed)}`;
@@ -577,18 +617,24 @@ function describeConsequenceSummary(collapsed, severity) {
 
 function buildSimulationCaption(simulation, severity) {
   if (simulation.unsupportedPlans <= 0) {
-    return "Your plan is not padded with extra certainty here. Misses can still happen, but they are not being created by overreach beyond the support line.";
+    return "Your plan is not padded with extra certainty here. Misses can still happen, but they are not being created by confidence above the support line.";
   }
 
   const unsupported = simulation.unsupportedPlans;
   const shortfall = simulation.runShortfall;
-  const lead = `Before the sequence began, ${unsupported} of your planned hits were already unsupported by the evidence.`;
+  const evidenceShortfall = Math.max(0, simulation.evidenceHits - simulation.actualHits);
+  const extraRunShortfall = Math.max(0, shortfall - evidenceShortfall);
+  const lead = `Before the sequence began, ${unsupported} of your planned hits were already above the support line.`;
 
   if (shortfall <= 0) {
     return `${lead} This particular run happened to rescue the posture, but the extra plans were still not supplied by the die itself.`;
   }
 
-  return `${lead} In this run, the plan fell short by ${shortfall}, so the unsupported posture turned into ${formatSeverityUnit(severity, shortfall)}.`;
+  if (extraRunShortfall > 0) {
+    return `${lead} In this run, faith added ${extraRunShortfall} extra ${formatSeverityUnit(severity, extraRunShortfall)} beyond what the evidence-capped planner would have paid.`;
+  }
+
+  return `${lead} In this run, the overreach did not add extra realized cost, but it was still a worse decision because the extra commitments were never licensed by the evidence.`;
 }
 
 function describeTransferRisk(gap, commitmentWeight) {
@@ -603,27 +649,27 @@ function describeTransferRisk(gap, commitmentWeight) {
 
   if (score <= 30) {
     return {
-      title: "A modest overhang is present.",
+      title: "A modest faith gap is present.",
       band: "Light overreach"
     };
   }
 
   if (score <= 80) {
     return {
-      title: "The selected claim is carrying a visible overhang.",
+      title: "The selected claim is carrying a visible faith gap.",
       band: "Live overreach"
     };
   }
 
   if (score <= 150) {
     return {
-      title: "The selected claim is carrying a large overhang.",
+      title: "The selected claim is carrying a large faith gap.",
       band: "Serious overreach"
     };
   }
 
   return {
-    title: "The selected claim is carrying a very heavy overhang.",
+    title: "The selected claim is carrying a very heavy faith gap.",
     band: "Severe overreach"
   };
 }
@@ -637,10 +683,10 @@ function buildTransferSummaryText(claim, gap) {
     : "no additional commitments";
 
   if (gap <= 0.5) {
-    return `For ${claim.title}, your confidence is not currently outrunning the support rating you gave it. Even if the claim matters deeply, this setting is not using faith to add extra certainty on top of that support.`;
+    return `For ${claim.title}, your confidence is not currently outrunning the support rating you gave it. Even if the claim matters deeply, this setting is not adding extra confidence on top of that support.`;
   }
 
-  return `For ${claim.title}, the current posture adds ${formatNumber(gap)} points of confidence beyond the support rating, then asks that extra confidence to carry ${commitmentNames}. That is where the danger of faith becomes salient under this definition.`;
+  return `For ${claim.title}, the current posture adds ${formatNumber(gap)} points of confidence beyond the support rating, then asks that extra confidence to carry ${commitmentNames}. That excess confidence is what this tool labels faith, and it lowers decision quality rather than improving it.`;
 }
 
 function buildDieSummaryTitle(gap, unsupportedPlans) {
@@ -649,18 +695,18 @@ function buildDieSummaryTitle(gap, unsupportedPlans) {
   }
 
   if (unsupportedPlans <= 2) {
-    return "Unsupported plans are beginning to appear.";
+    return "Faith is beginning to worsen the plan.";
   }
 
-  return "Unsupported plans are already in the room.";
+  return "Faith is already worsening the plan.";
 }
 
 function buildDieSummaryText(simulation, severity) {
   if (simulation.unsupportedPlans <= 0) {
-    return "At the current slider setting, your plan does not budget for more sixes than the evidence supports. Luck can still disappoint you, but faith is not inflating the plan.";
+    return "At the current slider setting, your plan does not budget for more sixes than the evidence supports. Luck can still disappoint you, but confidence above the support line is not inflating the plan.";
   }
 
-  return `Across ${state.trials} rolls, the evidence line warrants about ${simulation.evidenceHits} hits, but your current confidence plans for ${simulation.plannedHits}. That leaves ${simulation.unsupportedPlans} planned hits with no support behind them, and each one matters more under the current "${severity.label}" setting.`;
+  return `Across ${state.trials} rolls, the evidence line warrants about ${simulation.evidenceHits} hits, but your current confidence plans for ${simulation.plannedHits}. That leaves ${simulation.unsupportedPlans} extra planned hits beyond the support line. Those extra commitments make the decision itself worse before any outcome arrives, and they add more long-run cost under the current "${severity.label}" setting.`;
 }
 
 function buildSummaryOutput(simulation, severity, claim, transferRisk) {
@@ -678,26 +724,63 @@ function buildSummaryOutput(simulation, severity, claim, transferRisk) {
     "Fair-die drill",
     `- Evidence support for the next roll being a six: ${formatPercent(EVIDENCE_PERCENT)}`,
     `- Chosen confidence: ${formatPercent(state.confidence)}`,
-    `- Faith gap: ${formatNumber(Math.max(0, state.confidence - EVIDENCE_PERCENT))} points`,
+    `- Faith gap (confidence above perceived support): ${formatNumber(Math.max(0, state.confidence - EVIDENCE_PERCENT))} points`,
     `- Trial window: ${state.trials} rolls`,
     `- Evidence-based hits: ${simulation.evidenceHits}`,
     `- Planned hits at current confidence: ${simulation.plannedHits}`,
-    `- Unsupported planned hits: ${simulation.unsupportedPlans}`,
+    `- Extra planned hits beyond the support line: ${simulation.unsupportedPlans}`,
     `- Actual hits in the last run: ${simulation.actualHits}`,
     `- Shortfall in the last run: ${simulation.runShortfall}`,
     `- Consequence setting: ${severity.label}`,
     "",
-    "Faith-laden transfer claim",
+    "Faith-related transfer claim",
     `- Claim: ${claim.title}`,
     `- Perceived support: ${formatPercent(state.transferEvidence)}`,
     `- Confidence anyway: ${formatPercent(state.transferBelief)}`,
-    `- Faith gap: ${formatNumber(transferGap)} points`,
+    `- Faith gap (confidence above perceived support): ${formatNumber(transferGap)} points`,
     `- Commitments riding on the claim: ${commitmentList}`,
     `- Current overreach band: ${transferRisk.band}`,
     "",
     "Plain reading",
-    "The die section shows whether plans are being padded with extra confidence before reality answers back. The transfer section shows the same structure in a faith-loaded setting: support and confidence are separated so the overhang becomes visible."
+    "The die section shows that faith adds no value to the decision. It licenses extra commitments beyond perceived support, which lowers expected success and raises long-run cost. The transfer section applies the same point to religious choices, including which god, if any, to worship."
   ].join("\n");
+}
+
+function getPlannerComparison(simulation, severity) {
+  const averageExtraShortfall = expectedExtraShortfall(
+    state.trials,
+    simulation.evidenceHits,
+    simulation.plannedHits,
+    EVIDENCE_PROBABILITY
+  );
+  const averageExtraCost = averageExtraShortfall * severity.weight;
+
+  return {
+    averageExtraShortfall,
+    averageExtraCost
+  };
+}
+
+function expectedExtraShortfall(trials, evidenceHits, plannedHits, probability) {
+  if (plannedHits <= evidenceHits) {
+    return 0;
+  }
+
+  const missProbability = 1 - probability;
+  let chance = Math.pow(missProbability, trials);
+  let total = 0;
+
+  for (let actualHits = 0; actualHits <= trials; actualHits += 1) {
+    const evidenceShortfall = Math.max(0, evidenceHits - actualHits);
+    const faithShortfall = Math.max(0, plannedHits - actualHits);
+    total += (faithShortfall - evidenceShortfall) * chance;
+
+    if (actualHits < trials) {
+      chance *= ((trials - actualHits) / (actualHits + 1)) * (probability / missProbability);
+    }
+  }
+
+  return total;
 }
 
 function highlightQuickButtons() {
