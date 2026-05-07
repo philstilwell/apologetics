@@ -3,6 +3,7 @@ const EVIDENCE_PROBABILITY = 1 / 6;
 const EVIDENCE_PERCENT = Number((EVIDENCE_PROBABILITY * 100).toFixed(1));
 const DICE_PER_BATCH = 10;
 const MAX_BATCHES = 30;
+const LOSS_PER_SHORTFALL = 100;
 
 const severityOptions = [
   {
@@ -138,6 +139,8 @@ const commitments = [
 
 const defaultState = {
   confidence: 58,
+  compareMode: false,
+  compareConfidence: 85,
   severity: "money",
   transferClaim: "worship",
   transferEvidence: 24,
@@ -150,8 +153,6 @@ const defaultState = {
 
 const elements = {
   targetDie: document.querySelector("#targetDie"),
-  lastDie: document.querySelector("#lastDie"),
-  lastRollLabel: document.querySelector("#lastRollLabel"),
   metricEvidence: document.querySelector("#metricEvidence"),
   metricConfidence: document.querySelector("#metricConfidence"),
   metricConfidenceNote: document.querySelector("#metricConfidenceNote"),
@@ -182,26 +183,25 @@ const elements = {
   severityOptions: document.querySelector("#severityOptions"),
   runSimulation: document.querySelector("#runSimulation"),
   resetSimulation: document.querySelector("#resetSimulation"),
+  compareMode: document.querySelector("#compareMode"),
+  compareModeCaption: document.querySelector("#compareModeCaption"),
+  comparePrimaryReadout: document.querySelector("#comparePrimaryReadout"),
+  compareConfidenceRange: document.querySelector("#compareConfidenceRange"),
+  compareConfidenceReadout: document.querySelector("#compareConfidenceReadout"),
+  compareSecondarySetting: document.querySelector("#compareSecondarySetting"),
   stakesCaption: document.querySelector("#stakesCaption"),
-  evidenceHits: document.querySelector("#evidenceHits"),
-  plannedHits: document.querySelector("#plannedHits"),
-  cumulativeRate: document.querySelector("#cumulativeRate"),
-  actualHits: document.querySelector("#actualHits"),
+  expectedRule: document.querySelector("#expectedRule"),
+  comparisonMetrics: document.querySelector("#comparisonMetrics"),
   runShortfall: document.querySelector("#runShortfall"),
   rollStrip: document.querySelector("#rollStrip"),
   consequenceSummary: document.querySelector("#consequenceSummary"),
-  consequenceStrip: document.querySelector("#consequenceStrip"),
+  consequenceCompare: document.querySelector("#consequenceCompare"),
   consequenceTooltip: document.querySelector("#consequenceHelp"),
   simulationCaption: document.querySelector("#simulationCaption"),
   regressionStatus: document.querySelector("#regressionStatus"),
   regressionChart: document.querySelector("#regressionChart"),
   regressionCaption: document.querySelector("#regressionCaption"),
-  evidencePlannerPlan: document.querySelector("#evidencePlannerPlan"),
-  faithPlannerPlan: document.querySelector("#faithPlannerPlan"),
-  decisionPenalty: document.querySelector("#decisionPenalty"),
-  decisionPenaltyNote: document.querySelector("#decisionPenaltyNote"),
-  longRunCost: document.querySelector("#longRunCost"),
-  longRunCostNote: document.querySelector("#longRunCostNote"),
+  lossTraceNote: document.querySelector("#lossTraceNote"),
   claimButtons: document.querySelector("#claimButtons"),
   claimTitle: document.querySelector("#claimTitle"),
   claimPrompt: document.querySelector("#claimPrompt"),
@@ -267,6 +267,18 @@ function bindEvents() {
 
   elements.runSimulation.addEventListener("click", appendSimulationRound);
   elements.resetSimulation.addEventListener("click", restartSimulation);
+  elements.compareMode.addEventListener("change", (event) => {
+    state.compareMode = Boolean(event.target.checked);
+    persistState();
+    render();
+  });
+  elements.compareConfidenceRange.addEventListener("input", (event) => {
+    state.compareConfidence = normalizeConfidence(
+      clampNumber(Number(event.target.value), 0, 100, defaultState.compareConfidence)
+    );
+    persistState();
+    render();
+  });
 
   elements.claimButtons.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-claim]");
@@ -336,7 +348,8 @@ function render() {
   const confidenceMessage = describeConfidenceGap(confidenceGap);
   const exposure = describeExposure(confidenceGap, severity.weight);
   const simulation = getSimulationNumbers();
-  const plannerComparison = getPlannerComparison(simulation, severity);
+  const currentPlanner = getPlannerScenario(simulation, state.confidence);
+  const comparisonView = getComparisonView(simulation, severity);
   const transferGap = Math.max(0, state.transferBelief - state.transferEvidence);
   const transferCommitmentWeight = getCommitmentWeight(state.commitments);
   const transferRisk = describeTransferRisk(transferGap, transferCommitmentWeight);
@@ -371,23 +384,20 @@ function render() {
   elements.bridgeShareLabel.textContent = formatPercent(confidenceShare);
   elements.bridgeCaption.textContent = buildBridgeCaption(confidenceGap, confidenceShare);
 
-  renderTracePanel(simulation);
+  renderTracePanel(simulation, comparisonView);
+  elements.compareMode.checked = state.compareMode;
+  elements.compareModeCaption.textContent = state.compareMode
+    ? "Compare mode is on. Planner A uses your current drill setting. Planner B uses the second slider, but both are judged against the same trace and the same one-in-six support rule."
+    : "Default view compares the support line at 16.7% with your current drill setting.";
+  elements.comparePrimaryReadout.textContent = formatPercent(state.confidence);
+  elements.compareConfidenceRange.value = String(state.compareConfidence);
+  elements.compareConfidenceReadout.textContent = formatPercent(state.compareConfidence);
+  elements.compareSecondarySetting.hidden = !state.compareMode;
   highlightSeverityButtons();
   elements.stakesCaption.textContent = describeStakesCaption(confidenceGap, severity);
-  elements.evidencePlannerPlan.textContent = formatHitCount(simulation.evidenceHits);
-  elements.faithPlannerPlan.textContent = formatHitCount(simulation.plannedHits);
-  elements.decisionPenalty.textContent = simulation.unsupportedPlans > 0 ? `+${formatNumber(simulation.unsupportedPlans)}` : "0";
-  elements.decisionPenaltyNote.textContent =
-    simulation.unsupportedPlans > 0
-      ? `${formatNumber(simulation.unsupportedPlans)} extra planned hits are already being licensed before any roll happens.`
-      : "No extra commitments are being licensed beyond the support line.";
-  elements.longRunCost.textContent = plannerComparison.averageExtraCost > 0 ? `+${formatNumber(plannerComparison.averageExtraCost)}` : "0";
-  elements.longRunCostNote.textContent =
-    plannerComparison.averageExtraShortfall > 0
-      ? `If repeated many times, the faith-driven planner pays about ${formatNumber(plannerComparison.averageExtraShortfall)} more setbacks on average.`
-      : "If repeated many times, both planners perform the same because there is no measure of faith.";
-  renderSimulation(simulation, severity);
-  renderLastRoll(simulation.lastRoll);
+  elements.expectedRule.textContent =
+    `Expected sixes = tracked dice / 6 = ${simulation.totalDice} / 6 = ${formatNumber(simulation.evidenceHits)}`;
+  renderSimulation(simulation, severity, comparisonView);
 
   renderClaimButtons();
   elements.claimTitle.textContent = activeClaim.title;
@@ -405,18 +415,14 @@ function render() {
   elements.transferGapNote.textContent = buildGapNote(transferGap, "support line you entered");
   renderCommitmentOptions();
 
-  elements.dieSummaryTitle.textContent = buildDieSummaryTitle(confidenceGap, simulation.unsupportedPlans);
-  elements.dieSummaryText.textContent = buildDieSummaryText(simulation, severity);
+  elements.dieSummaryTitle.textContent = buildDieSummaryTitle(confidenceGap, currentPlanner.unsupportedPlans);
+  elements.dieSummaryText.textContent = buildDieSummaryText(simulation, currentPlanner, severity);
   elements.transferSummaryTitle.textContent = transferRisk.title;
   elements.transferSummaryText.textContent = buildTransferSummaryText(activeClaim, transferGap);
-  elements.summaryOutput.value = buildSummaryOutput(simulation, severity, activeClaim, transferRisk);
+  elements.summaryOutput.value = buildSummaryOutput(simulation, severity, activeClaim, transferRisk, comparisonView);
 }
 
-function renderSimulation(simulation, severity) {
-  elements.evidenceHits.textContent = formatHitCount(simulation.evidenceHits);
-  elements.plannedHits.textContent = formatHitCount(simulation.plannedHits);
-  elements.cumulativeRate.textContent = formatPercent(simulation.actualRate);
-  elements.actualHits.textContent = formatHitCount(simulation.actualHits);
+function renderSimulation(simulation, severity, comparisonView) {
   elements.runShortfall.textContent = `Batch sixes: ${simulation.lastBatchHits}`;
   elements.rollStrip.innerHTML = simulation.rolls
     .map((roll) => {
@@ -425,44 +431,117 @@ function renderSimulation(simulation, severity) {
     })
     .join("");
 
-  const collapsed = simulation.runShortfall || simulation.unsupportedPlans;
-  const collapsedDisplay = collapsed > 0 ? Math.max(1, Math.round(collapsed)) : 0;
-  const tokenCount = Math.max(1, Math.min(collapsedDisplay || 1, 24));
-  const extraCount = Math.max(0, collapsedDisplay - tokenCount);
-  const tokenClass =
-    severity.id === "money" ? "money" : severity.id === "safety" ? "safety" : severity.id === "catastrophic" ? "critical" : "soft";
-
-  elements.consequenceStrip.innerHTML = collapsed > 0
-    ? Array.from({ length: tokenCount }, (_, index) => {
-        return `<span class="consequence-token ${tokenClass}" aria-hidden="true">${index + 1}</span>`;
-      }).join("")
-    : `<span class="consequence-token extra" aria-hidden="true">0</span>`;
-
-  if (extraCount > 0) {
-    elements.consequenceStrip.insertAdjacentHTML(
-      "beforeend",
-      `<span class="consequence-token extra" aria-hidden="true">+${extraCount}</span>`
-    );
-  }
-
-  elements.consequenceSummary.textContent = describeConsequenceSummary(collapsed, severity);
-  elements.consequenceTooltip.innerHTML = buildConsequenceTooltip(simulation, severity);
-  elements.simulationCaption.textContent = buildSimulationCaption(simulation, severity);
+  renderComparisonMetrics(comparisonView, simulation, severity);
+  renderConsequenceComparison(comparisonView, severity);
+  elements.consequenceTooltip.innerHTML = buildConsequenceTooltip(comparisonView, simulation, severity);
+  elements.simulationCaption.textContent = buildSimulationCaption(comparisonView, simulation, severity);
 }
 
-function renderTracePanel(simulation) {
+function renderTracePanel(simulation, comparisonView) {
   const throwsRemaining = Math.max(0, MAX_BATCHES - simulation.roundsCount);
   elements.traceStatus.textContent = `${simulation.roundsCount} ${simulation.roundsCount === 1 ? "throw" : "throws"} of ${MAX_BATCHES} logged`;
   elements.traceCaption.textContent =
     simulation.roundsCount >= MAX_BATCHES
       ? `This trace has reached 30 throws, or ${simulation.totalDice} dice. The next click on the primary button resets the trace and starts a fresh line.`
       : `Each click adds another 10 dice to the same cumulative trace. ${throwsRemaining} more throw${throwsRemaining === 1 ? "" : "s"} remain before the trace resets at 30.`;
-  elements.regressionStatus.textContent = `${simulation.totalDice} dice tracked across ${simulation.roundsCount} ${simulation.roundsCount === 1 ? "throw" : "throws"}`;
+  elements.regressionStatus.textContent =
+    `${simulation.totalDice} dice tracked, ${simulation.actualHits} sixes so far (${formatPercent(simulation.actualRate)})`;
   elements.runSimulation.textContent =
-    simulation.roundsCount >= MAX_BATCHES ? "Reset trace and roll 10 dice" : "Roll another 10 dice";
-  elements.resetSimulation.textContent = simulation.roundsCount > 1 ? "Start new trace" : "Roll a fresh 10 dice";
-  renderRegressionChart(simulation);
+    simulation.roundsCount >= MAX_BATCHES ? "Reset trace and add 10 rolls" : "Add 10 rolls to the trace";
+  elements.resetSimulation.textContent = simulation.roundsCount > 1 ? "Start new trace" : "Restart with 10 rolls";
+  renderRegressionChart(simulation, comparisonView);
   elements.regressionCaption.textContent = buildRegressionCaption(simulation);
+  elements.lossTraceNote.textContent = buildLossTraceNote(comparisonView);
+}
+
+function renderComparisonMetrics(comparisonView, simulation, severity) {
+  const cards = [
+    {
+      label: `${comparisonView.plannerA.name} confidence`,
+      value: formatPercent(comparisonView.plannerA.confidence),
+      note: comparisonView.plannerA.confidenceNote
+    },
+    {
+      label: `${comparisonView.plannerB.name} confidence`,
+      value: formatPercent(comparisonView.plannerB.confidence),
+      note: comparisonView.plannerB.confidenceNote
+    },
+    {
+      label: `${comparisonView.plannerA.name} planned hits`,
+      value: formatHitCount(comparisonView.plannerA.plannedHits),
+      note: `What ${comparisonView.plannerA.name.toLowerCase()} budgets across ${simulation.totalDice} tracked dice.`
+    },
+    {
+      label: `${comparisonView.plannerB.name} planned hits`,
+      value: formatHitCount(comparisonView.plannerB.plannedHits),
+      note: `What ${comparisonView.plannerB.name.toLowerCase()} budgets across ${simulation.totalDice} tracked dice.`
+    },
+    {
+      label: `${comparisonView.plannerA.name} decision penalty`,
+      value:
+        comparisonView.plannerA.unsupportedPlans > 0
+          ? `+${formatNumber(comparisonView.plannerA.unsupportedPlans)}`
+          : "0",
+      note: "Extra planned hits above the support line before the world answers back."
+    },
+    {
+      label: `${comparisonView.plannerB.name} decision penalty`,
+      value:
+        comparisonView.plannerB.unsupportedPlans > 0
+          ? `+${formatNumber(comparisonView.plannerB.unsupportedPlans)}`
+          : "0",
+      note: "Extra planned hits above the support line before the world answers back."
+    },
+    {
+      label: `${comparisonView.plannerA.name} realized shortfall`,
+      value:
+        comparisonView.plannerA.realizedShortfall > 0
+          ? formatNumber(comparisonView.plannerA.realizedShortfall)
+          : "0",
+      note: `max(0, planned hits - actual hits) with ${formatHitCount(simulation.actualHits)} actually rolled.`
+    },
+    {
+      label: `${comparisonView.plannerB.name} realized shortfall`,
+      value:
+        comparisonView.plannerB.realizedShortfall > 0
+          ? formatNumber(comparisonView.plannerB.realizedShortfall)
+          : "0",
+      note: `max(0, planned hits - actual hits) with ${formatHitCount(simulation.actualHits)} actually rolled.`
+    }
+  ];
+
+  elements.comparisonMetrics.innerHTML = cards
+    .map((card) => {
+      return `
+        <article class="sim-stat">
+          <span>${card.label}</span>
+          <strong>${card.value}</strong>
+          <small>${card.note}</small>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderConsequenceComparison(comparisonView, severity) {
+  elements.consequenceCompare.innerHTML = [comparisonView.plannerA, comparisonView.plannerB]
+    .map((planner) => {
+      return `
+        <div class="consequence-column">
+          <div class="consequence-column-head">
+            <strong>${planner.name}</strong>
+            <span>${formatPercent(planner.confidence)}</span>
+          </div>
+          <div class="consequence-strip">
+            ${buildConsequenceTokens(planner.realizedShortfall, severity)}
+          </div>
+          <small>${describeConsequenceSummary(planner.realizedShortfall, severity)}</small>
+        </div>
+      `;
+    })
+    .join("");
+
+  elements.consequenceSummary.textContent = describeConsequenceComparisonSummary(comparisonView, severity);
 }
 
 function renderClaimButtons() {
@@ -470,7 +549,7 @@ function renderClaimButtons() {
     .map((claim) => {
       const active = claim.id === state.transferClaim ? "active" : "";
       return `
-        <button type="button" class="claim-button ${active}" data-claim="${claim.id}">
+        <button type="button" class="claim-button ${active}" data-claim="${claim.id}" aria-pressed="${claim.id === state.transferClaim ? "true" : "false"}">
           <strong>${claim.title}</strong>
           <span>${claim.prompt}</span>
         </button>
@@ -482,8 +561,9 @@ function renderClaimButtons() {
 function renderSeverityOptions() {
   elements.severityOptions.innerHTML = severityOptions
     .map((option) => {
+      const active = option.id === state.severity ? "active" : "";
       return `
-        <button type="button" class="severity-option" data-severity="${option.id}">
+        <button type="button" class="severity-option ${active}" data-severity="${option.id}" aria-pressed="${option.id === state.severity ? "true" : "false"}">
           <strong>${option.label}</strong>
           <span>${option.detail}</span>
         </button>
@@ -507,11 +587,6 @@ function renderCommitmentOptions() {
       `;
     })
     .join("");
-}
-
-function renderLastRoll(lastRoll) {
-  renderDieFace(elements.lastDie, lastRoll || 1);
-  elements.lastRollLabel.textContent = `Last roll in the sequence: ${lastRoll || 1}.`;
 }
 
 function appendSimulationRound() {
@@ -553,9 +628,6 @@ function getSimulationNumbers() {
   const totalDice = rolls.length;
   const actualHits = rolls.filter((roll) => roll === 6).length;
   const evidenceHits = EVIDENCE_PROBABILITY * totalDice;
-  const plannedHits = (state.confidence / 100) * totalDice;
-  const unsupportedPlans = Math.max(0, plannedHits - evidenceHits);
-  const runShortfall = Math.max(0, plannedHits - actualHits);
   const actualRate = totalDice > 0 ? (actualHits / totalDice) * 100 : 0;
   const lastBatch = rounds[rounds.length - 1] || [];
   const lastBatchHits = lastBatch.filter((roll) => roll === 6).length;
@@ -563,9 +635,12 @@ function getSimulationNumbers() {
   let runningHits = 0;
   const cumulativeRates = rounds.map((round, index) => {
     runningHits += round.filter((roll) => roll === 6).length;
+    const cumulativeDice = (index + 1) * DICE_PER_BATCH;
     return {
       round: index + 1,
-      rate: (runningHits / ((index + 1) * DICE_PER_BATCH)) * 100
+      hits: runningHits,
+      totalDice: cumulativeDice,
+      rate: (runningHits / cumulativeDice) * 100
     };
   });
 
@@ -573,16 +648,98 @@ function getSimulationNumbers() {
     roundsCount,
     totalDice,
     evidenceHits,
-    plannedHits,
-    unsupportedPlans,
     actualHits,
     actualRate,
-    runShortfall,
     rolls: lastBatch,
-    lastRoll: lastBatch[lastBatch.length - 1] || 1,
     lastBatchHits,
     cumulativeRates
   };
+}
+
+function getPlannerScenario(simulation, confidence) {
+  const plannedHits =
+    Math.abs(confidence - EVIDENCE_PERCENT) <= 0.05
+      ? simulation.totalDice * EVIDENCE_PROBABILITY
+      : (confidence / 100) * simulation.totalDice;
+  const unsupportedPlansRaw = Math.max(0, plannedHits - simulation.evidenceHits);
+  const realizedShortfallRaw = Math.max(0, plannedHits - simulation.actualHits);
+
+  return {
+    confidence,
+    plannedHits,
+    unsupportedPlans: unsupportedPlansRaw <= 0.05 ? 0 : unsupportedPlansRaw,
+    realizedShortfall: realizedShortfallRaw <= 0.05 ? 0 : realizedShortfallRaw
+  };
+}
+
+function getComparisonView(simulation, severity) {
+  const supportPlanner = getPlannerScenario(simulation, EVIDENCE_PERCENT);
+  const currentPlanner = getPlannerScenario(simulation, state.confidence);
+  const comparePlanner = getPlannerScenario(simulation, state.compareConfidence);
+  const plannerA = state.compareMode
+    ? {
+        ...currentPlanner,
+        name: "Setting A",
+        confidenceNote: "This is your current drill slider carried into the same trace."
+      }
+    : {
+        ...supportPlanner,
+        name: "Support line",
+        confidenceNote: "Evidence-capped baseline. It stops at the one-in-six support rule."
+      };
+  const plannerB = state.compareMode
+    ? {
+        ...comparePlanner,
+        name: "Setting B",
+        confidenceNote: "Second confidence setting on the exact same trace."
+      }
+    : {
+        ...currentPlanner,
+        name: "Current setting",
+        confidenceNote: "Your drill slider judged against the same trace."
+      };
+
+  const longRunDifference =
+    expectedShortfall(simulation.totalDice, plannerB.plannedHits, EVIDENCE_PROBABILITY) -
+    expectedShortfall(simulation.totalDice, plannerA.plannedHits, EVIDENCE_PROBABILITY);
+  const lossSeries = buildCumulativeLossSeries(simulation, plannerA.confidence, plannerB.confidence);
+  const currentExtraLoss = lossSeries.length > 0 ? lossSeries[lossSeries.length - 1].loss : 0;
+
+  return {
+    plannerA,
+    plannerB,
+    severity,
+    lossSeries,
+    currentExtraLoss,
+    longRunDifference: Math.abs(longRunDifference) <= 0.05 ? 0 : longRunDifference,
+    longRunCostDifference: Math.abs(longRunDifference) <= 0.05 ? 0 : longRunDifference * severity.weight
+  };
+}
+
+function buildCumulativeLossSeries(simulation, plannerAConfidence, plannerBConfidence) {
+  return simulation.cumulativeRates.map((point) => {
+    const plannerA = getPlannerScenario(
+      {
+        totalDice: point.totalDice,
+        evidenceHits: point.totalDice * EVIDENCE_PROBABILITY,
+        actualHits: point.hits
+      },
+      plannerAConfidence
+    );
+    const plannerB = getPlannerScenario(
+      {
+        totalDice: point.totalDice,
+        evidenceHits: point.totalDice * EVIDENCE_PROBABILITY,
+        actualHits: point.hits
+      },
+      plannerBConfidence
+    );
+    const extraShortfall = Math.max(0, plannerB.realizedShortfall - plannerA.realizedShortfall);
+    return {
+      round: point.round,
+      loss: extraShortfall * LOSS_PER_SHORTFALL
+    };
+  });
 }
 
 function describeConfidenceGap(gap) {
@@ -681,6 +838,14 @@ function buildRegressionCaption(simulation) {
   return `After ${simulation.roundsCount} throws (${simulation.totalDice} dice), the cumulative line is at ${formatPercent(simulation.actualRate)}, which is ${formatNumber(distanceFromMean)} points away from the 16.7% mean. More throws usually shrink that gap rather than reinforcing it.`;
 }
 
+function buildLossTraceNote(comparisonView) {
+  const relationship = state.compareMode
+    ? `Amber line: extra dollars ${comparisonView.plannerB.name} loses beyond ${comparisonView.plannerA.name}`
+    : "Amber line: extra dollars the current setting loses beyond the evidence-capped plan";
+
+  return `${relationship} if each extra shortfall unit costs ${formatCurrency(LOSS_PER_SHORTFALL)}. Current trace difference: ${formatCurrency(comparisonView.currentExtraLoss)}.`;
+}
+
 function describeStakesCaption(gap, severity) {
   if (gap <= 0.5) {
     return `With the slider at or below the evidence line, ${severity.label.toLowerCase()} still matters, but you are not adding extra belief beyond what the die supports. The cumulative trace may still wander, but the plan itself is not overshooting the support line.`;
@@ -697,44 +862,60 @@ function describeConsequenceSummary(collapsed, severity) {
   return `About ${formatNumber(collapsed)} ${formatSeverityUnit(severity, collapsed)}`;
 }
 
-function buildConsequenceTooltip(simulation, severity) {
-  const planned = formatNumber(simulation.plannedHits);
-  const actual = formatNumber(simulation.actualHits);
-  const shortfall = formatNumber(simulation.runShortfall);
-  const confidence = formatPercent(state.confidence);
+function describeConsequenceComparisonSummary(comparisonView, severity) {
+  const gap = comparisonView.plannerB.realizedShortfall - comparisonView.plannerA.realizedShortfall;
 
-  if (simulation.runShortfall <= 0.05) {
-    return `Current shortfall math: <code>max(0, planned hits - actual hits) = max(0, ${planned} - ${actual}) = 0</code>.
-      Planned hits can be fractional because they come from your confidence setting: <code>${confidence} × ${simulation.totalDice} dice = ${planned} planned hits</code>.
-      The selected category, <code>${severity.label}</code>, tells you how to interpret each shortfall unit if one appears. The numbered tiles are rounded visual blocks, while the summary text keeps the precise value when needed.`;
+  if (Math.abs(gap) <= 0.05) {
+    return "Both planners come out the same on this trace.";
   }
 
-  return `Current shortfall math: <code>max(0, planned hits - actual hits) = max(0, ${planned} - ${actual}) = ${shortfall}</code>.
-    Planned hits can be fractional because they come from your confidence setting: <code>${confidence} × ${simulation.totalDice} dice = ${planned} planned hits</code>.
-    The selected category, <code>${severity.label}</code>, does not change the arithmetic. It changes how to read each missing hit. So a summary like <code>About ${shortfall} ${formatSeverityUnit(severity, simulation.runShortfall)}</code> means a cumulative shortfall of about ${shortfall} hit-equivalents under that consequence framing, not necessarily ${shortfall} literal separate events.
-    The numbered tiles round that running shortfall to whole blocks for quick visual scanning.`;
+  if (gap > 0) {
+    return `${comparisonView.plannerB.name} adds about ${formatNumber(gap)} more ${formatSeverityUnit(severity, gap)} than ${comparisonView.plannerA.name} on this trace.`;
+  }
+
+  return `${comparisonView.plannerB.name} avoids about ${formatNumber(Math.abs(gap))} ${formatSeverityUnit(severity, Math.abs(gap))} compared with ${comparisonView.plannerA.name} on this trace.`;
 }
 
-function buildSimulationCaption(simulation, severity) {
-  if (simulation.unsupportedPlans <= 0) {
-    return `Across ${simulation.roundsCount} tracked throw${simulation.roundsCount === 1 ? "" : "s"} of 10 dice, your plan is not padded with extra certainty. The line can still drift, but that drift is coming from luck rather than confidence above the support line.`;
+function buildConsequenceTooltip(comparisonView, simulation, severity) {
+  const plannerA = comparisonView.plannerA;
+  const plannerB = comparisonView.plannerB;
+
+  return `${plannerA.name} shortfall math: <code>max(0, planned hits - actual hits) = max(0, ${formatNumber(plannerA.plannedHits)} - ${formatNumber(simulation.actualHits)}) = ${formatNumber(plannerA.realizedShortfall)}</code>.
+    ${plannerB.name} shortfall math: <code>max(0, planned hits - actual hits) = max(0, ${formatNumber(plannerB.plannedHits)} - ${formatNumber(simulation.actualHits)}) = ${formatNumber(plannerB.realizedShortfall)}</code>.
+    The decision-penalty cards above are different: they show unsupported planned hits before any roll happens. The selected category, <code>${severity.label}</code>, only changes how to read each realized shortfall unit once the world answers back.`;
+}
+
+function buildSimulationCaption(comparisonView, simulation, severity) {
+  const penaltyGap = comparisonView.plannerB.unsupportedPlans - comparisonView.plannerA.unsupportedPlans;
+  const realizedGap = comparisonView.plannerB.realizedShortfall - comparisonView.plannerA.realizedShortfall;
+  const longRunGap = comparisonView.longRunDifference;
+  const direction = penaltyGap >= 0 ? "more" : "fewer";
+  const realizedDirection = realizedGap >= 0 ? "more" : "fewer";
+  const longRunDirection = longRunGap >= 0 ? "more" : "fewer";
+
+  if (Math.abs(penaltyGap) <= 0.05 && Math.abs(realizedGap) <= 0.05) {
+    return `Both planners are carrying the same load on this trace. No extra decision penalty is being introduced, and the realized shortfall comes out the same.`;
   }
 
-  const unsupported = simulation.unsupportedPlans;
-  const shortfall = simulation.runShortfall;
-  const evidenceShortfall = Math.max(0, simulation.evidenceHits - simulation.actualHits);
-  const extraRunShortfall = Math.max(0, shortfall - evidenceShortfall);
-  const lead = `Across ${simulation.roundsCount} tracked throw${simulation.roundsCount === 1 ? "" : "s"} (${simulation.totalDice} dice), ${formatNumber(unsupported)} of your planned hits were already above the support line.`;
+  return `${comparisonView.plannerB.name} begins with ${formatNumber(Math.abs(penaltyGap))} ${direction} unsupported planned hits than ${comparisonView.plannerA.name}. On this same trace, that turned into ${formatNumber(Math.abs(realizedGap))} ${realizedDirection} ${formatSeverityUnit(severity, Math.abs(realizedGap))}. If repeated many times, the same setting difference would usually add about ${formatNumber(Math.abs(longRunGap))} ${longRunDirection} ${formatSeverityUnit(severity, Math.abs(longRunGap))}.`;
+}
 
-  if (shortfall <= 0.05) {
-    return `${lead} This particular run happened to rescue the posture, but the extra plans were still not supplied by the die itself.`;
-  }
+function buildConsequenceTokens(value, severity) {
+  const displayValue = value > 0 ? Math.max(1, Math.round(value)) : 0;
+  const tokenCount = Math.max(1, Math.min(displayValue || 1, 16));
+  const extraCount = Math.max(0, displayValue - tokenCount);
+  const tokenClass =
+    severity.id === "money" ? "money" : severity.id === "safety" ? "safety" : severity.id === "catastrophic" ? "critical" : "soft";
 
-  if (extraRunShortfall > 0.05) {
-    return `${lead} In this cumulative trace, faith added about ${formatNumber(extraRunShortfall)} extra ${formatSeverityUnit(severity, extraRunShortfall)} beyond what the evidence-capped planner would have paid.`;
-  }
+  const tokens = value > 0
+    ? Array.from({ length: tokenCount }, (_, index) => {
+        return `<span class="consequence-token ${tokenClass}" aria-hidden="true">${index + 1}</span>`;
+      }).join("")
+    : `<span class="consequence-token extra" aria-hidden="true">0</span>`;
 
-  return `${lead} In this cumulative trace, the overreach did not add extra realized cost, but it was still a worse decision because the extra commitments were never licensed by the evidence.`;
+  return extraCount > 0
+    ? `${tokens}<span class="consequence-token extra" aria-hidden="true">+${extraCount}</span>`
+    : tokens;
 }
 
 function describeTransferRisk(gap, commitmentWeight) {
@@ -801,15 +982,18 @@ function buildDieSummaryTitle(gap, unsupportedPlans) {
   return "Faith is already worsening the plan.";
 }
 
-function buildDieSummaryText(simulation, severity) {
-  if (simulation.unsupportedPlans <= 0) {
+function buildDieSummaryText(simulation, currentPlanner, severity) {
+  if (currentPlanner.unsupportedPlans <= 0) {
     return "At the current slider setting, your plan does not budget for more sixes than the evidence supports. Luck can still disappoint you, but confidence above the support line is not inflating the cumulative trace.";
   }
 
-  return `Across ${simulation.roundsCount} tracked throw${simulation.roundsCount === 1 ? "" : "s"} (${simulation.totalDice} dice), the evidence line warrants about ${formatNumber(simulation.evidenceHits)} hits, but your current confidence plans for ${formatNumber(simulation.plannedHits)}. That leaves ${formatNumber(simulation.unsupportedPlans)} extra planned hits beyond the support line. Those extra commitments make the decision itself worse before any outcome arrives, and they add more long-run cost under the current "${severity.label}" setting.`;
+  const averageAddedShortfall =
+    expectedShortfall(simulation.totalDice, currentPlanner.plannedHits, EVIDENCE_PROBABILITY) -
+    expectedShortfall(simulation.totalDice, simulation.evidenceHits, EVIDENCE_PROBABILITY);
+  return `Across ${simulation.roundsCount} tracked throw${simulation.roundsCount === 1 ? "" : "s"} (${simulation.totalDice} dice), the evidence line warrants about ${formatNumber(simulation.evidenceHits)} hits, but your current confidence plans for ${formatNumber(currentPlanner.plannedHits)}. That leaves ${formatNumber(currentPlanner.unsupportedPlans)} extra planned hits beyond the support line before any outcome arrives. On average, that setting adds about ${formatNumber(averageAddedShortfall)} more ${formatSeverityUnit(severity, averageAddedShortfall)} than the support-line planner.`;
 }
 
-function buildSummaryOutput(simulation, severity, claim, transferRisk) {
+function buildSummaryOutput(simulation, severity, claim, transferRisk, comparisonView) {
   const transferGap = Math.max(0, state.transferBelief - state.transferEvidence);
   const commitmentList = state.commitments.length
     ? state.commitments
@@ -817,6 +1001,7 @@ function buildSummaryOutput(simulation, severity, claim, transferRisk) {
         .filter(Boolean)
         .join("; ")
     : "None selected";
+  const currentPlanner = getPlannerScenario(simulation, state.confidence);
 
   return [
     "Belief Overreach Audit",
@@ -828,13 +1013,15 @@ function buildSummaryOutput(simulation, severity, claim, transferRisk) {
     `- Tracked throws of 10 dice: ${simulation.roundsCount} of ${MAX_BATCHES}`,
     `- Total dice tracked: ${simulation.totalDice}`,
     `- Evidence-based hits across tracked dice: ${formatNumber(simulation.evidenceHits)}`,
-    `- Planned hits at current confidence: ${formatNumber(simulation.plannedHits)}`,
-    `- Extra planned hits beyond the support line: ${formatNumber(simulation.unsupportedPlans)}`,
+    `- Planned hits at current confidence: ${formatNumber(currentPlanner.plannedHits)}`,
+    `- Extra planned hits beyond the support line: ${formatNumber(currentPlanner.unsupportedPlans)}`,
     `- Actual hits across tracked dice: ${simulation.actualHits}`,
     `- Cumulative hit rate across tracked dice: ${formatPercent(simulation.actualRate)}`,
     `- Most recent 10-die batch sixes: ${simulation.lastBatchHits}`,
-    `- Current cumulative shortfall: ${formatNumber(simulation.runShortfall)}`,
+    `- Current realized shortfall at current confidence: ${formatNumber(currentPlanner.realizedShortfall)}`,
     `- Consequence setting: ${severity.label}`,
+    `- ${comparisonView.plannerA.name} realized shortfall: ${formatNumber(comparisonView.plannerA.realizedShortfall)}`,
+    `- ${comparisonView.plannerB.name} realized shortfall: ${formatNumber(comparisonView.plannerB.realizedShortfall)}`,
     "",
     "Faith-related transfer claim",
     `- Claim: ${claim.title}`,
@@ -849,34 +1036,13 @@ function buildSummaryOutput(simulation, severity, claim, transferRisk) {
   ].join("\n");
 }
 
-function getPlannerComparison(simulation, severity) {
-  const averageExtraShortfall = expectedExtraShortfall(
-    simulation.totalDice,
-    simulation.evidenceHits,
-    simulation.plannedHits,
-    EVIDENCE_PROBABILITY
-  );
-  const averageExtraCost = averageExtraShortfall * severity.weight;
-
-  return {
-    averageExtraShortfall,
-    averageExtraCost
-  };
-}
-
-function expectedExtraShortfall(trials, evidenceHits, plannedHits, probability) {
-  if (plannedHits <= evidenceHits) {
-    return 0;
-  }
-
+function expectedShortfall(trials, plannedHits, probability) {
   const missProbability = 1 - probability;
   let chance = Math.pow(missProbability, trials);
   let total = 0;
 
   for (let actualHits = 0; actualHits <= trials; actualHits += 1) {
-    const evidenceShortfall = Math.max(0, evidenceHits - actualHits);
-    const faithShortfall = Math.max(0, plannedHits - actualHits);
-    total += (faithShortfall - evidenceShortfall) * chance;
+    total += Math.max(0, plannedHits - actualHits) * chance;
 
     if (actualHits < trials) {
       chance *= ((trials - actualHits) / (actualHits + 1)) * (probability / missProbability);
@@ -889,14 +1055,18 @@ function expectedExtraShortfall(trials, evidenceHits, plannedHits, probability) 
 function highlightQuickButtons() {
   const buttons = Array.from(elements.quickConfidenceButtons.querySelectorAll("button[data-confidence]"));
   buttons.forEach((button) => {
-    button.classList.toggle("active", Math.abs(Number(button.dataset.confidence) - state.confidence) < 0.05);
+    const active = Math.abs(Number(button.dataset.confidence) - state.confidence) < 0.05;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
   });
 }
 
 function highlightSeverityButtons() {
   const buttons = Array.from(elements.severityOptions.querySelectorAll("button[data-severity]"));
   buttons.forEach((button) => {
-    button.classList.toggle("active", button.dataset.severity === state.severity);
+    const active = button.dataset.severity === state.severity;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
   });
 }
 
@@ -922,10 +1092,10 @@ function setPointer(element, value) {
   element.style.left = `${clampNumber(value, 0, 100, 0)}%`;
 }
 
-function renderRegressionChart(simulation) {
+function renderRegressionChart(simulation, comparisonView) {
   const width = 640;
   const height = 240;
-  const margin = { top: 18, right: 22, bottom: 34, left: 44 };
+  const margin = { top: 18, right: 54, bottom: 34, left: 44 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -938,9 +1108,14 @@ function renderRegressionChart(simulation) {
     return;
   }
 
+  const lossSeries = comparisonView.lossSeries;
   const maxObserved = Math.max(...simulation.cumulativeRates.map((point) => point.rate), EVIDENCE_PERCENT);
   const yMax = Math.min(100, Math.max(40, Math.ceil((maxObserved + 10) / 10) * 10));
   const yTicks = [0, yMax / 2, yMax];
+  const maxLossObserved = Math.max(...lossSeries.map((point) => point.loss), 0);
+  const lossTickStep = maxLossObserved <= 500 ? 100 : maxLossObserved <= 2000 ? 250 : 500;
+  const lossMax = Math.max(lossTickStep, Math.ceil(maxLossObserved / lossTickStep) * lossTickStep);
+  const lossTicks = [0, lossMax / 2, lossMax];
   const xTicks = Array.from(
     new Set([1, Math.max(1, Math.ceil(simulation.roundsCount / 2)), simulation.roundsCount])
   );
@@ -949,8 +1124,13 @@ function renderRegressionChart(simulation) {
       ? margin.left + innerWidth / 2
       : margin.left + (index / (simulation.cumulativeRates.length - 1)) * innerWidth;
   const getY = (rate) => margin.top + innerHeight - (rate / yMax) * innerHeight;
+  const getLossY = (loss) => margin.top + innerHeight - (loss / lossMax) * innerHeight;
   const linePoints = simulation.cumulativeRates.map((point, index) => `${getX(index)},${getY(point.rate)}`).join(" ");
+  const lossPoints = lossSeries.map((point, index) => `${getX(index)},${getLossY(point.loss)}`).join(" ");
   const meanY = getY(EVIDENCE_PERCENT);
+  const lastLoss = lossSeries.length > 0 ? lossSeries[lossSeries.length - 1].loss : 0;
+  const lastLossX = lossSeries.length > 0 ? getX(lossSeries.length - 1) : width - margin.right;
+  const lastLossY = getLossY(lastLoss);
 
   elements.regressionChart.innerHTML = `
     ${yTicks
@@ -962,13 +1142,26 @@ function renderRegressionChart(simulation) {
         `;
       })
       .join("")}
+    ${lossTicks
+      .map((tick) => {
+        const y = getLossY(tick);
+        return `
+          <text class="chart-loss-axis-label" x="${width - margin.right + 8}" y="${y + 4}" text-anchor="start">${formatCurrencyCompact(tick)}</text>
+        `;
+      })
+      .join("")}
     <line class="chart-axis-line" x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${height - margin.bottom}"></line>
+    <line class="chart-axis-line chart-axis-line-right" x1="${width - margin.right}" y1="${margin.top}" x2="${width - margin.right}" y2="${height - margin.bottom}"></line>
     <line class="chart-axis-line" x1="${margin.left}" y1="${height - margin.bottom}" x2="${width - margin.right}" y2="${height - margin.bottom}"></line>
     <line class="chart-mean-line" x1="${margin.left}" y1="${meanY}" x2="${width - margin.right}" y2="${meanY}"></line>
     <text class="chart-mean-label" x="${width - margin.right}" y="${meanY - 8}" text-anchor="end">Mean 16.7%</text>
+    <polyline class="chart-loss-line" points="${lossPoints}"></polyline>
     <polyline class="chart-observed-line" points="${linePoints}"></polyline>
     ${simulation.cumulativeRates
       .map((point, index) => `<circle class="chart-point" cx="${getX(index)}" cy="${getY(point.rate)}" r="4"></circle>`)
+      .join("")}
+    ${lossSeries
+      .map((point, index) => `<circle class="chart-loss-point" cx="${getX(index)}" cy="${getLossY(point.loss)}" r="3"></circle>`)
       .join("")}
     ${xTicks
       .map((tick) => {
@@ -979,6 +1172,8 @@ function renderRegressionChart(simulation) {
       })
       .join("")}
     <text class="chart-axis-title" x="${margin.left}" y="${margin.top - 2}" text-anchor="start">Cumulative six rate</text>
+    <text class="chart-loss-title" x="${width - margin.right}" y="${margin.top - 2}" text-anchor="end">Extra loss</text>
+    <text class="chart-loss-label" x="${Math.min(width - margin.right - 4, lastLossX + 8)}" y="${Math.max(margin.top + 12, lastLossY - 8)}" text-anchor="end">${formatCurrency(lastLoss)}</text>
     <text class="chart-axis-title" x="${width - margin.right}" y="${height - 6}" text-anchor="end">Throws of 10 dice</text>
   `;
 }
@@ -1024,6 +1219,10 @@ function loadState() {
 
     return {
       confidence: savedConfidence,
+      compareMode: Boolean(raw.compareMode),
+      compareConfidence: normalizeConfidence(
+        clampNumber(raw.compareConfidence, 0, 100, defaultState.compareConfidence)
+      ),
       severity: validateSeverity(raw.severity),
       transferClaim: claim.id,
       transferEvidence: clampNumber(raw.transferEvidence, 0, 100, claim.suggestedEvidence),
@@ -1058,6 +1257,24 @@ function formatPercent(value) {
 
 function formatNumber(value) {
   return Math.abs(value - Math.round(value)) < 0.05 ? String(Math.round(value)) : value.toFixed(1);
+}
+
+function formatCurrency(value) {
+  const rounded = Math.abs(value - Math.round(value)) < 0.5 ? Math.round(value) : Number(value.toFixed(1));
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: rounded % 1 === 0 ? 0 : 1
+  }).format(rounded);
+}
+
+function formatCurrencyCompact(value) {
+  if (value >= 1000) {
+    const compact = value >= 10000 ? Math.round(value / 1000) : Number((value / 1000).toFixed(1));
+    return `$${compact}k`;
+  }
+
+  return `$${Math.round(value)}`;
 }
 
 function formatHitCount(value) {

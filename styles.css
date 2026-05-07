@@ -463,6 +463,14 @@ main {
   letter-spacing: 0;
 }
 
+.hub-landing .section-note {
+  max-width: 760px;
+  margin: 0 0 24px;
+  color: #4e4e4e;
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
 .principle-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -8039,7 +8047,9 @@ body.app-overreach #summary-step {
 .stakes-caption,
 .simulation-caption,
 .bridge-caption,
-.confidence-caption {
+.confidence-caption,
+.drill-note,
+.chart-note {
   margin: 0;
   color: var(--overreach-muted);
   font-size: 0.92rem;
@@ -8051,6 +8061,11 @@ body.app-overreach #summary-step {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin-top: 16px;
+}
+
+.die-stage-single {
+  grid-template-columns: minmax(220px, 280px);
+  justify-content: start;
 }
 
 .die-stack {
@@ -8200,7 +8215,10 @@ body.app-overreach #summary-step {
 .sim-stat small,
 .claim-button span,
 .severity-option span,
-.commitment-option small {
+.commitment-option small,
+.compare-setting small,
+.formula-bar small,
+.consequence-column small {
   margin: 6px 0 0;
   color: var(--overreach-muted);
   font-size: 0.84rem;
@@ -8518,6 +8536,58 @@ body.app-overreach #summary-step {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.compare-fieldset {
+  display: grid;
+  gap: 12px;
+}
+
+.compare-toggle {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  color: var(--overreach-ink);
+  font-size: 0.9rem;
+  font-weight: 780;
+  line-height: 1.4;
+}
+
+.compare-toggle input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--overreach-blue);
+}
+
+.compare-settings {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.compare-setting {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid rgba(110, 74, 31, 0.22);
+  border-radius: var(--radius);
+  background: rgba(255, 252, 247, 0.92);
+}
+
+.compare-setting[hidden] {
+  display: none;
+}
+
+.compare-setting strong,
+.formula-bar strong {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  line-height: 1;
+}
+
+.compare-setting-locked {
+  align-content: start;
+}
+
 .severity-option,
 .claim-button,
 .commitment-option {
@@ -8550,10 +8620,21 @@ body.app-overreach #summary-step {
   display: contents;
 }
 
+.simulation-panel > .formula-bar,
 .simulation-panel > .roll-panel,
 .simulation-panel > .consequence-panel,
 .simulation-panel > .simulation-caption {
   grid-column: 1 / -1;
+}
+
+.formula-bar {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid rgba(110, 74, 31, 0.22);
+  border-left: 5px solid var(--overreach-green);
+  border-radius: var(--radius);
+  background: rgba(255, 252, 247, 0.94);
 }
 
 .mean-panel {
@@ -8602,6 +8683,10 @@ body.app-overreach #summary-step {
   stroke-width: 1.5;
 }
 
+.chart-axis-line-right {
+  opacity: 0.7;
+}
+
 .chart-mean-line {
   stroke: var(--overreach-green);
   stroke-width: 2.5;
@@ -8620,9 +8705,25 @@ body.app-overreach #summary-step {
   fill: var(--overreach-blue);
 }
 
+.chart-loss-line {
+  fill: none;
+  stroke: var(--overreach-amber);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 8 5;
+}
+
+.chart-loss-point {
+  fill: var(--overreach-amber);
+}
+
 .chart-axis-label,
 .chart-mean-label,
 .chart-axis-title,
+.chart-loss-axis-label,
+.chart-loss-title,
+.chart-loss-label,
 .chart-placeholder {
   fill: var(--overreach-muted);
   font-family: inherit;
@@ -8634,6 +8735,12 @@ body.app-overreach #summary-step {
 .chart-axis-title,
 .chart-mean-label {
   fill: var(--overreach-deep);
+}
+
+.chart-loss-axis-label,
+.chart-loss-title,
+.chart-loss-label {
+  fill: var(--overreach-amber);
 }
 
 .sim-stat strong {
@@ -8680,6 +8787,40 @@ body.app-overreach #summary-step {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.consequence-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.consequence-column {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid rgba(110, 74, 31, 0.18);
+  border-radius: var(--radius);
+  background: rgba(255, 252, 247, 0.92);
+}
+
+.consequence-column-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.consequence-column-head strong {
+  font-size: 0.96rem;
+}
+
+.consequence-column-head span {
+  color: var(--overreach-muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .roll-token,
@@ -8848,6 +8989,8 @@ body.app-overreach #summary-step {
   .commitment-grid,
   .mean-grid,
   .simulation-metrics,
+  .compare-settings,
+  .consequence-compare,
   .option-grid,
   .option-grid-compact {
     grid-template-columns: 1fr;
@@ -8859,6 +9002,48 @@ body.app-overreach #summary-step {
 
   .overreach-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .severity-option {
+    min-height: auto;
+    padding: 12px;
+  }
+
+  .severity-option strong {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .severity-option strong::after {
+    content: "+";
+    flex: 0 0 auto;
+    color: var(--overreach-muted);
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  .severity-option span {
+    max-height: 0;
+    margin-top: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      max-height 0.2s ease,
+      margin-top 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .severity-option.active strong::after {
+    content: "\2212";
+  }
+
+  .severity-option.active span,
+  .severity-option:focus-visible span {
+    max-height: 240px;
+    margin-top: 8px;
+    opacity: 1;
   }
 }
 

@@ -216,18 +216,19 @@
             is not “sixes happen.” The claim is “the next roll will be a six.”
           </p>
 
-          <div class="die-stage">
+          <div class="die-stage die-stage-single">
             <div class="die-stack">
               <span class="mini-label">Target face</span>
               <div class="die-face" id="targetDie" aria-label="Target die face showing six"></div>
               <small>The target event never changes.</small>
             </div>
-            <div class="die-stack">
-              <span class="mini-label">Last roll</span>
-              <div class="die-face die-face-muted" id="lastDie" aria-live="polite" aria-label="Last rolled die face"></div>
-              <small id="lastRollLabel">No sequence run yet.</small>
-            </div>
           </div>
+
+          <p class="drill-note">
+            Recent rolls in the trace can change the running graph below, but they do not change
+            the probability of the next fair roll. The target proposition stays fixed at one
+            chance in six.
+          </p>
 
           <div class="scenario-facts">
             <article>
@@ -410,9 +411,41 @@
           </div>
 
           <div class="simulation-actions">
-            <button type="button" class="primary" id="runSimulation">Roll another 10 dice</button>
+            <button type="button" class="primary" id="runSimulation">Add 10 rolls to the trace</button>
             <button type="button" class="secondary" id="resetSimulation">Start new trace</button>
           </div>
+
+          <fieldset class="option-fieldset compare-fieldset">
+            <legend>Compare planning settings on the same trace</legend>
+            <label class="compare-toggle" for="compareMode">
+              <input type="checkbox" id="compareMode">
+              <span>Use a second confidence setting instead of the support-line baseline</span>
+            </label>
+            <p class="simulation-caption" id="compareModeCaption">
+              Default view compares the support line at 16.7% with your current drill setting.
+            </p>
+            <div class="compare-settings">
+              <div class="compare-setting compare-setting-locked">
+                <span class="mini-label">Current drill setting</span>
+                <strong id="comparePrimaryReadout">58%</strong>
+                <small>This stays synced to the main confidence slider above.</small>
+              </div>
+              <div class="compare-setting" id="compareSecondarySetting">
+                <label class="slider-label" for="compareConfidenceRange">Second confidence setting</label>
+                <strong id="compareConfidenceReadout">85%</strong>
+                <input
+                  id="compareConfidenceRange"
+                  class="confidence-range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  value="85"
+                >
+                <small>Turn compare mode on to judge the same trace with this second setting.</small>
+              </div>
+            </div>
+          </fieldset>
 
           <fieldset class="option-fieldset">
             <legend>How costly is each shortfall?</legend>
@@ -425,51 +458,13 @@
         </article>
 
         <aside class="overreach-card simulation-panel">
-          <div class="simulation-metrics planner-metrics">
-            <article class="sim-stat">
-              <span>Evidence-capped planner</span>
-              <strong id="evidencePlannerPlan">3 hits</strong>
-              <small>Stops where the support line stops.</small>
-            </article>
-            <article class="sim-stat">
-              <span>Faith-driven planner</span>
-              <strong id="faithPlannerPlan">10 hits</strong>
-              <small>Adds commitments beyond the support line.</small>
-            </article>
-            <article class="sim-stat">
-              <span>Decision penalty</span>
-              <strong id="decisionPenalty">7</strong>
-              <small id="decisionPenaltyNote">Extra commitments are already present before any roll happens.</small>
-            </article>
-            <article class="sim-stat">
-              <span>Long-run added cost</span>
-              <strong id="longRunCost">16.1</strong>
-              <small id="longRunCostNote">If repeated many times, the faith-driven planner pays this much more on average.</small>
-            </article>
+          <div class="formula-bar">
+            <span class="mini-label">Support rule</span>
+            <strong id="expectedRule">Expected sixes = tracked dice / 6 = 10 / 6 = 1.7</strong>
+            <small>The chart and both planners are judged against this same one-in-six baseline.</small>
           </div>
 
-          <div class="simulation-metrics">
-            <article class="sim-stat">
-              <span>Evidence-based hits</span>
-              <strong id="evidenceHits">1.7 hits</strong>
-              <small>What the support line expects across all tracked dice.</small>
-            </article>
-            <article class="sim-stat">
-              <span>Planned hits</span>
-              <strong id="plannedHits">5.8 hits</strong>
-              <small>What your current confidence would budget across all tracked dice.</small>
-            </article>
-            <article class="sim-stat">
-              <span>Cumulative six rate</span>
-              <strong id="cumulativeRate">20%</strong>
-              <small>The observed share of sixes across the whole trace so far.</small>
-            </article>
-            <article class="sim-stat">
-              <span>Actual hits</span>
-              <strong id="actualHits">2 hits</strong>
-              <small>The number of sixes actually rolled across the whole trace.</small>
-            </article>
-          </div>
+          <div class="simulation-metrics planner-metrics" id="comparisonMetrics"></div>
 
           <div class="roll-panel regression-panel">
             <div class="roll-strip-head">
@@ -482,11 +477,17 @@
                 class="regression-chart"
                 viewBox="0 0 640 240"
                 role="img"
-                aria-label="Line graph showing the cumulative share of sixes across successive throws of ten dice compared with the 16.7 percent mean."
+                aria-label="Line graph showing the cumulative share of sixes across successive throws of ten dice compared with the 16.7 percent mean, plus an amber line showing extra dollars lost beyond the evidence-capped baseline at one hundred dollars per extra shortfall unit."
               ></svg>
             </div>
             <p class="simulation-caption" id="regressionCaption">
               Each point shows the cumulative percentage of sixes after another throw of 10 dice.
+            </p>
+            <p class="chart-note" id="lossTraceNote">
+              Amber line: extra dollars lost beyond the evidence-capped plan if each extra shortfall unit costs $100.
+            </p>
+            <p class="chart-note">
+              The line can zigzag for a while. Regression toward 16.7% is noisy, not monotonic.
             </p>
           </div>
 
@@ -511,9 +512,9 @@
                   This panel turns the current cumulative shortfall into consequence units under the selected severity framing.
                 </span>
               </div>
-              <span id="consequenceSummary">About 3.8 costly setbacks</span>
+              <span id="consequenceSummary">Both planners come out the same on this trace.</span>
             </div>
-            <div class="consequence-strip" id="consequenceStrip"></div>
+            <div class="consequence-compare" id="consequenceCompare"></div>
           </div>
 
           <p class="simulation-caption" id="simulationCaption">
