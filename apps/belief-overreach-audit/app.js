@@ -7,35 +7,39 @@ const MAX_BATCHES = 30;
 const severityOptions = [
   {
     id: "minor",
-    label: "Minor inconvenience",
+    label: "Minor letdown",
     weight: 1,
-    detail: "Each shortfall wastes a little time or creates a small inconvenience.",
-    singularUnit: "minor setback",
-    pluralUnit: "minor setbacks"
+    detail:
+      "Example: hope makes you believe a romantic interest will call you back tonight, so you keep waiting and checking your phone. If the belief outruns the evidence, the shortfall mainly wastes time or attention.",
+    singularUnit: "minor letdown",
+    pluralUnit: "minor letdowns"
   },
   {
     id: "money",
-    label: "Budget strain",
+    label: "Costly setback",
     weight: 2.3,
-    detail: "Each shortfall costs money, effort, or emotional bandwidth.",
+    detail:
+      "Example: hope leads you to trust a thinly supported investment tip, supplement, or answered-prayer expectation, and the miss costs money, effort, or emotional bandwidth.",
     singularUnit: "costly setback",
     pluralUnit: "costly setbacks"
   },
   {
     id: "safety",
-    label: "Safety margin loss",
+    label: "Safety risk",
     weight: 4.2,
-    detail: "Each shortfall removes backup room and leaves you more exposed.",
-    singularUnit: "safety loss",
-    pluralUnit: "safety losses"
+    detail:
+      "Example: hope tells you help will arrive, the weather will break, or your plan will hold, so you delay a backup. The miss removes safety margin and leaves you more exposed.",
+    singularUnit: "safety risk",
+    pluralUnit: "safety risks"
   },
   {
     id: "catastrophic",
-    label: "Single-point exposure",
+    label: "Last-chance failure",
     weight: 7,
-    detail: "Each shortfall lands on something you cannot easily replace or retry.",
-    singularUnit: "critical setback",
-    pluralUnit: "critical setbacks"
+    detail:
+      "Example: faith in hope tells you your last match will light the fire that saves you from hypothermia. If that belief exceeds the evidence and fails, the loss lands on something you cannot replace or retry.",
+    singularUnit: "critical failure",
+    pluralUnit: "critical failures"
   }
 ];
 
