@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Belief Overreach Audit | Crosshairs Audit Lab</title>
+    <meta
+      name="description"
+      content="A Crosshairs audit for watching confidence outrun perceived evidence, then tracing the planning and commitment failures that follow."
+    >
+    <meta name="author" content="Phil Stilwell">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#6e4a1f">
+    <link rel="canonical" href="https://xhairs.com/apps/belief-overreach-audit/">
+    <meta property="og:site_name" content="Crosshairs Audit Lab">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Belief Overreach Audit | Crosshairs Audit Lab">
+    <meta property="og:description" content="Watch confidence outrun perceived evidence, then trace the planning and commitment failures that follow.">
+    <meta property="og:url" content="https://xhairs.com/apps/belief-overreach-audit/">
+    <meta property="og:image" content="https://xhairs.com/assets/crosshairs-og.svg">
+    <meta property="og:image:alt" content="Crosshairs Audit Lab: belief under inspection.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Belief Overreach Audit | Crosshairs Audit Lab">
+    <meta name="twitter:description" content="Use a fair die, a bridge metaphor, and a transfer panel to see what happens when belief outruns support.">
+    <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260507-belief-overreach">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Belief Overreach Audit",
+        "url": "https://xhairs.com/apps/belief-overreach-audit/",
+        "description": "A Crosshairs audit for showing what happens when confidence outruns the evidence a person thinks they have.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "author": {
+          "@type": "Person",
+          "name": "Phil Stilwell",
+          "url": "https://xhairs.com/#author"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
+  </head>
+  <body class="app-overreach">
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
+        <span class="brand-mark" aria-hidden="true">X</span>
+        <span>
+          <strong><span class="brand-cross">Cross</span><span class="brand-hairs">hairs</span> Audit Lab</strong>
+          <small>Belief Overreach Audit</small>
+        </span>
+      </a>
+      <a class="site-domain-link" href="https://xhairs.com" aria-label="Visit xhairs.com">
+        https://<strong class="site-domain-x">x</strong>hairs.com
+      </a>
+      <nav class="top-nav" aria-label="Primary">
+        <a class="hub-link" href="../../">Hub</a>
+        <a href="#drill-step">Drill</a>
+        <a href="#bridge-step">Bridge</a>
+        <a href="#stakes-step">Stakes</a>
+        <a href="#transfer-step">Transfer</a>
+        <a href="#summary-step">Summary</a>
+      </nav>
+    </header>
+
+    <main class="app-shell overreach-tool">
+      <section class="app-header">
+        <div class="app-title">
+          <p class="eyebrow">Faith-gap audit</p>
+          <h1>Belief Overreach Audit</h1>
+          <p>
+            Start with a fair die, where both symmetry and repeated experience support only a
+            one-in-six chance that the next roll will be a six. Then watch what happens when
+            confidence moves beyond that support and begins carrying plans, risks, and life
+            commitments the evidence never supplied.
+          </p>
+        </div>
+        <aside class="source-note">
+          <strong>Not a verdict on God.</strong>
+          This tool isolates a narrower question: if your confidence rises above the evidence
+          you yourself think you have, what new failure pressure enters the picture?
+        </aside>
+        <details class="annotation app-wide">
+          <summary>How to use this audit</summary>
+          <p>
+            First, set your confidence about the next roll of a fair die being a six. The die
+            fixes the support at 16.7%. The slider shows whether your belief stays inside that
+            support or walks beyond it.
+          </p>
+          <p>
+            Next, run a short sequence of rolls. The tool compares what the evidence would
+            warrant, what your confidence plans for, and what the world actually delivers.
+          </p>
+          <p>
+            Finally, transfer the same structure to faith-laden claims. Rate the support you
+            think you really have, then rate how confident you are anyway. The gap is the part
+            being carried by faith rather than perceived evidence.
+          </p>
+        </details>
+      </section>
+
+      <nav class="guided-steps overreach-steps" aria-label="Audit steps">
+        <a href="#drill-step" aria-describedby="overreach-step-drill-help">
+          <span class="step-number">1</span>
+          <span class="step-label">Calibration drill</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="overreach-step-drill-help" role="tooltip">
+            The fair die keeps the evidence point fixed, so only your confidence can move.
+          </span>
+        </a>
+        <a href="#bridge-step" aria-describedby="overreach-step-bridge-help">
+          <span class="step-number">2</span>
+          <span class="step-label">Watch the bridge</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="overreach-step-bridge-help" role="tooltip">
+            Supported planks reach only as far as the evidence. The highlighted overhang shows
+            the part being carried by faith.
+          </span>
+        </a>
+        <a href="#stakes-step" aria-describedby="overreach-step-stakes-help">
+          <span class="step-number">3</span>
+          <span class="step-label">Stress the plan</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="overreach-step-stakes-help" role="tooltip">
+            A person can plan for more hits than the evidence supports. Those extra planned hits
+            are where avoidable failure pressure enters.
+          </span>
+        </a>
+        <a href="#transfer-step" aria-describedby="overreach-step-transfer-help">
+          <span class="step-number">4</span>
+          <span class="step-label">Transfer the lesson</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="overreach-step-transfer-help" role="tooltip">
+            Move from the die to prayer, healing, guidance, or resurrection-related claims by
+            rating support and confidence separately.
+          </span>
+        </a>
+        <a href="#summary-step" aria-describedby="overreach-step-summary-help">
+          <span class="step-number">5</span>
+          <span class="step-label">Read the result</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="overreach-step-summary-help" role="tooltip">
+            The result does not tell you what is true. It tells you whether your current
+            confidence is leaning on more than your perceived evidence supplies.
+          </span>
+        </a>
+      </nav>
+
+      <section class="overreach-dashboard" aria-label="Current overreach status">
+        <article class="metric-card">
+          <span class="metric-label" tabindex="0" aria-describedby="overreach-evidence-help">
+            <span class="metric-label-text">Evidence support</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="overreach-evidence-help" role="tooltip">
+            With a fair die, the chance that the next roll is a six is one in six, or about 16.7%.
+          </span>
+          <strong id="metricEvidence">16.7%</strong>
+          <small>Fixed by the die, not by feeling</small>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label" tabindex="0" aria-describedby="overreach-confidence-help">
+            <span class="metric-label-text">Your confidence</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="overreach-confidence-help" role="tooltip">
+            This is the degree of belief you are currently placing on the next roll being a six.
+          </span>
+          <strong id="metricConfidence">58%</strong>
+          <small id="metricConfidenceNote">A large part of this setting sits beyond the evidence line.</small>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label" tabindex="0" aria-describedby="overreach-gap-help">
+            <span class="metric-label-text">Faith gap</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="overreach-gap-help" role="tooltip">
+            The faith gap is the portion of confidence that exceeds the evidence you perceive.
+          </span>
+          <strong id="metricGap">41.3 pts</strong>
+          <small id="metricGapNote">Everything above 16.7% is being carried by more than the die supports.</small>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label" tabindex="0" aria-describedby="overreach-exposure-help">
+            <span class="metric-label-text">Exposure mode</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+          </span>
+          <span class="metric-tooltip" id="overreach-exposure-help" role="tooltip">
+            This combines the current faith gap with the selected consequence setting to show how
+            dangerous the current posture becomes when something important rides on it.
+          </span>
+          <strong id="metricExposure">Exposed</strong>
+          <small id="metricExposureNote">Resource-sized commitments are already leaning on unsupported belief.</small>
+        </article>
+      </section>
+
+      <section class="overreach-grid" id="drill-step" aria-labelledby="drill-title">
+        <article class="overreach-card">
+          <p class="app-step">Calibration drill</p>
+          <h2 id="drill-title">One fair die. One honest support line.</h2>
+          <p class="overreach-lead">
+            The scenario stays intentionally plain so the logic is hard to hide from. The claim
+            is not “sixes happen.” The claim is “the next roll will be a six.”
+          </p>
+
+          <div class="die-stage">
+            <div class="die-stack">
+              <span class="mini-label">Target face</span>
+              <div class="die-face" id="targetDie" aria-label="Target die face showing six"></div>
+              <small>The target event never changes.</small>
+            </div>
+            <div class="die-stack">
+              <span class="mini-label">Last roll</span>
+              <div class="die-face die-face-muted" id="lastDie" aria-live="polite" aria-label="Last rolled die face"></div>
+              <small id="lastRollLabel">No sequence run yet.</small>
+            </div>
+          </div>
+
+          <div class="scenario-facts">
+            <article>
+              <strong>Deductive symmetry</strong>
+              <p>No side of a fair die has a privileged route to the next roll.</p>
+            </article>
+            <article>
+              <strong>Inductive experience</strong>
+              <p>Long runs keep settling around one six in every six throws.</p>
+            </article>
+            <article>
+              <strong>Honest credence</strong>
+              <p>If you stop at 16.7%, belief stays inside the support you perceive.</p>
+            </article>
+          </div>
+        </article>
+
+        <aside class="overreach-card confidence-panel">
+          <p class="app-step">Move the slider</p>
+          <h2>How sure are you anyway?</h2>
+          <div class="confidence-display">
+            <span class="mini-label">Current confidence</span>
+            <strong id="confidenceReadout">58%</strong>
+          </div>
+          <label class="slider-label" for="confidenceRange">
+            Set your confidence that the next roll will be a six.
+          </label>
+          <input
+            id="confidenceRange"
+            class="confidence-range"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="58"
+          >
+          <div class="slider-scale" aria-hidden="true">
+            <span>0%</span>
+            <span>16.7%</span>
+            <span>50%</span>
+            <span>100%</span>
+          </div>
+          <div class="quick-picks" id="quickConfidenceButtons" aria-label="Common confidence presets">
+            <button type="button" data-confidence="17">16.7%</button>
+            <button type="button" data-confidence="33">33%</button>
+            <button type="button" data-confidence="50">50%</button>
+            <button type="button" data-confidence="75">75%</button>
+            <button type="button" data-confidence="95">95%</button>
+          </div>
+
+          <div class="belief-gauge" aria-live="polite">
+            <div class="gauge-label-row">
+              <span>Evidence</span>
+              <span id="gaugeEvidenceLabel">16.7%</span>
+            </div>
+            <div class="gauge-track">
+              <div class="gauge-evidence" id="gaugeEvidenceBar"></div>
+              <div class="gauge-faith" id="gaugeFaithBar"></div>
+              <div class="gauge-pointer" id="gaugePointer"></div>
+            </div>
+            <div class="gauge-label-row">
+              <span>Faith gap</span>
+              <span id="gaugeGapLabel">41.3 points</span>
+            </div>
+          </div>
+
+          <p class="confidence-caption" id="confidenceCaption">
+            This setting asks the die to carry much more certainty than the evidence line supplies.
+          </p>
+        </aside>
+      </section>
+
+      <section class="overreach-card bridge-panel" id="bridge-step" aria-labelledby="bridge-title">
+        <p class="app-step">Bridge view</p>
+        <h2 id="bridge-title">Watch confidence outwalk the support</h2>
+        <p class="overreach-lead">
+          Think of evidence as the planks that make a bridge passable. The supported bridge stops
+          where the evidence stops. Any extra distance is overhang.
+        </p>
+
+        <div class="bridge-stage">
+          <div class="bridge-track-wrap">
+            <div class="bridge-track" aria-hidden="true">
+              <div class="bridge-supported" id="bridgeSupported"></div>
+              <div class="bridge-overhang" id="bridgeOverhang"></div>
+              <div class="bridge-marker bridge-marker-evidence" id="bridgeEvidenceMarker"></div>
+              <div class="bridge-marker bridge-marker-belief" id="bridgeBeliefMarker"></div>
+            </div>
+            <div class="bridge-scale-row">
+              <span>0%</span>
+              <span>Support line</span>
+              <span>100%</span>
+            </div>
+          </div>
+
+          <div class="bridge-readout">
+            <article>
+              <span>Supported span</span>
+              <strong id="bridgeSupportedLabel">16.7%</strong>
+              <p>The planks the die really gives you.</p>
+            </article>
+            <article>
+              <span>Unsupported overhang</span>
+              <strong id="bridgeOverhangLabel">41.3%</strong>
+              <p>The part being carried by faith rather than support.</p>
+            </article>
+            <article>
+              <span>Inside your own position</span>
+              <strong id="bridgeShareLabel">71.2%</strong>
+              <p>The share of your current confidence resting beyond the support line.</p>
+            </article>
+          </div>
+        </div>
+
+        <p class="bridge-caption" id="bridgeCaption">
+          At this setting, most of your current position is no longer standing on what the die
+          itself supplies.
+        </p>
+      </section>
+
+      <section class="stakes-grid" id="stakes-step" aria-labelledby="stakes-title">
+        <article class="overreach-card">
+          <p class="app-step">Stress test</p>
+          <h2 id="stakes-title">Let the world answer back</h2>
+          <p class="overreach-lead">
+            Overconfidence does not change the die. It changes how many successes you plan for
+            and how much you are willing to hang on those plans.
+          </p>
+
+          <fieldset class="option-fieldset">
+            <legend>How many similar chances are you planning across?</legend>
+            <div class="option-grid option-grid-compact" id="trialButtons">
+              <button type="button" class="trial-option" data-trials="6">6 rolls</button>
+              <button type="button" class="trial-option" data-trials="18">18 rolls</button>
+              <button type="button" class="trial-option" data-trials="60">60 rolls</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="option-fieldset">
+            <legend>How costly is each collapsed plan?</legend>
+            <div class="option-grid" id="severityOptions"></div>
+          </fieldset>
+
+          <div class="simulation-actions">
+            <button type="button" class="primary" id="runSimulation">Roll this sequence</button>
+            <button type="button" class="secondary" id="rerollSimulation">Reroll same setup</button>
+          </div>
+
+          <p class="stakes-caption" id="stakesCaption">
+            High stakes do not make the evidence stronger. They only make overreach more expensive.
+          </p>
+        </article>
+
+        <aside class="overreach-card simulation-panel">
+          <div class="simulation-metrics">
+            <article class="sim-stat">
+              <span>Evidence-based hits</span>
+              <strong id="evidenceHits">3</strong>
+              <small>What the support line warrants across the selected run.</small>
+            </article>
+            <article class="sim-stat">
+              <span>Planned hits</span>
+              <strong id="plannedHits">10</strong>
+              <small>What your current confidence is budgeting for.</small>
+            </article>
+            <article class="sim-stat">
+              <span>Unsupported plans</span>
+              <strong id="unsupportedPlans">7</strong>
+              <small>The extra successes your evidence never supplied.</small>
+            </article>
+            <article class="sim-stat">
+              <span>Actual hits</span>
+              <strong id="actualHits">0</strong>
+              <small>What the last run of rolls actually delivered.</small>
+            </article>
+          </div>
+
+          <div class="roll-panel">
+            <div class="roll-strip-head">
+              <h3>Last sequence</h3>
+              <span id="runShortfall">Shortfall: 10</span>
+            </div>
+            <div class="roll-strip" id="rollStrip" aria-live="polite"></div>
+          </div>
+
+          <div class="consequence-panel">
+            <div class="roll-strip-head">
+              <h3>Collapsed plans</h3>
+              <span id="consequenceSummary">10 costly misses</span>
+            </div>
+            <div class="consequence-strip" id="consequenceStrip"></div>
+          </div>
+
+          <p class="simulation-caption" id="simulationCaption">
+            The run does not need to be disastrous every time for the posture to be bad. The key
+            point is that some of the planned hits were unsupported before the sequence even began.
+          </p>
+        </aside>
+      </section>
+
+      <section class="transfer-grid" id="transfer-step" aria-labelledby="transfer-title">
+        <article class="overreach-card">
+          <p class="app-step">Transfer</p>
+          <h2 id="transfer-title">Move from the die to faith-laden claims</h2>
+          <p class="overreach-lead">
+            The structure is the same even when the content changes. Separate the support you
+            think you really have from the confidence you are carrying anyway.
+          </p>
+
+          <div class="claim-grid" id="claimButtons" aria-label="Claim choices"></div>
+
+          <div class="claim-copy">
+            <h3 id="claimTitle">Answered prayer</h3>
+            <p id="claimPrompt">
+              A prayer request is more likely to be fulfilled because it was prayed for.
+            </p>
+            <p class="claim-tension" id="claimTension">
+              The danger enters when misses stop lowering confidence and start getting redescribed
+              as hidden wisdom, timing, or mystery instead.
+            </p>
+          </div>
+        </article>
+
+        <aside class="overreach-card transfer-controls">
+          <div class="transfer-slider-block">
+            <label class="slider-label" for="transferEvidenceRange">
+              How much support do you think you really have?
+            </label>
+            <strong id="transferEvidenceReadout">28%</strong>
+            <input
+              id="transferEvidenceRange"
+              class="confidence-range"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="28"
+            >
+          </div>
+
+          <div class="transfer-slider-block">
+            <label class="slider-label" for="transferBeliefRange">
+              How confident are you anyway?
+            </label>
+            <strong id="transferBeliefReadout">74%</strong>
+            <input
+              id="transferBeliefRange"
+              class="confidence-range"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="74"
+            >
+          </div>
+
+          <div class="belief-gauge">
+            <div class="gauge-label-row">
+              <span>Support</span>
+              <span id="transferGaugeSupport">28%</span>
+            </div>
+            <div class="gauge-track">
+              <div class="gauge-evidence" id="transferEvidenceBar"></div>
+              <div class="gauge-faith" id="transferFaithBar"></div>
+              <div class="gauge-pointer" id="transferPointer"></div>
+            </div>
+            <div class="gauge-label-row">
+              <span>Faith gap</span>
+              <span id="transferGapReadout">46 points</span>
+            </div>
+          </div>
+
+          <fieldset class="option-fieldset">
+            <legend>What is this claim being asked to carry?</legend>
+            <div class="commitment-grid" id="commitmentGrid"></div>
+          </fieldset>
+        </aside>
+      </section>
+
+      <section class="overreach-card summary-panel" id="summary-step" aria-labelledby="summary-title">
+        <p class="app-step">Summary</p>
+        <h2 id="summary-title">What this setting is showing</h2>
+
+        <div class="summary-grid">
+          <article class="summary-card">
+            <span>Die lesson</span>
+            <h3 id="dieSummaryTitle">Unsupported plans are already in the room.</h3>
+            <p id="dieSummaryText">
+              Before a roll even happens, your current confidence is budgeting for more sixes than
+              the evidence line supports.
+            </p>
+          </article>
+          <article class="summary-card">
+            <span>Faith lesson</span>
+            <h3 id="transferSummaryTitle">The selected claim is carrying a large overhang.</h3>
+            <p id="transferSummaryText">
+              The current claim posture is using more confidence than the support rating provides,
+              then leaning real commitments onto that extra confidence.
+            </p>
+          </article>
+        </div>
+
+        <div class="report-box">
+          <label class="slider-label" for="summaryOutput">Copyable summary</label>
+          <textarea id="summaryOutput" readonly spellcheck="false"></textarea>
+          <div class="report-actions">
+            <button type="button" class="secondary" id="copySummary">Copy summary</button>
+            <span class="copy-status" id="copyStatus" aria-live="polite"></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

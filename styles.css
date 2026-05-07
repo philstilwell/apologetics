@@ -7866,3 +7866,744 @@ body.app-moral-particulars .ai-output-card {
     min-height: 80vh;
   }
 }
+
+.hub-landing .hub-card-overreach {
+  --app-accent: #6e4a1f;
+  --app-accent-dark: #42290a;
+  --app-tint: #fff6e8;
+  --app-line: #d9bf95;
+  grid-column: 1 / -1;
+  width: min(100%, calc((100% - 18px) / 2));
+  justify-self: center;
+}
+
+body.app-overreach {
+  --overreach-ink: #221710;
+  --overreach-muted: #655244;
+  --overreach-card: rgba(255, 248, 241, 0.94);
+  --overreach-line: rgba(114, 79, 43, 0.28);
+  --overreach-blue: #2a6172;
+  --overreach-green: #2f6d49;
+  --overreach-amber: #b77115;
+  --overreach-red: #9f3f30;
+  --overreach-deep: #4a2715;
+  background:
+    radial-gradient(circle at top right, rgba(255, 218, 170, 0.45), transparent 34%),
+    linear-gradient(180deg, #f8efe6 0%, #f5f1eb 55%, #fbfaf8 100%);
+  color: var(--overreach-ink);
+}
+
+body.app-overreach .site-header {
+  border-bottom-color: rgba(74, 39, 21, 0.18);
+  background: rgba(250, 244, 238, 0.96);
+}
+
+body.app-overreach .brand-mark {
+  background: var(--overreach-deep);
+  color: #ffefcf;
+}
+
+body.app-overreach #drill-step,
+body.app-overreach #bridge-step,
+body.app-overreach #stakes-step,
+body.app-overreach #transfer-step,
+body.app-overreach #summary-step {
+  scroll-margin-top: 92px;
+}
+
+.overreach-tool {
+  display: grid;
+  gap: 16px;
+}
+
+.overreach-steps {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.overreach-steps a {
+  border-color: rgba(114, 79, 43, 0.22);
+  background: rgba(255, 252, 247, 0.9);
+}
+
+.overreach-steps a:hover,
+.overreach-steps a:focus-visible {
+  border-color: var(--overreach-blue);
+  color: var(--overreach-ink);
+}
+
+.overreach-steps .step-number {
+  background: var(--overreach-blue);
+}
+
+.overreach-steps .label-help-dot {
+  border-color: #ccb38c;
+  color: var(--overreach-deep);
+}
+
+.overreach-dashboard {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.overreach-dashboard .metric-card {
+  min-height: 124px;
+  padding: 14px;
+  border: 1px solid var(--overreach-line);
+  border-top: 5px solid var(--overreach-blue);
+  border-radius: var(--radius);
+  background: var(--overreach-card);
+  box-shadow: 0 12px 28px rgba(52, 31, 13, 0.11);
+}
+
+.overreach-dashboard .metric-card:nth-child(2) {
+  border-top-color: var(--overreach-green);
+}
+
+.overreach-dashboard .metric-card:nth-child(3) {
+  border-top-color: var(--overreach-amber);
+}
+
+.overreach-dashboard .metric-card:nth-child(4) {
+  border-top-color: var(--overreach-red);
+}
+
+.overreach-dashboard .metric-label,
+.overreach-dashboard small {
+  display: block;
+  color: var(--overreach-muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.overreach-dashboard strong {
+  display: block;
+  margin: 8px 0 6px;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 0.9;
+}
+
+.overreach-grid,
+.stakes-grid,
+.transfer-grid,
+.summary-grid,
+.simulation-metrics,
+.scenario-facts,
+.bridge-readout,
+.claim-grid,
+.commitment-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.overreach-grid {
+  grid-template-columns: minmax(0, 1.06fr) minmax(300px, 0.94fr);
+}
+
+.stakes-grid {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+}
+
+.transfer-grid {
+  grid-template-columns: minmax(280px, 0.74fr) minmax(0, 1.26fr);
+}
+
+.summary-grid,
+.simulation-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.overreach-card,
+.summary-card {
+  border: 1px solid var(--overreach-line);
+  border-radius: var(--radius);
+  background: var(--overreach-card);
+  box-shadow: var(--shadow);
+}
+
+.overreach-card {
+  padding: 14px;
+}
+
+.overreach-lead,
+.claim-copy p,
+.summary-card p,
+.stakes-caption,
+.simulation-caption,
+.bridge-caption,
+.confidence-caption {
+  margin: 0;
+  color: var(--overreach-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.die-stage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.die-stack {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid rgba(110, 74, 31, 0.24);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 253, 249, 0.98), rgba(255, 244, 228, 0.9));
+  text-align: center;
+}
+
+.mini-label {
+  color: var(--overreach-muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.die-stack small,
+.roll-strip-head span,
+.claim-tension,
+.report-actions .copy-status {
+  color: var(--overreach-muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.die-face {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: min(126px, 100%);
+  aspect-ratio: 1;
+  gap: 10px;
+  padding: 16px;
+  border: 3px solid var(--overreach-deep);
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fffdf9 0%, #f7ebdf 100%);
+  box-shadow:
+    inset 0 -8px 18px rgba(74, 39, 21, 0.08),
+    0 18px 34px rgba(52, 31, 13, 0.1);
+}
+
+.die-face-muted {
+  border-color: rgba(74, 39, 21, 0.45);
+  background: linear-gradient(180deg, #fff 0%, #f0ece8 100%);
+}
+
+.pip {
+  width: 100%;
+  aspect-ratio: 1;
+  align-self: center;
+  justify-self: center;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.pip.active {
+  background: radial-gradient(circle at 35% 35%, #6f4d36 0%, var(--overreach-deep) 72%);
+}
+
+.scenario-facts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 16px;
+}
+
+.scenario-facts article,
+.summary-card,
+.sim-stat,
+.claim-button,
+.severity-option,
+.trial-option,
+.commitment-option {
+  border: 1px solid rgba(110, 74, 31, 0.22);
+  border-radius: var(--radius);
+  background: rgba(255, 252, 247, 0.92);
+}
+
+.scenario-facts article,
+.sim-stat,
+.summary-card {
+  padding: 12px;
+}
+
+.scenario-facts p,
+.sim-stat small,
+.claim-button span,
+.severity-option span,
+.commitment-option small {
+  margin: 6px 0 0;
+  color: var(--overreach-muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.confidence-panel {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.confidence-display {
+  display: grid;
+  gap: 4px;
+}
+
+.confidence-display strong,
+.transfer-slider-block strong {
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  line-height: 0.9;
+}
+
+.slider-label {
+  color: var(--overreach-ink);
+  font-size: 0.88rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.confidence-range {
+  width: 100%;
+  accent-color: var(--overreach-blue);
+}
+
+.slider-scale,
+.gauge-label-row,
+.bridge-scale-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.slider-scale,
+.gauge-label-row,
+.bridge-scale-row,
+.option-fieldset legend,
+.sim-stat span,
+.summary-card span {
+  color: var(--overreach-muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.quick-picks,
+.simulation-actions,
+.report-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-picks button,
+.trial-option,
+.severity-option {
+  min-height: 38px;
+  padding: 9px 12px;
+  border-color: rgba(110, 74, 31, 0.22);
+  background: rgba(255, 252, 247, 0.98);
+}
+
+.quick-picks button.active,
+.trial-option.active,
+.severity-option.active,
+.claim-button.active,
+.commitment-option:has(input:checked) {
+  border-color: var(--overreach-blue);
+  background: rgba(234, 244, 248, 0.95);
+  box-shadow: inset 0 0 0 1px rgba(42, 97, 114, 0.2);
+}
+
+.belief-gauge,
+.bridge-track-wrap,
+.roll-panel,
+.consequence-panel,
+.report-box {
+  padding: 12px;
+  border: 1px solid rgba(110, 74, 31, 0.22);
+  border-radius: var(--radius);
+  background: rgba(255, 252, 247, 0.9);
+}
+
+.belief-gauge {
+  display: grid;
+  gap: 10px;
+}
+
+.gauge-track,
+.bridge-track {
+  position: relative;
+  height: 22px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(84, 61, 43, 0.12), rgba(84, 61, 43, 0.06));
+  overflow: hidden;
+}
+
+.bridge-track {
+  height: 34px;
+  background:
+    linear-gradient(180deg, rgba(74, 39, 21, 0.16), rgba(74, 39, 21, 0.08)),
+    linear-gradient(90deg, rgba(84, 61, 43, 0.1), rgba(84, 61, 43, 0.04));
+}
+
+.gauge-evidence,
+.gauge-faith,
+.bridge-supported,
+.bridge-overhang {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.gauge-evidence,
+.bridge-supported {
+  left: 0;
+  background:
+    linear-gradient(90deg, rgba(47, 109, 73, 0.98), rgba(101, 176, 129, 0.98)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.15) 0,
+      rgba(255, 255, 255, 0.15) 10px,
+      rgba(255, 255, 255, 0.05) 10px,
+      rgba(255, 255, 255, 0.05) 20px
+    );
+}
+
+.gauge-faith,
+.bridge-overhang {
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(242, 197, 116, 0.95) 0,
+      rgba(242, 197, 116, 0.95) 12px,
+      rgba(250, 226, 173, 0.98) 12px,
+      rgba(250, 226, 173, 0.98) 24px
+    );
+}
+
+.gauge-pointer,
+.bridge-marker {
+  position: absolute;
+  top: -6px;
+  width: 2px;
+  height: 34px;
+  background: var(--overreach-deep);
+  transform: translateX(-50%);
+}
+
+.bridge-marker {
+  top: -8px;
+  height: 50px;
+}
+
+.gauge-pointer::after,
+.bridge-marker::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--overreach-deep);
+}
+
+.bridge-marker-evidence {
+  background: var(--overreach-green);
+}
+
+.bridge-marker-evidence::after {
+  background: var(--overreach-green);
+}
+
+.bridge-stage {
+  display: grid;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.bridge-readout {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.bridge-readout article {
+  padding: 12px;
+  border: 1px solid rgba(110, 74, 31, 0.2);
+  border-radius: var(--radius);
+  background: rgba(255, 252, 247, 0.92);
+}
+
+.bridge-readout strong {
+  display: block;
+  margin: 8px 0 6px;
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  line-height: 1;
+}
+
+.bridge-readout p {
+  margin: 0;
+  color: var(--overreach-muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.option-fieldset {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid rgba(110, 74, 31, 0.22);
+  border-radius: var(--radius);
+  background: rgba(255, 252, 247, 0.82);
+}
+
+.option-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 10px;
+}
+
+.option-grid-compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.severity-option,
+.claim-button,
+.commitment-option {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-height: 92px;
+  padding: 10px;
+  text-align: left;
+}
+
+.trial-option {
+  justify-content: center;
+  font-weight: 850;
+}
+
+.simulation-panel,
+.transfer-controls {
+  display: grid;
+  gap: 14px;
+}
+
+.sim-stat strong {
+  display: block;
+  margin: 8px 0 6px;
+  font-size: clamp(1.5rem, 4vw, 2.6rem);
+  line-height: 0.95;
+}
+
+.roll-strip-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.roll-strip-head h3 {
+  font-size: 1rem;
+}
+
+.roll-strip,
+.consequence-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.roll-token,
+.consequence-token {
+  display: grid;
+  place-items: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 8px;
+  font-weight: 900;
+}
+
+.roll-token.hit {
+  background: rgba(47, 109, 73, 0.16);
+  color: var(--overreach-green);
+}
+
+.roll-token.miss {
+  background: rgba(74, 39, 21, 0.08);
+  color: var(--overreach-deep);
+}
+
+.consequence-token {
+  background: rgba(159, 63, 48, 0.14);
+  color: var(--overreach-red);
+}
+
+.consequence-token.money {
+  background: rgba(183, 113, 21, 0.16);
+  color: var(--overreach-amber);
+}
+
+.consequence-token.safety {
+  background: rgba(42, 97, 114, 0.15);
+  color: var(--overreach-blue);
+}
+
+.consequence-token.critical {
+  background: rgba(159, 63, 48, 0.18);
+  color: var(--overreach-red);
+}
+
+.consequence-token.extra {
+  background: rgba(74, 39, 21, 0.1);
+  color: var(--overreach-deep);
+}
+
+.claim-grid,
+.commitment-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.claim-copy {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.claim-copy h3 {
+  font-size: 1.2rem;
+}
+
+.claim-copy p {
+  margin: 0;
+}
+
+.transfer-slider-block {
+  display: grid;
+  gap: 8px;
+}
+
+.commitment-option {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  min-height: auto;
+}
+
+.commitment-option input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--overreach-blue);
+}
+
+.commitment-option span {
+  display: grid;
+  gap: 4px;
+}
+
+.summary-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.summary-card h3 {
+  font-size: 1.16rem;
+}
+
+.report-box {
+  margin-top: 14px;
+}
+
+.report-box textarea {
+  width: 100%;
+  min-height: 228px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid rgba(110, 74, 31, 0.22);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--overreach-ink);
+  font: inherit;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.report-actions {
+  margin-top: 10px;
+}
+
+@media (max-width: 1120px) {
+  body.app-overreach .site-header {
+    position: static;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  body.app-overreach .site-domain-link {
+    position: static;
+    transform: none;
+  }
+
+  body.app-overreach .top-nav {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px 12px;
+  }
+
+  .overreach-grid,
+  .stakes-grid,
+  .transfer-grid,
+  .summary-grid,
+  .scenario-facts,
+  .bridge-readout,
+  .overreach-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .overreach-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hub-landing .hub-card-overreach {
+    width: 100%;
+  }
+}
+
+@media (max-width: 820px) {
+  .die-stage,
+  .claim-grid,
+  .commitment-grid,
+  .simulation-metrics,
+  .option-grid,
+  .option-grid-compact {
+    grid-template-columns: 1fr;
+  }
+
+  .overreach-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .overreach-steps,
+  .quick-picks,
+  .simulation-actions,
+  .report-actions {
+    display: grid;
+  }
+
+  .roll-strip-head {
+    align-items: start;
+    flex-direction: column;
+  }
+}
