@@ -8403,6 +8403,12 @@ body.app-overreach #summary-step {
   gap: 12px;
 }
 
+.trace-panel,
+.regression-panel {
+  display: grid;
+  gap: 12px;
+}
+
 .mean-card.active {
   border-color: var(--overreach-blue);
   background: rgba(234, 244, 248, 0.95);
@@ -8416,6 +8422,60 @@ body.app-overreach #summary-step {
 .mean-card small + small {
   display: block;
   margin-top: 6px;
+}
+
+.regression-chart-wrap {
+  padding: 4px 0 0;
+}
+
+.regression-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chart-grid-line {
+  stroke: rgba(110, 74, 31, 0.12);
+  stroke-width: 1;
+}
+
+.chart-axis-line {
+  stroke: rgba(110, 74, 31, 0.22);
+  stroke-width: 1.5;
+}
+
+.chart-mean-line {
+  stroke: var(--overreach-green);
+  stroke-width: 2.5;
+  stroke-dasharray: 7 6;
+}
+
+.chart-observed-line {
+  fill: none;
+  stroke: var(--overreach-blue);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-point {
+  fill: var(--overreach-blue);
+}
+
+.chart-axis-label,
+.chart-mean-label,
+.chart-axis-title,
+.chart-placeholder {
+  fill: var(--overreach-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.chart-axis-title,
+.chart-mean-label {
+  fill: var(--overreach-deep);
 }
 
 .sim-stat strong {
