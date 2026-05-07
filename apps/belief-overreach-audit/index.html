@@ -24,7 +24,7 @@
     <meta name="twitter:description" content="Use a fair die, a bridge metaphor, and a transfer panel to see what happens when belief outruns support.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260507-belief-overreach">
+    <link rel="stylesheet" href="../../styles.css?v=20260507-belief-overreach-mean">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -369,6 +369,37 @@
               <button type="button" class="trial-option" data-trials="60">60 rolls</button>
             </div>
           </fieldset>
+
+          <div class="roll-panel mean-panel">
+            <div class="roll-strip-head">
+              <h3>Longer runs regress toward the same mean</h3>
+              <span>Probabilistic mean: 16.7%</span>
+            </div>
+            <div class="simulation-metrics mean-grid" id="meanGrid">
+              <article class="sim-stat mean-card">
+                <span>6 rolls</span>
+                <strong>16.7%</strong>
+                <small>Expected sixes: 1 of 6.</small>
+                <small>Common drift: about +/- 15.2 pts.</small>
+              </article>
+              <article class="sim-stat mean-card active">
+                <span>18 rolls</span>
+                <strong>16.7%</strong>
+                <small>Expected sixes: 3 of 18.</small>
+                <small>Common drift: about +/- 8.8 pts.</small>
+              </article>
+              <article class="sim-stat mean-card">
+                <span>60 rolls</span>
+                <strong>16.7%</strong>
+                <small>Expected sixes: 10 of 60.</small>
+                <small>Common drift: about +/- 4.8 pts.</small>
+              </article>
+            </div>
+            <p class="simulation-caption" id="meanRegressionCaption">
+              Short windows can land far from 16.7%, but longer windows usually pull the observed
+              share back toward that same one-in-six center.
+            </p>
+          </div>
 
           <fieldset class="option-fieldset">
             <legend>How costly is each shortfall?</legend>

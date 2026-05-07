@@ -174,6 +174,8 @@ const elements = {
   bridgeShareLabel: document.querySelector("#bridgeShareLabel"),
   bridgeCaption: document.querySelector("#bridgeCaption"),
   trialButtons: document.querySelector("#trialButtons"),
+  meanGrid: document.querySelector("#meanGrid"),
+  meanRegressionCaption: document.querySelector("#meanRegressionCaption"),
   severityOptions: document.querySelector("#severityOptions"),
   runSimulation: document.querySelector("#runSimulation"),
   rerollSimulation: document.querySelector("#rerollSimulation"),
@@ -375,6 +377,7 @@ function render() {
   elements.bridgeCaption.textContent = buildBridgeCaption(confidenceGap, confidenceShare);
 
   highlightTrialButtons();
+  renderMeanRegression(simulation);
   highlightSeverityButtons();
   elements.stakesCaption.textContent = describeStakesCaption(confidenceGap, severity);
   elements.evidencePlannerPlan.textContent = `${simulation.evidenceHits} hits`;
@@ -447,6 +450,27 @@ function renderSimulation(simulation, severity) {
 
   elements.consequenceSummary.textContent = describeConsequenceSummary(collapsed, severity);
   elements.simulationCaption.textContent = buildSimulationCaption(simulation, severity);
+}
+
+function renderMeanRegression(simulation) {
+  const actualRate = state.trials > 0 ? (simulation.actualHits / state.trials) * 100 : 0;
+
+  elements.meanGrid.innerHTML = TRIAL_OPTIONS.map((trials) => {
+    const expectedHits = EVIDENCE_PROBABILITY * trials;
+    const wobble = getTypicalWobblePoints(trials);
+    const active = trials === state.trials ? "active" : "";
+
+    return `
+      <article class="sim-stat mean-card ${active}">
+        <span>${trials} rolls</span>
+        <strong>${formatPercent(EVIDENCE_PERCENT)}</strong>
+        <small>Expected sixes: ${formatNumber(expectedHits)} of ${trials}.</small>
+        <small>Common drift: about +/- ${formatNumber(wobble)} pts.</small>
+      </article>
+    `;
+  }).join("");
+
+  elements.meanRegressionCaption.textContent = buildMeanRegressionCaption(simulation, actualRate);
 }
 
 function renderClaimButtons() {
@@ -611,6 +635,24 @@ function buildGapNote(gap, supportLineLabel) {
   return `The gold segment is the faith gap: the part of your confidence that extends beyond the ${supportLineLabel}.`;
 }
 
+function buildMeanRegressionCaption(simulation, actualRate) {
+  const distanceFromMean = Math.abs(actualRate - EVIDENCE_PERCENT);
+
+  if (distanceFromMean <= 0.05) {
+    return `This ${state.trials}-roll run landed right on the 16.7% mean. As runs get longer, the observed percentage usually stays closer to that same one-in-six center.`;
+  }
+
+  if (state.trials <= 6) {
+    return `This 6-roll run landed at ${formatPercent(actualRate)}. That is ${formatNumber(distanceFromMean)} points away from the probabilistic mean. Short windows can swing hard, but longer windows usually regress back toward that same center.`;
+  }
+
+  if (state.trials <= 18) {
+    return `This 18-roll run landed at ${formatPercent(actualRate)}. That is ${formatNumber(distanceFromMean)} points away from the probabilistic mean. Medium windows still wobble, but less wildly than 6-roll runs, and longer windows pull the observed share closer to the same center.`;
+  }
+
+  return `This 60-roll run landed at ${formatPercent(actualRate)}. That is ${formatNumber(distanceFromMean)} points away from the probabilistic mean. Longer windows do not change the probability. They make the observed share hug that mean more tightly.`;
+}
+
 function describeStakesCaption(gap, severity) {
   if (gap <= 0.5) {
     return `With the slider at or below the evidence line, ${severity.label.toLowerCase()} still matters, but you are not adding extra belief beyond what the die supports.`;
@@ -723,6 +765,7 @@ function buildDieSummaryText(simulation, severity) {
 
 function buildSummaryOutput(simulation, severity, claim, transferRisk) {
   const transferGap = Math.max(0, state.transferBelief - state.transferEvidence);
+  const actualRate = state.trials > 0 ? (simulation.actualHits / state.trials) * 100 : 0;
   const commitmentList = state.commitments.length
     ? state.commitments
         .map((id) => commitments.find((item) => item.id === id)?.label)
@@ -742,6 +785,7 @@ function buildSummaryOutput(simulation, severity, claim, transferRisk) {
     `- Planned hits at current confidence: ${simulation.plannedHits}`,
     `- Extra planned hits beyond the support line: ${simulation.unsupportedPlans}`,
     `- Actual hits in the last run: ${simulation.actualHits}`,
+    `- Actual hit rate in the last run: ${formatPercent(actualRate)}`,
     `- Shortfall in the last run: ${simulation.runShortfall}`,
     `- Consequence setting: ${severity.label}`,
     "",
@@ -754,7 +798,7 @@ function buildSummaryOutput(simulation, severity, claim, transferRisk) {
     `- Current overreach band: ${transferRisk.band}`,
     "",
     "Plain reading",
-    "The die section shows that faith adds no value to the decision. It licenses extra commitments beyond perceived support, which lowers expected success and raises long-run cost. The transfer section applies the same point to religious choices, including which god, if any, to worship. When a religion praises this very overreach as virtue, the method itself is irrational on this audit's definition because it tells belief to exceed perceived support on purpose."
+    "The die section shows that faith adds no value to the decision. It licenses extra commitments beyond perceived support, which lowers expected success and raises long-run cost. Across longer runs, the observed share of sixes tends to regress toward the same 16.7% mean rather than toward your preferred confidence level. The transfer section applies the same point to religious choices, including which god, if any, to worship. When a religion praises this very overreach as virtue, the method itself is irrational on this audit's definition because it tells belief to exceed perceived support on purpose."
   ].join("\n");
 }
 
@@ -793,6 +837,10 @@ function expectedExtraShortfall(trials, evidenceHits, plannedHits, probability) 
   }
 
   return total;
+}
+
+function getTypicalWobblePoints(trials) {
+  return Math.sqrt((EVIDENCE_PROBABILITY * (1 - EVIDENCE_PROBABILITY)) / trials) * 100;
 }
 
 function highlightQuickButtons() {

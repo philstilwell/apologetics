@@ -7990,6 +7990,7 @@ body.app-overreach #summary-step {
 .stakes-grid,
 .transfer-grid,
 .summary-grid,
+.mean-grid,
 .simulation-metrics,
 .scenario-facts,
 .bridge-readout,
@@ -8014,6 +8015,10 @@ body.app-overreach #summary-step {
 .summary-grid,
 .simulation-metrics {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mean-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .overreach-card,
@@ -8393,6 +8398,26 @@ body.app-overreach #summary-step {
   gap: 14px;
 }
 
+.mean-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.mean-card.active {
+  border-color: var(--overreach-blue);
+  background: rgba(234, 244, 248, 0.95);
+  box-shadow: inset 0 0 0 1px rgba(42, 97, 114, 0.2);
+}
+
+.mean-card.active strong {
+  color: var(--overreach-blue);
+}
+
+.mean-card small + small {
+  display: block;
+  margin-top: 6px;
+}
+
 .sim-stat strong {
   display: block;
   margin: 8px 0 6px;
@@ -8583,6 +8608,7 @@ body.app-overreach #summary-step {
   .die-stage,
   .claim-grid,
   .commitment-grid,
+  .mean-grid,
   .simulation-metrics,
   .option-grid,
   .option-grid-compact {
