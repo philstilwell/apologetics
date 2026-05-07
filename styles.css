@@ -8151,6 +8151,28 @@ body.app-overreach #summary-step {
   margin-left: 6px;
 }
 
+.consequence-help {
+  position: relative;
+}
+
+.consequence-help .metric-tooltip {
+  top: calc(100% + 9px);
+  bottom: auto;
+  border-color: rgba(110, 74, 31, 0.24);
+  color: var(--overreach-ink);
+}
+
+.consequence-help:hover .metric-tooltip,
+.consequence-help:focus-within .metric-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.consequence-help .metric-tooltip code {
+  font-size: 0.86em;
+}
+
 .scenario-facts .metric-tooltip {
   top: calc(100% + 9px);
   bottom: auto;

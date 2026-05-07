@@ -500,7 +500,17 @@
 
           <div class="consequence-panel">
             <div class="roll-strip-head">
-              <h3>Cumulative shortfall costs</h3>
+              <div class="consequence-help">
+                <h3>
+                  <span class="metric-label fact-label" tabindex="0" aria-describedby="consequenceHelp">
+                    <span class="metric-label-text">Cumulative shortfall costs</span>
+                    <span class="label-help-dot" aria-hidden="true">?</span>
+                  </span>
+                </h3>
+                <span class="metric-tooltip" id="consequenceHelp" role="tooltip">
+                  This panel turns the current cumulative shortfall into consequence units under the selected severity framing.
+                </span>
+              </div>
               <span id="consequenceSummary">About 3.8 costly setbacks</span>
             </div>
             <div class="consequence-strip" id="consequenceStrip"></div>

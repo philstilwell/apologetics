@@ -191,6 +191,7 @@ const elements = {
   rollStrip: document.querySelector("#rollStrip"),
   consequenceSummary: document.querySelector("#consequenceSummary"),
   consequenceStrip: document.querySelector("#consequenceStrip"),
+  consequenceTooltip: document.querySelector("#consequenceHelp"),
   simulationCaption: document.querySelector("#simulationCaption"),
   regressionStatus: document.querySelector("#regressionStatus"),
   regressionChart: document.querySelector("#regressionChart"),
@@ -445,6 +446,7 @@ function renderSimulation(simulation, severity) {
   }
 
   elements.consequenceSummary.textContent = describeConsequenceSummary(collapsed, severity);
+  elements.consequenceTooltip.innerHTML = buildConsequenceTooltip(simulation, severity);
   elements.simulationCaption.textContent = buildSimulationCaption(simulation, severity);
 }
 
@@ -693,6 +695,24 @@ function describeConsequenceSummary(collapsed, severity) {
   }
 
   return `About ${formatNumber(collapsed)} ${formatSeverityUnit(severity, collapsed)}`;
+}
+
+function buildConsequenceTooltip(simulation, severity) {
+  const planned = formatNumber(simulation.plannedHits);
+  const actual = formatNumber(simulation.actualHits);
+  const shortfall = formatNumber(simulation.runShortfall);
+  const confidence = formatPercent(state.confidence);
+
+  if (simulation.runShortfall <= 0.05) {
+    return `Current shortfall math: <code>max(0, planned hits - actual hits) = max(0, ${planned} - ${actual}) = 0</code>.
+      Planned hits can be fractional because they come from your confidence setting: <code>${confidence} × ${simulation.totalDice} dice = ${planned} planned hits</code>.
+      The selected category, <code>${severity.label}</code>, tells you how to interpret each shortfall unit if one appears. The numbered tiles are rounded visual blocks, while the summary text keeps the precise value when needed.`;
+  }
+
+  return `Current shortfall math: <code>max(0, planned hits - actual hits) = max(0, ${planned} - ${actual}) = ${shortfall}</code>.
+    Planned hits can be fractional because they come from your confidence setting: <code>${confidence} × ${simulation.totalDice} dice = ${planned} planned hits</code>.
+    The selected category, <code>${severity.label}</code>, does not change the arithmetic. It changes how to read each missing hit. So a summary like <code>About ${shortfall} ${formatSeverityUnit(severity, simulation.runShortfall)}</code> means a cumulative shortfall of about ${shortfall} hit-equivalents under that consequence framing, not necessarily ${shortfall} literal separate events.
+    The numbered tiles round that running shortfall to whole blocks for quick visual scanning.`;
 }
 
 function buildSimulationCaption(simulation, severity) {
