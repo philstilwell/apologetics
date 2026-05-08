@@ -8062,6 +8062,11 @@ body.app-overreach #summary-step {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.belief-balance-grid {
+  align-items: start;
+  align-content: start;
+}
+
 #lessonCards {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -8092,6 +8097,10 @@ body.app-overreach #summary-step {
 }
 
 .scenario-tab {
+  --scenario-accent: #2a6172;
+  --scenario-accent-ink: #183b45;
+  --scenario-accent-line: rgba(42, 97, 114, 0.3);
+  --scenario-accent-tint: rgba(42, 97, 114, 0.08);
   display: grid;
   gap: 4px;
   align-content: start;
@@ -8101,7 +8110,44 @@ body.app-overreach #summary-step {
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  border-width: 1.5px;
+  border-color: var(--scenario-accent-line);
+  background:
+    linear-gradient(180deg, var(--scenario-accent-tint) 0, rgba(255, 252, 247, 0.96) 72%);
+  box-shadow: inset 0 4px 0 rgba(255, 255, 255, 0.92);
+  transition:
+    border-color 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background 150ms ease;
+}
+
+.scenario-tab[data-scenario="gambling"] {
+  --scenario-accent: #1f6a3d;
+  --scenario-accent-ink: #123f25;
+  --scenario-accent-line: rgba(31, 106, 61, 0.34);
+  --scenario-accent-tint: rgba(31, 106, 61, 0.12);
+}
+
+.scenario-tab[data-scenario="investment"] {
+  --scenario-accent: #9a6408;
+  --scenario-accent-ink: #5a3800;
+  --scenario-accent-line: rgba(154, 100, 8, 0.34);
+  --scenario-accent-tint: rgba(154, 100, 8, 0.12);
+}
+
+.scenario-tab[data-scenario="romance"] {
+  --scenario-accent: #8d4b73;
+  --scenario-accent-ink: #5a2745;
+  --scenario-accent-line: rgba(141, 75, 115, 0.34);
+  --scenario-accent-tint: rgba(141, 75, 115, 0.12);
+}
+
+.scenario-tab[data-scenario="religion"] {
+  --scenario-accent: #6a5220;
+  --scenario-accent-ink: #43310f;
+  --scenario-accent-line: rgba(106, 82, 32, 0.34);
+  --scenario-accent-tint: rgba(106, 82, 32, 0.12);
 }
 
 .scenario-tab span,
@@ -8128,14 +8174,34 @@ body.app-overreach #summary-step {
 
 .scenario-tab:hover,
 .scenario-tab:focus-visible {
-  border-color: var(--overreach-blue);
+  border-color: var(--scenario-accent);
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, 0.98),
+    0 8px 16px rgba(17, 17, 17, 0.08);
   transform: translateY(-1px);
 }
 
 .scenario-tab.active {
-  border-color: var(--overreach-blue);
-  box-shadow: inset 0 0 0 2px rgba(42, 97, 114, 0.24);
-  background: #fffdf9;
+  border-width: 2px;
+  border-color: var(--scenario-accent);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0, var(--scenario-accent-tint) 12%, rgba(255, 252, 247, 0.98) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.96),
+    inset 0 6px 0 var(--scenario-accent),
+    0 0 0 3px rgba(17, 17, 17, 0.08),
+    0 10px 20px rgba(17, 17, 17, 0.08);
+  color: var(--scenario-accent-ink);
+  transform: translateY(-1px);
+}
+
+.scenario-tab.active span,
+.scenario-tab.active small {
+  color: var(--scenario-accent-ink);
+}
+
+.scenario-tab.active small {
+  font-weight: 800;
 }
 
 .belief-agent-head,
@@ -8159,8 +8225,76 @@ body.app-overreach #summary-step {
   flex-wrap: wrap;
 }
 
+.try-controls {
+  gap: 12px;
+}
+
+.try-controls #runTry,
+.try-controls #resetScenario {
+  min-height: 52px;
+  padding: 12px 18px;
+  font-size: 1.02rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 18px rgba(52, 31, 13, 0.08);
+}
+
+.try-controls #runTry {
+  border: 2px solid #6e4a1f;
+  background: #714700;
+  color: #fff5d1;
+}
+
+.try-controls #runTry:hover,
+.try-controls #runTry:focus-visible {
+  border-color: #4a2d00;
+  background: #553200;
+  box-shadow:
+    0 0 0 3px rgba(113, 71, 0, 0.16),
+    0 10px 22px rgba(52, 31, 13, 0.14);
+}
+
+.try-controls #runTry:disabled {
+  border-color: rgba(113, 71, 0, 0.28);
+  background: rgba(113, 71, 0, 0.34);
+  color: rgba(255, 245, 209, 0.72);
+  box-shadow: none;
+}
+
+.try-controls #resetScenario {
+  border: 2px solid #8f6e4b;
+  background: #f8efe1;
+  color: #4d351b;
+}
+
+.try-controls #resetScenario:hover,
+.try-controls #resetScenario:focus-visible {
+  border-color: #6e4a1f;
+  background: #f3e2c9;
+  box-shadow:
+    0 0 0 3px rgba(143, 110, 75, 0.14),
+    0 10px 22px rgba(52, 31, 13, 0.1);
+}
+
+.try-controls #resetScenario:disabled {
+  border-color: rgba(143, 110, 75, 0.22);
+  background: rgba(248, 239, 225, 0.74);
+  color: rgba(77, 53, 27, 0.46);
+  box-shadow: none;
+}
+
 .belief-agent-head {
   align-items: flex-start;
+}
+
+.belief-agent-foot {
+  align-items: flex-end;
+  flex-wrap: nowrap;
+}
+
+.belief-agent-foot .mini-label {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .belief-avatar {
@@ -8196,7 +8330,17 @@ body.app-overreach #summary-step {
   line-height: 1.45;
 }
 
-.belief-agent-foot strong,
+.belief-agent-foot strong {
+  display: block;
+  flex: 0 0 auto;
+  margin-top: 6px;
+  font-size: clamp(1.35rem, 2.2vw, 1.95rem);
+  font-weight: 950;
+  line-height: 0.95;
+  white-space: nowrap;
+  letter-spacing: -0.03em;
+}
+
 .belief-balance-value {
   display: block;
   margin-top: 6px;
@@ -8269,6 +8413,10 @@ body.app-overreach #summary-step {
 .belief-agent-card {
   position: relative;
   overflow: hidden;
+}
+
+.belief-balance-card {
+  align-self: start;
 }
 
 .belief-agent-ada,

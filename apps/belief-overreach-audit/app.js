@@ -185,7 +185,7 @@ const scenarios = {
     tryLabel: "investment round",
     startValue: 1000,
     unit: "currency",
-    maxTries: 14,
+    maxTries: 30,
     lead:
       "Each round brings another company with a fundamentals signal and a hype signal. The grounded investor studies the business. The faith-driven investor lets buzz and gut feeling do too much of the work.",
     supportRule:
@@ -222,7 +222,7 @@ const scenarios = {
     tryLabel: "romantic prospect",
     startValue: 1000,
     unit: "points",
-    maxTries: 12,
+    maxTries: 30,
     lead:
       "Each try introduces either a local prospect or a remote romantic story. Character and verification are the real support. Spark, flattery, fantasy, and fate-talk are the pull that faith can mistake for support.",
     supportRule:
@@ -259,7 +259,7 @@ const scenarios = {
     tryLabel: "religious pressure point",
     startValue: 1000,
     unit: "points",
-    maxTries: 12,
+    maxTries: 30,
     lead:
       "Each try introduces a religious pull: a church, revival, testimony, prophecy stream, or inherited tradition. Evidence and emotional-social pull do not move together. Faith lets the second one impersonate the first.",
     supportRule:
@@ -477,7 +477,7 @@ function renderScenarioPanel() {
   elements.tryStatus.textContent = `${tryCount} ${pluralize(tryCount, "try", "tries")} logged`;
   elements.tryHint.textContent =
     tryCount >= scenario.maxTries
-      ? `This field has reached its ${scenario.maxTries}-try limit. Press Try again to reset it.`
+      ? `This field has reached its ${scenario.maxTries}-try limit. Press Reset to clear it and start over.`
       : `Each click adds one more random ${scenario.tryLabel}.`;
 
   elements.runTry.textContent = tryCount === 0 ? "Try" : "Try next event";
