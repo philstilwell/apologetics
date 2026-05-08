@@ -7960,6 +7960,24 @@ body.app-overreach #summary-step {
   gap: 18px;
 }
 
+body.app-overreach #overview-step .overreach-lead,
+body.app-overreach #lessons-step .overreach-lead {
+  margin-top: 12px;
+}
+
+body.app-overreach #overview-step #agentGrid {
+  margin-top: 8px;
+}
+
+body.app-overreach #lessons-step #lessonCards {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+body.app-overreach #lessons-step #lessonClosing {
+  margin-top: 4px;
+}
+
 .overreach-steps {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
@@ -8111,6 +8129,12 @@ body.app-overreach #summary-step {
 .belief-action-card,
 .belief-balance-card {
   padding: 13px;
+}
+
+.belief-event-card,
+.belief-action-card {
+  display: grid;
+  gap: 12px;
 }
 
 .scenario-tab {
@@ -8471,6 +8495,10 @@ body.app-overreach #summary-step {
   line-height: 0.98;
   letter-spacing: -0.02em;
   overflow-wrap: anywhere;
+}
+
+.belief-agent-actions {
+  margin-top: 6px;
 }
 
 .belief-action-card,
