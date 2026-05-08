@@ -476,6 +476,7 @@ const elements = {
 };
 
 const state = loadState();
+let copySummaryResetTimer = null;
 
 bindEvents();
 render();
@@ -503,16 +504,20 @@ function bindEvents() {
   elements.copySummary.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(elements.summaryOutput.value);
-      elements.copyStatus.textContent = "Summary copied.";
+      elements.copySummary.textContent = "Copied";
+      elements.copyStatus.textContent = "";
+      window.clearTimeout(copySummaryResetTimer);
+      copySummaryResetTimer = window.setTimeout(() => {
+        elements.copySummary.textContent = "Copy";
+      }, 5000);
     } catch (error) {
       elements.summaryOutput.focus();
       elements.summaryOutput.select();
-      elements.copyStatus.textContent = "Summary selected. Copy manually if needed.";
+      elements.copyStatus.textContent = "Prompt selected. Copy manually if needed.";
+      window.setTimeout(() => {
+        elements.copyStatus.textContent = "";
+      }, 2500);
     }
-
-    window.setTimeout(() => {
-      elements.copyStatus.textContent = "";
-    }, 1800);
   });
 }
 
@@ -874,14 +879,32 @@ function renderSummary() {
 }
 
 function buildSummaryOutput(scenario, scenarioState, standings, lastEvent) {
+  const currentLines = agents.map((agent) => {
+    return `${agent.name} (${agent.faithLabel}): ${formatScenarioValue(scenario, getCurrentValue(scenarioState, agent.id))}`;
+  });
+
   const lines = [
-    "Belief Overreach Audit",
+    "You are analyzing output from the \"Belief Overreach Audit.\"",
     "",
-    `Field: ${scenario.name}`,
-    `Tries logged: ${scenarioState.tries.length} of ${scenario.maxTries}`,
-    `Support rule: ${scenario.supportRule}`,
-    `Faith shift: ${scenario.faithShift}`,
-    `Resource at stake: ${scenario.resource}`,
+    "Write a concise analysis that interprets the current run in line with the tool's framework.",
+    "",
+    "Goal:",
+    "- Highlight the intrinsic inferiority of faith, where faith is defined here as confidence, trust, or commitment that exceeds perceived evidence.",
+    "- Treat the current run as stochastic or pseudo-random rather than deterministic: mention that lucky bursts can temporarily flatter the more faith-driven lines without vindicating the method.",
+    "- Emphasize that the same world-inputs were sampled for all four agents and that the line differences arise from different commitment thresholds rather than different evidence.",
+    "- Explain why, within this tool's framework, faith is an epistemically inferior policy because it authorizes overcommitment beyond support.",
+    "",
+    "Constraints:",
+    "- Do not redefine faith in a softer, evidence-aligned sense except to note briefly that some religious groups use the term that way and that this tool is not targeting that narrower usage.",
+    "- Stay grounded in the data below, but draw the broader lesson the tool is built to illustrate.",
+    "- Make clear that temporary wins do not rescue a method that repeatedly outruns evidence.",
+    "",
+    "Current run data:",
+    `- Field: ${scenario.name}`,
+    `- Tries logged: ${scenarioState.tries.length} of ${scenario.maxTries}`,
+    `- Support rule: ${scenario.supportRule}`,
+    `- Faith shift: ${scenario.faithShift}`,
+    `- Resource at stake: ${scenario.resource}`,
     "",
     "Model assumptions:"
   ];
@@ -891,36 +914,38 @@ function buildSummaryOutput(scenario, scenarioState, standings, lastEvent) {
   });
 
   lines.push("");
+  lines.push("Current lines:");
 
-  agents.forEach((agent) => {
-    lines.push(
-      `${agent.name} (${agent.faithLabel}): ${formatScenarioValue(scenario, getCurrentValue(scenarioState, agent.id))}`
-    );
+  currentLines.forEach((line) => {
+    lines.push(`- ${line}`);
   });
 
   lines.push("");
 
   if (lastEvent) {
-    lines.push(`Latest try: ${lastEvent.title}`);
-    lines.push(`Latest rollup: ${lastEvent.rollup}`);
-    lines.push(`Latest summary: ${lastEvent.summary}`);
+    lines.push("Latest event:");
+    lines.push(`- ${lastEvent.title}`);
+    lines.push(`- Rollup: ${lastEvent.rollup}`);
+    lines.push(`- Summary: ${lastEvent.summary}`);
     lines.push("");
   }
 
   lines.push(
-    `Leader: ${standings[0].agent.name}`,
-    `Laggard: ${standings[standings.length - 1].agent.name}`,
-    `Current spread: ${formatScenarioValue(scenario, standings[0].value - standings[standings.length - 1].value, true)}`,
+    "Interpretive cues:",
+    `- Leader: ${standings[0].agent.name}`,
+    `- Laggard: ${standings[standings.length - 1].agent.name}`,
+    `- Current spread: ${formatScenarioValue(scenario, standings[0].value - standings[standings.length - 1].value, true)}`,
+    `- Reading cue: ${buildLessonClosing(scenario, lastEvent)}`,
     "",
-    `Reading: ${buildLessonClosing(scenario, lastEvent)}`,
-    "",
-    "Scope and limitations:",
+    "Scope reminder:",
     "- These scenarios are stylized comparisons, not precise measurements of all real-world cases.",
     "- The point is structural: when confidence outruns perceived support, decisions usually become less truth-tracking and more costly.",
     "- Some religious groups define faith more modestly as evidence-aligned trust or confidence. If that is what they mean, this audit is not targeting that narrower usage.",
     "- The target here is faith as belief, trust, or commitment that exceeds what the agent perceives the evidence to warrant.",
     "- On that definition, any ideology that positively encourages faith is very likely false, or at least deeply epistemically unreliable, because truth does not need belief to transcend the actual evidence.",
-    "- For a more technical treatment of core and deep rationality, see https://credencing.com"
+    "",
+    "Optional closing note:",
+    "- For a more technical treatment of core and deep rationality, you may point readers to https://credencing.com"
   );
 
   return lines.join("\n");

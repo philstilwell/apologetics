@@ -8732,6 +8732,32 @@ circle.belief-line-zeke {
   margin: 0;
 }
 
+.overreach-disclaimer-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.overreach-disclaimer-list li {
+  position: relative;
+  margin: 0;
+  padding-left: 1.45rem;
+  color: var(--overreach-muted);
+  line-height: 1.5;
+}
+
+.overreach-disclaimer-list li::before {
+  content: "◉";
+  position: absolute;
+  top: 0.05em;
+  left: 0;
+  color: #6e4a1f;
+  font-size: 0.88rem;
+  line-height: 1;
+}
+
 .overreach-disclaimer-card a {
   color: var(--overreach-blue);
   font-weight: 800;
