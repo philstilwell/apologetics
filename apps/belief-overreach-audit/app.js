@@ -1,1258 +1,1179 @@
-const STORAGE_KEY = "belief-overreach-audit-v1";
-const EVIDENCE_PROBABILITY = 1 / 6;
-const EVIDENCE_PERCENT = Number((EVIDENCE_PROBABILITY * 100).toFixed(1));
-const DICE_PER_BATCH = 10;
-const MAX_BATCHES = 30;
-const STAKE_PER_COMMITMENT = 100;
+const STORAGE_KEY = "belief-overreach-audit-v6";
 
-const severityOptions = [
+const agents = [
   {
-    id: "minor",
-    label: "Minor letdown",
-    weight: 1,
-    detail:
-      "Example: hope makes you believe a romantic interest will call you back tonight, so you keep waiting and checking your phone. If the belief outruns the evidence, the shortfall mainly wastes time or attention.",
-    singularUnit: "minor letdown",
-    pluralUnit: "minor letdowns"
+    id: "ada",
+    name: "Ada Anchor",
+    shortName: "Ada",
+    avatar: "AA",
+    faith: 0,
+    faithLabel: "0 faith points",
+    bias: 0,
+    summary: "Refuses to let confidence outrun support."
   },
   {
-    id: "money",
-    label: "Costly setback",
-    weight: 2.3,
-    detail:
-      "Example: hope leads you to trust a thinly supported investment tip, supplement, or answered-prayer expectation, and the miss costs money, effort, or emotional bandwidth.",
-    singularUnit: "costly setback",
-    pluralUnit: "costly setbacks"
+    id: "milo",
+    name: "Milo Maybe",
+    shortName: "Milo",
+    avatar: "MM",
+    faith: 10,
+    faithLabel: "10 faith points",
+    bias: 0.18,
+    summary: "Adds a small hope premium."
   },
   {
-    id: "safety",
-    label: "Safety risk",
-    weight: 4.2,
-    detail:
-      "Example: hope tells you help will arrive, the weather will break, or your plan will hold, so you delay a backup. The miss removes safety margin and leaves you more exposed.",
-    singularUnit: "safety risk",
-    pluralUnit: "safety risks"
+    id: "willa",
+    name: "Willa Wish",
+    shortName: "Willa",
+    avatar: "WW",
+    faith: 30,
+    faithLabel: "30 faith points",
+    bias: 0.46,
+    summary: "Lets desire do part of the reasoning."
   },
   {
-    id: "catastrophic",
-    label: "Last-chance failure",
-    weight: 7,
-    detail:
-      "Example: faith in hope tells you your last match will light the fire that saves you from hypothermia. If that belief exceeds the evidence and fails, the loss lands on something you cannot replace or retry.",
-    singularUnit: "critical failure",
-    pluralUnit: "critical failures"
+    id: "zeke",
+    name: "Zeke Zeal",
+    shortName: "Zeke",
+    avatar: "ZZ",
+    faith: 60,
+    faithLabel: "60 faith points",
+    bias: 0.84,
+    summary: "Treats longing as warrant."
   }
 ];
 
-const transferClaims = [
+const investmentNames = [
+  "Harbor Biotech",
+  "Northline AI",
+  "Cinder Logistics",
+  "Lumen Grid",
+  "Echo Retail",
+  "Blue Vale Energy",
+  "Starling Cloud",
+  "Ridge Water",
+  "Juniper Health",
+  "Morrow Mobility",
+  "Signal Foundry",
+  "Cobalt Foods",
+  "Atlas Battery",
+  "Velvet Robotics",
+  "Granite Fiber",
+  "Beacon Transit"
+];
+
+const localProspects = [
+  "Nora",
+  "Jonah",
+  "Maya",
+  "Leo",
+  "Clara",
+  "Evan",
+  "Sofia",
+  "Miles",
+  "Rina",
+  "Theo",
+  "Jade",
+  "Aiden"
+];
+
+const remoteHandles = [
+  "LunaSky88",
+  "TrueNorthSoul",
+  "VelvetComet",
+  "RiverLight22",
+  "SparrowSong7",
+  "QuietOrbit"
+];
+
+const religionEncounters = [
+  "family church pull",
+  "campus revival",
+  "healing meeting",
+  "prophecy stream",
+  "apologetics weekend",
+  "pilgrimage invite",
+  "youth retreat",
+  "end-times sermon",
+  "deliverance room",
+  "miracle testimony circle",
+  "worship conference",
+  "small-group pressure"
+];
+
+const scenarioOrder = ["gambling", "investment", "romance", "religion"];
+const CASINO_BASE_STAKE = 100;
+const CASINO_BUST_LIMIT = 21;
+const CASINO_SAFE_MIN = 18;
+const CASINO_OPENING_MIN = 16;
+const CASINO_OPENING_MAX = 20;
+const CASINO_CARD_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const CASINO_WIN_PROFIT = 30;
+
+const casinoMoodDeck = [
   {
-    id: "worship",
-    title: "Which god, if any, should I worship?",
-    prompt: "One god or one religious path deserves worship strongly enough to justify allegiance, ritual, obedience, and identity.",
-    tension:
-      "If the support is thinner than the confidence, faith can push a person to worship one god, reject rivals, or reject no-worship paths without enough evidence to license that choice.",
-    suggestedEvidence: 24,
-    suggestedBelief: 76
+    id: "due",
+    statLabel: "Due-now feeling",
+    rollup: "Some players felt the next card was due to help them.",
+    summary:
+      "A low card or a near miss can make another good card feel due. That feeling is psychologically powerful, but it does not change the next draw."
   },
   {
-    id: "prayer",
-    title: "Answered prayer",
-    prompt: "A prayer request is more likely to be fulfilled because it was prayed for.",
-    tension:
-      "The danger enters when misses stop lowering confidence and start getting redescribed as hidden wisdom, timing, or mystery instead.",
-    suggestedEvidence: 28,
-    suggestedBelief: 74
+    id: "hot",
+    statLabel: "Hot-hand feeling",
+    rollup: "Some players felt the table was running hot.",
+    summary:
+      "A run of decent cards can make the table feel hot. Faith-heavy gamblers often let that mood justify one more draw, even when the hand is already good enough."
   },
   {
-    id: "healing",
-    title: "Divine healing",
-    prompt: "Prayer or divine action produces healings that should outperform ordinary recovery alone.",
-    tension:
-      "The pressure point is whether surprising recoveries are allowed to count for the claim while ordinary declines and misses are protected from counting against it.",
-    suggestedEvidence: 22,
-    suggestedBelief: 67
+    id: "lucky",
+    statLabel: "Feeling-lucky mood",
+    rollup: "Several players were simply feeling lucky.",
+    summary:
+      "Sometimes nothing more specific is happening than a surge of confidence, hope, or ritualized luck. That feeling can still push people to chase another card when caution would be wiser."
   },
   {
-    id: "guidance",
-    title: "Divine guidance",
-    prompt: "God gives believers guidance or insight that outperforms ordinary reflection, advice, and luck.",
-    tension:
-      "The danger appears when successful calls are remembered as guidance while bad calls, mixed results, and vague impressions do little to lower confidence.",
-    suggestedEvidence: 31,
-    suggestedBelief: 78
-  },
-  {
-    id: "resurrection",
-    title: "Resurrection case",
-    prompt: "The resurrection is historically supported strongly enough to justify very high confidence.",
-    tension:
-      "The pressure point is whether testimony, argument, and background assumptions are being asked to carry a level of certainty they do not themselves provide.",
-    suggestedEvidence: 38,
-    suggestedBelief: 84
+    id: "pattern",
+    statLabel: "Pattern-reading mood",
+    rollup: "Some players kept reading patterns into the table.",
+    summary:
+      "People kept treating harmless patterns as signals. That is how faith starts turning noise into a reason for chasing one more card on a hand that was already strong."
   }
 ];
 
-const commitments = [
-  {
-    id: "worship",
-    label: "Give worship, obedience, or loyalty to it",
-    detail: "Let the claim direct prayer, ritual, obedience, or identity.",
-    weight: 3.1
+const scenarios = {
+  gambling: {
+    id: "gambling",
+    name: "Gambling",
+    tryLabel: "casino night",
+    startValue: 1000,
+    unit: "currency",
+    maxTries: 30,
+    lead:
+      "All four gamblers ante the same $100 every casino night. Each round begins with the same opening total for everyone, somewhere between 16 and 20. On 18, 19, or 20, the rational move is to bank the modest house payout. On 16 or 17, a single extra card is the only route to a win. Faith enters when a gambler treats an already winning hand as a reason to chase one more card because they feel lucky.",
+    supportRule:
+      "The support is simple: once the opening total is 18 or better, standing locks in the same small payout the extra card would be chasing. Another draw at that point adds downside without adding a better reward.",
+    faithShift:
+      "Faith does not just raise confidence. It turns a paying hand into a tempting hand for one more draw because the gambler feels due, hot, charmed, or lucky.",
+    resource:
+      "Bankroll dollars. Everyone risks the same ante. The difference is not bigger stakes, but a worse decision about whether to bank the hand or chase another card.",
+    chartTitle: "Bankroll over casino nights",
+    chartCaption:
+      "All four lines are betting every night. The separation comes from who chases another card after the hand is already good enough.",
+    stochasticNote:
+      "A reckless extra draw can still catch exactly the right card once in a while. The deeper point is that faith makes a good stopping point feel emotionally unsatisfying.",
+    lessonLead:
+      "This is the cleanest field because the world answers immediately. Feeling lucky can change whether a gambler chases another card, but it cannot change what that card will be.",
+    lessonCards: [
+      {
+        title: "Same total, same next card",
+        text: "All four people begin with the same opening total and face the same possible next card. The only standing difference is whether they can leave a paying hand alone."
+      },
+      {
+        title: "Faith chases improvement",
+        text: "Milo can talk himself into drawing on 18, Willa can rationalize drawing on 19, and Zeke will even push 20 because the feeling of luck starts impersonating judgment."
+      },
+      {
+        title: "A lucky draw is not a better method",
+        text: "Sometimes the reckless draw lands exactly the right card. That does not mean faith improved the choice. It means variance briefly rewarded a worse stopping rule."
+      }
+    ]
   },
-  {
-    id: "exclude",
-    label: "Reject rival gods or no-god paths",
-    detail: "Use the claim to rule out alternative worship options or non-worship entirely.",
-    weight: 2.5
+  investment: {
+    id: "investment",
+    name: "Investment",
+    tryLabel: "investment round",
+    startValue: 1000,
+    unit: "currency",
+    maxTries: 14,
+    lead:
+      "Each round brings another company with a fundamentals signal and a hype signal. The grounded investor studies the business. The faith-driven investor lets buzz and gut feeling do too much of the work.",
+    supportRule:
+      "Support lives in the fundamentals: profitability, debt, leadership quality, and durable demand. That is the sober signal the rational investor respects.",
+    faithShift:
+      "Faith makes hype feel like support. The farther right the agent sits, the more easily excitement, story, and momentum can substitute for due diligence.",
+    resource:
+      "Portfolio dollars. The overreach cost appears as larger positions taken in weaker businesses.",
+    chartTitle: "Portfolio over investment rounds",
+    chartCaption:
+      "The business outcomes are random, but stronger fundamentals keep tilting the odds. Faith-heavy investors keep calling weak evidence good enough.",
+    stochasticNote:
+      "A hype stock can soar for a while. The issue is not whether buzz can ever pay. It is whether the investor is repeatedly sizing positions beyond what the evidence supports.",
+    lessonLead:
+      "Investment makes faith look respectable because confidence can masquerade as bold vision. But when confidence outruns the business case, capital gets dragged behind a story rather than anchored in a company.",
+    lessonCards: [
+      {
+        title: "Fundamentals vs buzz",
+        text: "The grounded line mostly follows the fundamentals score. The faith-heavy lines keep letting excitement count as if it were evidence."
+      },
+      {
+        title: "Bigger overreach means bigger positions",
+        text: "Faith does not only change what gets bought. It changes how much of the bankroll gets concentrated in poorly supported calls."
+      },
+      {
+        title: "Gut wins do not rescue the method",
+        text: "Sometimes the red line hits a lucky trade. That does not prove faith works. It shows that even a weak method can catch a windfall now and then."
+      }
+    ]
   },
-  {
-    id: "share",
-    label: "Tell others the claim is settled",
-    detail: "Present the conclusion as already established rather than still under live review.",
-    weight: 1.2
+  romance: {
+    id: "romance",
+    name: "Romance",
+    tryLabel: "romantic prospect",
+    startValue: 1000,
+    unit: "points",
+    maxTries: 12,
+    lead:
+      "Each try introduces either a local prospect or a remote romantic story. Character and verification are the real support. Spark, flattery, fantasy, and fate-talk are the pull that faith can mistake for support.",
+    supportRule:
+      "Support lives in character, consistency, and verification. The grounded person does not hand over trust merely because the feelings are intense.",
+    faithShift:
+      "Faith makes chemistry feel like knowledge. It lowers the threshold for commitment and can make a remote story feel trustworthy before the person has earned that trust.",
+    resource:
+      "Trust-and-time capital. This line tracks the life energy spent on people who either deserved or did not deserve deep commitment.",
+    chartTitle: "Relational capital over romantic prospects",
+    chartCaption:
+      "Spark is random and powerful, but it is not the same thing as character. The faith-heavy lines keep committing before verification catches up.",
+    stochasticNote:
+      "Some risky romances do work. The issue is the method: faith keeps licensing trust before the person on the other side has been properly vetted.",
+    lessonLead:
+      "Romance hides overreach well because hope, projection, and longing are so emotionally persuasive. But the same practical rule applies: trust given beyond support becomes expensive.",
+    lessonCards: [
+      {
+        title: "Character is the support",
+        text: "The most grounded line waits for evidence about honesty, steadiness, and real-world consistency before it hands over serious trust."
+      },
+      {
+        title: "Highest faith gets catfished",
+        text: "The most faith-driven line is the one most likely to start a remote relationship on intensity alone, skip vetting, and get catfished when the story collapses."
+      },
+      {
+        title: "The cost is not only heartbreak",
+        text: "Bad romantic overreach spends time, boundaries, emotional focus, and better opportunities on someone who did not deserve that investment."
+      }
+    ]
   },
-  {
-    id: "filter",
-    label: "Use it to dismiss alternatives",
-    detail: "Let the claim stop comparison with rival explanations or ordinary causes.",
-    weight: 1.6
-  },
-  {
-    id: "decide",
-    label: "Make a major life decision on it",
-    detail: "Let the claim direct relationships, time, vocation, location, or identity.",
-    weight: 2.6
-  },
-  {
-    id: "delay",
-    label: "Delay ordinary fallback options",
-    detail: "Hold off on safer or more ordinary routes because the claim feels solid enough already.",
-    weight: 2.9
-  },
-  {
-    id: "moralize",
-    label: "Treat doubt as a character problem",
-    detail: "Explain disagreement mainly in terms of spiritual or moral failure rather than evidential limits.",
-    weight: 1.8
-  }
-];
-
-const defaultState = {
-  confidence: 58,
-  compareMode: false,
-  compareConfidence: 85,
-  severity: "money",
-  transferClaim: "worship",
-  transferEvidence: 24,
-  transferBelief: 76,
-  commitments: ["worship", "exclude", "decide"],
-  simulation: {
-    rounds: []
+  religion: {
+    id: "religion",
+    name: "Religion",
+    tryLabel: "religious pressure point",
+    startValue: 1000,
+    unit: "points",
+    maxTries: 12,
+    lead:
+      "Each try introduces a religious pull: a church, revival, testimony, prophecy stream, or inherited tradition. Evidence and emotional-social pull do not move together. Faith lets the second one impersonate the first.",
+    supportRule:
+      "Support lives in actual evidence for the claim. Community warmth, fear, meaning, inheritance, and urgency can feel powerful, but they are not the same thing as support."
+    ,
+    faithShift:
+      "Faith lowers the commitment threshold. It turns a thinly supported claim into something worthy of obedience, donations, identity, and life direction.",
+    resource:
+      "Life-budget capital. This tracks time, energy, money, autonomy, and identity pressure rather than cash alone.",
+    chartTitle: "Life budget over religious pressure points",
+    chartCaption:
+      "The next encounter is random, but the recurring pattern is not. Faith-heavy agents keep surrendering more of life to claims their own support line has not justified.",
+    stochasticNote:
+      "Some communities offer comfort or belonging for a time. The question here is narrower: whether confidence is being inflated beyond evidence and then turned into obedience and expenditure.",
+    lessonLead:
+      "Religion can hide overreach under noble language like trust, surrender, and obedience. But if the claim is under-supported, those virtues become tools for spending life on what has not earned it.",
+    lessonCards: [
+      {
+        title: "Pull is not proof",
+        text: "Belonging, fear, meaning, beauty, and family inheritance can all raise a claim's emotional pull without raising its evidential support."
+      },
+      {
+        title: "Faith spends a whole life",
+        text: "The religious cost is not only money. It includes calendar time, obedience, filtered relationships, guilt, identity, and major life choices."
+      },
+      {
+        title: "Waiting is not emptiness",
+        text: "The grounded line does not lose by waiting. It preserves time and clarity until a claim actually earns the level of allegiance it is requesting."
+      }
+    ]
   }
 };
 
 const elements = {
-  targetDie: document.querySelector("#targetDie"),
-  metricEvidence: document.querySelector("#metricEvidence"),
-  metricConfidence: document.querySelector("#metricConfidence"),
-  metricConfidenceNote: document.querySelector("#metricConfidenceNote"),
+  scenarioButtons: document.querySelector("#scenarioButtons"),
+  agentGrid: document.querySelector("#agentGrid"),
+  balanceGrid: document.querySelector("#balanceGrid"),
+  eventStats: document.querySelector("#eventStats"),
+  eventActions: document.querySelector("#eventActions"),
+  runTry: document.querySelector("#runTry"),
+  resetScenario: document.querySelector("#resetScenario"),
+  copySummary: document.querySelector("#copySummary"),
+  metricScenario: document.querySelector("#metricScenario"),
+  metricScenarioNote: document.querySelector("#metricScenarioNote"),
+  metricTries: document.querySelector("#metricTries"),
+  metricTriesNote: document.querySelector("#metricTriesNote"),
+  metricLeader: document.querySelector("#metricLeader"),
+  metricLeaderNote: document.querySelector("#metricLeaderNote"),
   metricGap: document.querySelector("#metricGap"),
   metricGapNote: document.querySelector("#metricGapNote"),
-  metricExposure: document.querySelector("#metricExposure"),
-  metricExposureNote: document.querySelector("#metricExposureNote"),
-  confidenceRange: document.querySelector("#confidenceRange"),
-  confidenceReadout: document.querySelector("#confidenceReadout"),
-  quickConfidenceButtons: document.querySelector("#quickConfidenceButtons"),
-  gaugeEvidenceLabel: document.querySelector("#gaugeEvidenceLabel"),
-  gaugeGapLabel: document.querySelector("#gaugeGapLabel"),
-  gaugeEvidenceBar: document.querySelector("#gaugeEvidenceBar"),
-  gaugeFaithBar: document.querySelector("#gaugeFaithBar"),
-  gaugePointer: document.querySelector("#gaugePointer"),
-  gaugeGapNote: document.querySelector("#gaugeGapNote"),
-  confidenceCaption: document.querySelector("#confidenceCaption"),
-  bridgeSupported: document.querySelector("#bridgeSupported"),
-  bridgeOverhang: document.querySelector("#bridgeOverhang"),
-  bridgeEvidenceMarker: document.querySelector("#bridgeEvidenceMarker"),
-  bridgeBeliefMarker: document.querySelector("#bridgeBeliefMarker"),
-  bridgeSupportedLabel: document.querySelector("#bridgeSupportedLabel"),
-  bridgeOverhangLabel: document.querySelector("#bridgeOverhangLabel"),
-  bridgeShareLabel: document.querySelector("#bridgeShareLabel"),
-  bridgeCaption: document.querySelector("#bridgeCaption"),
-  traceStatus: document.querySelector("#traceStatus"),
-  traceCaption: document.querySelector("#traceCaption"),
-  severityOptions: document.querySelector("#severityOptions"),
-  runSimulation: document.querySelector("#runSimulation"),
-  resetSimulation: document.querySelector("#resetSimulation"),
-  compareMode: document.querySelector("#compareMode"),
-  compareModeCaption: document.querySelector("#compareModeCaption"),
-  comparePrimaryReadout: document.querySelector("#comparePrimaryReadout"),
-  compareConfidenceRange: document.querySelector("#compareConfidenceRange"),
-  compareConfidenceReadout: document.querySelector("#compareConfidenceReadout"),
-  compareSecondarySetting: document.querySelector("#compareSecondarySetting"),
-  stakesCaption: document.querySelector("#stakesCaption"),
-  expectedRule: document.querySelector("#expectedRule"),
-  comparisonMetrics: document.querySelector("#comparisonMetrics"),
-  runShortfall: document.querySelector("#runShortfall"),
-  rollStrip: document.querySelector("#rollStrip"),
-  consequenceSummary: document.querySelector("#consequenceSummary"),
-  consequenceCompare: document.querySelector("#consequenceCompare"),
-  consequenceTooltip: document.querySelector("#consequenceHelp"),
-  simulationCaption: document.querySelector("#simulationCaption"),
-  regressionStatus: document.querySelector("#regressionStatus"),
-  regressionChart: document.querySelector("#regressionChart"),
-  regressionCaption: document.querySelector("#regressionCaption"),
-  lossTraceNote: document.querySelector("#lossTraceNote"),
-  claimButtons: document.querySelector("#claimButtons"),
-  claimTitle: document.querySelector("#claimTitle"),
-  claimPrompt: document.querySelector("#claimPrompt"),
-  claimTension: document.querySelector("#claimTension"),
-  transferEvidenceRange: document.querySelector("#transferEvidenceRange"),
-  transferEvidenceReadout: document.querySelector("#transferEvidenceReadout"),
-  transferBeliefRange: document.querySelector("#transferBeliefRange"),
-  transferBeliefReadout: document.querySelector("#transferBeliefReadout"),
-  transferGaugeSupport: document.querySelector("#transferGaugeSupport"),
-  transferEvidenceBar: document.querySelector("#transferEvidenceBar"),
-  transferFaithBar: document.querySelector("#transferFaithBar"),
-  transferPointer: document.querySelector("#transferPointer"),
-  transferGapReadout: document.querySelector("#transferGapReadout"),
-  transferGapNote: document.querySelector("#transferGapNote"),
-  commitmentGrid: document.querySelector("#commitmentGrid"),
-  dieSummaryTitle: document.querySelector("#dieSummaryTitle"),
-  dieSummaryText: document.querySelector("#dieSummaryText"),
-  transferSummaryTitle: document.querySelector("#transferSummaryTitle"),
-  transferSummaryText: document.querySelector("#transferSummaryText"),
+  scenarioTitle: document.querySelector("#scenario-title"),
+  scenarioLead: document.querySelector("#scenarioLead"),
+  supportRuleText: document.querySelector("#supportRuleText"),
+  faithShiftText: document.querySelector("#faithShiftText"),
+  resourceText: document.querySelector("#resourceText"),
+  tryStatus: document.querySelector("#tryStatus"),
+  tryHint: document.querySelector("#tryHint"),
+  eventLabel: document.querySelector("#eventLabel"),
+  eventRollup: document.querySelector("#eventRollup"),
+  eventTitle: document.querySelector("#eventTitle"),
+  eventSummary: document.querySelector("#eventSummary"),
+  chartTitle: document.querySelector("#chartTitle"),
+  chartStatus: document.querySelector("#chartStatus"),
+  chartCaption: document.querySelector("#chartCaption"),
+  stochasticNote: document.querySelector("#stochasticNote"),
+  beliefChart: document.querySelector("#beliefChart"),
+  lessonLead: document.querySelector("#lessonLead"),
+  lessonCards: document.querySelector("#lessonCards"),
+  lessonClosing: document.querySelector("#lessonClosing"),
+  summaryFieldTitle: document.querySelector("#summaryFieldTitle"),
+  summaryFieldText: document.querySelector("#summaryFieldText"),
+  summaryCostTitle: document.querySelector("#summaryCostTitle"),
+  summaryCostText: document.querySelector("#summaryCostText"),
   summaryOutput: document.querySelector("#summaryOutput"),
-  copySummary: document.querySelector("#copySummary"),
   copyStatus: document.querySelector("#copyStatus")
 };
 
 const state = loadState();
 
-renderDieFace(elements.targetDie, 6);
-renderClaimButtons();
-renderSeverityOptions();
-renderCommitmentOptions();
-ensureSimulation();
 bindEvents();
 render();
 
 function bindEvents() {
-  elements.confidenceRange.addEventListener("input", (event) => {
-    state.confidence = normalizeConfidence(clampNumber(Number(event.target.value), 0, 100, defaultState.confidence));
-    persistState();
-    render();
-  });
-
-  elements.quickConfidenceButtons.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-confidence]");
+  elements.scenarioButtons.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-scenario]");
     if (!button) {
       return;
     }
 
-    state.confidence = normalizeConfidence(clampNumber(Number(button.dataset.confidence), 0, 100, defaultState.confidence));
+    state.activeScenario = button.dataset.scenario;
     persistState();
     render();
   });
 
-  elements.severityOptions.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-severity]");
-    if (!button) {
-      return;
-    }
-
-    state.severity = validateSeverity(button.dataset.severity);
-    persistState();
-    render();
+  elements.runTry.addEventListener("click", () => {
+    runScenarioTry();
   });
 
-  elements.runSimulation.addEventListener("click", appendSimulationRound);
-  elements.resetSimulation.addEventListener("click", restartSimulation);
-  elements.compareMode.addEventListener("change", (event) => {
-    state.compareMode = Boolean(event.target.checked);
-    persistState();
-    render();
-  });
-  elements.compareConfidenceRange.addEventListener("input", (event) => {
-    state.compareConfidence = normalizeConfidence(
-      clampNumber(Number(event.target.value), 0, 100, defaultState.compareConfidence)
-    );
-    persistState();
-    render();
-  });
-
-  elements.claimButtons.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-claim]");
-    if (!button) {
-      return;
-    }
-
-    const claim = getClaim(button.dataset.claim);
-    state.transferClaim = claim.id;
-    state.transferEvidence = claim.suggestedEvidence;
-    state.transferBelief = claim.suggestedBelief;
-    persistState();
-    render();
-  });
-
-  elements.transferEvidenceRange.addEventListener("input", (event) => {
-    state.transferEvidence = clampNumber(Number(event.target.value), 0, 100, defaultState.transferEvidence);
-    persistState();
-    render();
-  });
-
-  elements.transferBeliefRange.addEventListener("input", (event) => {
-    state.transferBelief = clampNumber(Number(event.target.value), 0, 100, defaultState.transferBelief);
-    persistState();
-    render();
-  });
-
-  elements.commitmentGrid.addEventListener("change", (event) => {
-    const input = event.target.closest("input[data-commitment]");
-    if (!input) {
-      return;
-    }
-
-    const id = input.dataset.commitment;
-    if (input.checked) {
-      if (!state.commitments.includes(id)) {
-        state.commitments.push(id);
-      }
-    } else {
-      state.commitments = state.commitments.filter((item) => item !== id);
-    }
-
-    persistState();
-    render();
+  elements.resetScenario.addEventListener("click", () => {
+    resetActiveScenario();
   });
 
   elements.copySummary.addEventListener("click", async () => {
     try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(elements.summaryOutput.value);
-      } else {
-        elements.summaryOutput.focus();
-        elements.summaryOutput.select();
-        document.execCommand("copy");
-      }
+      await navigator.clipboard.writeText(elements.summaryOutput.value);
       elements.copyStatus.textContent = "Summary copied.";
     } catch (error) {
-      elements.copyStatus.textContent = "Copy failed. Select the summary manually.";
+      elements.summaryOutput.focus();
+      elements.summaryOutput.select();
+      elements.copyStatus.textContent = "Summary selected. Copy manually if needed.";
     }
+
+    window.setTimeout(() => {
+      elements.copyStatus.textContent = "";
+    }, 1800);
   });
 }
 
-function render() {
-  const severity = getSeverity(state.severity);
-  const confidenceGap = Math.max(0, state.confidence - EVIDENCE_PERCENT);
-  const confidenceShare = state.confidence > 0 ? (confidenceGap / state.confidence) * 100 : 0;
-  const confidenceMessage = describeConfidenceGap(confidenceGap);
-  const exposure = describeExposure(confidenceGap, severity.weight);
-  const simulation = getSimulationNumbers();
-  const currentPlanner = getPlannerScenario(simulation, state.confidence);
-  const comparisonView = getComparisonView(simulation, severity);
-  const transferGap = Math.max(0, state.transferBelief - state.transferEvidence);
-  const transferCommitmentWeight = getCommitmentWeight(state.commitments);
-  const transferRisk = describeTransferRisk(transferGap, transferCommitmentWeight);
-  const activeClaim = getClaim(state.transferClaim);
+function runScenarioTry() {
+  const scenario = scenarios[state.activeScenario];
+  const scenarioState = state.scenarios[state.activeScenario];
 
-  elements.metricEvidence.textContent = formatPercent(EVIDENCE_PERCENT);
-  elements.metricConfidence.textContent = formatPercent(state.confidence);
-  elements.metricConfidenceNote.textContent = confidenceMessage.brief;
-  elements.metricGap.textContent = `${formatNumber(confidenceGap)} pts`;
-  elements.metricGapNote.textContent = confidenceMessage.detail;
-  elements.metricExposure.textContent = exposure.label;
-  elements.metricExposureNote.textContent = exposure.detail;
+  if (scenarioState.tries.length >= scenario.maxTries) {
+    return;
+  }
 
-  elements.confidenceRange.value = String(state.confidence);
-  elements.confidenceReadout.textContent = formatPercent(state.confidence);
-  highlightQuickButtons();
+  const event = createScenarioEvent(scenario, scenarioState);
+  scenarioState.tries.push(event);
+  agents.forEach((agent) => {
+    scenarioState.series[agent.id].push(event.after[agent.id]);
+  });
 
-  elements.gaugeEvidenceLabel.textContent = formatPercent(EVIDENCE_PERCENT);
-  elements.gaugeGapLabel.textContent = `${formatNumber(confidenceGap)} points`;
-  setBarWidth(elements.gaugeEvidenceBar, EVIDENCE_PERCENT);
-  setBarSegment(elements.gaugeFaithBar, EVIDENCE_PERCENT, confidenceGap);
-  setPointer(elements.gaugePointer, state.confidence);
-  elements.gaugeGapNote.textContent = buildGapNote(confidenceGap, "green support line");
-  elements.confidenceCaption.textContent = confidenceMessage.caption;
-
-  setBarWidth(elements.bridgeSupported, EVIDENCE_PERCENT);
-  setBarSegment(elements.bridgeOverhang, EVIDENCE_PERCENT, confidenceGap);
-  setPointer(elements.bridgeEvidenceMarker, EVIDENCE_PERCENT);
-  setPointer(elements.bridgeBeliefMarker, state.confidence);
-  elements.bridgeSupportedLabel.textContent = formatPercent(EVIDENCE_PERCENT);
-  elements.bridgeOverhangLabel.textContent = formatPercent(confidenceGap);
-  elements.bridgeShareLabel.textContent = formatPercent(confidenceShare);
-  elements.bridgeCaption.textContent = buildBridgeCaption(confidenceGap, confidenceShare);
-
-  renderTracePanel(simulation, comparisonView);
-  elements.compareMode.checked = state.compareMode;
-  elements.compareModeCaption.textContent = state.compareMode
-    ? "Compare mode is on. Planner A uses your current drill setting. Planner B uses the second slider, but both are judged against the same trace and the same one-in-six support rule."
-    : "Default view compares the support line at 16.7% with your current drill setting.";
-  elements.comparePrimaryReadout.textContent = formatPercent(state.confidence);
-  elements.compareConfidenceRange.value = String(state.compareConfidence);
-  elements.compareConfidenceReadout.textContent = formatPercent(state.compareConfidence);
-  elements.compareSecondarySetting.hidden = !state.compareMode;
-  highlightSeverityButtons();
-  elements.stakesCaption.textContent = describeStakesCaption(confidenceGap, severity);
-  elements.expectedRule.textContent =
-    `Expected sixes = tracked dice / 6 = ${simulation.totalDice} / 6 = ${formatNumber(simulation.evidenceHits)}`;
-  renderSimulation(simulation, severity, comparisonView);
-
-  renderClaimButtons();
-  elements.claimTitle.textContent = activeClaim.title;
-  elements.claimPrompt.textContent = activeClaim.prompt;
-  elements.claimTension.textContent = activeClaim.tension;
-  elements.transferEvidenceRange.value = String(state.transferEvidence);
-  elements.transferBeliefRange.value = String(state.transferBelief);
-  elements.transferEvidenceReadout.textContent = formatPercent(state.transferEvidence);
-  elements.transferBeliefReadout.textContent = formatPercent(state.transferBelief);
-  elements.transferGaugeSupport.textContent = formatPercent(state.transferEvidence);
-  setBarWidth(elements.transferEvidenceBar, state.transferEvidence);
-  setBarSegment(elements.transferFaithBar, state.transferEvidence, transferGap);
-  setPointer(elements.transferPointer, state.transferBelief);
-  elements.transferGapReadout.textContent = `${formatNumber(transferGap)} points`;
-  elements.transferGapNote.textContent = buildGapNote(transferGap, "support line you entered");
-  renderCommitmentOptions();
-
-  elements.dieSummaryTitle.textContent = buildDieSummaryTitle(confidenceGap, currentPlanner.unsupportedPlans);
-  elements.dieSummaryText.textContent = buildDieSummaryText(simulation, currentPlanner, severity);
-  elements.transferSummaryTitle.textContent = transferRisk.title;
-  elements.transferSummaryText.textContent = buildTransferSummaryText(activeClaim, transferGap);
-  elements.summaryOutput.value = buildSummaryOutput(simulation, severity, activeClaim, transferRisk, comparisonView);
+  persistState();
+  render();
 }
 
-function renderSimulation(simulation, severity, comparisonView) {
-  elements.runShortfall.textContent = `Batch sixes: ${simulation.lastBatchHits}`;
-  elements.rollStrip.innerHTML = simulation.rolls
-    .map((roll) => {
-      const isHit = roll === 6;
-      return `<span class="roll-token ${isHit ? "hit" : "miss"}" title="Rolled ${roll}">${roll}</span>`;
+function resetActiveScenario() {
+  state.scenarios[state.activeScenario] = createScenarioState(state.activeScenario);
+  persistState();
+  render();
+}
+
+function render() {
+  renderScenarioButtons();
+  renderAgentGrid();
+  renderScenarioPanel();
+  renderBalanceGrid();
+  renderDashboard();
+  renderEventCard();
+  renderChart();
+  renderLessons();
+  renderSummary();
+}
+
+function renderScenarioButtons() {
+  elements.scenarioButtons.innerHTML = scenarioOrder
+    .map((id) => {
+      const scenario = scenarios[id];
+      const active = id === state.activeScenario;
+      return `
+        <button
+          type="button"
+          class="scenario-tab ${active ? "active" : ""}"
+          data-scenario="${scenario.id}"
+          aria-pressed="${active ? "true" : "false"}"
+        >
+          <span>${scenario.name}</span>
+          <small>${scenario.maxTries} tries</small>
+        </button>
+      `;
     })
     .join("");
-
-  renderComparisonMetrics(comparisonView, simulation, severity);
-  renderConsequenceComparison(comparisonView, severity);
-  elements.consequenceTooltip.innerHTML = buildConsequenceTooltip(comparisonView, simulation, severity);
-  elements.simulationCaption.textContent = buildSimulationCaption(comparisonView, simulation, severity);
 }
 
-function renderTracePanel(simulation, comparisonView) {
-  const throwsRemaining = Math.max(0, MAX_BATCHES - simulation.roundsCount);
-  elements.traceStatus.textContent = `${simulation.roundsCount} ${simulation.roundsCount === 1 ? "throw" : "throws"} of ${MAX_BATCHES} logged`;
-  elements.traceCaption.textContent =
-    simulation.roundsCount >= MAX_BATCHES
-      ? `This trace has reached 30 throws, or ${simulation.totalDice} dice. The next click on the primary button resets the trace and starts a fresh line.`
-      : `Each click adds another 10 dice to the same cumulative trace. ${throwsRemaining} more throw${throwsRemaining === 1 ? "" : "s"} remain before the trace resets at 30.`;
-  elements.regressionStatus.textContent =
-    `${simulation.totalDice} dice tracked, ${simulation.actualHits} sixes so far (${formatPercent(simulation.actualRate)})`;
-  elements.runSimulation.textContent =
-    simulation.roundsCount >= MAX_BATCHES ? "Reset trace and add 10 rolls" : "Add 10 rolls to the trace";
-  elements.resetSimulation.textContent = simulation.roundsCount > 1 ? "Start new trace" : "Restart with 10 rolls";
-  renderRegressionChart(simulation, comparisonView);
-  elements.regressionCaption.textContent = buildRegressionCaption(simulation);
-  elements.lossTraceNote.textContent = buildLossTraceNote(comparisonView);
-}
+function renderAgentGrid() {
+  const scenario = scenarios[state.activeScenario];
+  const scenarioState = state.scenarios[state.activeScenario];
 
-function renderComparisonMetrics(comparisonView, simulation, severity) {
-  const cards = [
-    {
-      label: `${comparisonView.plannerA.name} confidence`,
-      value: formatPercent(comparisonView.plannerA.confidence),
-      note: comparisonView.plannerA.confidenceNote
-    },
-    {
-      label: `${comparisonView.plannerB.name} confidence`,
-      value: formatPercent(comparisonView.plannerB.confidence),
-      note: comparisonView.plannerB.confidenceNote
-    },
-    {
-      label: `${comparisonView.plannerA.name} planned hits`,
-      value: formatHitCount(comparisonView.plannerA.plannedHits),
-      note: `What ${comparisonView.plannerA.name.toLowerCase()} budgets across ${simulation.totalDice} tracked dice.`
-    },
-    {
-      label: `${comparisonView.plannerB.name} planned hits`,
-      value: formatHitCount(comparisonView.plannerB.plannedHits),
-      note: `What ${comparisonView.plannerB.name.toLowerCase()} budgets across ${simulation.totalDice} tracked dice.`
-    },
-    {
-      label: `${comparisonView.plannerA.name} decision penalty`,
-      value:
-        comparisonView.plannerA.unsupportedPlans > 0
-          ? `+${formatNumber(comparisonView.plannerA.unsupportedPlans)}`
-          : "0",
-      note: "Extra planned hits above the support line before the world answers back."
-    },
-    {
-      label: `${comparisonView.plannerB.name} decision penalty`,
-      value:
-        comparisonView.plannerB.unsupportedPlans > 0
-          ? `+${formatNumber(comparisonView.plannerB.unsupportedPlans)}`
-          : "0",
-      note: "Extra planned hits above the support line before the world answers back."
-    },
-    {
-      label: `${comparisonView.plannerA.name} realized shortfall`,
-      value:
-        comparisonView.plannerA.realizedShortfall > 0
-          ? formatNumber(comparisonView.plannerA.realizedShortfall)
-          : "0",
-      note: `max(0, planned hits - actual hits) with ${formatHitCount(simulation.actualHits)} actually rolled.`
-    },
-    {
-      label: `${comparisonView.plannerB.name} realized shortfall`,
-      value:
-        comparisonView.plannerB.realizedShortfall > 0
-          ? formatNumber(comparisonView.plannerB.realizedShortfall)
-          : "0",
-      note: `max(0, planned hits - actual hits) with ${formatHitCount(simulation.actualHits)} actually rolled.`
-    }
-  ];
-
-  elements.comparisonMetrics.innerHTML = cards
-    .map((card) => {
+  elements.agentGrid.innerHTML = agents
+    .map((agent) => {
+      const currentValue = getCurrentValue(scenarioState, agent.id);
       return `
-        <article class="sim-stat">
-          <span>${card.label}</span>
-          <strong>${card.value}</strong>
-          <small>${card.note}</small>
+        <article class="belief-agent-card belief-agent-${agent.id}">
+          <div class="belief-agent-head">
+            <span class="belief-avatar" aria-hidden="true">${agent.avatar}</span>
+            <div>
+              <h3>${agent.name}</h3>
+              <p>${agent.faithLabel}</p>
+            </div>
+          </div>
+          <p class="belief-agent-summary">${agent.summary}</p>
+          <div class="belief-agent-foot">
+            <span class="mini-label">Current ${scenario.name.toLowerCase()} line</span>
+            <strong>${formatScenarioValue(scenario, currentValue)}</strong>
+          </div>
         </article>
       `;
     })
     .join("");
 }
 
-function renderConsequenceComparison(comparisonView, severity) {
-  elements.consequenceCompare.innerHTML = [comparisonView.plannerA, comparisonView.plannerB]
-    .map((planner) => {
+function renderScenarioPanel() {
+  const scenario = scenarios[state.activeScenario];
+  const scenarioState = state.scenarios[state.activeScenario];
+  const tryCount = scenarioState.tries.length;
+
+  elements.scenarioTitle.textContent = scenario.name;
+  elements.scenarioLead.textContent = scenario.lead;
+  elements.supportRuleText.textContent = scenario.supportRule;
+  elements.faithShiftText.textContent = scenario.faithShift;
+  elements.resourceText.textContent = scenario.resource;
+  elements.chartTitle.textContent = scenario.chartTitle;
+  elements.chartCaption.textContent = scenario.chartCaption;
+  elements.stochasticNote.textContent = scenario.stochasticNote;
+  elements.tryStatus.textContent = `${tryCount} ${pluralize(tryCount, "try", "tries")} logged`;
+  elements.tryHint.textContent =
+    tryCount >= scenario.maxTries
+      ? `This field has reached its ${scenario.maxTries}-try limit. Press Try again to reset it.`
+      : `Each click adds one more random ${scenario.tryLabel}.`;
+
+  elements.runTry.textContent = tryCount === 0 ? "Try" : "Try next event";
+  elements.runTry.disabled = tryCount >= scenario.maxTries;
+  elements.resetScenario.disabled = tryCount === 0;
+}
+
+function renderBalanceGrid() {
+  const scenario = scenarios[state.activeScenario];
+  const scenarioState = state.scenarios[state.activeScenario];
+  const lastEvent = getLastEvent(scenarioState);
+
+  elements.balanceGrid.innerHTML = agents
+    .map((agent) => {
+      const currentValue = getCurrentValue(scenarioState, agent.id);
+      const delta = lastEvent ? lastEvent.delta[agent.id] : 0;
+      const action = lastEvent ? lastEvent.actions[agent.id].tag : "Waiting";
       return `
-        <div class="consequence-column">
-          <div class="consequence-column-head">
-            <strong>${planner.name}</strong>
-            <span>${formatPercent(planner.confidence)}</span>
+        <article class="belief-balance-card belief-agent-${agent.id}">
+          <div class="belief-balance-top">
+            <span class="belief-avatar small" aria-hidden="true">${agent.avatar}</span>
+            <div>
+              <strong>${agent.shortName}</strong>
+              <small>${agent.faithLabel}</small>
+            </div>
           </div>
-          <div class="consequence-strip">
-            ${buildConsequenceTokens(planner.realizedShortfall, severity)}
+          <span class="belief-balance-value">${formatScenarioValue(scenario, currentValue)}</span>
+          <div class="belief-balance-foot">
+            <span class="belief-tag">${action}</span>
+            <span class="belief-delta ${delta > 0 ? "up" : delta < 0 ? "down" : "flat"}">${formatDelta(scenario, delta)}</span>
           </div>
-          <small>${describeConsequenceSummary(planner.realizedShortfall, severity)}</small>
-        </div>
-      `;
-    })
-    .join("");
-
-  elements.consequenceSummary.textContent = describeConsequenceComparisonSummary(comparisonView, severity);
-}
-
-function renderClaimButtons() {
-  elements.claimButtons.innerHTML = transferClaims
-    .map((claim) => {
-      const active = claim.id === state.transferClaim ? "active" : "";
-      return `
-        <button type="button" class="claim-button ${active}" data-claim="${claim.id}" aria-pressed="${claim.id === state.transferClaim ? "true" : "false"}">
-          <strong>${claim.title}</strong>
-          <span>${claim.prompt}</span>
-        </button>
+        </article>
       `;
     })
     .join("");
 }
 
-function renderSeverityOptions() {
-  elements.severityOptions.innerHTML = severityOptions
-    .map((option) => {
-      const active = option.id === state.severity ? "active" : "";
-      return `
-        <button type="button" class="severity-option ${active}" data-severity="${option.id}" aria-pressed="${option.id === state.severity ? "true" : "false"}">
-          <strong>${option.label}</strong>
-          <span>${option.detail}</span>
-        </button>
-      `;
-    })
-    .join("");
+function renderDashboard() {
+  const scenario = scenarios[state.activeScenario];
+  const scenarioState = state.scenarios[state.activeScenario];
+  const standings = getStandings(scenarioState);
+  const tryCount = scenarioState.tries.length;
+  const faithDrag = standings[0].value - standings[standings.length - 1].value;
+
+  elements.metricScenario.textContent = scenario.name;
+  elements.metricScenarioNote.textContent = scenario.resource;
+  elements.metricTries.textContent = String(tryCount);
+  elements.metricTriesNote.textContent =
+    tryCount === 0
+      ? "Press Try to generate the first event."
+      : `${tryCount} ${pluralize(tryCount, scenario.tryLabel, `${scenario.tryLabel}s`)} recorded so far.`;
+  elements.metricLeader.textContent = standings[0].agent.shortName;
+  elements.metricLeaderNote.textContent =
+    tryCount === 0
+      ? "All four lines are still tied at the start."
+      : `${standings[0].agent.name} is currently ahead in ${scenario.name.toLowerCase()}.`;
+  elements.metricGap.textContent = formatScenarioValue(scenario, faithDrag, true);
+  elements.metricGapNote.textContent =
+    tryCount === 0
+      ? "No divergence has opened yet."
+      : `Current spread between ${standings[0].agent.shortName} and ${standings[standings.length - 1].agent.shortName}.`;
 }
 
-function renderCommitmentOptions() {
-  elements.commitmentGrid.innerHTML = commitments
-    .map((item) => {
-      const checked = state.commitments.includes(item.id) ? "checked" : "";
-      return `
-        <label class="commitment-option">
-          <input type="checkbox" data-commitment="${item.id}" ${checked}>
-          <span>
-            <strong>${item.label}</strong>
-            <small>${item.detail}</small>
-          </span>
-        </label>
-      `;
-    })
-    .join("");
-}
+function renderEventCard() {
+  const scenario = scenarios[state.activeScenario];
+  const scenarioState = state.scenarios[state.activeScenario];
+  const lastEvent = getLastEvent(scenarioState);
 
-function appendSimulationRound() {
-  if (!Array.isArray(state.simulation.rounds)) {
-    state.simulation.rounds = [];
-  }
-
-  if (state.simulation.rounds.length >= MAX_BATCHES) {
-    state.simulation.rounds = [];
-  }
-
-  state.simulation.rounds.push(createSimulationRound());
-  persistState();
-  render();
-}
-
-function restartSimulation() {
-  state.simulation.rounds = [createSimulationRound()];
-  persistState();
-  render();
-}
-
-function ensureSimulation(forceNew = false) {
-  const hasRounds = Array.isArray(state.simulation.rounds) && state.simulation.rounds.length > 0;
-  if (forceNew || !hasRounds) {
-    state.simulation.rounds = [createSimulationRound()];
+  if (!lastEvent) {
+    elements.eventLabel.textContent = "First event";
+    elements.eventRollup.textContent = "No results yet";
+    elements.eventTitle.textContent = "Press Try to generate the next event.";
+    elements.eventSummary.textContent =
+      "The random event will carry the relevant balance of inputs for this field, and each agent will respond according to their degree of faith.";
+    elements.eventStats.innerHTML = "";
+    elements.eventActions.innerHTML = "";
     return;
   }
 
-  if (state.simulation.rounds.length > MAX_BATCHES) {
-    state.simulation.rounds = state.simulation.rounds.slice(-MAX_BATCHES);
-  }
+  elements.eventLabel.textContent = `${scenario.name} try ${lastEvent.index}`;
+  elements.eventRollup.textContent = lastEvent.rollup;
+  elements.eventTitle.textContent = lastEvent.title;
+  elements.eventSummary.textContent = lastEvent.summary;
+  elements.eventStats.innerHTML = lastEvent.stats
+    .map((item) => {
+      return `
+        <article class="belief-stat-pill">
+          <span>${item.label}</span>
+          <strong>${item.value}</strong>
+        </article>
+      `;
+    })
+    .join("");
+  elements.eventActions.innerHTML = agents
+    .map((agent) => {
+      const action = lastEvent.actions[agent.id];
+      return `
+        <article class="belief-action-card belief-agent-${agent.id}">
+          <div class="belief-action-head">
+            <span class="belief-avatar small" aria-hidden="true">${agent.avatar}</span>
+            <strong>${agent.shortName}</strong>
+            <span class="belief-delta ${action.delta > 0 ? "up" : action.delta < 0 ? "down" : "flat"}">${formatDelta(scenario, action.delta)}</span>
+          </div>
+          <span class="belief-tag">${action.tag}</span>
+          <p>${action.text}</p>
+        </article>
+      `;
+    })
+    .join("");
 }
 
-function getSimulationNumbers() {
-  const rounds = Array.isArray(state.simulation.rounds) ? state.simulation.rounds : [];
-  const rolls = rounds.flat();
-  const roundsCount = rounds.length;
-  const totalDice = rolls.length;
-  const actualHits = rolls.filter((roll) => roll === 6).length;
-  const evidenceHits = EVIDENCE_PROBABILITY * totalDice;
-  const actualRate = totalDice > 0 ? (actualHits / totalDice) * 100 : 0;
-  const lastBatch = rounds[rounds.length - 1] || [];
-  const lastBatchHits = lastBatch.filter((roll) => roll === 6).length;
-
-  let runningHits = 0;
-  const cumulativeRates = rounds.map((round, index) => {
-    runningHits += round.filter((roll) => roll === 6).length;
-    const cumulativeDice = (index + 1) * DICE_PER_BATCH;
-    return {
-      round: index + 1,
-      hits: runningHits,
-      totalDice: cumulativeDice,
-      rate: (runningHits / cumulativeDice) * 100
-    };
-  });
-
-  return {
-    roundsCount,
-    totalDice,
-    evidenceHits,
-    actualHits,
-    actualRate,
-    rolls: lastBatch,
-    lastBatchHits,
-    cumulativeRates
-  };
-}
-
-function getPlannerScenario(simulation, confidence) {
-  const plannedHits =
-    Math.abs(confidence - EVIDENCE_PERCENT) <= 0.05
-      ? simulation.totalDice * EVIDENCE_PROBABILITY
-      : (confidence / 100) * simulation.totalDice;
-  const unsupportedPlansRaw = Math.max(0, plannedHits - simulation.evidenceHits);
-  const realizedShortfallRaw = Math.max(0, plannedHits - simulation.actualHits);
-
-  return {
-    confidence,
-    plannedHits,
-    unsupportedPlans: unsupportedPlansRaw <= 0.05 ? 0 : unsupportedPlansRaw,
-    realizedShortfall: realizedShortfallRaw <= 0.05 ? 0 : realizedShortfallRaw
-  };
-}
-
-function getComparisonView(simulation, severity) {
-  const supportPlanner = getPlannerScenario(simulation, EVIDENCE_PERCENT);
-  const currentPlanner = getPlannerScenario(simulation, state.confidence);
-  const comparePlanner = getPlannerScenario(simulation, state.compareConfidence);
-  const plannerA = state.compareMode
-    ? {
-        ...currentPlanner,
-        name: "Setting A",
-        confidenceNote: "This is your current drill slider carried into the same trace."
-      }
-    : {
-        ...supportPlanner,
-        name: "Support line",
-        confidenceNote: "Evidence-capped baseline. It stops at the one-in-six support rule."
-      };
-  const plannerB = state.compareMode
-    ? {
-        ...comparePlanner,
-        name: "Setting B",
-        confidenceNote: "Second confidence setting on the exact same trace."
-      }
-    : {
-        ...currentPlanner,
-        name: "Current setting",
-        confidenceNote: "Your drill slider judged against the same trace."
-      };
-
-  const longRunDifference =
-    expectedShortfall(simulation.totalDice, plannerB.plannedHits, EVIDENCE_PROBABILITY) -
-    expectedShortfall(simulation.totalDice, plannerA.plannedHits, EVIDENCE_PROBABILITY);
-  const netSeries = buildCumulativeNetSeries(simulation, plannerA.confidence, plannerB.confidence);
-  const currentNetResult = netSeries.length > 0 ? netSeries[netSeries.length - 1].net : 0;
-
-  return {
-    plannerA,
-    plannerB,
-    severity,
-    netSeries,
-    currentNetResult,
-    longRunDifference: Math.abs(longRunDifference) <= 0.05 ? 0 : longRunDifference,
-    longRunCostDifference: Math.abs(longRunDifference) <= 0.05 ? 0 : longRunDifference * severity.weight
-  };
-}
-
-function buildCumulativeNetSeries(simulation, plannerAConfidence, plannerBConfidence) {
-  return simulation.cumulativeRates.map((point) => {
-    const plannerA = getPlannerScenario(
-      {
-        totalDice: point.totalDice,
-        evidenceHits: point.totalDice * EVIDENCE_PROBABILITY,
-        actualHits: point.hits
-      },
-      plannerAConfidence
-    );
-    const plannerB = getPlannerScenario(
-      {
-        totalDice: point.totalDice,
-        evidenceHits: point.totalDice * EVIDENCE_PROBABILITY,
-        actualHits: point.hits
-      },
-      plannerBConfidence
-    );
-    const plannerANet = getPlannerNet(plannerA, point.hits);
-    const plannerBNet = getPlannerNet(plannerB, point.hits);
-    return {
-      round: point.round,
-      net: plannerBNet - plannerANet
-    };
-  });
-}
-
-function getPlannerNet(planner, actualHits) {
-  return (2 * Math.min(actualHits, planner.plannedHits) - planner.plannedHits) * STAKE_PER_COMMITMENT;
-}
-
-function describeConfidenceGap(gap) {
-  if (gap <= 0.5) {
-    return {
-      brief: "Your confidence is staying inside the support line.",
-      detail: "This matches the support you say the evidence provides.",
-      caption:
-        "At or below the evidence line, the tool is showing core rationality under your definition: belief remains inside perceived support."
-    };
-  }
-
-  if (gap <= 10) {
-    return {
-      brief: "Confidence is leaning slightly beyond the support line.",
-      detail: "A small measure of faith is already present under this audit's definition.",
-      caption:
-        "The die is still only giving you 16.7%. The extra confidence is small, but it adds no new information. It only lets the decision outrun the support."
-    };
-  }
-
-  if (gap <= 30) {
-    return {
-      brief: "A substantial slice of confidence is above the support line.",
-      detail: "This setting is asking the die to carry much more than one honest chance in six.",
-      caption:
-        "This is no longer a minor lean. A noticeable chunk of your certainty lies above the support you perceive. This tool labels that excess confidence faith, and it worsens the decision rather than improving it."
-    };
-  }
-
-  return {
-    brief: "Most of the current confidence is above the support line.",
-    detail: "The larger part of this confidence setting no longer rests on what the die supplies.",
-    caption:
-      "At this level, the overhang dominates the position. The die has not strengthened. Only the confidence has, so the decision quality is now being driven mostly by faith."
-  };
-}
-
-function describeExposure(gap, severityWeight) {
-  const score = gap * severityWeight;
-
-  if (score <= 12) {
-    return {
-      label: "Guarded",
-      detail: "Even with the chosen stakes, the current posture stays close to the support line."
-    };
-  }
-
-  if (score <= 45) {
-    return {
-      label: "Strained",
-      detail: "Some commitment is already being placed on a worse-than-evidence decision posture."
-    };
-  }
-
-  if (score <= 110) {
-    return {
-      label: "Exposed",
-      detail: "Real costs now ride on confidence the evidence would not license."
-    };
-  }
-
-  return {
-    label: "Acute",
-    detail: "At this combination of gap and stakes, even a modest run of misses can become costly fast."
-  };
-}
-
-function buildBridgeCaption(gap, share) {
-  if (gap <= 0.5) {
-    return "The belief marker is still standing on supported planks. No overhang is being asked to carry weight.";
-  }
-
-  return `At this setting, ${formatPercent(share)} of your current confidence stands beyond the warranted degree of belief. That striped overhang is the measure of faith.`;
-}
-
-function buildGapNote(gap, supportLineLabel) {
-  if (gap <= 0.05) {
-    return `No measure of faith is present here. Your confidence is staying inside the warranted degree of belief marked by the ${supportLineLabel}.`;
-  }
-
-  return `The gold striped segment is the measure of faith: whatever degree of belief exceeds the warranted degree of belief marked by the ${supportLineLabel}.`;
-}
-
-function buildRegressionCaption(simulation) {
-  const distanceFromMean = Math.abs(simulation.actualRate - EVIDENCE_PERCENT);
-
-  if (simulation.roundsCount <= 1) {
-    return `After the first throw of 10 dice, the cumulative rate can swing sharply. As more throws are added, the line is usually pulled back toward the 16.7% mean.`;
-  }
-
-  if (distanceFromMean <= 0.75) {
-    return `After ${simulation.roundsCount} throws (${simulation.totalDice} dice), the cumulative line is sitting close to the 16.7% mean. Longer traces usually keep hugging that same one-in-six center more tightly.`;
-  }
-
-  return `After ${simulation.roundsCount} throws (${simulation.totalDice} dice), the cumulative line is at ${formatPercent(simulation.actualRate)}, which is ${formatNumber(distanceFromMean)} points away from the 16.7% mean. More throws usually shrink that gap rather than reinforcing it.`;
-}
-
-function buildLossTraceNote(comparisonView) {
-  const relationship = state.compareMode
-    ? `Amber line: extra dollars ${comparisonView.plannerB.name} loses beyond ${comparisonView.plannerA.name}`
-    : "Amber line: extra dollars the current setting loses beyond the evidence-capped plan";
-
-  return `${relationship} if each extra shortfall unit costs ${formatCurrency(LOSS_PER_SHORTFALL)}. Current trace difference: ${formatCurrency(comparisonView.currentExtraLoss)}.`;
-}
-
-function describeStakesCaption(gap, severity) {
-  if (gap <= 0.5) {
-    return `With the slider at or below the evidence line, ${severity.label.toLowerCase()} still matters, but you are not adding extra belief beyond what the die supports. The cumulative trace may still wander, but the plan itself is not overshooting the support line.`;
-  }
-
-  return `${severity.label} does not make the die kinder. Faith does not improve the decision. It changes how expensive each overreach-driven shortfall becomes when the world fails to cooperate.`;
-}
-
-function describeConsequenceSummary(collapsed, severity) {
-  if (collapsed <= 0.05) {
-    return "No cumulative shortfall in this trace.";
-  }
-
-  return `About ${formatNumber(collapsed)} ${formatSeverityUnit(severity, collapsed)}`;
-}
-
-function describeConsequenceComparisonSummary(comparisonView, severity) {
-  const gap = comparisonView.plannerB.realizedShortfall - comparisonView.plannerA.realizedShortfall;
-
-  if (Math.abs(gap) <= 0.05) {
-    return "Both planners come out the same on this trace.";
-  }
-
-  if (gap > 0) {
-    return `${comparisonView.plannerB.name} adds about ${formatNumber(gap)} more ${formatSeverityUnit(severity, gap)} than ${comparisonView.plannerA.name} on this trace.`;
-  }
-
-  return `${comparisonView.plannerB.name} avoids about ${formatNumber(Math.abs(gap))} ${formatSeverityUnit(severity, Math.abs(gap))} compared with ${comparisonView.plannerA.name} on this trace.`;
-}
-
-function buildConsequenceTooltip(comparisonView, simulation, severity) {
-  const plannerA = comparisonView.plannerA;
-  const plannerB = comparisonView.plannerB;
-
-  return `${plannerA.name} shortfall math: <code>max(0, planned hits - actual hits) = max(0, ${formatNumber(plannerA.plannedHits)} - ${formatNumber(simulation.actualHits)}) = ${formatNumber(plannerA.realizedShortfall)}</code>.
-    ${plannerB.name} shortfall math: <code>max(0, planned hits - actual hits) = max(0, ${formatNumber(plannerB.plannedHits)} - ${formatNumber(simulation.actualHits)}) = ${formatNumber(plannerB.realizedShortfall)}</code>.
-    The decision-penalty cards above are different: they show unsupported planned hits before any roll happens. The selected category, <code>${severity.label}</code>, only changes how to read each realized shortfall unit once the world answers back.`;
-}
-
-function buildSimulationCaption(comparisonView, simulation, severity) {
-  const penaltyGap = comparisonView.plannerB.unsupportedPlans - comparisonView.plannerA.unsupportedPlans;
-  const realizedGap = comparisonView.plannerB.realizedShortfall - comparisonView.plannerA.realizedShortfall;
-  const longRunGap = comparisonView.longRunDifference;
-  const direction = penaltyGap >= 0 ? "more" : "fewer";
-  const realizedDirection = realizedGap >= 0 ? "more" : "fewer";
-  const longRunDirection = longRunGap >= 0 ? "more" : "fewer";
-
-  if (Math.abs(penaltyGap) <= 0.05 && Math.abs(realizedGap) <= 0.05) {
-    return `Both planners are carrying the same load on this trace. No extra decision penalty is being introduced, and the realized shortfall comes out the same.`;
-  }
-
-  return `${comparisonView.plannerB.name} begins with ${formatNumber(Math.abs(penaltyGap))} ${direction} unsupported planned hits than ${comparisonView.plannerA.name}. On this same trace, that turned into ${formatNumber(Math.abs(realizedGap))} ${realizedDirection} ${formatSeverityUnit(severity, Math.abs(realizedGap))}. If repeated many times, the same setting difference would usually add about ${formatNumber(Math.abs(longRunGap))} ${longRunDirection} ${formatSeverityUnit(severity, Math.abs(longRunGap))}.`;
-}
-
-function buildConsequenceTokens(value, severity) {
-  const displayValue = value > 0 ? Math.max(1, Math.round(value)) : 0;
-  const tokenCount = Math.max(1, Math.min(displayValue || 1, 16));
-  const extraCount = Math.max(0, displayValue - tokenCount);
-  const tokenClass =
-    severity.id === "money" ? "money" : severity.id === "safety" ? "safety" : severity.id === "catastrophic" ? "critical" : "soft";
-
-  const tokens = value > 0
-    ? Array.from({ length: tokenCount }, (_, index) => {
-        return `<span class="consequence-token ${tokenClass}" aria-hidden="true">${index + 1}</span>`;
-      }).join("")
-    : `<span class="consequence-token extra" aria-hidden="true">0</span>`;
-
-  return extraCount > 0
-    ? `${tokens}<span class="consequence-token extra" aria-hidden="true">+${extraCount}</span>`
-    : tokens;
-}
-
-function describeTransferRisk(gap, commitmentWeight) {
-  const score = gap * (1 + commitmentWeight * 0.4);
-
-  if (gap <= 0.5) {
-    return {
-      title: "Belief is staying inside the stated support.",
-      band: "Aligned"
-    };
-  }
-
-  if (score <= 30) {
-    return {
-      title: "A modest measure of faith is present.",
-      band: "Light overreach"
-    };
-  }
-
-  if (score <= 80) {
-    return {
-      title: "The selected claim is carrying a visible measure of faith.",
-      band: "Live overreach"
-    };
-  }
-
-  if (score <= 150) {
-    return {
-      title: "The selected claim is carrying a large measure of faith.",
-      band: "Serious overreach"
-    };
-  }
-
-  return {
-    title: "The selected claim is carrying a very heavy measure of faith.",
-    band: "Severe overreach"
-  };
-}
-
-function buildTransferSummaryText(claim, gap) {
-  const commitmentNames = state.commitments.length
-    ? state.commitments
-        .map((id) => commitments.find((item) => item.id === id)?.label)
-        .filter(Boolean)
-        .join(", ")
-    : "no additional commitments";
-
-  if (gap <= 0.5) {
-    return `For ${claim.title}, your confidence is not currently outrunning the support rating you gave it. Even if the claim matters deeply, this setting is not adding extra confidence on top of that support.`;
-  }
-
-  return `For ${claim.title}, the current posture adds ${formatNumber(gap)} points of confidence beyond the support rating, then asks that extra confidence to carry ${commitmentNames}. That excess confidence is what this tool labels faith, and it lowers decision quality rather than improving it.`;
-}
-
-function buildDieSummaryTitle(gap, unsupportedPlans) {
-  if (gap <= 0.5) {
-    return "The plan is staying inside the die's support line.";
-  }
-
-  if (unsupportedPlans <= 2) {
-    return "Faith is beginning to worsen the plan.";
-  }
-
-  return "Faith is already worsening the plan.";
-}
-
-function buildDieSummaryText(simulation, currentPlanner, severity) {
-  if (currentPlanner.unsupportedPlans <= 0) {
-    return "At the current slider setting, your plan does not budget for more sixes than the evidence supports. Luck can still disappoint you, but confidence above the support line is not inflating the cumulative trace.";
-  }
-
-  const averageAddedShortfall =
-    expectedShortfall(simulation.totalDice, currentPlanner.plannedHits, EVIDENCE_PROBABILITY) -
-    expectedShortfall(simulation.totalDice, simulation.evidenceHits, EVIDENCE_PROBABILITY);
-  return `Across ${simulation.roundsCount} tracked throw${simulation.roundsCount === 1 ? "" : "s"} (${simulation.totalDice} dice), the evidence line warrants about ${formatNumber(simulation.evidenceHits)} hits, but your current confidence plans for ${formatNumber(currentPlanner.plannedHits)}. That leaves ${formatNumber(currentPlanner.unsupportedPlans)} extra planned hits beyond the support line before any outcome arrives. On average, that setting adds about ${formatNumber(averageAddedShortfall)} more ${formatSeverityUnit(severity, averageAddedShortfall)} than the support-line planner.`;
-}
-
-function buildSummaryOutput(simulation, severity, claim, transferRisk, comparisonView) {
-  const transferGap = Math.max(0, state.transferBelief - state.transferEvidence);
-  const commitmentList = state.commitments.length
-    ? state.commitments
-        .map((id) => commitments.find((item) => item.id === id)?.label)
-        .filter(Boolean)
-        .join("; ")
-    : "None selected";
-  const currentPlanner = getPlannerScenario(simulation, state.confidence);
-
-  return [
-    "Belief Overreach Audit",
-    "",
-    "Fair-die drill",
-    `- Evidence support for the next roll being a six: ${formatPercent(EVIDENCE_PERCENT)}`,
-    `- Chosen confidence: ${formatPercent(state.confidence)}`,
-    `- Measure of faith (belief above warranted belief): ${formatNumber(Math.max(0, state.confidence - EVIDENCE_PERCENT))} points`,
-    `- Tracked throws of 10 dice: ${simulation.roundsCount} of ${MAX_BATCHES}`,
-    `- Total dice tracked: ${simulation.totalDice}`,
-    `- Evidence-based hits across tracked dice: ${formatNumber(simulation.evidenceHits)}`,
-    `- Planned hits at current confidence: ${formatNumber(currentPlanner.plannedHits)}`,
-    `- Extra planned hits beyond the support line: ${formatNumber(currentPlanner.unsupportedPlans)}`,
-    `- Actual hits across tracked dice: ${simulation.actualHits}`,
-    `- Cumulative hit rate across tracked dice: ${formatPercent(simulation.actualRate)}`,
-    `- Most recent 10-die batch sixes: ${simulation.lastBatchHits}`,
-    `- Current realized shortfall at current confidence: ${formatNumber(currentPlanner.realizedShortfall)}`,
-    `- Consequence setting: ${severity.label}`,
-    `- ${comparisonView.plannerA.name} realized shortfall: ${formatNumber(comparisonView.plannerA.realizedShortfall)}`,
-    `- ${comparisonView.plannerB.name} realized shortfall: ${formatNumber(comparisonView.plannerB.realizedShortfall)}`,
-    "",
-    "Faith-related transfer claim",
-    `- Claim: ${claim.title}`,
-    `- Perceived support: ${formatPercent(state.transferEvidence)}`,
-    `- Confidence anyway: ${formatPercent(state.transferBelief)}`,
-    `- Measure of faith (belief above warranted belief): ${formatNumber(transferGap)} points`,
-    `- Commitments riding on the claim: ${commitmentList}`,
-    `- Current overreach band: ${transferRisk.band}`,
-    "",
-    "Plain reading",
-    "The die section shows that faith adds no value to the decision. It licenses extra commitments beyond perceived support, which lowers expected success and raises long-run cost. Across longer runs, the observed share of sixes tends to regress toward the same 16.7% mean rather than toward your preferred confidence level. The transfer section applies the same point to religious choices, including which god, if any, to worship. Hope, comfort, longing, or fear may explain why people raise confidence above perceived support, but those motives do not increase evidential support. When a religion praises this very overreach as virtue, the method itself is irrational on this audit's definition because it tells belief to exceed perceived support on purpose."
-  ].join("\n");
-}
-
-function expectedShortfall(trials, plannedHits, probability) {
-  const missProbability = 1 - probability;
-  let chance = Math.pow(missProbability, trials);
-  let total = 0;
-
-  for (let actualHits = 0; actualHits <= trials; actualHits += 1) {
-    total += Math.max(0, plannedHits - actualHits) * chance;
-
-    if (actualHits < trials) {
-      chance *= ((trials - actualHits) / (actualHits + 1)) * (probability / missProbability);
-    }
-  }
-
-  return total;
-}
-
-function highlightQuickButtons() {
-  const buttons = Array.from(elements.quickConfidenceButtons.querySelectorAll("button[data-confidence]"));
-  buttons.forEach((button) => {
-    const active = Math.abs(Number(button.dataset.confidence) - state.confidence) < 0.05;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", active ? "true" : "false");
-  });
-}
-
-function highlightSeverityButtons() {
-  const buttons = Array.from(elements.severityOptions.querySelectorAll("button[data-severity]"));
-  buttons.forEach((button) => {
-    const active = button.dataset.severity === state.severity;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", active ? "true" : "false");
-  });
-}
-
-function getCommitmentWeight(selectedCommitments) {
-  return selectedCommitments.reduce((total, id) => {
-    const commitment = commitments.find((item) => item.id === id);
-    return total + (commitment ? commitment.weight : 0);
-  }, 0);
-}
-
-function setBarWidth(element, width) {
-  element.style.width = `${clampNumber(width, 0, 100, 0)}%`;
-}
-
-function setBarSegment(element, left, width) {
-  const safeLeft = clampNumber(left, 0, 100, 0);
-  const safeWidth = clampNumber(width, 0, 100 - safeLeft, 0);
-  element.style.left = `${safeLeft}%`;
-  element.style.width = `${safeWidth}%`;
-}
-
-function setPointer(element, value) {
-  element.style.left = `${clampNumber(value, 0, 100, 0)}%`;
-}
-
-function renderRegressionChart(simulation, comparisonView) {
-  const width = 640;
-  const height = 240;
-  const margin = { top: 18, right: 54, bottom: 34, left: 44 };
+function renderChart() {
+  const scenario = scenarios[state.activeScenario];
+  const scenarioState = state.scenarios[state.activeScenario];
+  const tries = scenarioState.tries.length;
+  const seriesValues = agents.flatMap((agent) => scenarioState.series[agent.id]);
+  const width = 720;
+  const height = 320;
+  const margin = { top: 24, right: 24, bottom: 42, left: 74 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
+  const minValue = Math.min(...seriesValues);
+  const maxValue = Math.max(...seriesValues);
+  const padding = scenario.unit === "currency" ? 80 : 60;
+  const yMin = Math.max(0, Math.floor((minValue - padding) / 50) * 50);
+  const yMax = Math.ceil((maxValue + padding) / 50) * 50;
+  const ySpan = Math.max(100, yMax - yMin);
+  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((ratio) => yMin + ySpan * ratio);
+  const xTicks = buildXTicks(scenario.maxTries);
+  const getX = (index) => margin.left + (index / scenario.maxTries) * innerWidth;
+  const getY = (value) => margin.top + innerHeight - ((value - yMin) / ySpan) * innerHeight;
 
-  if (!simulation.cumulativeRates.length) {
-    elements.regressionChart.innerHTML = `
-      <text class="chart-placeholder" x="${width / 2}" y="${height / 2}" text-anchor="middle">
-        Roll 10 dice to start the cumulative trace.
-      </text>
-    `;
-    return;
-  }
+  const lines = agents
+    .map((agent) => {
+      const values = scenarioState.series[agent.id];
+      const points = values.map((value, index) => `${getX(index)},${getY(value)}`).join(" ");
+      const circles = values
+        .map((value, index) => {
+          return `<circle class="belief-point belief-line-${agent.id}" cx="${getX(index)}" cy="${getY(value)}" r="${index === values.length - 1 ? 4.5 : 3.2}"></circle>`;
+        })
+        .join("");
+      return `
+        <polyline class="belief-line belief-line-${agent.id}" points="${points}"></polyline>
+        ${circles}
+      `;
+    })
+    .join("");
 
-  const lossSeries = comparisonView.lossSeries;
-  const maxObserved = Math.max(...simulation.cumulativeRates.map((point) => point.rate), EVIDENCE_PERCENT);
-  const yMax = Math.min(100, Math.max(40, Math.ceil((maxObserved + 10) / 10) * 10));
-  const yTicks = [0, yMax / 2, yMax];
-  const maxLossObserved = Math.max(...lossSeries.map((point) => point.loss), 0);
-  const lossTickStep = maxLossObserved <= 500 ? 100 : maxLossObserved <= 2000 ? 250 : 500;
-  const lossMax = Math.max(lossTickStep, Math.ceil(maxLossObserved / lossTickStep) * lossTickStep);
-  const lossTicks = [0, lossMax / 2, lossMax];
-  const xTicks = Array.from(
-    new Set([1, Math.max(1, Math.ceil(simulation.roundsCount / 2)), simulation.roundsCount])
-  );
-  const getX = (index) =>
-    simulation.cumulativeRates.length === 1
-      ? margin.left + innerWidth / 2
-      : margin.left + (index / (simulation.cumulativeRates.length - 1)) * innerWidth;
-  const getY = (rate) => margin.top + innerHeight - (rate / yMax) * innerHeight;
-  const getLossY = (loss) => margin.top + innerHeight - (loss / lossMax) * innerHeight;
-  const linePoints = simulation.cumulativeRates.map((point, index) => `${getX(index)},${getY(point.rate)}`).join(" ");
-  const lossPoints = lossSeries.map((point, index) => `${getX(index)},${getLossY(point.loss)}`).join(" ");
-  const meanY = getY(EVIDENCE_PERCENT);
-  const lastLoss = lossSeries.length > 0 ? lossSeries[lossSeries.length - 1].loss : 0;
-  const lastLossX = lossSeries.length > 0 ? getX(lossSeries.length - 1) : width - margin.right;
-  const lastLossY = getLossY(lastLoss);
+  const legend = agents
+    .map((agent, index) => {
+      const x = margin.left + index * 148;
+      return `
+        <g transform="translate(${x}, ${height - 8})">
+          <line class="belief-line belief-line-${agent.id}" x1="0" y1="-6" x2="18" y2="-6"></line>
+          <text class="belief-axis-label" x="24" y="-2">${agent.shortName}</text>
+        </g>
+      `;
+    })
+    .join("");
 
-  elements.regressionChart.innerHTML = `
+  elements.chartStatus.textContent =
+    tries === 0
+      ? `All four lines begin at ${formatScenarioValue(scenario, scenario.startValue)}.`
+      : `${tries} of ${scenario.maxTries} ${pluralize(tries, scenario.tryLabel, `${scenario.tryLabel}s`)} logged.`;
+
+  elements.beliefChart.innerHTML = `
     ${yTicks
       .map((tick) => {
         const y = getY(tick);
         return `
-          <line class="chart-grid-line" x1="${margin.left}" y1="${y}" x2="${width - margin.right}" y2="${y}"></line>
-          <text class="chart-axis-label" x="${margin.left - 8}" y="${y + 4}" text-anchor="end">${formatPercent(tick)}</text>
+          <line class="belief-grid-line" x1="${margin.left}" y1="${y}" x2="${width - margin.right}" y2="${y}"></line>
+          <text class="belief-axis-label" x="${margin.left - 10}" y="${y + 4}" text-anchor="end">${formatScenarioValue(scenario, tick, true)}</text>
         `;
       })
-      .join("")}
-    ${lossTicks
-      .map((tick) => {
-        const y = getLossY(tick);
-        return `
-          <text class="chart-loss-axis-label" x="${width - margin.right + 8}" y="${y + 4}" text-anchor="start">${formatCurrencyCompact(tick)}</text>
-        `;
-      })
-      .join("")}
-    <line class="chart-axis-line" x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${height - margin.bottom}"></line>
-    <line class="chart-axis-line chart-axis-line-right" x1="${width - margin.right}" y1="${margin.top}" x2="${width - margin.right}" y2="${height - margin.bottom}"></line>
-    <line class="chart-axis-line" x1="${margin.left}" y1="${height - margin.bottom}" x2="${width - margin.right}" y2="${height - margin.bottom}"></line>
-    <line class="chart-mean-line" x1="${margin.left}" y1="${meanY}" x2="${width - margin.right}" y2="${meanY}"></line>
-    <text class="chart-mean-label" x="${width - margin.right}" y="${meanY - 8}" text-anchor="end">Mean 16.7%</text>
-    <polyline class="chart-loss-line" points="${lossPoints}"></polyline>
-    <polyline class="chart-observed-line" points="${linePoints}"></polyline>
-    ${simulation.cumulativeRates
-      .map((point, index) => `<circle class="chart-point" cx="${getX(index)}" cy="${getY(point.rate)}" r="4"></circle>`)
-      .join("")}
-    ${lossSeries
-      .map((point, index) => `<circle class="chart-loss-point" cx="${getX(index)}" cy="${getLossY(point.loss)}" r="3"></circle>`)
       .join("")}
     ${xTicks
       .map((tick) => {
-        const x = getX(tick - 1);
-        return `
-          <text class="chart-axis-label" x="${x}" y="${height - margin.bottom + 20}" text-anchor="middle">${tick}</text>
-        `;
+        const x = getX(tick);
+        return `<text class="belief-axis-label" x="${x}" y="${height - margin.bottom + 22}" text-anchor="middle">${tick}</text>`;
       })
       .join("")}
-    <text class="chart-axis-title" x="${margin.left}" y="${margin.top - 2}" text-anchor="start">Cumulative six rate</text>
-    <text class="chart-loss-title" x="${width - margin.right}" y="${margin.top - 2}" text-anchor="end">Extra loss</text>
-    <text class="chart-loss-label" x="${Math.min(width - margin.right - 4, lastLossX + 8)}" y="${Math.max(margin.top + 12, lastLossY - 8)}" text-anchor="end">${formatCurrency(lastLoss)}</text>
-    <text class="chart-axis-title" x="${width - margin.right}" y="${height - 6}" text-anchor="end">Throws of 10 dice</text>
+    <line class="belief-axis-line" x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${height - margin.bottom}"></line>
+    <line class="belief-axis-line" x1="${margin.left}" y1="${height - margin.bottom}" x2="${width - margin.right}" y2="${height - margin.bottom}"></line>
+    <text class="belief-axis-title" x="${margin.left}" y="${margin.top - 6}" text-anchor="start">${scenario.name} outcome</text>
+    <text class="belief-axis-title" x="${width - margin.right}" y="${height - margin.bottom + 32}" text-anchor="end">Tries</text>
+    ${lines}
+    ${legend}
   `;
 }
 
-function createSimulationRound() {
-  return Array.from({ length: DICE_PER_BATCH }, () => Math.floor(Math.random() * 6) + 1);
+function renderLessons() {
+  const scenario = scenarios[state.activeScenario];
+  const scenarioState = state.scenarios[state.activeScenario];
+  const lastEvent = getLastEvent(scenarioState);
+
+  elements.lessonLead.textContent = scenario.lessonLead;
+  elements.lessonCards.innerHTML = scenario.lessonCards
+    .map((card) => {
+      return `
+        <article class="summary-card">
+          <span>${scenario.name}</span>
+          <h3>${card.title}</h3>
+          <p>${card.text}</p>
+        </article>
+      `;
+    })
+    .join("");
+
+  elements.lessonClosing.textContent = lastEvent
+    ? buildLessonClosing(scenario, lastEvent)
+    : `In ${scenario.name.toLowerCase()}, faith has not spent anything yet only because no tries have been taken.`;
 }
 
-function renderDieFace(container, value) {
-  const positions = {
-    1: [5],
-    2: [1, 9],
-    3: [1, 5, 9],
-    4: [1, 3, 7, 9],
-    5: [1, 3, 5, 7, 9],
-    6: [1, 3, 4, 6, 7, 9]
+function renderSummary() {
+  const scenario = scenarios[state.activeScenario];
+  const scenarioState = state.scenarios[state.activeScenario];
+  const standings = getStandings(scenarioState);
+  const lastEvent = getLastEvent(scenarioState);
+  const leader = standings[0];
+  const laggard = standings[standings.length - 1];
+  const gap = leader.value - laggard.value;
+  const summary = buildSummaryOutput(scenario, scenarioState, standings, lastEvent);
+
+  if (!lastEvent) {
+    elements.summaryFieldTitle.textContent = `${scenario.name} has not started yet.`;
+    elements.summaryFieldText.textContent =
+      "Once you press Try, this panel will explain what the active field is rewarding and what the faith-heavy lines are failing to respect.";
+    elements.summaryCostTitle.textContent = "No divergence yet.";
+    elements.summaryCostText.textContent =
+      "All four lines still sit at the same start value, so no practical cost of faith has been displayed yet.";
+  } else {
+    elements.summaryFieldTitle.textContent = `${leader.agent.name} is currently leading ${scenario.name.toLowerCase()}.`;
+    elements.summaryFieldText.textContent =
+      `${leader.agent.name} is at ${formatScenarioValue(scenario, leader.value)}, while ${laggard.agent.name} is at ${formatScenarioValue(scenario, laggard.value)}. In this field, the lines separate because the same random world keeps meeting very different commitment thresholds.`;
+    elements.summaryCostTitle.textContent = `${formatScenarioValue(scenario, gap, true)} currently separates the top and bottom lines.`;
+    elements.summaryCostText.textContent =
+      `The lagging line belongs to ${laggard.agent.name}, who is carrying ${laggard.agent.faithLabel}. Here that extra faith is spending ${scenario.unit === "currency" ? "money" : "life capital"} on ventures that have not earned the same level of trust.`;
+  }
+
+  elements.summaryOutput.value = summary;
+}
+
+function buildSummaryOutput(scenario, scenarioState, standings, lastEvent) {
+  const lines = [
+    "Belief Overreach Audit",
+    "",
+    `Field: ${scenario.name}`,
+    `Tries logged: ${scenarioState.tries.length} of ${scenario.maxTries}`,
+    `Support rule: ${scenario.supportRule}`,
+    `Faith shift: ${scenario.faithShift}`,
+    `Resource at stake: ${scenario.resource}`,
+    ""
+  ];
+
+  agents.forEach((agent) => {
+    lines.push(
+      `${agent.name} (${agent.faithLabel}): ${formatScenarioValue(scenario, getCurrentValue(scenarioState, agent.id))}`
+    );
+  });
+
+  lines.push("");
+
+  if (lastEvent) {
+    lines.push(`Latest try: ${lastEvent.title}`);
+    lines.push(`Latest rollup: ${lastEvent.rollup}`);
+    lines.push(`Latest summary: ${lastEvent.summary}`);
+    lines.push("");
+  }
+
+  lines.push(
+    `Leader: ${standings[0].agent.name}`,
+    `Laggard: ${standings[standings.length - 1].agent.name}`,
+    `Current spread: ${formatScenarioValue(scenario, standings[0].value - standings[standings.length - 1].value, true)}`,
+    "",
+    `Reading: ${buildLessonClosing(scenario, lastEvent)}`
+  );
+
+  return lines.join("\n");
+}
+
+function buildLessonClosing(scenario, lastEvent) {
+  if (!lastEvent) {
+    return `In ${scenario.name.toLowerCase()}, faith has not yet been tested because no tries have been taken.`;
+  }
+
+  switch (scenario.id) {
+    case "gambling":
+      return "The next card still does not care how lucky anyone feels. Faith changes whether a gambler chases one more card on a good hand, not what that card will be.";
+    case "investment":
+      return "The market can reward weak methods for a round, but faith keeps making hype count as if it were business substance.";
+    case "romance":
+      return "Spark can be real without being trustworthy. Faith turns attraction into premature commitment, and that is how catfishing and bad bonds become expensive.";
+    case "religion":
+      return "Community pull can feel deep without becoming evidence. Faith lowers the threshold for surrender and starts spending a life on claims that have not earned it.";
+    default:
+      return "Faith is adding commitment before the world has earned that commitment.";
+  }
+}
+
+function createScenarioEvent(scenario, scenarioState) {
+  switch (scenario.id) {
+    case "gambling":
+      return createGamblingEvent(scenarioState);
+    case "investment":
+      return createInvestmentEvent(scenarioState);
+    case "romance":
+      return createRomanceEvent(scenarioState);
+    case "religion":
+      return createReligionEvent(scenarioState);
+    default:
+      return createGamblingEvent(scenarioState);
+  }
+}
+
+function createGamblingEvent(scenarioState) {
+  const index = scenarioState.tries.length + 1;
+  const openingTotal = drawCasinoOpeningTotal();
+  const nextCard = drawCasinoCard();
+  const mood = casinoMoodDeck[randomInt(0, casinoMoodDeck.length - 1)];
+  const luckPull = randomInt(45, 95);
+  const after = {};
+  const delta = {};
+  const actions = {};
+
+  agents.forEach((agent) => {
+    const previous = getCurrentValue(scenarioState, agent.id);
+    const stake = getCasinoStake(previous);
+    const played = playCasinoHand(agent, openingTotal, nextCard, luckPull);
+    const won = stake > 0 && played.total >= CASINO_SAFE_MIN && played.total <= CASINO_BUST_LIMIT;
+    const change = stake > 0 ? Math.round((won ? (stake * CASINO_WIN_PROFIT) / 100 : -stake) * 100) / 100 : 0;
+    let text;
+
+    if (!played.hit) {
+      text =
+        openingTotal >= CASINO_SAFE_MIN
+          ? `${agent.shortName} banked ${openingTotal} because it was already a paying hand. ${describeCasinoOutcome(played, won)}`
+          : `${agent.shortName} froze on ${openingTotal} instead of taking the necessary draw. ${describeCasinoOutcome(played, won)}`
+    } else if (played.riskyHit) {
+      text = `${agent.shortName} already had ${openingTotal}, which was enough to collect the modest payout. But a ${luckPull}/100 ${mood.statLabel.toLowerCase()} made one more card feel worth it. ${describeCasinoOutcome(played, won)}`
+    } else {
+      text = `${agent.shortName} had only ${openingTotal}, so taking one card was the only route to a paying hand. ${describeCasinoOutcome(played, won)}`
+    }
+
+    delta[agent.id] = change;
+    after[agent.id] = clampNumber(previous + change, 0, Infinity, previous + change);
+    actions[agent.id] = { tag: getCasinoActionTag(played), text, delta: change };
+  });
+
+  return {
+    index,
+    rollup: `Opening total ${openingTotal}. ${mood.rollup}`,
+    title: `Casino night ${index}: opening total ${openingTotal}.`,
+    summary:
+      openingTotal >= CASINO_SAFE_MIN
+        ? `The opening total was already in the paying zone. ${mood.summary} This round mainly tested who could leave a winning hand alone.`
+        : `The opening total started below the paying zone, so one draw was necessary. ${mood.summary} The real question was who would keep treating luck as guidance once the hand became strong enough.`,
+    stats: [
+      { label: "Opening total", value: `${openingTotal}` },
+      { label: "House rule", value: `Ante $100. Hold on ${CASINO_SAFE_MIN} to 21 for +$${CASINO_WIN_PROFIT}; one extra card can still bust.` },
+      { label: "Luck pull", value: `${luckPull}/100 ${mood.statLabel}` },
+      { label: "Next card", value: `${nextCard}` }
+    ],
+    delta,
+    after,
+    actions
   };
-
-  container.innerHTML = Array.from({ length: 9 }, (_, index) => {
-    const slot = index + 1;
-    const active = positions[value]?.includes(slot) ? "pip active" : "pip";
-    return `<span class="${active}"></span>`;
-  }).join("");
 }
 
-function getClaim(id) {
-  return transferClaims.find((claim) => claim.id === id) || transferClaims[0];
+function createInvestmentEvent(scenarioState) {
+  const index = scenarioState.tries.length + 1;
+  const company = investmentNames[(index - 1) % investmentNames.length];
+  const fundamentals = randomInt(25, 92);
+  const hype = randomInt(18, 97);
+  const pGain = clampNumber(0.18 + fundamentals * 0.006, 0.18, 0.78, 0.45);
+  const returnRate = Math.random() < pGain
+    ? randomRange(0.05, 0.16 + fundamentals / 420)
+    : -randomRange(0.05, 0.12 + (100 - fundamentals) / 220);
+  const after = {};
+  const delta = {};
+  const actions = {};
+
+  agents.forEach((agent) => {
+    const previous = getCurrentValue(scenarioState, agent.id);
+    const decisionScore = fundamentals * (1 - agent.bias) + hype * agent.bias;
+    const invest = decisionScore >= 62;
+    let change;
+    let tag;
+    let text;
+
+    if (invest) {
+      const stakeFraction = 0.12 + agent.bias * 0.18;
+      const stake = previous * stakeFraction;
+      const reserveYield = (previous - stake) * 0.0025;
+      change = stake * returnRate + reserveYield;
+      tag = returnRate >= 0 ? "Bought well" : "Bought weakly";
+      text =
+        returnRate >= 0
+          ? `${agent.shortName} bought ${formatPercent(stakeFraction * 100)} of the bankroll because the story cleared ${formatNumber(decisionScore)}. This round it paid ${formatPercent(returnRate * 100)}.`
+          : `${agent.shortName} bought ${formatPercent(stakeFraction * 100)} of the bankroll because the story cleared ${formatNumber(decisionScore)}. This round it lost ${formatPercent(Math.abs(returnRate) * 100)}.`;
+    } else {
+      change = previous * 0.0025;
+      tag = "Passed";
+      text = `${agent.shortName} stayed in cash because the business case did not clear the threshold. The reserve still picked up a tiny yield.`;
+    }
+
+    delta[agent.id] = Math.round(change * 100) / 100;
+    after[agent.id] = Math.max(0, Math.round((previous + delta[agent.id]) * 100) / 100);
+    actions[agent.id] = { tag, text, delta: delta[agent.id] };
+  });
+
+  return {
+    index,
+    rollup: `${company} moved ${returnRate >= 0 ? "+" : "-"}${formatPercent(Math.abs(returnRate) * 100)}.`,
+    title: `Investment round ${index}: ${company}.`,
+    summary:
+      fundamentals >= hype
+        ? "This company had more substance than spectacle. Evidence-friendly investors were better positioned to benefit from it."
+        : "This company looked louder than it was strong. That is where faith-heavy investors start treating buzz as if it were support.",
+    stats: [
+      { label: "Fundamentals", value: `${fundamentals}/100` },
+      { label: "Buzz", value: `${hype}/100` },
+      { label: "Actual move", value: `${returnRate >= 0 ? "+" : "-"}${formatPercent(Math.abs(returnRate) * 100)}` }
+    ],
+    delta,
+    after,
+    actions
+  };
 }
 
-function getSeverity(id) {
-  return severityOptions.find((option) => option.id === id) || severityOptions[1];
+function createRomanceEvent(scenarioState) {
+  const index = scenarioState.tries.length + 1;
+  const forceCatfish = !scenarioState.tries.some((event) => event.kind === "catfish") && index === 4;
+  const remote = forceCatfish || Math.random() < 0.3;
+  const catfishTargetId = "zeke";
+  const character = remote ? randomInt(18, 52) : randomInt(25, 94);
+  const spark = remote ? randomInt(74, 97) : randomInt(24, 92);
+  const verification = remote ? randomInt(8, 28) : randomInt(48, 96);
+  const supportScore = character * 0.65 + verification * 0.35;
+  const pStable = remote
+    ? 0.02 + character * 0.002 + verification * 0.002
+    : 0.08 + character * 0.005 + verification * 0.0025;
+  const success = forceCatfish ? false : Math.random() < clampNumber(pStable, 0.04, 0.86, 0.42);
+  const handle = remote
+    ? remoteHandles[(index - 1) % remoteHandles.length]
+    : localProspects[(index - 1) % localProspects.length];
+  const after = {};
+  const delta = {};
+  const actions = {};
+
+  agents.forEach((agent) => {
+    const previous = getCurrentValue(scenarioState, agent.id);
+    const decisionScore = supportScore * (1 - agent.bias) + spark * agent.bias;
+    const forcedCatfishCommit = forceCatfish && remote && agent.id === catfishTargetId;
+    const commit = forcedCatfishCommit ? true : forceCatfish && remote ? false : decisionScore >= 60;
+    let change;
+    let tag;
+    let text;
+
+    if (commit) {
+      const commitmentCost = 18 + agent.bias * 22;
+      if (success) {
+        change = 28 + character * 0.6 + verification * 0.18 - commitmentCost;
+        tag = remote ? "Remote success" : "Committed";
+        text = `${agent.shortName} committed because the story cleared ${formatNumber(decisionScore)}. This time the relationship held up and paid back some of that trust.`;
+      } else {
+        const catfishPenalty = remote ? 36 + (100 - verification) * 0.42 + (forcedCatfishCommit ? 18 : 0) : 0;
+        change = -(30 + (100 - character) * 0.66 + spark * 0.18 + commitmentCost + catfishPenalty);
+        tag = forcedCatfishCommit ? "Catfished" : remote ? "Remote collapse" : "Bad commitment";
+        text = forcedCatfishCommit
+          ? `${agent.shortName} started a remote relationship without vetting the person well enough, treated chemistry as trust, and got catfished when the story had to meet reality.`
+          : remote
+            ? `${agent.shortName} committed hard to a remote story before it had been properly verified, and the relationship collapsed under scrutiny.`
+            : `${agent.shortName} committed before the person's character had earned that level of trust, and the relationship turned costly.`;
+      }
+    } else {
+      change = remote ? 12 : character < 55 ? 8 : 4;
+      tag = forceCatfish && remote ? "Vetted first" : "Held back";
+      text = forceCatfish && remote
+        ? `${agent.shortName} refused to let a remote spark count as knowledge and waited for real verification before making the relationship costly.`
+        : `${agent.shortName} kept trust in reserve and waited for better verification before turning spark into a major commitment.`;
+    }
+
+    delta[agent.id] = Math.round(change * 100) / 100;
+    after[agent.id] = Math.max(0, Math.round((previous + delta[agent.id]) * 100) / 100);
+    actions[agent.id] = { tag, text, delta: delta[agent.id] };
+  });
+
+  return {
+    index,
+    kind: remote && !success ? "catfish" : remote ? "remote" : "local",
+    rollup: remote
+      ? success
+        ? `Remote bond with ${handle} held up.`
+        : forceCatfish
+          ? `${handle} collapsed under verification and the highest-faith line paid for it.`
+          : `${handle} collapsed under verification.`
+      : success
+        ? `${handle} turned out steady.`
+        : `${handle} proved costly to trust.`,
+    title: remote ? `Romance try ${index}: remote pull from ${handle}.` : `Romance try ${index}: local prospect ${handle}.`,
+    summary:
+      remote
+        ? forceCatfish
+          ? "This remote romance offered strong chemistry and almost no verification. The grounded lines slowed down, but the highest-faith line converted intensity into trust and got catfished."
+          : "This was a remote romance story. The spark was high, but the verification was thin. That is the exact kind of setting in which faith can convert chemistry into a catfishing disaster."
+        : "This was a local prospect with ordinary real-world signals. The question was whether anyone turned attraction into deep commitment before the character score had earned it.",
+    stats: [
+      { label: "Character signs", value: `${character}/100` },
+      { label: "Spark", value: `${spark}/100` },
+      { label: "Verification", value: `${verification}/100` }
+    ],
+    delta,
+    after,
+    actions
+  };
 }
 
-function validateSeverity(id) {
-  return severityOptions.some((option) => option.id === id) ? id : defaultState.severity;
+function createReligionEvent(scenarioState) {
+  const index = scenarioState.tries.length + 1;
+  const encounter = religionEncounters[(index - 1) % religionEncounters.length];
+  const evidence = randomInt(8, 58);
+  const pull = randomInt(34, 96);
+  const demand = randomInt(26, 86);
+  const pGrounded = clampNumber(0.03 + evidence * 0.0035, 0.04, 0.32, 0.14);
+  const grounded = Math.random() < pGrounded;
+  const after = {};
+  const delta = {};
+  const actions = {};
+
+  agents.forEach((agent) => {
+    const previous = getCurrentValue(scenarioState, agent.id);
+    const decisionScore = evidence * (1 - agent.bias) + pull * agent.bias;
+    const commit = decisionScore >= 54;
+    let change;
+    let tag;
+    let text;
+
+    if (commit) {
+      const baseCost = 22 + agent.bias * 38 + demand * 0.12;
+      if (grounded) {
+        change = 10 + evidence * 0.28 + pull * 0.05 - baseCost * 0.45;
+        tag = "Committed";
+        text = `${agent.shortName} committed because the claim felt weighty enough. This time some of that commitment returned a modest payoff, but only after a real cost.`;
+      } else {
+        change = -(12 + (100 - evidence) * 0.34 + demand * 0.35 + agent.bias * 18);
+        tag = "Overcommitted";
+        text = `${agent.shortName} spent time, money, and obedience on a thinly supported religious pull. The claim did not cash out enough to justify what was surrendered.`;
+      }
+    } else {
+      change = 10 + evidence * 0.06;
+      tag = "Waited";
+      text = `${agent.shortName} kept life capital in reserve and waited for stronger evidence before handing over allegiance.`;
+    }
+
+    delta[agent.id] = Math.round(change * 100) / 100;
+    after[agent.id] = Math.max(0, Math.round((previous + delta[agent.id]) * 100) / 100);
+    actions[agent.id] = { tag, text, delta: delta[agent.id] };
+  });
+
+  return {
+    index,
+    rollup: grounded ? `${encounter} returned some benefit.` : `${encounter} pulled harder than it proved.`,
+    title: `Religion try ${index}: ${encounter}.`,
+    summary:
+      grounded
+        ? "This encounter offered some real comfort or structure, but only after asking for a large amount of prior trust and surrender."
+        : "This encounter had more social and emotional pull than evidential weight. That is where faith starts converting atmosphere into obedience.",
+    stats: [
+      { label: "Evidence", value: `${evidence}/100` },
+      { label: "Pull", value: `${pull}/100` },
+      { label: "Demand", value: `${demand}/100` }
+    ],
+    delta,
+    after,
+    actions
+  };
+}
+
+function getStandings(scenarioState) {
+  return agents
+    .map((agent) => ({
+      agent,
+      value: getCurrentValue(scenarioState, agent.id)
+    }))
+    .sort((left, right) => right.value - left.value);
+}
+
+function getCurrentValue(scenarioState, agentId) {
+  const values = scenarioState.series[agentId];
+  return values[values.length - 1];
+}
+
+function getLastEvent(scenarioState) {
+  return scenarioState.tries[scenarioState.tries.length - 1] || null;
+}
+
+function createScenarioState(scenarioId) {
+  const startValue = scenarios[scenarioId].startValue;
+  return {
+    tries: [],
+    series: Object.fromEntries(agents.map((agent) => [agent.id, [startValue]]))
+  };
+}
+
+function buildDefaultState() {
+  return {
+    activeScenario: "gambling",
+    scenarios: Object.fromEntries(scenarioOrder.map((id) => [id, createScenarioState(id)]))
+  };
 }
 
 function loadState() {
   try {
-    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    const claim = getClaim(raw.transferClaim || defaultState.transferClaim);
-    const savedConfidence = normalizeConfidence(clampNumber(raw.confidence, 0, 100, defaultState.confidence));
+    const raw = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "null");
+    if (!raw || !scenarioOrder.includes(raw.activeScenario)) {
+      return buildDefaultState();
+    }
 
-    return {
-      confidence: savedConfidence,
-      compareMode: Boolean(raw.compareMode),
-      compareConfidence: normalizeConfidence(
-        clampNumber(raw.compareConfidence, 0, 100, defaultState.compareConfidence)
-      ),
-      severity: validateSeverity(raw.severity),
-      transferClaim: claim.id,
-      transferEvidence: clampNumber(raw.transferEvidence, 0, 100, claim.suggestedEvidence),
-      transferBelief: clampNumber(raw.transferBelief, 0, 100, claim.suggestedBelief),
-      commitments: Array.isArray(raw.commitments)
-        ? raw.commitments.filter((id) => commitments.some((item) => item.id === id))
-        : [...defaultState.commitments],
-      simulation: normalizeSimulation(raw.simulation)
-    };
+    const loaded = buildDefaultState();
+    loaded.activeScenario = raw.activeScenario;
+
+    scenarioOrder.forEach((scenarioId) => {
+      const scenario = scenarios[scenarioId];
+      const candidate = raw.scenarios?.[scenarioId];
+      if (!candidate || !Array.isArray(candidate.tries) || !candidate.series) {
+        return;
+      }
+
+      const validSeries = agents.every((agent) => {
+        const values = candidate.series[agent.id];
+        return Array.isArray(values) && values.length === candidate.tries.length + 1 && values.every((value) => Number.isFinite(value));
+      });
+
+      if (!validSeries) {
+        return;
+      }
+
+      loaded.scenarios[scenarioId] = {
+        tries: candidate.tries.slice(0, scenario.maxTries),
+        series: Object.fromEntries(
+          agents.map((agent) => {
+            const values = candidate.series[agent.id].slice(0, candidate.tries.length + 1);
+            return [agent.id, values];
+          })
+        )
+      };
+    });
+
+    return loaded;
   } catch (error) {
-    return JSON.parse(JSON.stringify(defaultState));
+    return buildDefaultState();
   }
 }
 
 function persistState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-function clampNumber(value, min, max, fallback) {
-  const numeric = Number.isFinite(value) ? value : fallback;
-  return Math.min(max, Math.max(min, numeric));
+function formatScenarioValue(scenario, value, compact = false) {
+  if (scenario.unit === "currency") {
+    return compact ? formatMoneyCompact(value) : formatMoney(value);
+  }
+
+  return compact ? `${Math.round(value)} pts` : `${Math.round(value)} points`;
 }
 
-function normalizeConfidence(value) {
-  return value === 17 ? EVIDENCE_PERCENT : value;
+function formatDelta(scenario, value) {
+  if (Math.abs(value) < 0.05) {
+    return scenario.unit === "currency" ? "$0" : "0 pts";
+  }
+
+  const sign = value > 0 ? "+" : "-";
+  if (scenario.unit === "currency") {
+    return `${sign}${formatMoney(Math.abs(value))}`;
+  }
+
+  return `${sign}${Math.round(Math.abs(value))} pts`;
+}
+
+function formatMoney(value) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0
+  }).format(value);
+}
+
+function formatMoneyCompact(value) {
+  const absolute = Math.abs(value);
+  const sign = value < 0 ? "-" : "";
+  if (absolute >= 1000) {
+    const compact = absolute >= 10000 ? Math.round(absolute / 1000) : Number((absolute / 1000).toFixed(1));
+    return `${sign}$${compact}k`;
+  }
+
+  return `${sign}$${Math.round(absolute)}`;
 }
 
 function formatPercent(value) {
@@ -1264,59 +1185,107 @@ function formatNumber(value) {
   return Math.abs(value - Math.round(value)) < 0.05 ? String(Math.round(value)) : value.toFixed(1);
 }
 
-function formatCurrency(value) {
-  const rounded = Math.abs(value - Math.round(value)) < 0.5 ? Math.round(value) : Number(value.toFixed(1));
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: rounded % 1 === 0 ? 0 : 1
-  }).format(rounded);
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function formatCurrencyCompact(value) {
-  if (value >= 1000) {
-    const compact = value >= 10000 ? Math.round(value / 1000) : Number((value / 1000).toFixed(1));
-    return `$${compact}k`;
+function drawCasinoCard() {
+  return CASINO_CARD_VALUES[randomInt(0, CASINO_CARD_VALUES.length - 1)];
+}
+
+function drawCasinoOpeningTotal() {
+  return randomInt(CASINO_OPENING_MIN, CASINO_OPENING_MAX);
+}
+
+function getCasinoStake(previous) {
+  if (previous <= 0) {
+    return 0;
   }
 
-  return `$${Math.round(value)}`;
+  return Math.min(previous, CASINO_BASE_STAKE);
 }
 
-function formatHitCount(value) {
-  const magnitude = formatNumber(value);
-  return `${magnitude} ${Math.abs(value - 1) < 0.05 ? "hit" : "hits"}`;
-}
-
-function formatSeverityUnit(severity, count) {
-  return Math.abs(count - 1) < 0.05 ? severity.singularUnit : severity.pluralUnit;
-}
-
-function normalizeSimulation(rawSimulation) {
-  const normalizedRounds = Array.isArray(rawSimulation?.rounds)
-    ? rawSimulation.rounds
-        .map((round) =>
-          Array.isArray(round)
-            ? round.filter((roll) => Number.isInteger(roll) && roll >= 1 && roll <= 6).slice(0, DICE_PER_BATCH)
-            : []
-        )
-        .filter((round) => round.length === DICE_PER_BATCH)
-        .slice(0, MAX_BATCHES)
-    : [];
-
-  if (normalizedRounds.length > 0) {
-    return { rounds: normalizedRounds };
+function shouldTakeCasinoCard(agent, total, luckPull) {
+  if (total < CASINO_SAFE_MIN) {
+    return true;
   }
 
-  if (Array.isArray(rawSimulation?.rolls)) {
-    const validRolls = rawSimulation.rolls.filter((roll) => Number.isInteger(roll) && roll >= 1 && roll <= 6);
-    const migratedRounds = [];
+  switch (agent.id) {
+    case "ada":
+      return false;
+    case "milo":
+      return total === 18 && luckPull >= 82;
+    case "willa":
+      return (total === 18 && luckPull >= 65) || (total === 19 && luckPull >= 88);
+    case "zeke":
+      return (
+        (total === 18 && luckPull >= 50) ||
+        (total === 19 && luckPull >= 68) ||
+        (total === 20 && luckPull >= 85)
+      );
+    default:
+      return false;
+  }
+}
 
-    for (let index = 0; index + DICE_PER_BATCH <= validRolls.length && migratedRounds.length < MAX_BATCHES; index += DICE_PER_BATCH) {
-      migratedRounds.push(validRolls.slice(index, index + DICE_PER_BATCH));
-    }
+function playCasinoHand(agent, openingTotal, nextCard, luckPull) {
+  const hit = shouldTakeCasinoCard(agent, openingTotal, luckPull);
+  const total = hit ? openingTotal + nextCard : openingTotal;
 
-    return { rounds: migratedRounds };
+  return {
+    openingTotal,
+    nextCard,
+    total,
+    hit,
+    busted: total > CASINO_BUST_LIMIT,
+    riskyHit: hit && openingTotal >= CASINO_SAFE_MIN
+  };
+}
+
+function describeCasinoOutcome(played, won) {
+  if (played.busted) {
+    return `The extra card was ${played.nextCard}, which pushed the total to ${played.total} and burned the ante.`;
   }
 
-  return { rounds: [] };
+  if (won) {
+    return played.hit
+      ? `The extra card was ${played.nextCard}, which moved the total to ${played.total} and collected the payout.`
+      : `Standing kept the total at ${played.total}, which collected the payout.`;
+  }
+
+  return played.hit
+    ? `The extra card was ${played.nextCard}, but the total only reached ${played.total}, so the ante was lost anyway.`
+    : `Standing left the total at ${played.total}, which stayed below the paying line and lost the ante.`;
+}
+
+function getCasinoActionTag(played) {
+  if (played.busted) {
+    return `Busted to ${played.total}`;
+  }
+
+  if (!played.hit) {
+    return `Banked ${played.total}`;
+  }
+
+  return played.total >= CASINO_SAFE_MIN ? `Drew to ${played.total}` : `Missed at ${played.total}`;
+}
+
+function randomRange(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+function pluralize(count, singular, plural) {
+  return count === 1 ? singular : plural;
+}
+
+function buildXTicks(maxTries) {
+  return Array.from(new Set([0, Math.ceil(maxTries / 3), Math.ceil((2 * maxTries) / 3), maxTries]));
+}
+
+function clampNumber(value, min, max, fallback) {
+  if (!Number.isFinite(value)) {
+    return fallback;
+  }
+
+  return Math.min(max, Math.max(min, value));
 }

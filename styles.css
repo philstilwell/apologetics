@@ -7938,13 +7938,28 @@ body.app-overreach #summary-step {
   scroll-margin-top: 92px;
 }
 
+body.app-overreach #overview-step,
+body.app-overreach #scenario-step,
+body.app-overreach #lessons-step,
+body.app-overreach #summary-step {
+  scroll-margin-top: 92px;
+}
+
 .overreach-tool {
   display: grid;
   gap: 16px;
 }
 
+.belief-sim-tool {
+  gap: 18px;
+}
+
 .overreach-steps {
   grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.belief-steps {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .overreach-steps a {
@@ -8011,6 +8026,438 @@ body.app-overreach #summary-step {
   margin: 8px 0 6px;
   font-size: clamp(2rem, 5vw, 3.5rem);
   line-height: 0.9;
+}
+
+.belief-stage-grid,
+.belief-agent-grid,
+.belief-rule-grid,
+.belief-event-stats,
+.belief-agent-actions,
+.belief-balance-grid,
+.scenario-switcher,
+#lessonCards {
+  display: grid;
+  gap: 14px;
+}
+
+.belief-stage-grid {
+  grid-template-columns: minmax(300px, 0.88fr) minmax(0, 1.12fr);
+}
+
+.belief-agent-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.scenario-switcher {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.belief-rule-grid,
+.belief-event-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.belief-agent-actions,
+.belief-balance-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#lessonCards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.belief-scenario-panel,
+.belief-graph-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.belief-agent-card,
+.belief-rule-card,
+.belief-event-card,
+.belief-action-card,
+.belief-balance-card,
+.scenario-tab {
+  border: 1px solid rgba(110, 74, 31, 0.22);
+  border-radius: var(--radius);
+  background: rgba(255, 252, 247, 0.92);
+}
+
+.belief-agent-card,
+.belief-rule-card,
+.belief-event-card,
+.belief-action-card,
+.belief-balance-card {
+  padding: 13px;
+}
+
+.scenario-tab {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  min-height: 84px;
+  padding: 12px;
+  color: var(--overreach-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+
+.scenario-tab span,
+.belief-action-head strong,
+.belief-balance-top strong,
+.belief-event-card h3,
+.belief-agent-card h3 {
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.scenario-tab small,
+.belief-agent-card p,
+.belief-rule-card p,
+.belief-event-card p,
+.belief-action-card p,
+.belief-balance-top small,
+.belief-balance-foot,
+.belief-agent-foot .mini-label,
+.belief-event-head .event-rollup {
+  color: var(--overreach-muted);
+}
+
+.scenario-tab:hover,
+.scenario-tab:focus-visible {
+  border-color: var(--overreach-blue);
+  transform: translateY(-1px);
+}
+
+.scenario-tab.active {
+  border-color: var(--overreach-blue);
+  box-shadow: inset 0 0 0 2px rgba(42, 97, 114, 0.24);
+  background: #fffdf9;
+}
+
+.belief-agent-head,
+.belief-balance-top,
+.belief-action-head,
+.belief-event-head,
+.belief-controls,
+.try-controls,
+.belief-balance-foot,
+.belief-agent-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.belief-event-head,
+.belief-controls,
+.belief-balance-foot,
+.belief-agent-foot {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.belief-agent-head {
+  align-items: flex-start;
+}
+
+.belief-avatar {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--overreach-deep);
+  color: #fff3d4;
+  font-size: 0.92rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+}
+
+.belief-avatar.small {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  font-size: 0.74rem;
+}
+
+.belief-agent-card h3,
+.belief-agent-card p,
+.belief-rule-card p,
+.belief-action-card p,
+.belief-balance-card p {
+  margin: 0;
+}
+
+.belief-agent-summary {
+  min-height: 42px;
+  line-height: 1.45;
+}
+
+.belief-agent-foot strong,
+.belief-balance-value {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 950;
+  line-height: 0.95;
+}
+
+.belief-rule-card p {
+  margin-top: 8px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.belief-try-status {
+  display: grid;
+  gap: 4px;
+}
+
+.belief-try-status strong {
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.belief-try-status small {
+  color: var(--overreach-muted);
+}
+
+.belief-event-card h3 {
+  margin: 4px 0 0;
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+}
+
+.belief-stat-pill {
+  padding: 10px 12px;
+  border: 1px solid rgba(110, 74, 31, 0.18);
+  border-radius: 14px;
+  background: rgba(255, 249, 242, 0.9);
+}
+
+.belief-stat-pill span,
+.belief-tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 22px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.belief-stat-pill span {
+  background: rgba(42, 97, 114, 0.12);
+  color: var(--overreach-blue);
+}
+
+.belief-stat-pill strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.22rem;
+  line-height: 1;
+}
+
+.belief-action-card,
+.belief-balance-card,
+.belief-agent-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.belief-agent-ada,
+.belief-line-ada,
+.belief-agent-ada .belief-avatar,
+.belief-agent-ada .belief-tag {
+  --belief-accent: #2f6d49;
+}
+
+.belief-agent-milo,
+.belief-line-milo,
+.belief-agent-milo .belief-avatar,
+.belief-agent-milo .belief-tag {
+  --belief-accent: #2a6172;
+}
+
+.belief-agent-willa,
+.belief-line-willa,
+.belief-agent-willa .belief-avatar,
+.belief-agent-willa .belief-tag {
+  --belief-accent: #b77115;
+}
+
+.belief-agent-zeke,
+.belief-line-zeke,
+.belief-agent-zeke .belief-avatar,
+.belief-agent-zeke .belief-tag {
+  --belief-accent: #9f3f30;
+}
+
+.belief-agent-ada,
+.belief-agent-milo,
+.belief-agent-willa,
+.belief-agent-zeke {
+  border-top: 4px solid var(--belief-accent);
+}
+
+.belief-agent-ada .belief-avatar,
+.belief-agent-milo .belief-avatar,
+.belief-agent-willa .belief-avatar,
+.belief-agent-zeke .belief-avatar {
+  background: var(--belief-accent);
+}
+
+.belief-action-card .belief-tag,
+.belief-balance-card .belief-tag {
+  background: color-mix(in srgb, var(--belief-accent) 14%, white);
+  color: var(--belief-accent);
+}
+
+.belief-delta {
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.belief-delta.up {
+  color: var(--overreach-green);
+}
+
+.belief-delta.down {
+  color: var(--overreach-red);
+}
+
+.belief-delta.flat {
+  color: var(--overreach-muted);
+}
+
+.belief-chart {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.belief-grid-line {
+  stroke: rgba(110, 74, 31, 0.14);
+  stroke-width: 1;
+}
+
+.belief-axis-line {
+  stroke: rgba(110, 74, 31, 0.28);
+  stroke-width: 1.5;
+}
+
+.belief-axis-label,
+.belief-axis-title {
+  fill: var(--overreach-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.belief-axis-title {
+  fill: var(--overreach-ink);
+}
+
+.belief-line {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.belief-point {
+  stroke: rgba(255, 255, 255, 0.72);
+  stroke-width: 1.4;
+}
+
+.belief-line-ada {
+  stroke: #2f6d49;
+}
+
+.belief-line-milo {
+  stroke: #2a6172;
+}
+
+.belief-line-willa {
+  stroke: #b77115;
+}
+
+.belief-line-zeke {
+  stroke: #9f3f30;
+}
+
+circle.belief-line-ada {
+  fill: #2f6d49;
+}
+
+circle.belief-line-milo {
+  fill: #2a6172;
+}
+
+circle.belief-line-willa {
+  fill: #b77115;
+}
+
+circle.belief-line-zeke {
+  fill: #9f3f30;
+}
+
+@media (max-width: 1120px) {
+  .belief-agent-grid,
+  .scenario-switcher,
+  #lessonCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .belief-rule-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 920px) {
+  .belief-stage-grid,
+  .belief-agent-actions,
+  .belief-balance-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .belief-dashboard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .belief-event-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .belief-steps,
+  .belief-dashboard,
+  .belief-agent-grid,
+  .scenario-switcher,
+  #lessonCards,
+  .belief-event-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .belief-controls {
+    align-items: stretch;
+  }
+
+  .try-controls {
+    width: 100%;
+  }
+
+  .try-controls button {
+    flex: 1 1 0;
+  }
 }
 
 .overreach-grid,
@@ -8710,6 +9157,12 @@ body.app-overreach #summary-step {
   stroke: var(--overreach-green);
   stroke-width: 2.5;
   stroke-dasharray: 7 6;
+}
+
+.chart-money-zero-line {
+  stroke: rgba(178, 118, 18, 0.28);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
 }
 
 .chart-observed-line {

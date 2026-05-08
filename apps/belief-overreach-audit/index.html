@@ -6,7 +6,7 @@
     <title>Belief Overreach Audit | Crosshairs Audit Lab</title>
     <meta
       name="description"
-      content="A Crosshairs audit for watching confidence outrun perceived evidence, then tracing the planning and commitment failures that follow."
+      content="Compare four epistemic agents across gambling, investing, romance, and religion to watch how greater faith worsens practical outcomes over repeated tries."
     >
     <meta name="author" content="Phil Stilwell">
     <meta name="robots" content="index, follow">
@@ -15,23 +15,29 @@
     <meta property="og:site_name" content="Crosshairs Audit Lab">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Belief Overreach Audit | Crosshairs Audit Lab">
-    <meta property="og:description" content="Watch confidence outrun perceived evidence, then trace the planning and commitment failures that follow.">
+    <meta
+      property="og:description"
+      content="Four people, four degrees of faith, four practical fields. Watch their lines diverge as random tries accumulate."
+    >
     <meta property="og:url" content="https://xhairs.com/apps/belief-overreach-audit/">
     <meta property="og:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <meta property="og:image:alt" content="Crosshairs Audit Lab: belief under inspection.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Belief Overreach Audit | Crosshairs Audit Lab">
-    <meta name="twitter:description" content="Use a fair die, a bridge metaphor, and a transfer panel to see what happens when belief outruns support.">
+    <meta
+      name="twitter:description"
+      content="Watch four epistemic agents take stochastic tries in gambling, investment, romance, and religion."
+    >
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260507-belief-overreach-legend">
+    <link rel="stylesheet" href="../../styles.css?v=20260507-belief-overreach-simulator">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Belief Overreach Audit",
         "url": "https://xhairs.com/apps/belief-overreach-audit/",
-        "description": "A Crosshairs audit for showing what happens when confidence outruns the evidence a person thinks they have.",
+        "description": "A Crosshairs audit for comparing how four degrees of faith perform across gambling, investment, romance, and religion.",
         "applicationCategory": "EducationalApplication",
         "operatingSystem": "Any",
         "inLanguage": "en",
@@ -64,568 +70,234 @@
       </a>
       <nav class="top-nav" aria-label="Primary">
         <a class="hub-link" href="../../">Hub</a>
-        <a href="#drill-step">Drill</a>
-        <a href="#bridge-step">Bridge</a>
-        <a href="#stakes-step">Stakes</a>
-        <a href="#transfer-step">Transfer</a>
+        <a href="#overview-step">Agents</a>
+        <a href="#scenario-step">Scenario</a>
+        <a href="#lessons-step">Lessons</a>
         <a href="#summary-step">Summary</a>
       </nav>
     </header>
 
-    <main class="app-shell overreach-tool">
+    <main class="app-shell overreach-tool belief-sim-tool">
       <section class="app-header">
         <div class="app-title">
-          <p class="eyebrow">Faith-gap audit</p>
+          <p class="eyebrow">Faith-comparison simulator</p>
           <h1>Belief Overreach Audit</h1>
           <p>
-            Start with a fair die, where both symmetry and repeated experience support only a
-            one-in-six chance that the next roll will be a six. Then watch what happens when
-            confidence moves beyond that support and begins carrying plans, risks, and life
-            commitments the evidence never licensed. Under this definition, faith adds no new
-            guidance value. It only worsens the decision by authorizing commitments the support
-            line never justified.
+            This version compares four epistemic agents who carry different degrees of faith into
+            four practical fields: gambling, investment, romance, and religion. Each press of
+            <strong>Try</strong> adds one more stochastic event. The world is random, but the
+            agents do not meet it with the same discipline. The more confidence outruns support,
+            the more capital, trust, time, and identity get placed on ventures that do not yet
+            deserve them.
           </p>
         </div>
         <aside class="source-note">
-          <strong>A narrow use of “faith”.</strong>
-          In this tool, faith means only the portion of confidence that rises above the evidence
-          as you yourself perceive it. Here, faith adds no information, no predictive power, and
-          no success value. The question is not whether God exists, but whether your confidence is
-          outrunning your own support line and making the decision itself worse.
+          <strong>What faith means here.</strong>
+          In this audit, faith is the extra confidence that rises above warranted belief. It does
+          not improve the die, the company, the lover, or the god-claim. It only changes how much
+          of life an agent is willing to commit anyway.
         </aside>
         <details class="annotation app-wide">
           <summary>How to use this audit</summary>
           <p>
-            First, set your confidence about the next roll of a fair die being a six. The die
-            fixes the support at 16.7%. The slider shows whether your belief stays inside that
-            support or walks beyond it.
+            First, meet the four agents and note how much faith each one carries into decisions.
           </p>
           <p>
-            Next, run a short sequence of rolls. The tool compares what the evidence would
-            warrant, what your confidence plans for, and what the world actually delivers.
+            Next, choose a field. Each field has its own support signal, its own temptations, and
+            its own resource at stake.
           </p>
           <p>
-            Finally, transfer the same structure to religious claims, including which god, if
-            any, to worship. Rate the support you think you really have, then rate how confident
-            you are anyway. The gap is the portion this tool labels faith.
+            Then press <strong>Try</strong>. Each try creates one more random event, and the graph
+            extends the four lines according to how each agent reasons and commits.
+          </p>
+          <p>
+            Finally, compare the running losses. Sometimes faith gets lucky for a while. But over
+            repeated tries it keeps licensing heavier commitments than the evidence warrants.
           </p>
         </details>
       </section>
 
-      <nav class="guided-steps overreach-steps" aria-label="Audit steps">
-        <a href="#drill-step" aria-describedby="overreach-step-drill-help">
+      <nav class="guided-steps overreach-steps belief-steps" aria-label="Audit steps">
+        <a href="#overview-step" aria-describedby="belief-step-agents-help">
           <span class="step-number">1</span>
-          <span class="step-label">Calibration drill</span>
+          <span class="step-label">Meet the agents</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
-          <span class="label-tooltip" id="overreach-step-drill-help" role="tooltip">
-            The fair die keeps the evidence point fixed, so only your confidence can move.
+          <span class="label-tooltip" id="belief-step-agents-help" role="tooltip">
+            The same four people enter every field. Only their faith load changes.
           </span>
         </a>
-        <a href="#bridge-step" aria-describedby="overreach-step-bridge-help">
+        <a href="#scenario-step" aria-describedby="belief-step-scenario-help">
           <span class="step-number">2</span>
-          <span class="step-label">Watch the bridge</span>
+          <span class="step-label">Choose a field</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
-          <span class="label-tooltip" id="overreach-step-bridge-help" role="tooltip">
-            Supported planks reach only as far as the evidence. The highlighted overhang shows
-            the portion of confidence this tool counts as faith.
+          <span class="label-tooltip" id="belief-step-scenario-help" role="tooltip">
+            Gambling, investing, romance, and religion all reward different kinds of discipline.
           </span>
         </a>
-        <a href="#stakes-step" aria-describedby="overreach-step-stakes-help">
+        <a href="#scenario-step" aria-describedby="belief-step-try-help">
           <span class="step-number">3</span>
-          <span class="step-label">Stress the plan</span>
+          <span class="step-label">Press Try</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
-          <span class="label-tooltip" id="overreach-step-stakes-help" role="tooltip">
-            The evidence-capped planner stops where the support stops. The faith-driven planner
-            adds commitments beyond that line, which makes the decision worse before the world answers back.
+          <span class="label-tooltip" id="belief-step-try-help" role="tooltip">
+            Each try generates the next event for the active field and extends all four lines.
           </span>
         </a>
-        <a href="#transfer-step" aria-describedby="overreach-step-transfer-help">
+        <a href="#lessons-step" aria-describedby="belief-step-lessons-help">
           <span class="step-number">4</span>
-          <span class="step-label">Transfer the lesson</span>
+          <span class="step-label">Read the loss</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
-          <span class="label-tooltip" id="overreach-step-transfer-help" role="tooltip">
-            Move from the die to prayer, healing, guidance, worship, or resurrection-related
-            claims by rating support and confidence separately before asking a claim to carry commitments.
-          </span>
-        </a>
-        <a href="#summary-step" aria-describedby="overreach-step-summary-help">
-          <span class="step-number">5</span>
-          <span class="step-label">Read the result</span>
-          <span class="label-help-dot" aria-hidden="true">?</span>
-          <span class="label-tooltip" id="overreach-step-summary-help" role="tooltip">
-            The result does not tell you what is true. It tells you whether your current
-            confidence is leaning on more than your perceived evidence supplies.
+          <span class="label-tooltip" id="belief-step-lessons-help" role="tooltip">
+            The costs look different in each field, but the same overreach pattern keeps driving them.
           </span>
         </a>
       </nav>
 
-      <section class="overreach-dashboard" aria-label="Current overreach status">
+      <section class="overreach-dashboard belief-dashboard" aria-label="Current scenario status">
         <article class="metric-card">
-          <span class="metric-label" tabindex="0" aria-describedby="overreach-evidence-help">
-            <span class="metric-label-text">Evidence support</span>
-            <span class="label-help-dot" aria-hidden="true">?</span>
-          </span>
-          <span class="metric-tooltip" id="overreach-evidence-help" role="tooltip">
-            With a fair die, the chance that the next roll is a six is one in six, or about 16.7%.
-          </span>
-          <strong id="metricEvidence">16.7%</strong>
-          <small>Fixed by the die, not by feeling</small>
+          <span class="metric-label">Active field</span>
+          <strong id="metricScenario">Gambling</strong>
+          <small id="metricScenarioNote">Same fair world, different faith load.</small>
         </article>
         <article class="metric-card">
-          <span class="metric-label" tabindex="0" aria-describedby="overreach-confidence-help">
-            <span class="metric-label-text">Your confidence</span>
-            <span class="label-help-dot" aria-hidden="true">?</span>
-          </span>
-          <span class="metric-tooltip" id="overreach-confidence-help" role="tooltip">
-            This is the degree of belief you are currently placing on the next roll being a six.
-          </span>
-          <strong id="metricConfidence">58%</strong>
-          <small id="metricConfidenceNote">A large part of this setting sits beyond the evidence line.</small>
+          <span class="metric-label">Tries logged</span>
+          <strong id="metricTries">0</strong>
+          <small id="metricTriesNote">Press Try to generate the first event.</small>
         </article>
         <article class="metric-card">
-          <span class="metric-label" tabindex="0" aria-describedby="overreach-gap-help">
-            <span class="metric-label-text">Measure of faith</span>
-            <span class="label-help-dot" aria-hidden="true">?</span>
-          </span>
-          <span class="metric-tooltip" id="overreach-gap-help" role="tooltip">
-            Under this audit's definition, the measure of faith is whatever degree of belief exceeds the warranted degree of belief.
-          </span>
-          <strong id="metricGap">41.3 pts</strong>
-          <small id="metricGapNote">Everything above 16.7% is belief above the warranted degree of belief.</small>
+          <span class="metric-label">Current leader</span>
+          <strong id="metricLeader">Ada</strong>
+          <small id="metricLeaderNote">The most grounded line is ahead at the moment.</small>
         </article>
         <article class="metric-card">
-          <span class="metric-label" tabindex="0" aria-describedby="overreach-exposure-help">
-          <span class="metric-label-text">Exposure mode</span>
-            <span class="label-help-dot" aria-hidden="true">?</span>
-          </span>
-          <span class="metric-tooltip" id="overreach-exposure-help" role="tooltip">
-            This combines the current measure of faith with the selected consequence setting to show how
-            dangerous the current posture becomes when something important rides on it.
-          </span>
-          <strong id="metricExposure">Exposed</strong>
-          <small id="metricExposureNote">Real commitments are already leaning on a worse-than-evidence decision posture.</small>
+          <span class="metric-label">Faith drag</span>
+          <strong id="metricGap">$0</strong>
+          <small id="metricGapNote">No divergence has opened yet.</small>
         </article>
       </section>
 
-      <section class="overreach-grid" id="drill-step" aria-labelledby="drill-title">
-        <article class="overreach-card">
-          <p class="app-step">Calibration drill</p>
-          <h2 id="drill-title">One fair die. One honest support line.</h2>
-          <p class="overreach-lead">
-            The scenario stays intentionally plain so the logic is hard to hide from. The claim
-            is not “sixes happen.” The claim is “the next roll will be a six.”
-          </p>
-
-          <div class="die-stage die-stage-single">
-            <div class="die-stack">
-              <span class="mini-label">Target face</span>
-              <div class="die-face" id="targetDie" aria-label="Target die face showing six"></div>
-              <small>The target event never changes.</small>
-            </div>
-          </div>
-
-          <p class="drill-note">
-            Recent rolls in the trace can change the running graph below, but they do not change
-            the probability of the next fair roll. The target proposition stays fixed at one
-            chance in six.
-          </p>
-
-          <div class="scenario-facts">
-            <article>
-              <span class="metric-label fact-label" tabindex="0" aria-describedby="overreach-deduction-help">
-                <span class="metric-label-text">Deductive symmetry</span>
-                <span class="label-help-dot" aria-hidden="true">?</span>
-              </span>
-              <span class="metric-tooltip" id="overreach-deduction-help" role="tooltip">
-                This is the mathematical argument. If the die is fair, each face has the same
-                probability. Call that probability <code>p</code>. The six faces exhaust all
-                possible outcomes, so <code>p + p + p + p + p + p = 1</code>. That gives
-                <code>6p = 1</code>, so <code>p = 1/6 = 0.1667 = 16.67%</code>. Under the fairness
-                assumption, the next roll being a six is fixed by symmetry and probability
-                arithmetic, not by hope, intuition, or preference.
-              </span>
-              <p>No side of a fair die has a privileged route to the next roll.</p>
-            </article>
-            <article>
-              <span class="metric-label fact-label" tabindex="0" aria-describedby="overreach-induction-help">
-                <span class="metric-label-text">Inductive experience</span>
-                <span class="label-help-dot" aria-hidden="true">?</span>
-              </span>
-              <span class="metric-tooltip" id="overreach-induction-help" role="tooltip">
-                This is the empirical check. If you throw the die <code>n</code> times and get
-                <code>k</code> sixes, the observed rate is <code>k / n</code>. In short runs that
-                rate can swing high or low, but across longer runs it keeps settling near
-                <code>1/6</code>. Induction does not prove the next throw deductively. It shows
-                repeated experience converging on the same value that symmetry predicts.
-              </span>
-              <p>Long runs keep settling around one six in every six throws.</p>
-            </article>
-            <article>
-              <span class="metric-label fact-label" tabindex="0" aria-describedby="overreach-credence-help">
-                <span class="metric-label-text">Honest credence</span>
-                <span class="label-help-dot" aria-hidden="true">?</span>
-              </span>
-              <span class="metric-tooltip" id="overreach-credence-help" role="tooltip">
-                This is the norm for belief. If the support you perceive is
-                <code>1/6 = 16.67%</code>, then honest credence stops there. On this tool's
-                definition, faith begins when belief rises above that line. For example, if you
-                choose <code>40%</code>, the measure of faith is <code>40 - 16.7 = 23.3</code> points.
-                Core rationality here is simply: <code>belief = perceived support</code>, not
-                <code>belief &gt; perceived support</code>.
-              </span>
-              <p>If you stop at 16.7%, belief stays inside the support you perceive.</p>
-            </article>
-          </div>
-        </article>
-
-        <aside class="overreach-card confidence-panel">
-          <p class="app-step">Move the slider</p>
-          <h2>How sure are you anyway?</h2>
-          <div class="confidence-display">
-            <span class="mini-label">Current confidence</span>
-            <strong id="confidenceReadout">58%</strong>
-          </div>
-          <label class="slider-label" for="confidenceRange">
-            Set your confidence that the next roll will be a six.
-          </label>
-          <input
-            id="confidenceRange"
-            class="confidence-range"
-            type="range"
-            min="0"
-            max="100"
-            step="0.1"
-            value="58"
-          >
-          <div class="slider-scale" aria-hidden="true">
-            <span>0%</span>
-            <span>16.7%</span>
-            <span>50%</span>
-            <span>100%</span>
-          </div>
-          <div class="quick-picks" id="quickConfidenceButtons" aria-label="Common confidence presets">
-            <button type="button" data-confidence="16.7">16.7%</button>
-            <button type="button" data-confidence="33">33%</button>
-            <button type="button" data-confidence="50">50%</button>
-            <button type="button" data-confidence="75">75%</button>
-            <button type="button" data-confidence="95">95%</button>
-          </div>
-
-          <div class="belief-gauge" aria-live="polite">
-            <div class="gauge-label-row">
-              <span>Evidence</span>
-              <span id="gaugeEvidenceLabel">16.7%</span>
-            </div>
-            <div class="gauge-track">
-              <div class="gauge-evidence" id="gaugeEvidenceBar"></div>
-              <div class="gauge-faith" id="gaugeFaithBar"></div>
-              <div class="gauge-pointer" id="gaugePointer"></div>
-            </div>
-            <div class="gauge-label-row">
-              <span>Measure of faith</span>
-              <span id="gaugeGapLabel">41.3 points</span>
-            </div>
-            <p class="confidence-caption" id="gaugeGapNote">
-              The gold striped segment is the measure of faith: whatever degree of belief exceeds the warranted degree of belief marked by the green support line.
-            </p>
-          </div>
-
-          <p class="confidence-caption" id="confidenceCaption">
-            This setting asks the die to carry much more certainty than the evidence line supplies.
-          </p>
-        </aside>
-      </section>
-
-      <section class="overreach-card bridge-panel" id="bridge-step" aria-labelledby="bridge-title">
-        <p class="app-step">Bridge view</p>
-        <h2 id="bridge-title">Watch confidence outwalk the support</h2>
+      <section class="overreach-card" id="overview-step" aria-labelledby="overview-title">
+        <p class="app-step">Epistemic agents</p>
+        <h2 id="overview-title">Four people. Same world. Different faith load.</h2>
         <p class="overreach-lead">
-          Think of evidence as the planks that make a bridge passable. The supported bridge stops
-          where the evidence stops. Any extra distance is overhang.
+          These four agents move through exactly the same scenarios. The only standing difference
+          is how much they let desire, hope, hype, chemistry, fear, or inherited trust push belief
+          above what their support actually warrants.
         </p>
-
-        <div class="bridge-stage">
-          <div class="bridge-track-wrap">
-            <div class="bridge-track" aria-hidden="true">
-              <div class="bridge-supported" id="bridgeSupported"></div>
-              <div class="bridge-overhang" id="bridgeOverhang"></div>
-              <div class="bridge-marker bridge-marker-evidence" id="bridgeEvidenceMarker"></div>
-              <div class="bridge-marker bridge-marker-belief" id="bridgeBeliefMarker"></div>
-            </div>
-            <div class="bridge-legend" aria-label="Bridge legend">
-              <span><span class="legend-swatch legend-supported" aria-hidden="true"></span>Supported span</span>
-              <span><span class="legend-swatch legend-overhang" aria-hidden="true"></span>Measure of faith</span>
-              <span><span class="legend-marker-chip legend-marker-chip-evidence" aria-hidden="true"></span>Support line</span>
-              <span><span class="legend-marker-chip legend-marker-chip-belief" aria-hidden="true"></span>Confidence line</span>
-            </div>
-            <div class="bridge-scale-row">
-              <span>0%</span>
-              <span>100%</span>
-            </div>
-          </div>
-
-          <div class="bridge-readout">
-            <article>
-              <span>Supported span</span>
-              <strong id="bridgeSupportedLabel">16.7%</strong>
-              <p>The planks the die really gives you.</p>
-            </article>
-            <article>
-              <span>Measure of faith</span>
-              <strong id="bridgeOverhangLabel">41.3%</strong>
-              <p>Whatever degree of belief exceeds the warranted degree of belief.</p>
-            </article>
-            <article>
-              <span>Inside your own position</span>
-              <strong id="bridgeShareLabel">71.2%</strong>
-              <p>The share of your current confidence resting beyond the support line.</p>
-            </article>
-          </div>
-        </div>
-
-        <p class="bridge-caption" id="bridgeCaption">
-          At this setting, most of your current position is no longer standing on what the die
-          itself supplies.
-        </p>
+        <div class="belief-agent-grid" id="agentGrid" aria-live="polite"></div>
       </section>
 
-      <section class="stakes-grid" id="stakes-step" aria-labelledby="stakes-title">
-        <article class="overreach-card">
-          <p class="app-step">Stress test</p>
-          <h2 id="stakes-title">Let the world answer back</h2>
-          <p class="overreach-lead">
-            Overconfidence does not change the die. It only changes how much you decide to stake
-            on the same evidence. That means faith does not improve the decision. It makes the
-            decision worse by authorizing extra commitments beyond the support line.
+      <section class="belief-stage-grid" id="scenario-step" aria-labelledby="scenario-title">
+        <article class="overreach-card belief-scenario-panel">
+          <p class="app-step">Scenario</p>
+          <h2 id="scenario-title">Choose a field, then press Try.</h2>
+          <p class="overreach-lead" id="scenarioLead">
+            Each field uses a different support signal and a different temptation. The random
+            outcomes change from try to try, but the lines respond according to how disciplined or
+            faith-driven each agent is.
           </p>
 
-          <div class="roll-panel trace-panel">
-            <div class="roll-strip-head">
-              <h3>Track successive throws of 10 dice</h3>
-              <span id="traceStatus">1 of 30 throws logged</span>
-            </div>
-            <p class="simulation-caption" id="traceCaption">
-              Each click adds another 10 dice to the same cumulative trace. After 30 throws, the
-              next click resets the trace and starts a fresh line.
-            </p>
+          <div class="scenario-switcher" id="scenarioButtons" aria-label="Scenario choices"></div>
+
+          <div class="belief-rule-grid">
+            <article class="belief-rule-card">
+              <span class="mini-label">What counts as support</span>
+              <p id="supportRuleText"></p>
+            </article>
+            <article class="belief-rule-card">
+              <span class="mini-label">What faith changes</span>
+              <p id="faithShiftText"></p>
+            </article>
+            <article class="belief-rule-card">
+              <span class="mini-label">What gets spent</span>
+              <p id="resourceText"></p>
+            </article>
           </div>
 
-          <div class="simulation-actions">
-            <button type="button" class="primary" id="runSimulation">Add 10 rolls to the trace</button>
-            <button type="button" class="secondary" id="resetSimulation">Start new trace</button>
+          <div class="belief-controls">
+            <div class="try-controls">
+              <button type="button" id="runTry">Try</button>
+              <button type="button" class="secondary" id="resetScenario">Try again</button>
+            </div>
+            <div class="belief-try-status">
+              <strong id="tryStatus">0 tries logged</strong>
+              <small id="tryHint">Each click adds one more random event for the active field.</small>
+            </div>
           </div>
 
-          <fieldset class="option-fieldset compare-fieldset">
-            <legend>Compare planning settings on the same trace</legend>
-            <label class="compare-toggle" for="compareMode">
-              <input type="checkbox" id="compareMode">
-              <span>Use a second confidence setting instead of the support-line baseline</span>
-            </label>
-            <p class="simulation-caption" id="compareModeCaption">
-              Default view compares the support line at 16.7% with your current drill setting.
-            </p>
-            <div class="compare-settings">
-              <div class="compare-setting compare-setting-locked">
-                <span class="mini-label">Current drill setting</span>
-                <strong id="comparePrimaryReadout">58%</strong>
-                <small>This stays synced to the main confidence slider above.</small>
-              </div>
-              <div class="compare-setting" id="compareSecondarySetting">
-                <label class="slider-label" for="compareConfidenceRange">Second confidence setting</label>
-                <strong id="compareConfidenceReadout">85%</strong>
-                <input
-                  id="compareConfidenceRange"
-                  class="confidence-range"
-                  type="range"
-                  min="0"
-                  max="100"
-                  step="0.1"
-                  value="85"
-                >
-                <small>Turn compare mode on to judge the same trace with this second setting.</small>
-              </div>
+          <div class="belief-event-card">
+            <div class="belief-event-head">
+              <span class="mini-label" id="eventLabel">First event</span>
+              <span class="event-rollup" id="eventRollup">No results yet</span>
             </div>
-          </fieldset>
-
-          <fieldset class="option-fieldset">
-            <legend>How costly is each shortfall?</legend>
-            <div class="option-grid" id="severityOptions"></div>
-          </fieldset>
-
-          <p class="stakes-caption" id="stakesCaption">
-            Higher stakes do not make the evidence stronger. They only make shortfalls more expensive.
-          </p>
+            <h3 id="eventTitle">Press Try to generate the next event.</h3>
+            <p id="eventSummary">
+              The random event will carry the relevant balance of inputs for this field, and each
+              agent will respond according to their degree of faith.
+            </p>
+            <div class="belief-event-stats" id="eventStats"></div>
+            <div class="belief-agent-actions" id="eventActions"></div>
+          </div>
         </article>
 
-        <aside class="overreach-card simulation-panel">
-          <div class="formula-bar">
-            <span class="mini-label">Support rule</span>
-            <strong id="expectedRule">Expected sixes = tracked dice / 6 = 10 / 6 = 1.7</strong>
-            <small>The chart and both planners are judged against this same one-in-six baseline.</small>
-          </div>
-
-          <div class="simulation-metrics planner-metrics" id="comparisonMetrics"></div>
+        <aside class="overreach-card belief-graph-panel">
+          <div class="belief-balance-grid" id="balanceGrid"></div>
 
           <div class="roll-panel regression-panel">
             <div class="roll-strip-head">
-              <h3>Cumulative six-rate trace</h3>
-              <span id="regressionStatus">10 dice tracked</span>
+              <h3 id="chartTitle">Running outcomes</h3>
+              <span id="chartStatus">All four lines begin at the same starting point.</span>
             </div>
             <div class="regression-chart-wrap">
               <svg
-                id="regressionChart"
-                class="regression-chart"
-                viewBox="0 0 640 240"
+                id="beliefChart"
+                class="belief-chart"
+                viewBox="0 0 720 320"
                 role="img"
-                aria-label="Line graph showing the cumulative share of sixes across successive throws of ten dice compared with the 16.7 percent mean, plus an amber line showing extra dollars lost beyond the evidence-capped baseline at one hundred dollars per extra shortfall unit."
+                aria-label="Line chart comparing four epistemic agents as random tries accumulate."
               ></svg>
             </div>
-            <p class="simulation-caption" id="regressionCaption">
-              Each point shows the cumulative percentage of sixes after another throw of 10 dice.
+            <p class="simulation-caption" id="chartCaption">
+              Press Try to extend the lines. The outcomes are random, but the commitments are not.
             </p>
-            <p class="chart-note" id="lossTraceNote">
-              Amber line: extra dollars lost beyond the evidence-capped plan if each extra shortfall unit costs $100.
-            </p>
-            <p class="chart-note">
-              The line can zigzag for a while. Regression toward 16.7% is noisy, not monotonic.
+            <p class="chart-note" id="stochasticNote">
+              Randomness changes the next event. Faith changes how much each person is willing to
+              commit before the support is there.
             </p>
           </div>
-
-          <div class="roll-panel">
-            <div class="roll-strip-head">
-              <h3>Most recent 10-die batch</h3>
-              <span id="runShortfall">Batch sixes: 2</span>
-            </div>
-            <div class="roll-strip" id="rollStrip" aria-live="polite"></div>
-          </div>
-
-          <div class="consequence-panel">
-            <div class="roll-strip-head">
-              <div class="consequence-help">
-                <h3>
-                  <span class="metric-label fact-label" tabindex="0" aria-describedby="consequenceHelp">
-                    <span class="metric-label-text">Cumulative shortfall costs</span>
-                    <span class="label-help-dot" aria-hidden="true">?</span>
-                  </span>
-                </h3>
-                <span class="metric-tooltip" id="consequenceHelp" role="tooltip">
-                  This panel turns the current cumulative shortfall into consequence units under the selected severity framing.
-                </span>
-              </div>
-              <span id="consequenceSummary">Both planners come out the same on this trace.</span>
-            </div>
-            <div class="consequence-compare" id="consequenceCompare"></div>
-          </div>
-
-          <p class="simulation-caption" id="simulationCaption">
-            The lesson does not require catastrophe every time. The key point is that some of the
-            planned hits were above the support line before the sequence even began.
-          </p>
         </aside>
       </section>
 
-      <section class="transfer-grid" id="transfer-step" aria-labelledby="transfer-title">
-        <article class="overreach-card">
-          <p class="app-step">Transfer</p>
-          <h2 id="transfer-title">Move from the die to religious decisions</h2>
-          <p class="overreach-lead">
-            The structure is the same even when the content changes. Separate the support you
-            think you really have from the confidence you are carrying anyway, especially when the
-            question is which god, if any, deserves worship and obedience.
-          </p>
-
-          <div class="claim-grid" id="claimButtons" aria-label="Claim choices"></div>
-
-          <div class="claim-copy">
-            <h3 id="claimTitle">Which god, if any, should I worship?</h3>
-            <p id="claimPrompt">
-              One god or one religious path deserves worship strongly enough to justify allegiance, ritual, obedience, and identity.
-            </p>
-            <p class="claim-tension" id="claimTension">
-              If the support is thinner than the confidence, faith can push a person to worship one
-              god, reject rivals, or reject no-worship paths without enough evidence to license that choice.
-            </p>
-          </div>
-        </article>
-
-        <aside class="overreach-card transfer-controls">
-          <div class="transfer-slider-block">
-            <label class="slider-label" for="transferEvidenceRange">
-              How much support do you think you really have?
-            </label>
-            <strong id="transferEvidenceReadout">24%</strong>
-            <input
-              id="transferEvidenceRange"
-              class="confidence-range"
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value="24"
-            >
-          </div>
-
-          <div class="transfer-slider-block">
-            <label class="slider-label" for="transferBeliefRange">
-              How confident are you anyway?
-            </label>
-            <strong id="transferBeliefReadout">76%</strong>
-            <input
-              id="transferBeliefRange"
-              class="confidence-range"
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value="76"
-            >
-          </div>
-
-          <div class="belief-gauge">
-            <div class="gauge-label-row">
-              <span>Support</span>
-              <span id="transferGaugeSupport">24%</span>
-            </div>
-            <div class="gauge-track">
-              <div class="gauge-evidence" id="transferEvidenceBar"></div>
-              <div class="gauge-faith" id="transferFaithBar"></div>
-              <div class="gauge-pointer" id="transferPointer"></div>
-            </div>
-            <div class="gauge-label-row">
-              <span>Measure of faith</span>
-              <span id="transferGapReadout">46 points</span>
-            </div>
-            <p class="confidence-caption" id="transferGapNote">
-              The gold striped segment is the measure of faith: whatever degree of belief exceeds the warranted degree of belief you entered.
-            </p>
-          </div>
-
-          <fieldset class="option-fieldset">
-            <legend>What is this claim being asked to carry?</legend>
-            <div class="commitment-grid" id="commitmentGrid"></div>
-          </fieldset>
-        </aside>
+      <section class="overreach-card" id="lessons-step" aria-labelledby="lessons-title">
+        <p class="app-step">Field reading</p>
+        <h2 id="lessons-title">Why faith loses here</h2>
+        <p class="overreach-lead" id="lessonLead">
+          The surface story changes from field to field, but the practical logic does not.
+        </p>
+        <div class="summary-grid" id="lessonCards"></div>
+        <p class="bridge-caption" id="lessonClosing">
+          In every field, faith adds commitment before the world has earned that commitment.
+        </p>
       </section>
 
       <section class="overreach-card summary-panel" id="summary-step" aria-labelledby="summary-title">
         <p class="app-step">Summary</p>
-        <h2 id="summary-title">What this setting is showing</h2>
+        <h2 id="summary-title">What the current lines are showing</h2>
 
         <div class="summary-grid">
           <article class="summary-card">
-            <span>Die lesson</span>
-            <h3 id="dieSummaryTitle">Faith is already worsening the decision.</h3>
-            <p id="dieSummaryText">
-              Before a roll even happens, your current confidence is budgeting for more sixes than
-              the evidence line supports.
+            <span>Current field</span>
+            <h3 id="summaryFieldTitle">Gambling has not started yet.</h3>
+            <p id="summaryFieldText">
+              Once tries begin, this card will explain what the active field is rewarding and what
+              the faith-heavy lines are overlooking.
             </p>
           </article>
           <article class="summary-card">
-            <span>Faith lesson</span>
-            <h3 id="transferSummaryTitle">The selected claim is being carried by a large measure of faith.</h3>
-            <p id="transferSummaryText">
-              The current claim posture is using more confidence than the support rating provides,
-              then leaning real commitments onto that extra confidence.
+            <span>Faith cost</span>
+            <h3 id="summaryCostTitle">No divergence yet.</h3>
+            <p id="summaryCostText">
+              The summary updates after each try to show which line is leading, which line is
+              lagging, and what the extra faith is currently spending.
             </p>
           </article>
         </div>
@@ -638,62 +310,6 @@
             <span class="copy-status" id="copyStatus" aria-live="polite"></span>
           </div>
         </div>
-      </section>
-
-      <section class="overreach-card" id="religion-step" aria-labelledby="religion-title">
-        <p class="app-step">Religious pressure</p>
-        <h2 id="religion-title">Why praising faith is intrinsically irrational</h2>
-        <p class="overreach-lead">
-          Many religions do not merely permit confidence to outrun perceived support. They praise
-          it. They treat trust, surrender, loyalty, or obedience beyond what the believer thinks
-          they can really show as spiritually admirable. They also often recruit motives such as
-          hope, comfort, longing, fear, or the desire for meaning to push confidence upward.
-          Under this audit's definition, that is intrinsically irrational because none of those
-          motives increases the actual degree of evidence the believer perceives.
-        </p>
-
-        <div class="summary-grid">
-          <article class="summary-card">
-            <span>Rule change</span>
-            <h3>It treats overbelief as a virtue.</h3>
-            <p>
-              Core rationality says confidence should stop at the support line. A religion that
-              praises faith asks the person to cross that line on purpose.
-            </p>
-          </article>
-          <article class="summary-card">
-            <span>Hope pressure</span>
-            <h3>Hope can motivate belief without supporting it.</h3>
-            <p>
-              Hope for healing, rescue, justice, purpose, reunion, or eternal life can make a
-              higher confidence setting feel attractive. But hope changes what a person wants to
-              be true, not how much support they actually perceive.
-            </p>
-          </article>
-          <article class="summary-card">
-            <span>Error control</span>
-            <h3>It weakens self-correction.</h3>
-            <p>
-              Once doubt is framed as weakness or disloyalty, evidence loses authority. That makes
-              bad beliefs harder to reduce when the support is thin.
-            </p>
-          </article>
-          <article class="summary-card">
-            <span>Worship choice</span>
-            <h3>It worsens high-stakes religious decisions.</h3>
-            <p>
-              If several religions or gods compete for allegiance, a method that rewards confidence
-              beyond perceived support makes it more likely that worship, obedience, and identity
-              attach to the wrong object or path.
-            </p>
-          </article>
-        </div>
-
-        <p class="bridge-caption">
-          On this view, the problem is not only that faith sometimes ends badly. The problem is
-          already present in the method itself: any instruction to believe beyond perceived support,
-          even for the sake of hope, is a standing instruction to reason less honestly.
-        </p>
       </section>
     </main>
 
