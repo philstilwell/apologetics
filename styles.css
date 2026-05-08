@@ -8469,7 +8469,7 @@ body.app-overreach #lessons-step #lessonClosing {
   align-content: start;
 }
 
-.belief-stat-pill span,
+.belief-stat-pill > span,
 .belief-tag {
   display: inline-flex;
   align-items: center;
@@ -8484,7 +8484,7 @@ body.app-overreach #lessons-step #lessonClosing {
   text-transform: uppercase;
 }
 
-.belief-stat-pill span {
+.belief-stat-pill > span {
   background: rgba(42, 97, 114, 0.12);
   color: var(--overreach-blue);
 }
