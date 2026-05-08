@@ -8461,6 +8461,7 @@ body.app-overreach #lessons-step #lessonClosing {
 }
 
 .belief-stat-pill {
+  position: relative;
   padding: 10px 11px;
   border: 1px solid rgba(110, 74, 31, 0.18);
   border-radius: 14px;
@@ -8486,6 +8487,45 @@ body.app-overreach #lessons-step #lessonClosing {
 .belief-stat-pill span {
   background: rgba(42, 97, 114, 0.12);
   color: var(--overreach-blue);
+}
+
+.belief-stat-help {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  cursor: help;
+}
+
+.belief-stat-help .label-help-dot {
+  width: 16px;
+  height: 16px;
+  margin-left: 0;
+  border-color: rgba(42, 97, 114, 0.32);
+  color: var(--overreach-blue);
+  font-size: 0.62rem;
+}
+
+.belief-stat-pill .metric-tooltip {
+  top: calc(100% + 9px);
+  bottom: auto;
+  border-color: rgba(110, 74, 31, 0.24);
+  color: var(--overreach-ink);
+}
+
+.belief-stat-pill:hover .metric-tooltip,
+.belief-stat-pill:focus-within .metric-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.belief-event-stats .belief-stat-pill:last-child .metric-tooltip,
+.belief-event-stats .belief-stat-pill:nth-last-child(2):nth-child(2) .metric-tooltip {
+  right: 0;
+  left: auto;
 }
 
 .belief-stat-pill strong {

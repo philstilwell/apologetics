@@ -721,9 +721,18 @@ function renderEventCard() {
   elements.eventSummary.textContent = lastEvent.summary;
   elements.eventStats.innerHTML = lastEvent.stats
     .map((item) => {
+      const labelMarkup = item.tooltip
+        ? `
+          <span class="belief-stat-help" tabindex="0">
+            <span>${item.label}</span>
+            <span class="label-help-dot" aria-hidden="true">?</span>
+            <span class="metric-tooltip" role="tooltip">${item.tooltip}</span>
+          </span>
+        `
+        : `<span>${item.label}</span>`;
       return `
         <article class="belief-stat-pill">
-          <span>${item.label}</span>
+          ${labelMarkup}
           <strong>${item.value}</strong>
         </article>
       `;
@@ -2001,9 +2010,24 @@ function createReligionEvent(scenarioState) {
         ? "This encounter offered some real comfort or structure, but only after asking for a large amount of prior trust and surrender."
         : "This encounter had more social and emotional pull than evidential weight. That is where faith starts converting atmosphere into obedience.",
     stats: [
-      { label: "Evidence", value: `${evidence}/100` },
-      { label: "Pull", value: `${pull}/100` },
-      { label: "Demand", value: `${demand}/100` }
+      {
+        label: "Evidence",
+        value: `${evidence}/100`,
+        tooltip:
+          "Evidence estimates how much real support the claim has in this simulation. Higher evidence means there is more actual reason to think the religious claim is true or worth trusting."
+      },
+      {
+        label: "Pull",
+        value: `${pull}/100`,
+        tooltip:
+          "Pull estimates the emotional and social force of the encounter: belonging, fear, beauty, urgency, warmth, authority, or meaning. Pull can feel powerful without becoming evidence."
+      },
+      {
+        label: "Demand",
+        value: `${demand}/100`,
+        tooltip:
+          "Demand estimates how much the claim is asking from the person: time, money, obedience, identity, guilt, or life direction. Higher demand makes mistaken commitment more costly."
+      }
     ],
     delta,
     after,
