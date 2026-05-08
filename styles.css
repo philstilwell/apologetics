@@ -8064,6 +8064,11 @@ body.app-overreach #summary-step {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.belief-event-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .belief-agent-actions,
 .belief-balance-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -8432,10 +8437,11 @@ body.app-overreach #summary-step {
 }
 
 .belief-stat-pill {
-  padding: 10px 12px;
+  padding: 10px 11px;
   border: 1px solid rgba(110, 74, 31, 0.18);
   border-radius: 14px;
   background: rgba(255, 249, 242, 0.9);
+  align-content: start;
 }
 
 .belief-stat-pill span,
@@ -8460,9 +8466,11 @@ body.app-overreach #summary-step {
 
 .belief-stat-pill strong {
   display: block;
-  margin-top: 8px;
-  font-size: 1.22rem;
-  line-height: 1;
+  margin-top: 7px;
+  font-size: clamp(0.9rem, 1.15vw, 1.02rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
 }
 
 .belief-action-card,
