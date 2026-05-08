@@ -8367,6 +8367,51 @@ body.app-overreach #summary-step {
   line-height: 1.5;
 }
 
+.belief-inline-disclosure {
+  border-color: rgba(110, 74, 31, 0.22);
+  background:
+    linear-gradient(180deg, rgba(255, 249, 240, 0.98) 0, rgba(251, 244, 233, 0.96) 100%);
+}
+
+.belief-inline-disclosure summary {
+  min-height: 34px;
+  padding: 9px 12px;
+  color: var(--overreach-blue);
+  font-size: 0.77rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.belief-inline-disclosure summary::after {
+  background: rgba(42, 97, 114, 0.14);
+  color: var(--overreach-blue);
+}
+
+.belief-inline-disclosure p,
+.belief-inline-disclosure ul {
+  color: var(--overreach-muted);
+}
+
+.belief-inline-disclosure p {
+  padding: 0 12px 10px;
+  font-size: 0.84rem;
+  line-height: 1.48;
+}
+
+.belief-inline-disclosure ul {
+  gap: 6px;
+  padding: 0 12px 10px 28px;
+  font-size: 0.84rem;
+}
+
+.belief-inline-disclosure li::marker {
+  color: rgba(42, 97, 114, 0.92);
+}
+
+.belief-event-guide {
+  margin-top: 4px;
+}
+
 .belief-try-status {
   display: grid;
   gap: 4px;

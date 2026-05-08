@@ -109,6 +109,14 @@ const CASINO_OPENING_MIN = 16;
 const CASINO_OPENING_MAX = 20;
 const CASINO_CARD_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const CASINO_WIN_PROFIT = 30;
+const casinoDefaultThresholds = {
+  milo18: 82,
+  willa18: 65,
+  willa19: 88,
+  zeke18: 50,
+  zeke19: 68,
+  zeke20: 85
+};
 
 const casinoMoodDeck = [
   {
@@ -116,28 +124,100 @@ const casinoMoodDeck = [
     statLabel: "Due-now feeling",
     rollup: "Some players felt the next card was due to help them.",
     summary:
-      "A low card or a near miss can make another good card feel due. That feeling is psychologically powerful, but it does not change the next draw."
+      "A low card or a near miss can make another good card feel due. That feeling is psychologically powerful, but it does not change the next draw.",
+    thresholds: { milo18: 78, willa18: 61, willa19: 86, zeke18: 47, zeke19: 65, zeke20: 84 }
   },
   {
     id: "hot",
     statLabel: "Hot-hand feeling",
     rollup: "Some players felt the table was running hot.",
     summary:
-      "A run of decent cards can make the table feel hot. Faith-heavy gamblers often let that mood justify one more draw, even when the hand is already good enough."
+      "A run of decent cards can make the table feel hot. Faith-heavy gamblers often let that mood justify one more draw, even when the hand is already good enough.",
+    thresholds: { milo18: 81, willa18: 63, willa19: 83, zeke18: 48, zeke19: 62, zeke20: 79 }
   },
   {
     id: "lucky",
     statLabel: "Feeling-lucky mood",
     rollup: "Several players were simply feeling lucky.",
     summary:
-      "Sometimes nothing more specific is happening than a surge of confidence, hope, or ritualized luck. That feeling can still push people to chase another card when caution would be wiser."
+      "Sometimes nothing more specific is happening than a surge of confidence, hope, or ritualized luck. That feeling can still push people to chase another card when caution would be wiser.",
+    thresholds: { milo18: 80, willa18: 62, willa19: 85, zeke18: 47, zeke19: 64, zeke20: 80 }
   },
   {
     id: "pattern",
     statLabel: "Pattern-reading mood",
     rollup: "Some players kept reading patterns into the table.",
     summary:
-      "People kept treating harmless patterns as signals. That is how faith starts turning noise into a reason for chasing one more card on a hand that was already strong."
+      "People kept treating harmless patterns as signals. That is how faith starts turning noise into a reason for chasing one more card on a hand that was already strong.",
+    thresholds: { milo18: 77, willa18: 63, willa19: 84, zeke18: 46, zeke19: 63, zeke20: 82 }
+  },
+  {
+    id: "ritual",
+    statLabel: "Charm-and-ritual mood",
+    rollup: "A few players started trusting charms, routines, and lucky gestures.",
+    summary:
+      "Ritual can make caution feel almost disloyal to the moment. Once a lucky seat, phrase, or gesture starts feeling sacred, one more card can begin to look warranted.",
+    thresholds: { milo18: 79, willa18: 58, willa19: 80, zeke18: 45, zeke19: 60, zeke20: 76 }
+  },
+  {
+    id: "near-miss",
+    statLabel: "Near-miss mood",
+    rollup: "A few players kept treating recent near misses as a promise that the next card would land.",
+    summary:
+      "Near misses are famous for creating false momentum. They can make failure feel almost successful, which is exactly how people talk themselves into one more unwarranted risk.",
+    thresholds: { milo18: 74, willa18: 59, willa19: 82, zeke18: 43, zeke19: 60, zeke20: 79 }
+  },
+  {
+    id: "comeback",
+    statLabel: "Comeback mood",
+    rollup: "Some players wanted one dramatic card to restore the night.",
+    summary:
+      "A comeback story is emotionally sticky. Once the night is framed as needing a heroic turn, gamblers start treating one more card as redemption rather than arithmetic.",
+    thresholds: { milo18: 79, willa18: 57, willa19: 81, zeke18: 42, zeke19: 58, zeke20: 77 }
+  },
+  {
+    id: "table-talk",
+    statLabel: "Table-talk mood",
+    rollup: "Other players kept narrating streaks and signs as if the table were speaking.",
+    summary:
+      "Social suggestion does real work in casinos. Once the surrounding chatter starts calling the next card a sign, faith-heavy players can mistake shared excitement for evidence.",
+    thresholds: { milo18: 76, willa18: 61, willa19: 83, zeke18: 45, zeke19: 61, zeke20: 80 }
+  }
+];
+
+const casinoHouseNarratives = [
+  {
+    id: "flat",
+    statLabel: "Flat-payout table",
+    rollup: "The dealer reminded everyone that 18 through 21 all earn the same modest return.",
+    ruleText:
+      "Flat table: ante $100. Any total from 18 to 21 pays +$30; a flashier finish earns nothing extra.",
+    safeText:
+      "The table was already paying the same modest amount anywhere from 18 to 21, so a good hand did not become better just because someone wanted a prettier total.",
+    riskText:
+      "Below 18, one draw could still be necessary. But the flat-payout rule meant the only honest goal was getting into the paying zone, not theatrically chasing a higher number."
+  },
+  {
+    id: "tourist",
+    statLabel: "Tourist-floor rule",
+    rollup: "The game looked lively, but the house rule still quietly rewarded patience.",
+    ruleText:
+      "Tourist rule: ante $100. Reach 18 to 21 for +$30; anything else simply loses the ante to the house.",
+    safeText:
+      "The floor atmosphere tried to make the hand feel dramatic, but the rule itself was blunt: once the total was already paying, another card only reopened the downside.",
+    riskText:
+      "The table dressed itself up as entertainment, but the arithmetic stayed plain. A needed draw could help, while any unnecessary extra card just fed the house edge."
+  },
+  {
+    id: "no-style",
+    statLabel: "No-style-points rule",
+    rollup: "There were no extra style points for turning a good hand into a flashier one.",
+    ruleText:
+      "No-style rule: ante $100. Any total from 18 to 21 pays +$30; there is no bonus for reaching 20 or 21 the hard way.",
+    safeText:
+      "There was no extra applause for pushing 18 or 19 into something prettier. That made overconfident chasing look even more gratuitous than usual.",
+    riskText:
+      "The no-style table still allowed one honest draw below 18. But once the hand crossed into the paying zone, extra bravery became a needless tax."
   }
 ];
 
@@ -157,6 +237,19 @@ const scenarios = {
       "Faith does not just raise confidence. It turns a paying hand into a tempting hand for one more draw because the gambler feels due, hot, charmed, or lucky.",
     resource:
       "Bankroll dollars. Everyone risks the same ante. The difference is not bigger stakes, but a worse decision about whether to bank the hand or chase another card.",
+    assumptions: [
+      "All four gamblers face the same opening total, the same next card, and the same flat $100 ante every night.",
+      "The table always pays the same +$30 on any total from 18 to 21, so the game has a built-in house edge.",
+      "Faith is modeled as a lower stopping threshold: a willingness to draw on an already paying hand because luck feels probative.",
+      "The model ignores card counting, table selection, and multi-hand strategy so the focus stays on stopping discipline."
+    ],
+    guidePoints: [
+      "Each try is one shared casino night, so the world inputs are identical for all four gamblers.",
+      "A line rises when the gambler either banks a paying hand or takes the one necessary draw and lands safely.",
+      "A line falls when someone chases an unnecessary card, busts, or leaves the hand below the paying zone."
+    ],
+    guideClose:
+      "Lucky chases can create short upward spikes, but the repeated stopping rule is what shapes the long-run line.",
     chartTitle: "Bankroll over casino nights",
     chartCaption:
       "All four lines are betting every night. The separation comes from who chases another card after the hand is already good enough.",
@@ -194,11 +287,24 @@ const scenarios = {
       "Faith makes hype feel like support. The farther right the agent sits, the more easily excitement, story, and momentum can substitute for due diligence.",
     resource:
       "Portfolio dollars. The overreach cost appears as larger positions taken in weaker businesses.",
+    assumptions: [
+      "Each round compresses a company into two simplified signals: fundamentals and hype.",
+      "All four investors evaluate the same company at the same moment; only their thresholds and position sizing differ.",
+      "Cash left on the sidelines earns a tiny reserve yield instead of sitting perfectly still.",
+      "The model ignores diversification, hedging, and macro shocks so the focus stays on how overbelief changes what gets bought."
+    ],
+    guidePoints: [
+      "Each try introduces one company that everyone sees through the same fundamentals and hype scores.",
+      "The line moves according to whether the agent stays in cash or takes a position, and how large that position is.",
+      "Hype can produce real short-term wins, but repeated over-sizing on weak businesses creates deeper drawdowns."
+    ],
+    guideClose:
+      "A brief lead by a faith-heavy line does not show better reasoning. It shows that variance can flatter a worse filter for a while.",
     chartTitle: "Portfolio over investment rounds",
     chartCaption:
       "The business outcomes are random, but stronger fundamentals keep tilting the odds. Faith-heavy investors keep calling weak evidence good enough.",
     stochasticNote:
-      "A hype stock can soar for a while. The issue is not whether buzz can ever pay. It is whether the investor is repeatedly sizing positions beyond what the evidence supports.",
+      "A hype stock can soar for a while, so faith-heavy investors may lead for short stints. The issue is not whether buzz can ever pay. It is whether the investor can do this consistently without repeatedly sizing positions beyond what the evidence supports.",
     lessonLead:
       "Investment makes faith look respectable because confidence can masquerade as bold vision. But when confidence outruns the business case, capital gets dragged behind a story rather than anchored in a company.",
     lessonCards: [
@@ -231,6 +337,19 @@ const scenarios = {
       "Faith makes chemistry feel like knowledge. It lowers the threshold for commitment and can make a remote story feel trustworthy before the person has earned that trust.",
     resource:
       "Trust-and-time capital. This line tracks the life energy spent on people who either deserved or did not deserve deep commitment.",
+    assumptions: [
+      "Each try reduces a prospect to a few simplified signals such as character, spark, distance, and verification.",
+      "All four people meet the same prospect; only their trust threshold and pacing differ.",
+      "The line measures trust-and-time capital rather than literal dollars.",
+      "The model compresses messy human relationships so the focus stays on when desire is allowed to outrun vetting."
+    ],
+    guidePoints: [
+      "Each try gives the same prospect to all four agents.",
+      "The line rises when trust is paced well and the connection proves healthier than it first looked.",
+      "The line falls when someone commits before character and verification justify it."
+    ],
+    guideClose:
+      "A risky romance can work, but repeated premature trust is what bends the high-faith lines downward.",
     chartTitle: "Relational capital over romantic prospects",
     chartCaption:
       "Spark is random and powerful, but it is not the same thing as character. The faith-heavy lines keep committing before verification catches up.",
@@ -269,6 +388,19 @@ const scenarios = {
       "Faith lowers the commitment threshold. It turns a thinly supported claim into something worthy of obedience, donations, identity, and life direction.",
     resource:
       "Life-budget capital. This tracks time, energy, money, autonomy, and identity pressure rather than cash alone.",
+    assumptions: [
+      "Each try compresses a religious encounter into evidence, emotional-social pull, and demand level.",
+      "All four agents face the same encounter; only their commitment threshold differs.",
+      "The line tracks life-budget capital: time, attention, money, autonomy, and identity pressure.",
+      "The model does not claim every religious community is identical; it isolates what happens when confidence outruns perceived evidence."
+    ],
+    guidePoints: [
+      "Each try presents the same testimony, church, revival, or pressure point to all four agents.",
+      "The line moves according to whether they wait, commit cautiously, or surrender far beyond what the evidence supports.",
+      "Some encounters may give comfort or structure, but repeated over-commitment still spends more life than the claim earns back."
+    ],
+    guideClose:
+      "That is why a temporary benefit does not rescue a method that keeps turning pull into warrant.",
     chartTitle: "Life budget over religious pressure points",
     chartCaption:
       "The next encounter is random, but the recurring pattern is not. Faith-heavy agents keep surrendering more of life to claims their own support line has not justified.",
@@ -315,12 +447,18 @@ const elements = {
   supportRuleText: document.querySelector("#supportRuleText"),
   faithShiftText: document.querySelector("#faithShiftText"),
   resourceText: document.querySelector("#resourceText"),
+  scenarioAssumptions: document.querySelector("#scenarioAssumptions"),
+  scenarioAssumptionsList: document.querySelector("#scenarioAssumptionsList"),
   tryStatus: document.querySelector("#tryStatus"),
   tryHint: document.querySelector("#tryHint"),
   eventLabel: document.querySelector("#eventLabel"),
   eventRollup: document.querySelector("#eventRollup"),
   eventTitle: document.querySelector("#eventTitle"),
   eventSummary: document.querySelector("#eventSummary"),
+  eventGuide: document.querySelector("#eventGuide"),
+  eventGuideLead: document.querySelector("#eventGuideLead"),
+  eventGuideList: document.querySelector("#eventGuideList"),
+  eventGuideClose: document.querySelector("#eventGuideClose"),
   chartTitle: document.querySelector("#chartTitle"),
   chartStatus: document.querySelector("#chartStatus"),
   chartCaption: document.querySelector("#chartCaption"),
@@ -471,14 +609,18 @@ function renderScenarioPanel() {
   elements.supportRuleText.textContent = scenario.supportRule;
   elements.faithShiftText.textContent = scenario.faithShift;
   elements.resourceText.textContent = scenario.resource;
+  elements.scenarioAssumptionsList.innerHTML = scenario.assumptions
+    .map((assumption) => `<li>${assumption}</li>`)
+    .join("");
   elements.chartTitle.textContent = scenario.chartTitle;
   elements.chartCaption.textContent = scenario.chartCaption;
-  elements.stochasticNote.textContent = scenario.stochasticNote;
+  elements.stochasticNote.textContent =
+    `These tries are not deterministic. Each click samples a new pseudo-random event from a simplified ${scenario.name.toLowerCase()} model, so resetting the field will usually produce a different path. ${scenario.stochasticNote}`;
   elements.tryStatus.textContent = `${tryCount} ${pluralize(tryCount, "try", "tries")} logged`;
   elements.tryHint.textContent =
     tryCount >= scenario.maxTries
-      ? `This field has reached its ${scenario.maxTries}-try limit. Press Reset to clear it and start over.`
-      : `Each click adds one more random ${scenario.tryLabel}.`;
+      ? `This field has reached its ${scenario.maxTries}-try limit. Press Reset to sample a new path from the same simplified model.`
+      : `Each click samples one new pseudo-random ${scenario.tryLabel} from this simplified model.`;
 
   elements.runTry.textContent = tryCount === 0 ? "Try" : "Try next event";
   elements.runTry.disabled = tryCount >= scenario.maxTries;
@@ -545,6 +687,17 @@ function renderEventCard() {
   const scenario = scenarios[state.activeScenario];
   const scenarioState = state.scenarios[state.activeScenario];
   const lastEvent = getLastEvent(scenarioState);
+  const tryCount = scenarioState.tries.length;
+
+  elements.eventGuideLead.textContent = !lastEvent
+    ? `On the first click, ${scenario.name.toLowerCase()} samples one shared pseudo-random event for all four agents. The lines separate only because they respond to that same setup with different commitment thresholds.`
+    : `In the latest ${scenario.tryLabel}, all four agents faced the same sampled setup. The line movement comes from how much each one committed, preserved, or overextended in response.`;
+  elements.eventGuideList.innerHTML = scenario.guidePoints
+    .map((point) => `<li>${point}</li>`)
+    .join("");
+  elements.eventGuideClose.textContent =
+    `${scenario.guideClose} Resetting the field will usually produce a different run because the tries are sampled rather than scripted.`;
+  elements.eventGuide.open = tryCount <= 1;
 
   if (!lastEvent) {
     elements.eventLabel.textContent = "First event";
@@ -729,8 +882,15 @@ function buildSummaryOutput(scenario, scenarioState, standings, lastEvent) {
     `Support rule: ${scenario.supportRule}`,
     `Faith shift: ${scenario.faithShift}`,
     `Resource at stake: ${scenario.resource}`,
-    ""
+    "",
+    "Model assumptions:"
   ];
+
+  scenario.assumptions.forEach((assumption) => {
+    lines.push(`- ${assumption}`);
+  });
+
+  lines.push("");
 
   agents.forEach((agent) => {
     lines.push(
@@ -879,7 +1039,201 @@ function describeCasinoOutcomeVariant(played, won, seed) {
       );
 }
 
-function buildGamblingActionText({ agent, index, openingTotal, nextCard, luckPull, mood, played, won, stake }) {
+function describeCasinoMoodTemptation(mood, luckPull, seed) {
+  switch (mood.id) {
+    case "due":
+      return pickVariant(
+        [
+          `the deck felt due to help at ${luckPull}/100 confidence`,
+          `a ${luckPull}/100 sense of being owed a friendly card took over`,
+          `the feeling that the next card was finally due made the risk look justified`
+        ],
+        seed,
+        luckPull
+      );
+    case "hot":
+      return pickVariant(
+        [
+          `the table felt hot enough to carry one more draw`,
+          `the run of decent cards made another hit feel protected`,
+          `the warm table mood made caution feel overly timid`
+        ],
+        seed,
+        luckPull
+      );
+    case "lucky":
+      return pickVariant(
+        [
+          `a plain feeling of luck at ${luckPull}/100 started masquerading as judgment`,
+          `the gambler's mood alone made another draw seem earned`,
+          `nothing changed in the math, but the feeling of luck made the risk look friendlier`
+        ],
+        seed,
+        luckPull
+      );
+    case "pattern":
+      return pickVariant(
+        [
+          `harmless patterns on the table started feeling like signals`,
+          `the player mistook noise for a pattern worth trusting`,
+          `a made-up pattern in the flow of cards began to feel informative`
+        ],
+        seed,
+        luckPull
+      );
+    case "ritual":
+      return pickVariant(
+        [
+          `a lucky ritual made one more card feel almost required`,
+          `charms and table habits started acting like evidence`,
+          `a private ritual made stopping feel like breaking the spell`
+        ],
+        seed,
+        luckPull
+      );
+    case "near-miss":
+      return pickVariant(
+        [
+          `recent near misses made the next card feel almost promised`,
+          `an almost-win made the table feel one card away from paying back`,
+          `the memory of coming close made another draw feel prematurely validated`
+        ],
+        seed,
+        luckPull
+      );
+    case "comeback":
+      return pickVariant(
+        [
+          `the urge for a comeback story made one more card look redemptive`,
+          `the night felt like it needed a dramatic recovery card`,
+          `a comeback narrative started sounding more persuasive than the actual odds`
+        ],
+        seed,
+        luckPull
+      );
+    case "table-talk":
+      return pickVariant(
+        [
+          `the surrounding table talk turned excitement into apparent evidence`,
+          `other players kept narrating signs until one more draw sounded smart`,
+          `shared chatter around the table made the risk feel socially endorsed`
+        ],
+        seed,
+        luckPull
+      );
+    default:
+      return `the mood at ${luckPull}/100 let feeling impersonate judgment`;
+  }
+}
+
+function describeCasinoMoodRestraint(mood, seed) {
+  switch (mood.id) {
+    case "due":
+      return pickVariant(
+        [
+          "The whole discipline here was refusing to let a due-now story count as math.",
+          "Restraint meant rejecting the idea that the deck owed anyone a better finish.",
+          "Nothing about feeling due changed the wisdom of stopping."
+        ],
+        seed
+      );
+    case "hot":
+      return pickVariant(
+        [
+          "The skill was refusing to treat a hot table as permission to overplay a good hand.",
+          "A warm streak still did not improve the value of another card.",
+          "Restraint meant leaving the hand alone even while the table felt generous."
+        ],
+        seed
+      );
+    case "lucky":
+      return pickVariant(
+        [
+          "This was a round where discipline simply meant not obeying the feeling of luck.",
+          "Nothing beyond mood was urging the draw, so restraint was the whole edge.",
+          "The better move was to bank the hand instead of following a lucky feeling."
+        ],
+        seed
+      );
+    case "pattern":
+      return pickVariant(
+        [
+          "The skill was refusing to let a made-up pattern outrank the payoff rule.",
+          "Restraint meant treating pattern-reading as noise rather than guidance.",
+          "The imagined signal had to be ignored if the hand was already paying."
+        ],
+        seed
+      );
+    case "ritual":
+      return pickVariant(
+        [
+          "Restraint meant letting the ritual stay a ritual instead of turning it into evidence.",
+          "The lucky routine did not deserve a vote once the hand was already good enough.",
+          "The hard part was stopping without asking the ritual for one more favor."
+        ],
+        seed
+      );
+    case "near-miss":
+      return pickVariant(
+        [
+          "The discipline here was refusing to let almost-winning count as actual warrant.",
+          "A near miss still did not make the next card more promising.",
+          "Restraint meant not confusing psychological momentum with improved odds."
+        ],
+        seed
+      );
+    case "comeback":
+      return pickVariant(
+        [
+          "The better move was to resist the comeback story and bank the hand that was already good enough.",
+          "Discipline meant not letting the wish for redemption inflate the next draw.",
+          "A cleaner night-ending total was not worth buying with needless extra risk."
+        ],
+        seed
+      );
+    case "table-talk":
+      return pickVariant(
+        [
+          "The whole discipline here was refusing to borrow confidence from the table chatter.",
+          "Shared excitement still was not evidence that another draw was wise.",
+          "Restraint meant treating the gossip as atmosphere rather than insight."
+        ],
+        seed
+      );
+    default:
+      return "Nothing about the mood improved the value of drawing again.";
+  }
+}
+
+function describeCasinoNecessaryDrawCaution(mood, house, seed) {
+  const moodLine = (() => {
+    switch (mood.id) {
+      case "ritual":
+        return "Even a necessary draw can become overreach later if the ritual is allowed to keep speaking after the hand turns strong.";
+      case "near-miss":
+        return "The real trap comes after a close call, when almost-winning starts feeling like a reason to keep pressing.";
+      case "comeback":
+        return "The comeback mood becomes dangerous only once the hand is already good enough and pride still wants more.";
+      case "table-talk":
+        return "The chatter around the table becomes costly when it starts licensing extra draws after caution has already won.";
+      default:
+        return "The problem in this game is not the necessary draw itself, but the temptation to keep treating feeling as guidance once the hand turns strong enough.";
+    }
+  })();
+
+  return pickVariant(
+    [
+      `${house.riskText}`,
+      `${moodLine}`,
+      "This is the kind of draw even a disciplined gambler should take."
+    ],
+    seed,
+    mood.id,
+    house.id
+  );
+}
+
+function buildGamblingActionText({ agent, index, openingTotal, nextCard, luckPull, mood, house, played, won, stake }) {
   const baseSeed = buildSeed(index, agent.id, openingTotal, nextCard, luckPull, mood.id);
 
   if (stake <= 0) {
@@ -903,28 +1257,16 @@ function buildGamblingActionText({ agent, index, openingTotal, nextCard, luckPul
       baseSeed
     );
     const bridge = pickVariant(
-      [
-        `The whole discipline here was simply refusing the extra card.`,
-        `Nothing about the mood improved the value of drawing again.`,
-        `This was one of the rounds where restraint was the only real skill.`
-      ],
-      baseSeed + 1,
-      mood.id
+      [describeCasinoMoodRestraint(mood, baseSeed + 1), house.safeText, "This was one of the rounds where restraint was the only real skill."],
+      baseSeed + 2,
+      mood.id,
+      house.id
     );
     return `${lead} ${bridge} ${describeCasinoOutcomeVariant(played, won, baseSeed + 2)}`;
   }
 
   if (played.riskyHit) {
-    const temptation = pickVariant(
-      [
-        `${luckPull}/100 ${mood.statLabel.toLowerCase()} made one more card feel worth chasing.`,
-        `a ${luckPull}/100 ${mood.statLabel.toLowerCase()} let feeling impersonate judgment.`,
-        `the ${mood.statLabel.toLowerCase()} at ${luckPull}/100 made the already good hand feel improvable.`
-      ],
-      baseSeed + 3,
-      mood.id,
-      luckPull
-    );
+    const temptation = describeCasinoMoodTemptation(mood, luckPull, baseSeed + 3);
     const setup = pickVariant(
       [
         `${agent.shortName} already had ${openingTotal}, which was enough to collect the modest payout, but ${temptation}`,
@@ -949,13 +1291,15 @@ function buildGamblingActionText({ agent, index, openingTotal, nextCard, luckPul
   );
   const caution = pickVariant(
     [
-      `The problem in this game is never the necessary draw itself, but what counts as enough to stop afterward.`,
-      `This is the sort of draw even a disciplined gambler should take.`,
-      `There was no payout to bank yet, so the extra card was not overreach in itself.`
+      `There was no payout to bank yet, so the extra card was not overreach in itself.`,
+      `The honest draw here was only about reaching the paying zone, not about proving anyone lucky.`,
+      describeCasinoNecessaryDrawCaution(mood, house, baseSeed + 7)
     ],
-    baseSeed + 7
+    baseSeed + 8,
+    mood.id,
+    house.id
   );
-  return `${neededDraw} ${caution} ${describeCasinoOutcomeVariant(played, won, baseSeed + 8)}`;
+  return `${neededDraw} ${caution} ${describeCasinoOutcomeVariant(played, won, baseSeed + 9)}`;
 }
 
 function buildInvestmentActionText({ agent, index, company, fundamentals, hype, decisionScore, stakeFraction, returnRate, invest }) {
@@ -1301,6 +1645,7 @@ function createGamblingEvent(scenarioState) {
   const openingTotal = drawCasinoOpeningTotal();
   const nextCard = drawCasinoCard();
   const mood = casinoMoodDeck[randomInt(0, casinoMoodDeck.length - 1)];
+  const house = casinoHouseNarratives[randomInt(0, casinoHouseNarratives.length - 1)];
   const luckPull = randomInt(45, 95);
   const after = {};
   const delta = {};
@@ -1309,7 +1654,7 @@ function createGamblingEvent(scenarioState) {
   agents.forEach((agent) => {
     const previous = getCurrentValue(scenarioState, agent.id);
     const stake = getCasinoStake(previous);
-    const played = playCasinoHand(agent, openingTotal, nextCard, luckPull);
+    const played = playCasinoHand(agent, openingTotal, nextCard, luckPull, mood);
     const won = stake > 0 && played.total >= CASINO_SAFE_MIN && played.total <= CASINO_BUST_LIMIT;
     const change = stake > 0 ? Math.round((won ? (stake * CASINO_WIN_PROFIT) / 100 : -stake) * 100) / 100 : 0;
     const text = buildGamblingActionText({
@@ -1319,6 +1664,7 @@ function createGamblingEvent(scenarioState) {
       nextCard,
       luckPull,
       mood,
+      house,
       played,
       won,
       stake
@@ -1331,15 +1677,15 @@ function createGamblingEvent(scenarioState) {
 
   return {
     index,
-    rollup: `Opening total ${openingTotal}. ${mood.rollup}`,
+    rollup: `Opening total ${openingTotal}. ${mood.rollup} ${house.rollup}`,
     title: `Casino night ${index}: opening total ${openingTotal}.`,
     summary:
       openingTotal >= CASINO_SAFE_MIN
-        ? `The opening total was already in the paying zone. ${mood.summary} This round mainly tested who could leave a winning hand alone.`
-        : `The opening total started below the paying zone, so one draw was necessary. ${mood.summary} The real question was who would keep treating luck as guidance once the hand became strong enough.`,
+        ? `The opening total was already in the paying zone. ${house.safeText} ${mood.summary} This round mainly tested who could leave a winning hand alone.`
+        : `The opening total started below the paying zone, so one draw was necessary. ${house.riskText} ${mood.summary} The real question was who would keep treating luck as guidance once the hand became strong enough.`,
     stats: [
       { label: "Opening total", value: `${openingTotal}` },
-      { label: "House rule", value: `Ante $100. Hold on ${CASINO_SAFE_MIN} to 21 for +$${CASINO_WIN_PROFIT}; one extra card can still bust.` },
+      { label: "House rule", value: house.ruleText },
       { label: "Luck pull", value: `${luckPull}/100 ${mood.statLabel}` },
       { label: "Next card", value: `${nextCard}` }
     ],
@@ -1354,10 +1700,11 @@ function createInvestmentEvent(scenarioState) {
   const company = investmentNames[(index - 1) % investmentNames.length];
   const fundamentals = randomInt(25, 92);
   const hype = randomInt(18, 97);
-  const pGain = clampNumber(0.18 + fundamentals * 0.006, 0.18, 0.78, 0.45);
+  const mania = Math.max(0, hype - fundamentals);
+  const pGain = clampNumber(0.30 + fundamentals * 0.0047 - hype * 0.0031, 0.12, 0.76, 0.44);
   const returnRate = Math.random() < pGain
-    ? randomRange(0.05, 0.16 + fundamentals / 420)
-    : -randomRange(0.05, 0.12 + (100 - fundamentals) / 220);
+    ? randomRange(0.03, 0.10 + fundamentals / 540 + mania / 720)
+    : -randomRange(0.05, 0.12 + (100 - fundamentals) / 220 + mania / 240);
   const after = {};
   const delta = {};
   const actions = {};
@@ -1371,9 +1718,9 @@ function createInvestmentEvent(scenarioState) {
     let text;
 
     if (invest) {
-      const stakeFraction = 0.12 + agent.bias * 0.18;
+      const stakeFraction = Math.min(0.34, 0.10 + agent.bias * 0.11 + (mania * agent.bias) / 620);
       const stake = previous * stakeFraction;
-      const reserveYield = (previous - stake) * 0.0025;
+      const reserveYield = (previous - stake) * 0.0027;
       change = stake * returnRate + reserveYield;
       tag = returnRate >= 0 ? "Bought well" : "Bought weakly";
       text = buildInvestmentActionText({
@@ -1761,7 +2108,7 @@ function getCasinoStake(previous) {
   return Math.min(previous, CASINO_BASE_STAKE);
 }
 
-function shouldTakeCasinoCard(agent, total, luckPull) {
+function shouldTakeCasinoCard(agent, total, luckPull, thresholds = casinoDefaultThresholds) {
   if (total < CASINO_SAFE_MIN) {
     return true;
   }
@@ -1770,22 +2117,23 @@ function shouldTakeCasinoCard(agent, total, luckPull) {
     case "ada":
       return false;
     case "milo":
-      return total === 18 && luckPull >= 82;
+      return total === 18 && luckPull >= thresholds.milo18;
     case "willa":
-      return (total === 18 && luckPull >= 65) || (total === 19 && luckPull >= 88);
+      return (total === 18 && luckPull >= thresholds.willa18) || (total === 19 && luckPull >= thresholds.willa19);
     case "zeke":
       return (
-        (total === 18 && luckPull >= 50) ||
-        (total === 19 && luckPull >= 68) ||
-        (total === 20 && luckPull >= 85)
+        (total === 18 && luckPull >= thresholds.zeke18) ||
+        (total === 19 && luckPull >= thresholds.zeke19) ||
+        (total === 20 && luckPull >= thresholds.zeke20)
       );
     default:
       return false;
   }
 }
 
-function playCasinoHand(agent, openingTotal, nextCard, luckPull) {
-  const hit = shouldTakeCasinoCard(agent, openingTotal, luckPull);
+function playCasinoHand(agent, openingTotal, nextCard, luckPull, mood) {
+  const thresholds = mood?.thresholds || casinoDefaultThresholds;
+  const hit = shouldTakeCasinoCard(agent, openingTotal, luckPull, thresholds);
   const total = hit ? openingTotal + nextCard : openingTotal;
 
   return {

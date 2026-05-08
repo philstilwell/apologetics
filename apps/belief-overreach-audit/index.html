@@ -85,7 +85,8 @@
           <p>
             This version compares four epistemic agents who carry different degrees of faith into
             four practical fields: gambling, investment, romance, and religion. Each press of
-            <strong>Try</strong> adds one more stochastic event. The world is random, but the
+            <strong>Try</strong> adds one more stochastic event sampled from a simplified
+            pseudo-random model rather than a scripted path. The world sample is noisy, but the
             agents do not meet it with the same discipline. The more confidence outruns support,
             the more capital, trust, time, and identity get placed on ventures that do not yet
             deserve them.
@@ -111,7 +112,9 @@
           </p>
           <p>
             Then press <strong>Try</strong>. Each try creates one more random event, and the graph
-            extends the four lines according to how each agent reasons and commits.
+            extends the four lines according to how each agent reasons and commits. The exact path
+            is not deterministic. It is sampled from a simplified pseudo-random model, so
+            resetting the field will usually produce a different run.
           </p>
           <p>
             Finally, compare the running losses. Sometimes faith gets lucky for a while. But over
@@ -216,6 +219,11 @@
             </article>
           </div>
 
+          <details class="annotation belief-inline-disclosure" id="scenarioAssumptions">
+            <summary>Model assumptions</summary>
+            <ul id="scenarioAssumptionsList"></ul>
+          </details>
+
           <div class="belief-controls">
             <div class="try-controls">
               <button type="button" id="runTry">Try</button>
@@ -239,6 +247,19 @@
             </p>
             <div class="belief-event-stats" id="eventStats"></div>
             <div class="belief-agent-actions" id="eventActions"></div>
+
+            <details class="annotation belief-inline-disclosure belief-event-guide" id="eventGuide" open>
+              <summary>Why did this line move?</summary>
+              <p id="eventGuideLead">
+                Each click creates one shared event for all four agents. The lines separate only
+                because they respond to that same event with different commitment thresholds.
+              </p>
+              <ul id="eventGuideList"></ul>
+              <p id="eventGuideClose">
+                Short lucky bursts can happen, but the graph is mainly revealing what repeated
+                overreach does over time.
+              </p>
+            </details>
           </div>
         </article>
 
