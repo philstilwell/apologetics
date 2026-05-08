@@ -8523,7 +8523,7 @@ body.app-overreach #lessons-step #lessonClosing {
 .belief-line-milo,
 .belief-agent-milo .belief-avatar,
 .belief-agent-milo .belief-tag {
-  --belief-accent: #2a6172;
+  --belief-accent: #355c9a;
 }
 
 .belief-agent-willa,
@@ -8623,7 +8623,7 @@ body.app-overreach #lessons-step #lessonClosing {
 }
 
 .belief-line-milo {
-  stroke: #2a6172;
+  stroke: #355c9a;
 }
 
 .belief-line-willa {
@@ -8639,7 +8639,7 @@ circle.belief-line-ada {
 }
 
 circle.belief-line-milo {
-  fill: #2a6172;
+  fill: #355c9a;
 }
 
 circle.belief-line-willa {
