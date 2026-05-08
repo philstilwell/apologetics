@@ -973,6 +973,12 @@ button.ghost {
   color: var(--ink);
 }
 
+.source-note em,
+.overreach-disclaimer-card em {
+  font-style: italic;
+  font-weight: 700;
+}
+
 .annotation {
   border: 1px solid #8d5a12;
   border-radius: var(--radius);
@@ -8655,6 +8661,32 @@ circle.belief-line-zeke {
   border-radius: var(--radius);
   background: var(--overreach-card);
   box-shadow: var(--shadow);
+}
+
+.overreach-disclaimer-card {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-left: 5px solid #6e4a1f;
+  background:
+    linear-gradient(90deg, rgba(110, 74, 31, 0.08), rgba(255, 255, 255, 0) 58%),
+    rgba(255, 252, 247, 0.96);
+}
+
+.overreach-disclaimer-card h3,
+.overreach-disclaimer-card p {
+  margin: 0;
+}
+
+.overreach-disclaimer-card a {
+  color: var(--overreach-blue);
+  font-weight: 800;
+}
+
+.overreach-disclaimer-card a:hover,
+.overreach-disclaimer-card a:focus-visible {
+  color: var(--overreach-red);
 }
 
 .overreach-card {

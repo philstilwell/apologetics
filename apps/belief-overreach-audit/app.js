@@ -1,4 +1,4 @@
-const STORAGE_KEY = "belief-overreach-audit-v6";
+const STORAGE_KEY = "belief-overreach-audit-v7";
 
 const agents = [
   {
@@ -752,7 +752,15 @@ function buildSummaryOutput(scenario, scenarioState, standings, lastEvent) {
     `Laggard: ${standings[standings.length - 1].agent.name}`,
     `Current spread: ${formatScenarioValue(scenario, standings[0].value - standings[standings.length - 1].value, true)}`,
     "",
-    `Reading: ${buildLessonClosing(scenario, lastEvent)}`
+    `Reading: ${buildLessonClosing(scenario, lastEvent)}`,
+    "",
+    "Scope and limitations:",
+    "- These scenarios are stylized comparisons, not precise measurements of all real-world cases.",
+    "- The point is structural: when confidence outruns perceived support, decisions usually become less truth-tracking and more costly.",
+    "- Some religious groups define faith more modestly as evidence-aligned trust or confidence. If that is what they mean, this audit is not targeting that narrower usage.",
+    "- The target here is faith as belief, trust, or commitment that exceeds what the agent perceives the evidence to warrant.",
+    "- On that definition, any ideology that positively encourages faith is very likely false, or at least deeply epistemically unreliable, because truth does not need belief to transcend the actual evidence.",
+    "- For a more technical treatment of core and deep rationality, see https://credencing.com"
   );
 
   return lines.join("\n");
@@ -792,6 +800,502 @@ function createScenarioEvent(scenario, scenarioState) {
   }
 }
 
+function buildSeed(...parts) {
+  return parts.reduce((total, part, index) => {
+    if (typeof part === "number") {
+      return total + Math.round(part * 100) * (index + 3);
+    }
+
+    return (
+      total +
+      String(part)
+        .split("")
+        .reduce((sum, character) => sum + character.charCodeAt(0), 0) *
+        (index + 5)
+    );
+  }, 17);
+}
+
+function pickVariant(variants, ...parts) {
+  return variants[Math.abs(buildSeed(...parts)) % variants.length];
+}
+
+function describeCasinoOutcomeVariant(played, won, seed) {
+  if (played.busted) {
+    return pickVariant(
+      [
+        `The extra card was ${played.nextCard}, which pushed the total to ${played.total} and burned the ante.`,
+        `${played.nextCard} was exactly the wrong card: it shoved the total to ${played.total} and turned the whole ante into loss.`,
+        `That last draw added ${played.nextCard}, sent the hand to ${played.total}, and busted away the $100 stake.`
+      ],
+      seed,
+      played.total,
+      played.nextCard
+    );
+  }
+
+  if (won) {
+    return played.hit
+      ? pickVariant(
+          [
+            `The extra card was ${played.nextCard}, which moved the total to ${played.total} and collected the payout.`,
+            `${played.nextCard} landed cleanly, lifted the hand to ${played.total}, and turned the risk into a win.`,
+            `The added ${played.nextCard} carried the hand to ${played.total}, so the round actually paid.`
+          ],
+          seed,
+          played.total,
+          played.nextCard
+        )
+      : pickVariant(
+          [
+            `Standing kept the total at ${played.total}, which collected the payout.`,
+            `Leaving the hand at ${played.total} was enough to take the modest win.`,
+            `No extra card was needed: ${played.total} already cleared the line and paid out.`
+          ],
+          seed,
+          played.total
+        );
+  }
+
+  return played.hit
+    ? pickVariant(
+        [
+          `The extra card was ${played.nextCard}, but the total only reached ${played.total}, so the ante was lost anyway.`,
+          `${played.nextCard} improved the hand only to ${played.total}, which still did not justify the draw.`,
+          `Even after adding ${played.nextCard}, the hand stalled at ${played.total} and the $100 still disappeared.`
+        ],
+        seed,
+        played.total,
+        played.nextCard
+      )
+    : pickVariant(
+        [
+          `Standing left the total at ${played.total}, which stayed below the paying line and lost the ante.`,
+          `${played.total} looked neat, but it was not enough to get paid under the house rule.`,
+          `The hand froze at ${played.total}, and that meant the ante still went to the house.`
+        ],
+        seed,
+        played.total
+      );
+}
+
+function buildGamblingActionText({ agent, index, openingTotal, nextCard, luckPull, mood, played, won, stake }) {
+  const baseSeed = buildSeed(index, agent.id, openingTotal, nextCard, luckPull, mood.id);
+
+  if (stake <= 0) {
+    return pickVariant(
+      [
+        `${agent.shortName} had already run out of bankroll, so this round was only a reminder of how earlier overreach emptied the table stake.`,
+        `${agent.shortName} had no money left to risk. The lesson had already been paid for in earlier hands.`,
+        `${agent.shortName} was out of chips by this point, so the casino could no longer punish the method any further this round.`
+      ],
+      baseSeed
+    );
+  }
+
+  if (!played.hit) {
+    const lead = pickVariant(
+      [
+        `${agent.shortName} treated ${openingTotal} as enough and banked it.`,
+        `${agent.shortName} left ${openingTotal} alone because the hand was already paying.`,
+        `${agent.shortName} accepted ${openingTotal} as a hand worth cashing rather than decorating with luck.`
+      ],
+      baseSeed
+    );
+    const bridge = pickVariant(
+      [
+        `The whole discipline here was simply refusing the extra card.`,
+        `Nothing about the mood improved the value of drawing again.`,
+        `This was one of the rounds where restraint was the only real skill.`
+      ],
+      baseSeed + 1,
+      mood.id
+    );
+    return `${lead} ${bridge} ${describeCasinoOutcomeVariant(played, won, baseSeed + 2)}`;
+  }
+
+  if (played.riskyHit) {
+    const temptation = pickVariant(
+      [
+        `${luckPull}/100 ${mood.statLabel.toLowerCase()} made one more card feel worth chasing.`,
+        `a ${luckPull}/100 ${mood.statLabel.toLowerCase()} let feeling impersonate judgment.`,
+        `the ${mood.statLabel.toLowerCase()} at ${luckPull}/100 made the already good hand feel improvable.`
+      ],
+      baseSeed + 3,
+      mood.id,
+      luckPull
+    );
+    const setup = pickVariant(
+      [
+        `${agent.shortName} already had ${openingTotal}, which was enough to collect the modest payout, but ${temptation}`,
+        `${agent.shortName} was sitting on ${openingTotal}, and that should have been the stopping point. Instead, ${temptation}`,
+        `${agent.shortName} had already crossed the paying line at ${openingTotal}. Even so, ${temptation}`
+      ],
+      baseSeed + 4,
+      openingTotal,
+      mood.id
+    );
+    return `${setup} ${describeCasinoOutcomeVariant(played, won, baseSeed + 5)}`;
+  }
+
+  const neededDraw = pickVariant(
+    [
+      `${agent.shortName} had only ${openingTotal}, so one draw was actually warranted.`,
+      `At ${openingTotal}, ${agent.shortName} did not yet have a paying hand, so drawing once made sense.`,
+      `${agent.shortName} started on ${openingTotal}, which left only one honest route to a win: take a single card.`
+    ],
+    baseSeed + 6,
+    openingTotal
+  );
+  const caution = pickVariant(
+    [
+      `The problem in this game is never the necessary draw itself, but what counts as enough to stop afterward.`,
+      `This is the sort of draw even a disciplined gambler should take.`,
+      `There was no payout to bank yet, so the extra card was not overreach in itself.`
+    ],
+    baseSeed + 7
+  );
+  return `${neededDraw} ${caution} ${describeCasinoOutcomeVariant(played, won, baseSeed + 8)}`;
+}
+
+function buildInvestmentActionText({ agent, index, company, fundamentals, hype, decisionScore, stakeFraction, returnRate, invest }) {
+  const baseSeed = buildSeed(index, agent.id, company, fundamentals, hype, decisionScore, returnRate);
+  const fundamentalsLead = fundamentals - hype;
+  const investmentVoices = {
+    ada: {
+      pass: [
+        `${agent.shortName} left ${company} alone because the business case never looked sturdy enough. The idle cash still picked up a tiny yield.`,
+        `${agent.shortName} watched ${company} but would not let the story clear the threshold without stronger fundamentals.`
+      ],
+      gain: [
+        `${agent.shortName} bought ${company} only after the fundamentals justified it, and this round the position gained ${formatPercent(returnRate * 100)}.`,
+        `${agent.shortName} let ${company} into the portfolio on a stricter reading of the evidence, and the trade returned ${formatPercent(returnRate * 100)} this time.`
+      ],
+      loss: [
+        `${agent.shortName} still judged ${company} worth a position, but the market answered with a ${formatPercent(Math.abs(returnRate) * 100)} loss this round.`,
+        `${agent.shortName} bought ${company} on an evidence-heavy case, yet the position still slid ${formatPercent(Math.abs(returnRate) * 100)} this time.`
+      ]
+    },
+    milo: {
+      pass: [
+        `${agent.shortName} liked parts of the story around ${company}, but not enough to commit real capital this round.`,
+        `${agent.shortName} kept the bankroll mostly in reserve because ${company} never quite cleared the threshold.`
+      ],
+      gain: [
+        `${agent.shortName} bought into ${company} with a ${formatPercent(stakeFraction * 100)} position. This time the market rewarded the call with ${formatPercent(returnRate * 100)}.`,
+        `${agent.shortName} let ${company} into the portfolio after giving the combined case a score of ${formatNumber(decisionScore)}. On this pass, it gained ${formatPercent(returnRate * 100)}.`
+      ],
+      loss: [
+        `${agent.shortName} sized into ${company} because the story felt strong enough, and the market answered with a ${formatPercent(Math.abs(returnRate) * 100)} loss.`,
+        `${agent.shortName} gave ${company} a modest slice of capital, but this round the position fell ${formatPercent(Math.abs(returnRate) * 100)} instead.`
+      ]
+    },
+    willa: {
+      pass: [
+        `${agent.shortName} was tempted by the story around ${company} but, this time, still stopped short of buying.`,
+        `${agent.shortName} felt the appeal of ${company} yet kept the bankroll in reserve because the case never fully ripened.`
+      ],
+      gain: [
+        `${agent.shortName} let the promise of ${company} count for a lot, and this round the position paid ${formatPercent(returnRate * 100)}.`,
+        `${agent.shortName} gave ${company} a real slice of the bankroll because the story felt investable, and the market returned ${formatPercent(returnRate * 100)} this time.`
+      ],
+      loss: [
+        `${agent.shortName} treated ${company} as worthy of a substantial position, and the trade came back with a ${formatPercent(Math.abs(returnRate) * 100)} loss.`,
+        `${agent.shortName} let the narrative around ${company} do more work than the fundamentals deserved, and the position dropped ${formatPercent(Math.abs(returnRate) * 100)}.`
+      ]
+    },
+    zeke: {
+      pass: [
+        `${agent.shortName} almost never stays out, so this pass on ${company} means even the hype could not fully overpower the missing evidence.`,
+        `${agent.shortName} was unusually restrained and kept out of ${company}, leaving the bankroll largely untouched.`
+      ],
+      gain: [
+        `${agent.shortName} pushed capital into ${company} on a faith-heavy reading of the story, and this round the market happened to reward it with ${formatPercent(returnRate * 100)}.`,
+        `${agent.shortName} treated ${company} as a high-conviction idea and got lucky this time with a ${formatPercent(returnRate * 100)} gain.`
+      ],
+      loss: [
+        `${agent.shortName} pushed too much confidence into ${company}, and the position answered with a ${formatPercent(Math.abs(returnRate) * 100)} loss.`,
+        `${agent.shortName} let the hype around ${company} stand in for substance, then paid for it with a ${formatPercent(Math.abs(returnRate) * 100)} drawdown.`
+      ]
+    }
+  };
+  const voice = investmentVoices[agent.id];
+  const investmentCoda =
+    fundamentalsLead >= 20
+      ? "The company had materially stronger fundamentals than buzz."
+      : fundamentalsLead <= -20
+        ? "The story was much louder than the underlying business."
+        : hype >= 80
+          ? "This was exactly the kind of loud mixed case that tempts overbelief."
+          : "The evidence and the excitement were close enough to be easy to confuse.";
+
+  if (!invest) {
+    return `${pickVariant(voice.pass, baseSeed, fundamentalsLead)} ${investmentCoda}`;
+  }
+
+  if (returnRate >= 0) {
+    return `${pickVariant(voice.gain, baseSeed + 1, fundamentalsLead)} ${investmentCoda}`;
+  }
+
+  return `${pickVariant(voice.loss, baseSeed + 2, fundamentalsLead)} ${investmentCoda}`;
+}
+
+function buildRomanceActionText({
+  agent,
+  index,
+  remote,
+  handle,
+  decisionScore,
+  forceCatfish,
+  forcedCatfishCommit,
+  commit,
+  success,
+  supportScore,
+  character,
+  verification,
+  spark
+}) {
+  const baseSeed = buildSeed(index, agent.id, handle, decisionScore, supportScore, remote ? 1 : 0);
+  const romanceVoices = {
+    ada: {
+      holdRemote: [
+        `${agent.shortName} refused to let a remote spark count as knowledge and waited for real verification before making the relationship costly.`,
+        `${agent.shortName} would not convert distance and chemistry into trust without real-world confirmation first.`
+      ],
+      holdGeneral: [
+        `${agent.shortName} kept trust in reserve and waited for better verification before turning spark into a major commitment.`,
+        `${agent.shortName} slowed the relationship down and let character, not chemistry, carry the burden of proof.`
+      ],
+      remoteSuccess: [
+        `${agent.shortName} committed only after the remote story looked strong enough, and this time the person behind ${handle} actually justified the trust.`,
+        `${agent.shortName} gave the remote bond a chance only after it cleared a harder threshold, and the call happened to hold up.`
+      ],
+      localSuccess: [
+        `${agent.shortName} judged the local prospect worth the investment, and this time the relationship returned some of that trust.`,
+        `${agent.shortName} finally turned attraction into commitment only when the signals looked solid enough, and the relationship proved steady.`
+      ],
+      catfish: [
+        `${agent.shortName} would almost never reach this branch, but here the remote story still turned out to be a catfish once reality finally caught up.`,
+        `${agent.shortName} took the remote story more seriously than usual, and the person behind it still collapsed into a catfish.`
+      ],
+      remoteCollapse: [
+        `${agent.shortName} treated the remote connection as verified too early, and the whole story collapsed once scrutiny mattered.`,
+        `${agent.shortName} let the remote bond pass the commitment threshold before the evidence had earned it, and the relationship fell apart.`
+      ],
+      localCollapse: [
+        `${agent.shortName} committed a little too early, and the person's actual character did not justify the level of trust given.`,
+        `${agent.shortName} turned attraction into commitment before the evidence was mature enough, and the mismatch became costly.`
+      ]
+    },
+    milo: {
+      holdRemote: [
+        `${agent.shortName} felt the remote pull but still kept enough skepticism to ask for more verification.`,
+        `${agent.shortName} nearly let the remote chemistry count as proof, but paused before making the story expensive.`
+      ],
+      holdGeneral: [
+        `${agent.shortName} kept trust mostly in reserve and waited for a bit more confirmation before committing deeply.`,
+        `${agent.shortName} felt the attraction but did not let it finish the reasoning on its own.`
+      ],
+      remoteSuccess: [
+        `${agent.shortName} let the remote story clear the line, and this time the connection turned out to be genuine enough to hold.`,
+        `${agent.shortName} invested in the remote bond after a modest confidence bump, and the relationship happened to justify it.`
+      ],
+      localSuccess: [
+        `${agent.shortName} committed once the local relationship felt plausible enough, and the person turned out steady this time.`,
+        `${agent.shortName} gave the local prospect a chance and, on this round, the trust was repaid more than punished.`
+      ],
+      catfish: [
+        `${agent.shortName} let a little too much longing substitute for checking, and the remote story resolved into a catfish.`,
+        `${agent.shortName} treated romantic hope as if it were one more piece of evidence, and the remote bond failed as a catfish.`
+      ],
+      remoteCollapse: [
+        `${agent.shortName} committed to a remote story that still needed more checking, and scrutiny broke it apart.`,
+        `${agent.shortName} let hope push the remote relationship over the threshold too soon, and it collapsed under verification.`
+      ],
+      localCollapse: [
+        `${agent.shortName} moved from attraction to commitment a little too quickly, and the relationship turned more costly than trustworthy.`,
+        `${agent.shortName} let the early glow count for too much, and the local relationship could not carry the trust it received.`
+      ]
+    },
+    willa: {
+      holdRemote: [
+        `${agent.shortName} wanted to trust the remote chemistry, but even here she stopped short of giving it full commitment.`,
+        `${agent.shortName} felt the remote story tug hard, yet still held back enough to demand more proof.`
+      ],
+      holdGeneral: [
+        `${agent.shortName} kept the relationship from becoming costly even though the feelings were strong.`,
+        `${agent.shortName} nearly let desire finish the argument, but slowed down before making a deep commitment.`
+      ],
+      remoteSuccess: [
+        `${agent.shortName} leaned into the remote story because it felt compelling, and this time the trust happened to land on someone real enough.`,
+        `${agent.shortName} let the remote chemistry count for a lot, and on this round reality happened to cooperate.`
+      ],
+      localSuccess: [
+        `${agent.shortName} committed with a generous reading of the signs, and this time the relationship did not punish that generosity.`,
+        `${agent.shortName} trusted the local spark more quickly than Ada would have, and the relationship happened to hold together.`
+      ],
+      catfish: [
+        `${agent.shortName} let longing overpower verification, and the remote romance opened up as a catfish.`,
+        `${agent.shortName} trusted the story because it felt beautiful enough to be true, and the remote bond collapsed into catfishing.`
+      ],
+      remoteCollapse: [
+        `${agent.shortName} spent real trust on a remote story before the evidence was ready, and the relationship collapsed under inspection.`,
+        `${agent.shortName} treated the remote chemistry as a guide to character, and the relationship could not survive verification.`
+      ],
+      localCollapse: [
+        `${agent.shortName} committed because the feelings felt rich enough, but the person's character could not sustain the trust.`,
+        `${agent.shortName} moved into commitment on a hope-heavy reading of the signs, and the relationship turned expensive.`
+      ]
+    },
+    zeke: {
+      holdRemote: [
+        `${agent.shortName} almost never slows down here, so this rare pause meant he finally refused to let remote intensity count as proof.`,
+        `${agent.shortName} felt the remote pull hard but, unusually, still stopped short of treating it as established trust.`
+      ],
+      holdGeneral: [
+        `${agent.shortName} reined himself in for once and refused to turn raw feeling into a full commitment.`,
+        `${agent.shortName} actually paused before surrendering serious trust, which is already an improvement in method.`
+      ],
+      remoteSuccess: [
+        `${agent.shortName} pushed trust into the remote story early, and this time the world happened to reward the overreach.`,
+        `${agent.shortName} treated the remote bond as real before it had fully earned it, and this round he got lucky.`
+      ],
+      localSuccess: [
+        `${agent.shortName} committed on a very generous reading of the signs, and this time the relationship happened to justify that leap.`,
+        `${agent.shortName} let feeling carry the local case farther than the evidence strictly allowed, and the gamble paid this round.`
+      ],
+      catfish: [
+        `${agent.shortName} converted remote intensity straight into trust, and the story finally broke open as a catfish.`,
+        `${agent.shortName} trusted a remote fantasy before it had earned that right, and the result was a full catfishing collapse.`
+      ],
+      remoteCollapse: [
+        `${agent.shortName} spent trust on a remote bond almost as soon as it felt meaningful, and verification tore the story down.`,
+        `${agent.shortName} let the remote relationship become serious before it deserved seriousness, and the collapse exposed the overreach.`
+      ],
+      localCollapse: [
+        `${agent.shortName} committed on an inflated reading of the signs, and the person's character could not carry what was being asked of it.`,
+        `${agent.shortName} made the local relationship costly before the evidence was there, and the commitment turned sour.`
+      ]
+    }
+  };
+  const voice = romanceVoices[agent.id];
+  const romanceCoda =
+    remote
+      ? verification < 20
+        ? "There was almost no independent verification underneath the intensity."
+        : supportScore < 45
+          ? "The chemistry was doing much more work than the actual evidence."
+          : "The remote story had more support than usual, but distance still kept it fragile."
+      : character < 45
+        ? "The character signs were warning against a big leap."
+        : spark > 80 && supportScore < 60
+          ? "The feelings were outrunning the actual case for trust."
+          : "This was one of the more mixed cases, where attraction and evidence were pulling in different directions.";
+
+  if (!commit) {
+    return forceCatfish && remote
+      ? `${pickVariant(voice.holdRemote, baseSeed)} ${romanceCoda}`
+      : `${pickVariant(voice.holdGeneral, baseSeed + 1, remote ? "remote" : "local")} ${romanceCoda}`;
+  }
+
+  if (success) {
+    return remote
+      ? `${pickVariant(voice.remoteSuccess, baseSeed + 2)} ${romanceCoda}`
+      : `${pickVariant(voice.localSuccess, baseSeed + 3)} ${romanceCoda}`;
+  }
+
+  if (forcedCatfishCommit) {
+    return `${pickVariant(voice.catfish, baseSeed + 4)} ${romanceCoda}`;
+  }
+
+  if (remote) {
+    return `${pickVariant(voice.remoteCollapse, baseSeed + 5)} ${romanceCoda}`;
+  }
+
+  return `${pickVariant(voice.localCollapse, baseSeed + 6)} ${romanceCoda}`;
+}
+
+function buildReligionActionText({ agent, index, encounter, evidence, pull, demand, commit, grounded }) {
+  const baseSeed = buildSeed(index, agent.id, encounter, evidence, pull, demand);
+  const religionVoices = {
+    ada: {
+      waited: [
+        `${agent.shortName} kept life capital in reserve and waited for stronger evidence before handing over allegiance.`,
+        `${agent.shortName} refused to let the atmosphere around ${encounter} count as proof and stayed uncommitted.`
+      ],
+      grounded: [
+        `${agent.shortName} committed only because ${encounter} finally looked weighty enough, and this time some of that cost did return a modest benefit.`,
+        `${agent.shortName} let ${encounter} claim some real loyalty only after a harder evidential threshold, and the return was real but limited.`
+      ],
+      over: [
+        `${agent.shortName} still found ${encounter} too thin to justify what was surrendered, and the commitment failed to pay its way.`,
+        `${agent.shortName} spent some life capital on ${encounter}, but the evidence never rose high enough to excuse the surrender.`
+      ]
+    },
+    milo: {
+      waited: [
+        `${agent.shortName} felt the pull of ${encounter} but kept enough reserve to wait for a stronger case.`,
+        `${agent.shortName} did not let meaning, warmth, or urgency close the evidential gap this time.`
+      ],
+      grounded: [
+        `${agent.shortName} committed because ${encounter} felt persuasive enough, and this time some of the cost came back as real structure or comfort.`,
+        `${agent.shortName} gave ${encounter} a slice of life capital, and this round it returned a modest practical benefit.`
+      ],
+      over: [
+        `${agent.shortName} let the social and emotional force of ${encounter} count as if it were evidence, then paid for that overreach in life capital.`,
+        `${agent.shortName} treated the religious pull as slightly more probative than it was, and the surrender cost more than the claim returned.`
+      ]
+    },
+    willa: {
+      waited: [
+        `${agent.shortName} wanted to trust the meaning in ${encounter}, but still held back enough to avoid full surrender.`,
+        `${agent.shortName} felt the invitation strongly, yet still kept time, money, and obedience from being spent too quickly.`
+      ],
+      grounded: [
+        `${agent.shortName} surrendered to ${encounter} on a generous reading of the signs, and this time some real comfort did come back.`,
+        `${agent.shortName} let ${encounter} claim more life than Ada would have allowed, and this round it happened to return a modest benefit.`
+      ],
+      over: [
+        `${agent.shortName} handed too much allegiance to ${encounter} before the case was strong enough, and the return never justified the surrender.`,
+        `${agent.shortName} let the beauty and pull of ${encounter} outrun the evidence, and the cost landed on real life capital.`
+      ]
+    },
+    zeke: {
+      waited: [
+        `${agent.shortName} almost never pauses here, so this rare restraint meant he finally refused to let religious pull count as proof.`,
+        `${agent.shortName} felt the gravity of ${encounter} but, unusually, did not convert it straight into obedience.`
+      ],
+      grounded: [
+        `${agent.shortName} threw real loyalty behind ${encounter}, and this time the world happened to return enough comfort to make the move look less reckless than it was.`,
+        `${agent.shortName} surrendered first and questioned later, and on this round the claim happened to give back something tangible.`
+      ],
+      over: [
+        `${agent.shortName} spent time, money, and obedience on ${encounter} long before the evidence could bear that weight, and the claim did not pay it back.`,
+        `${agent.shortName} let the full emotional and communal force of ${encounter} masquerade as warrant, then paid for it in real life capital.`
+      ]
+    }
+  };
+  const voice = religionVoices[agent.id];
+  const religionCoda =
+    pull - evidence >= 28
+      ? "The emotional and communal force was doing far more work than the actual case."
+      : demand >= 70
+        ? "This pull was asking for an unusually high level of obedience, time, or identity."
+        : evidence >= 42
+          ? "There was at least some substance in the background, but still not enough to excuse careless surrender."
+          : "The evidential footing was still thin relative to what the claim was asking for.";
+
+  if (!commit) {
+    return `${pickVariant(voice.waited, baseSeed)} ${religionCoda}`;
+  }
+
+  if (grounded) {
+    return `${pickVariant(voice.grounded, baseSeed + 1)} ${religionCoda}`;
+  }
+
+  return `${pickVariant(voice.over, baseSeed + 2)} ${religionCoda}`;
+}
+
 function createGamblingEvent(scenarioState) {
   const index = scenarioState.tries.length + 1;
   const openingTotal = drawCasinoOpeningTotal();
@@ -808,22 +1312,21 @@ function createGamblingEvent(scenarioState) {
     const played = playCasinoHand(agent, openingTotal, nextCard, luckPull);
     const won = stake > 0 && played.total >= CASINO_SAFE_MIN && played.total <= CASINO_BUST_LIMIT;
     const change = stake > 0 ? Math.round((won ? (stake * CASINO_WIN_PROFIT) / 100 : -stake) * 100) / 100 : 0;
-    let text;
-
-    if (!played.hit) {
-      text =
-        openingTotal >= CASINO_SAFE_MIN
-          ? `${agent.shortName} banked ${openingTotal} because it was already a paying hand. ${describeCasinoOutcome(played, won)}`
-          : `${agent.shortName} froze on ${openingTotal} instead of taking the necessary draw. ${describeCasinoOutcome(played, won)}`
-    } else if (played.riskyHit) {
-      text = `${agent.shortName} already had ${openingTotal}, which was enough to collect the modest payout. But a ${luckPull}/100 ${mood.statLabel.toLowerCase()} made one more card feel worth it. ${describeCasinoOutcome(played, won)}`
-    } else {
-      text = `${agent.shortName} had only ${openingTotal}, so taking one card was the only route to a paying hand. ${describeCasinoOutcome(played, won)}`
-    }
+    const text = buildGamblingActionText({
+      agent,
+      index,
+      openingTotal,
+      nextCard,
+      luckPull,
+      mood,
+      played,
+      won,
+      stake
+    });
 
     delta[agent.id] = change;
     after[agent.id] = clampNumber(previous + change, 0, Infinity, previous + change);
-    actions[agent.id] = { tag: getCasinoActionTag(played), text, delta: change };
+    actions[agent.id] = { tag: stake > 0 ? getCasinoActionTag(played) : "Out of bankroll", text, delta: change };
   });
 
   return {
@@ -873,14 +1376,31 @@ function createInvestmentEvent(scenarioState) {
       const reserveYield = (previous - stake) * 0.0025;
       change = stake * returnRate + reserveYield;
       tag = returnRate >= 0 ? "Bought well" : "Bought weakly";
-      text =
-        returnRate >= 0
-          ? `${agent.shortName} bought ${formatPercent(stakeFraction * 100)} of the bankroll because the story cleared ${formatNumber(decisionScore)}. This round it paid ${formatPercent(returnRate * 100)}.`
-          : `${agent.shortName} bought ${formatPercent(stakeFraction * 100)} of the bankroll because the story cleared ${formatNumber(decisionScore)}. This round it lost ${formatPercent(Math.abs(returnRate) * 100)}.`;
+      text = buildInvestmentActionText({
+        agent,
+        index,
+        company,
+        fundamentals,
+        hype,
+        decisionScore,
+        stakeFraction,
+        returnRate,
+        invest
+      });
     } else {
       change = previous * 0.0025;
       tag = "Passed";
-      text = `${agent.shortName} stayed in cash because the business case did not clear the threshold. The reserve still picked up a tiny yield.`;
+      text = buildInvestmentActionText({
+        agent,
+        index,
+        company,
+        fundamentals,
+        hype,
+        decisionScore,
+        stakeFraction: 0,
+        returnRate,
+        invest
+      });
     }
 
     delta[agent.id] = Math.round(change * 100) / 100;
@@ -941,23 +1461,59 @@ function createRomanceEvent(scenarioState) {
       if (success) {
         change = 28 + character * 0.6 + verification * 0.18 - commitmentCost;
         tag = remote ? "Remote success" : "Committed";
-        text = `${agent.shortName} committed because the story cleared ${formatNumber(decisionScore)}. This time the relationship held up and paid back some of that trust.`;
+        text = buildRomanceActionText({
+          agent,
+          index,
+          remote,
+          handle,
+          decisionScore,
+          forceCatfish,
+          forcedCatfishCommit,
+          commit,
+          success,
+          supportScore,
+          character,
+          verification,
+          spark
+        });
       } else {
         const catfishPenalty = remote ? 36 + (100 - verification) * 0.42 + (forcedCatfishCommit ? 18 : 0) : 0;
         change = -(30 + (100 - character) * 0.66 + spark * 0.18 + commitmentCost + catfishPenalty);
         tag = forcedCatfishCommit ? "Catfished" : remote ? "Remote collapse" : "Bad commitment";
-        text = forcedCatfishCommit
-          ? `${agent.shortName} started a remote relationship without vetting the person well enough, treated chemistry as trust, and got catfished when the story had to meet reality.`
-          : remote
-            ? `${agent.shortName} committed hard to a remote story before it had been properly verified, and the relationship collapsed under scrutiny.`
-            : `${agent.shortName} committed before the person's character had earned that level of trust, and the relationship turned costly.`;
+        text = buildRomanceActionText({
+          agent,
+          index,
+          remote,
+          handle,
+          decisionScore,
+          forceCatfish,
+          forcedCatfishCommit,
+          commit,
+          success,
+          supportScore,
+          character,
+          verification,
+          spark
+        });
       }
     } else {
       change = remote ? 12 : character < 55 ? 8 : 4;
       tag = forceCatfish && remote ? "Vetted first" : "Held back";
-      text = forceCatfish && remote
-        ? `${agent.shortName} refused to let a remote spark count as knowledge and waited for real verification before making the relationship costly.`
-        : `${agent.shortName} kept trust in reserve and waited for better verification before turning spark into a major commitment.`;
+      text = buildRomanceActionText({
+        agent,
+        index,
+        remote,
+        handle,
+        decisionScore,
+        forceCatfish,
+        forcedCatfishCommit,
+        commit,
+        success,
+        supportScore,
+        character,
+        verification,
+        spark
+      });
     }
 
     delta[agent.id] = Math.round(change * 100) / 100;
@@ -1020,16 +1576,16 @@ function createReligionEvent(scenarioState) {
       if (grounded) {
         change = 10 + evidence * 0.28 + pull * 0.05 - baseCost * 0.45;
         tag = "Committed";
-        text = `${agent.shortName} committed because the claim felt weighty enough. This time some of that commitment returned a modest payoff, but only after a real cost.`;
+        text = buildReligionActionText({ agent, index, encounter, evidence, pull, demand, commit, grounded });
       } else {
         change = -(12 + (100 - evidence) * 0.34 + demand * 0.35 + agent.bias * 18);
         tag = "Overcommitted";
-        text = `${agent.shortName} spent time, money, and obedience on a thinly supported religious pull. The claim did not cash out enough to justify what was surrendered.`;
+        text = buildReligionActionText({ agent, index, encounter, evidence, pull, demand, commit, grounded });
       }
     } else {
       change = 10 + evidence * 0.06;
       tag = "Waited";
-      text = `${agent.shortName} kept life capital in reserve and waited for stronger evidence before handing over allegiance.`;
+      text = buildReligionActionText({ agent, index, encounter, evidence, pull, demand, commit, grounded });
     }
 
     delta[agent.id] = Math.round(change * 100) / 100;
@@ -1240,22 +1796,6 @@ function playCasinoHand(agent, openingTotal, nextCard, luckPull) {
     busted: total > CASINO_BUST_LIMIT,
     riskyHit: hit && openingTotal >= CASINO_SAFE_MIN
   };
-}
-
-function describeCasinoOutcome(played, won) {
-  if (played.busted) {
-    return `The extra card was ${played.nextCard}, which pushed the total to ${played.total} and burned the ante.`;
-  }
-
-  if (won) {
-    return played.hit
-      ? `The extra card was ${played.nextCard}, which moved the total to ${played.total} and collected the payout.`
-      : `Standing kept the total at ${played.total}, which collected the payout.`;
-  }
-
-  return played.hit
-    ? `The extra card was ${played.nextCard}, but the total only reached ${played.total}, so the ante was lost anyway.`
-    : `Standing left the total at ${played.total}, which stayed below the paying line and lost the ante.`;
 }
 
 function getCasinoActionTag(played) {
