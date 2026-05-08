@@ -788,7 +788,7 @@ function renderChart() {
     .map((agent, index) => {
       const x = margin.left + index * 148;
       return `
-        <g transform="translate(${x}, ${height - 8})">
+        <g transform="translate(${x}, ${height - 2})">
           <line class="belief-line belief-line-${agent.id}" x1="0" y1="-6" x2="18" y2="-6"></line>
           <text class="belief-axis-label" x="24" y="-2">${agent.shortName}</text>
         </g>
@@ -814,7 +814,8 @@ function renderChart() {
     ${xTicks
       .map((tick) => {
         const x = getX(tick);
-        return `<text class="belief-axis-label" x="${x}" y="${height - margin.bottom + 22}" text-anchor="middle">${tick}</text>`;
+        const label = tick === 0 ? "0 tries" : `${tick}`;
+        return `<text class="belief-axis-label" x="${x}" y="${height - margin.bottom + 18}" text-anchor="middle">${label}</text>`;
       })
       .join("")}
     <line class="belief-axis-line" x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${height - margin.bottom}"></line>
