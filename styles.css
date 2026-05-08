@@ -8042,6 +8042,7 @@ body.app-overreach #summary-step {
 
 .belief-stage-grid {
   grid-template-columns: minmax(300px, 0.88fr) minmax(0, 1.12fr);
+  align-items: start;
 }
 
 .belief-agent-grid {
@@ -8075,6 +8076,11 @@ body.app-overreach #summary-step {
 .belief-graph-panel {
   display: grid;
   gap: 14px;
+}
+
+.belief-graph-panel {
+  align-content: start;
+  align-self: start;
 }
 
 .belief-agent-card,
