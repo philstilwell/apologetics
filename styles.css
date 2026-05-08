@@ -8522,8 +8522,7 @@ body.app-overreach #lessons-step #lessonClosing {
   visibility: visible;
 }
 
-.belief-event-stats .belief-stat-pill:last-child .metric-tooltip,
-.belief-event-stats .belief-stat-pill:nth-last-child(2):nth-child(2) .metric-tooltip {
+.belief-event-stats .belief-stat-pill:last-child .metric-tooltip {
   right: 0;
   left: auto;
 }
