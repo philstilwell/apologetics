@@ -452,6 +452,7 @@ main {
 
 .purpose-band,
 .audit-list-band,
+.hub-qa-band,
 .author-band {
   padding: clamp(42px, 8vh, 82px) 0;
 }
@@ -463,6 +464,11 @@ main {
 .audit-list-band {
   border-top: 1px solid #d8d8d8;
   background: #f1f1ef;
+}
+
+.hub-qa-band {
+  border-top: 1px solid #d8d8d8;
+  background: #fff;
 }
 
 .author-band {
@@ -488,6 +494,76 @@ main {
   color: #4e4e4e;
   font-size: 1.02rem;
   line-height: 1.6;
+}
+
+.hub-qa-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.hub-qa-item {
+  border: 1px solid #d0d0d0;
+  border-radius: var(--radius);
+  background: #f7f7f5;
+  overflow: hidden;
+}
+
+.hub-qa-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 74px;
+  padding: 16px 18px;
+  color: #111;
+  cursor: pointer;
+  font-size: 1.06rem;
+  font-weight: 900;
+  line-height: 1.25;
+  list-style: none;
+}
+
+.hub-qa-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.hub-qa-item summary::after {
+  display: inline-grid;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid #111;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
+  content: "+";
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.hub-qa-item[open] summary {
+  border-bottom: 1px solid #d0d0d0;
+  background: #fff;
+}
+
+.hub-qa-item[open] summary::after {
+  content: "-";
+}
+
+.hub-qa-item div {
+  display: grid;
+  gap: 12px;
+  padding: 16px 18px 18px;
+}
+
+.hub-qa-item p {
+  margin: 0;
+  color: #454545;
+  font-size: 0.98rem;
+  line-height: 1.62;
 }
 
 .principle-grid {
@@ -3481,6 +3557,78 @@ body:has(.guided-resurrection) a:focus-visible {
   line-height: 1.12;
 }
 
+.resurrection-qa-section {
+  gap: 14px;
+}
+
+.resurrection-qa-list {
+  display: grid;
+  gap: 10px;
+}
+
+.resurrection-qa-item {
+  overflow: hidden;
+  border: 1px solid #a9c8b2;
+  border-radius: var(--radius);
+  background: #fbfff9;
+}
+
+.resurrection-qa-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  color: var(--plain-ink);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 950;
+  line-height: 1.25;
+  list-style: none;
+}
+
+.resurrection-qa-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.resurrection-qa-item summary::after {
+  content: "+";
+  display: grid;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--plain-green);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.resurrection-qa-item[open] summary {
+  border-bottom: 1px solid #a9c8b2;
+  background: var(--plain-green-soft);
+}
+
+.resurrection-qa-item[open] summary::after {
+  content: "-";
+}
+
+.resurrection-qa-item div {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px 16px;
+}
+
+.resurrection-qa-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
 .guided-resurrection .resurrection-report .result-panel {
   position: static;
 }
@@ -3571,6 +3719,10 @@ body:has(.guided-resurrection) a:focus-visible {
   }
 
   .principle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-qa-list {
     grid-template-columns: 1fr;
   }
 
@@ -5090,6 +5242,7 @@ body.app-falsifiability #summary {
 .outcome-rules-panel,
 .all-stance-panel,
 .report-panel,
+.qa-panel,
 .preset-panel,
 .share-panel {
   display: grid;
@@ -5220,6 +5373,7 @@ body.app-falsifiability #summary {
 .outcome-rules-panel h3,
 .all-stance-panel h3,
 .report-panel h3,
+.qa-panel h3,
 .preset-panel h3,
 .share-panel h3 {
   color: var(--ff-blue-dark);
@@ -5629,6 +5783,87 @@ body.app-falsifiability #summary {
   background: #fffdf6;
 }
 
+.qa-panel {
+  background: #fbfff9;
+}
+
+.qa-details .accordion-toggle-label::before {
+  content: "Show Q&A";
+}
+
+.qa-details[open] .accordion-toggle-label::before {
+  content: "Hide Q&A";
+}
+
+.qa-body {
+  display: grid;
+  gap: 9px;
+  padding: 0 14px 14px;
+}
+
+.qa-item {
+  border: 1px solid #c6d1ca;
+  border-radius: var(--radius);
+  background: #fffdf6;
+  overflow: hidden;
+}
+
+.qa-item > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 13px;
+  color: var(--ff-blue-dark);
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 920;
+  line-height: 1.25;
+  list-style: none;
+}
+
+.qa-item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.qa-item > summary::after {
+  display: inline-grid;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ff-blue-dark);
+  color: #fff;
+  content: "+";
+  font-size: 0.8rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.qa-item[open] > summary {
+  border-bottom: 1px solid #c6d1ca;
+  background: #f3faf8;
+}
+
+.qa-item[open] > summary::after {
+  content: "-";
+}
+
+.qa-item > div {
+  display: grid;
+  gap: 10px;
+  padding: 12px 13px 14px;
+}
+
+.qa-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 680;
+  line-height: 1.52;
+}
+
 .report-actions {
   display: flex;
   flex-wrap: wrap;
@@ -5913,6 +6148,7 @@ body.app-falsifiability #summary {
   .outcome-rules-panel,
   .all-stance-panel,
   .report-panel,
+  .qa-panel,
   .preset-panel,
   .share-panel {
     width: 100%;

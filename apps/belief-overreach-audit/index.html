@@ -31,6 +31,76 @@
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../../styles.css?v=20260507-belief-overreach-simulator">
+    <style>
+      .belief-faq-section {
+        display: grid;
+        gap: 14px;
+      }
+
+      .belief-faq-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .belief-faq-item {
+        overflow: hidden;
+        border: 1px solid rgba(110, 74, 31, 0.18);
+        border-radius: var(--radius);
+        background:
+          linear-gradient(180deg, rgba(255, 251, 246, 0.98) 0, rgba(255, 247, 237, 0.94) 100%);
+      }
+
+      .belief-faq-item > summary {
+        align-items: start;
+      }
+
+      .belief-faq-head {
+        display: grid;
+        gap: 6px;
+      }
+
+      .belief-faq-head h3,
+      .belief-faq-head p {
+        margin: 0;
+      }
+
+      .belief-faq-head h3 {
+        font-size: clamp(1rem, 1.55vw, 1.18rem);
+        line-height: 1.16;
+      }
+
+      .belief-faq-item .accordion-toggle-label::before {
+        content: "Show answer";
+      }
+
+      .belief-faq-item[open] .accordion-toggle-label::before {
+        content: "Hide answer";
+      }
+
+      .belief-faq-body {
+        display: grid;
+        gap: 10px;
+        padding: 0 14px 14px;
+      }
+
+      .belief-faq-body p,
+      .belief-faq-body ul {
+        margin: 0;
+        color: var(--overreach-muted);
+        font-size: 0.92rem;
+        line-height: 1.56;
+      }
+
+      .belief-faq-body a {
+        color: var(--overreach-blue);
+        font-weight: 800;
+      }
+
+      .belief-faq-body a:hover,
+      .belief-faq-body a:focus-visible {
+        color: var(--overreach-red);
+      }
+    </style>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -301,6 +371,235 @@
         <p class="bridge-caption" id="lessonClosing">
           In every field, faith adds commitment before the world has earned that commitment.
         </p>
+      </section>
+
+      <section class="overreach-card belief-faq-section" id="qa-step" aria-labelledby="qa-title">
+        <p class="app-step">Questions and answers</p>
+        <h2 id="qa-title">Anticipated questions</h2>
+        <p class="overreach-lead">
+          This simulator compresses several ideas into one visual exercise. These answers unpack
+          the most likely objections, misunderstandings, and follow-up questions.
+        </p>
+
+        <div class="belief-faq-grid">
+          <details class="belief-faq-item accordion-panel" open>
+            <summary>
+              <div class="belief-faq-head">
+                <span class="mini-label">Question</span>
+                <h3>What is this tool actually claiming about faith?</h3>
+                <p>
+                  The central claim is not that every strong feeling is bad. It is that faith, as
+                  defined here, is confidence or commitment that exceeds perceived support.
+                </p>
+              </div>
+              <span class="accordion-toggle-label" aria-hidden="true"></span>
+            </summary>
+            <div class="belief-faq-body">
+              <p>
+                Under that definition, faith does not improve the outside world. It does not make
+                the odds better, the company stronger, the lover safer, or the god-claim more
+                likely to be true. It only changes how much of life the agent is willing to stake
+                anyway.
+              </p>
+              <p>
+                The simulator is therefore comparing two methods, not two moods. One method tries
+                to keep belief and commitment inside perceived support. The other lets longing,
+                hope, hype, chemistry, fear, or inherited trust authorize extra commitment before
+                the world has earned it.
+              </p>
+            </div>
+          </details>
+
+          <details class="belief-faq-item accordion-panel">
+            <summary>
+              <div class="belief-faq-head">
+                <span class="mini-label">Question</span>
+                <h3>If the tries are random, how can the tool show anything reliable?</h3>
+                <p>
+                  A single run is noisy, but the comparison still matters because all four agents
+                  face the same sampled event each round.
+                </p>
+              </div>
+              <span class="accordion-toggle-label" aria-hidden="true"></span>
+            </summary>
+            <div class="belief-faq-body">
+              <p>
+                The tool does not feed one person an easy world and another person a hard one.
+                Each click creates one shared event. The lines diverge because the agents respond
+                to that same event with different thresholds for trust, commitment, and surrender.
+              </p>
+              <p>
+                That means the exact path can vary from run to run, but the method comparison is
+                still meaningful. A rerun may scramble the order for a while, yet over repeated
+                tries and repeated runs the more disciplined policy wastes less capital than the
+                more faith-driven one.
+              </p>
+            </div>
+          </details>
+
+          <details class="belief-faq-item accordion-panel">
+            <summary>
+              <div class="belief-faq-head">
+                <span class="mini-label">Question</span>
+                <h3>Why do faith-heavy lines sometimes lead for a while?</h3>
+                <p>
+                  Because bad methods can still catch lucky bursts, especially when the world is
+                  noisy and short samples are unstable.
+                </p>
+              </div>
+              <span class="accordion-toggle-label" aria-hidden="true"></span>
+            </summary>
+            <div class="belief-faq-body">
+              <p>
+                The point of the tool is not that faith must fail on every single try. It is that
+                faith licenses commitments that are too large for the support on offer. Sometimes
+                those oversized commitments happen to pay off briefly. When that happens, faith
+                can look vindicated even though the method has not become more truth-tracking.
+              </p>
+              <p>
+                This is why the graph matters more than one event card. Short winning streaks do
+                not cancel the long-run problem. They often help hide it by making overreach feel
+                wise, brave, or rewarded right before the next costly miss.
+              </p>
+            </div>
+          </details>
+
+          <details class="belief-faq-item accordion-panel">
+            <summary>
+              <div class="belief-faq-head">
+                <span class="mini-label">Question</span>
+                <h3>Does this mean people should never act until evidence is perfect?</h3>
+                <p>
+                  No. The tool is not arguing for paralysis. It is arguing for proportion.
+                </p>
+              </div>
+              <span class="accordion-toggle-label" aria-hidden="true"></span>
+            </summary>
+            <div class="belief-faq-body">
+              <p>
+                Real life often requires action under uncertainty. Core rationality does not say,
+                "Do nothing until certainty arrives." It says, "Do not let commitment outrun what
+                you take the evidence to support." You can act cautiously, provisionally, and with
+                escape routes while still being honest about how much support you actually have.
+              </p>
+              <p>
+                In practice, that means smaller commitments, reversible steps, backup plans, and a
+                willingness to keep updating. The tool treats faith as the move beyond that line:
+                the point where uncertainty is no longer being managed but instead covered over by
+                trust, hope, or pressure.
+              </p>
+            </div>
+          </details>
+
+          <details class="belief-faq-item accordion-panel">
+            <summary>
+              <div class="belief-faq-head">
+                <span class="mini-label">Question</span>
+                <h3>Is waiting always the rational move in romance or religion?</h3>
+                <p>
+                  Not if "waiting" means passivity. But yes if it means withholding irreversible
+                  commitment until stronger support arrives.
+                </p>
+              </div>
+              <span class="accordion-toggle-label" aria-hidden="true"></span>
+            </summary>
+            <div class="belief-faq-body">
+              <p>
+                The grounded agent is not frozen. In romance, that agent can still talk, meet,
+                observe, verify, and learn. In religion, that agent can still read, visit,
+                compare, and investigate. The key distinction is between exploring a claim and
+                surrendering to it.
+              </p>
+              <p>
+                The simulator counts "waiting" as rational when the alternative is an oversized
+                step that the current evidence does not justify. Sometimes patience preserves more
+                truth, money, safety, and identity than premature trust does.
+              </p>
+            </div>
+          </details>
+
+          <details class="belief-faq-item accordion-panel">
+            <summary>
+              <div class="belief-faq-head">
+                <span class="mini-label">Question</span>
+                <h3>Why include religion alongside gambling, investment, and romance?</h3>
+                <p>
+                  Because religion also asks for scarce resources, and the same structure of
+                  overcommitment can appear there too.
+                </p>
+              </div>
+              <span class="accordion-toggle-label" aria-hidden="true"></span>
+            </summary>
+            <div class="belief-faq-body">
+              <p>
+                In gambling the obvious resource is money. In investment it is capital. In romance
+                it is trust, exclusivity, future planning, and emotional bandwidth. In religion it
+                can be time, energy, money, identity, guilt, obedience, social belonging, and
+                major life direction.
+              </p>
+              <p>
+                The argument is not that religion is identical to a casino. It is that the same
+                epistemic question still applies: has this claim earned the degree of trust,
+                surrender, and life-structuring commitment being asked of the believer?
+              </p>
+            </div>
+          </details>
+
+          <details class="belief-faq-item accordion-panel">
+            <summary>
+              <div class="belief-faq-head">
+                <span class="mini-label">Question</span>
+                <h3>What if someone defines faith as evidence-aligned trust?</h3>
+                <p>
+                  Then this tool is not mainly aimed at that narrower definition.
+                </p>
+              </div>
+              <span class="accordion-toggle-label" aria-hidden="true"></span>
+            </summary>
+            <div class="belief-faq-body">
+              <p>
+                Some believers explicitly redefine faith so that it stays inside what they take the
+                evidence to support. If that is the intended meaning, then the term is functioning
+                more like confidence, reliance, or trust that follows evidential judgment rather
+                than outrunning it.
+              </p>
+              <p>
+                This tool is focused on the more common pattern in which people are encouraged to
+                trust, persist, surrender, or commit beyond what they themselves think the support
+                really warrants. That is the form of faith being tested here.
+              </p>
+            </div>
+          </details>
+
+          <details class="belief-faq-item accordion-panel">
+            <summary>
+              <div class="belief-faq-head">
+                <span class="mini-label">Question</span>
+                <h3>Are these scenarios meant as literal measurements of real life?</h3>
+                <p>
+                  No. They are deliberately simplified models meant to isolate the cost of
+                  overreach.
+                </p>
+              </div>
+              <span class="accordion-toggle-label" aria-hidden="true"></span>
+            </summary>
+            <div class="belief-faq-body">
+              <p>
+                Real casinos, markets, relationships, and religious communities are messier than
+                any simulator. The tool is not claiming that every romance fails, every church
+                exploits, or every investment driven by excitement collapses. It is trying to make
+                one structural point vivid: when commitment routinely gets ahead of support, the
+                policy becomes less reliable and more costly.
+              </p>
+              <p>
+                If you want the broader conceptual framework behind that claim, the more technical
+                treatment of core and deep rationality lives at
+                <a href="https://credencing.com" target="_blank" rel="noopener noreferrer">credencing.com</a>.
+                This simulator is the non-technical, visual companion to that deeper treatment.
+              </p>
+            </div>
+          </details>
+        </div>
       </section>
 
       <section class="overreach-card summary-panel" id="summary-step" aria-labelledby="summary-title">
