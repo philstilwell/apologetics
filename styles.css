@@ -4006,6 +4006,26 @@ body:has(.guided-resurrection) a:focus-visible {
 }
 
 @media (max-width: 980px) {
+  body:has(.guided-resurrection) .site-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 14px;
+    align-items: center;
+  }
+
+  body:has(.guided-resurrection) .site-domain-link {
+    position: static;
+    justify-self: end;
+    transform: none;
+  }
+
+  body:has(.guided-resurrection) .top-nav {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px 14px;
+  }
+
   .guided-steps {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
