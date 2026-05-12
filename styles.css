@@ -6543,11 +6543,38 @@ body.app-falsifiability #summary {
   --app-line: #d6a7b6;
 }
 
+.hub-landing .hub-card-threshold {
+  --app-accent: #8b610f;
+  --app-accent-dark: #5f4306;
+  --app-tint: #fff7e3;
+  --app-line: #d8c08b;
+}
+
 .hub-landing .hub-card-particulars {
   --app-accent: #b24c4a;
   --app-accent-dark: #6f2426;
   --app-tint: #fff1f1;
   --app-line: #e6b5b4;
+}
+
+.hub-landing .app-card .card-note {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(139, 97, 15, 0.26);
+  border-left: 4px solid #8b610f;
+  border-radius: 8px;
+  background: #fff8e7;
+  color: #6a4c1e;
+  font-size: 0.8rem;
+  font-weight: 760;
+  line-height: 1.4;
+}
+
+.hub-landing .hub-card-morality .card-note {
+  border-color: rgba(124, 47, 71, 0.2);
+  border-left-color: #7c2f47;
+  background: #fff1f6;
+  color: #5c2234;
 }
 
 body.app-morality {
@@ -6602,6 +6629,27 @@ body.app-moral-particulars .brand-mark {
   color: var(--brand-cross-color);
 }
 
+body.app-moral-threshold {
+  --ink: #241907;
+  --muted: #66533b;
+  --line: #ceb890;
+  --paper: #f3ecdd;
+  --soft: #e6ddca;
+  --card: #fffcf4;
+  --shadow: 0 18px 45px rgba(52, 37, 11, 0.1);
+  background:
+    linear-gradient(180deg, #f7f0e1 0, var(--paper) 280px, #ede4d1 100%);
+}
+
+body.app-moral-threshold .site-header {
+  border-bottom-color: rgba(36, 25, 7, 0.16);
+  background: rgba(243, 236, 221, 0.96);
+}
+
+body.app-moral-threshold .brand-mark {
+  color: #8b610f;
+}
+
 body.app-morality #claim-step,
 body.app-morality #elements-step,
 body.app-morality #boundary-step,
@@ -6619,6 +6667,14 @@ body.app-moral-particulars #disagreement-step,
 body.app-moral-particulars #patterns-step,
 body.app-moral-particulars #qa-step,
 body.app-moral-particulars #report-step {
+  scroll-margin-top: 92px;
+}
+
+body.app-moral-threshold #claim-step,
+body.app-moral-threshold #checklist-step,
+body.app-moral-threshold #diagnosis-step,
+body.app-moral-threshold #next-step,
+body.app-moral-threshold #report-step {
   scroll-margin-top: 92px;
 }
 
@@ -6680,6 +6736,116 @@ body.app-moral-particulars #report-step {
 .moral-report-grid {
   display: grid;
   gap: 14px;
+}
+
+.morality-sequence-band {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--moral-line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(124, 47, 71, 0.08), rgba(255, 250, 240, 0) 56%),
+    var(--moral-card);
+  box-shadow: var(--shadow);
+}
+
+.morality-sequence-copy h2 {
+  font-size: clamp(1.28rem, 2vw, 1.7rem);
+}
+
+.morality-sequence-copy p:not(.app-step) {
+  margin: 8px 0 0;
+  color: var(--moral-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.morality-sequence-copy a {
+  color: var(--moral-blue);
+  font-weight: 800;
+}
+
+.morality-sequence-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.morality-sequence-step {
+  display: grid;
+  gap: 7px;
+  min-height: 126px;
+  padding: 12px;
+  border: 1px solid rgba(184, 144, 101, 0.76);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.68);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.morality-sequence-step:hover,
+.morality-sequence-step:focus-visible {
+  border-color: var(--moral-blue);
+  background: var(--moral-blue-soft);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.morality-sequence-step.current {
+  border-color: var(--moral-red);
+  background:
+    linear-gradient(135deg, rgba(124, 47, 71, 0.12), rgba(255, 255, 255, 0) 56%),
+    #fff7fb;
+  box-shadow: inset 0 0 0 1px rgba(124, 47, 71, 0.16);
+}
+
+.morality-sequence-step span {
+  color: var(--moral-muted);
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.morality-sequence-step strong {
+  color: var(--moral-ink);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.morality-sequence-step p {
+  margin: 0;
+  color: var(--moral-muted);
+  font-size: 0.82rem;
+  font-weight: 720;
+  line-height: 1.42;
+}
+
+.morality-import-notice {
+  padding: 12px 14px;
+  border: 1px solid rgba(184, 144, 101, 0.82);
+  border-left: 5px solid var(--moral-red);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(124, 47, 71, 0.08), rgba(255, 255, 255, 0) 56%),
+    #fffaf8;
+  box-shadow: var(--shadow);
+}
+
+.morality-import-notice strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--moral-ink);
+}
+
+.morality-import-notice p:not(.app-step) {
+  margin: 7px 0 0;
+  color: var(--moral-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 body.app-morality .moral-steps {
@@ -7779,6 +7945,10 @@ body.app-morality .moral-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .morality-sequence-grid {
+    grid-template-columns: 1fr;
+  }
+
   body.app-morality .moral-steps {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -7881,6 +8051,254 @@ body.app-morality .moral-steps {
 
   body.app-morality .export-box {
     min-height: 80vh;
+  }
+}
+
+.threshold-tool .app-title h1 {
+  color: var(--moral-ink);
+}
+
+.threshold-dashboard .metric-card {
+  background:
+    linear-gradient(135deg, rgba(139, 97, 15, 0.08), rgba(255, 250, 240, 0) 54%),
+    var(--moral-card);
+}
+
+.threshold-dashboard strong {
+  font-size: clamp(1.6rem, 3.1vw, 2.7rem);
+  line-height: 0.98;
+  overflow-wrap: anywhere;
+}
+
+.threshold-steps {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.threshold-claim-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.threshold-route-note {
+  margin: -2px 0 0;
+  padding: 10px 11px;
+  border: 1px solid rgba(139, 97, 15, 0.32);
+  border-left: 4px solid var(--moral-gold);
+  border-radius: var(--radius);
+  background: rgba(255, 242, 199, 0.58);
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 760;
+  line-height: 1.4;
+}
+
+.threshold-preset-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.threshold-preset-grid .moral-lens-button {
+  min-height: 84px;
+  background: #fff9ea;
+}
+
+.threshold-preset-grid .moral-lens-button:hover,
+.threshold-preset-grid .moral-lens-button:focus-visible {
+  background: var(--moral-gold-soft);
+}
+
+.threshold-checklist,
+.threshold-diagnosis-grid,
+.threshold-sequence {
+  display: grid;
+  gap: 12px;
+}
+
+.threshold-checklist {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.threshold-item-card,
+.threshold-sequence-card {
+  border: 1px solid var(--moral-line);
+  border-radius: var(--radius);
+  background: var(--moral-card);
+  box-shadow: var(--shadow);
+}
+
+.threshold-item-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.threshold-item-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.threshold-item-head h3 {
+  margin: 3px 0 0;
+  color: var(--moral-ink);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.threshold-collapse-tag,
+.threshold-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--moral-gold-soft);
+  color: var(--moral-gold);
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.threshold-question {
+  margin: 0;
+  color: var(--moral-muted);
+  font-size: 0.88rem;
+  font-weight: 760;
+  line-height: 1.46;
+}
+
+.threshold-status-control {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.threshold-note-field {
+  margin-bottom: 0;
+}
+
+.threshold-note-field textarea {
+  min-height: 96px;
+}
+
+.threshold-diagnosis-grid {
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+}
+
+.threshold-diagnosis-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.threshold-diagnosis-panel h3 {
+  color: var(--moral-ink);
+  font-size: clamp(1.35rem, 2.3vw, 1.9rem);
+  line-height: 1.12;
+}
+
+.threshold-diagnosis-panel p:not(.app-step) {
+  margin: 0;
+  color: var(--moral-muted);
+  line-height: 1.5;
+}
+
+.threshold-mini-ledger {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.threshold-mini-ledger strong {
+  overflow-wrap: anywhere;
+}
+
+.threshold-collapse-list li {
+  border-color: rgba(139, 97, 15, 0.28);
+  background: #fff8e8;
+}
+
+.threshold-sequence {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.threshold-sequence-card {
+  display: grid;
+  gap: 8px;
+  min-height: 188px;
+  padding: 16px;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.threshold-sequence-card.secondary {
+  background:
+    linear-gradient(135deg, rgba(178, 76, 74, 0.06), rgba(255, 255, 255, 0) 52%),
+    #fffaf8;
+}
+
+.threshold-sequence-card:hover,
+.threshold-sequence-card:focus-visible {
+  border-color: var(--moral-blue);
+  box-shadow: 0 22px 42px rgba(52, 37, 11, 0.14);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.threshold-sequence-card strong {
+  color: var(--moral-ink);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  line-height: 1.15;
+}
+
+.threshold-sequence-card p {
+  margin: 0;
+  color: var(--moral-muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+@media (max-width: 1120px) {
+  .threshold-preset-grid,
+  .threshold-checklist,
+  .threshold-diagnosis-grid,
+  .threshold-sequence,
+  .threshold-mini-ledger {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .threshold-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .threshold-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .threshold-item-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media print {
+  body.app-moral-threshold .site-header,
+  body.app-moral-threshold .guided-steps,
+  body.app-moral-threshold button,
+  body.app-moral-threshold #claim-step,
+  body.app-moral-threshold #checklist-step,
+  body.app-moral-threshold #diagnosis-step,
+  body.app-moral-threshold #next-step,
+  body.app-moral-threshold .seo-related {
+    display: none !important;
+  }
+
+  body.app-moral-threshold .output-grid {
+    display: block;
   }
 }
 

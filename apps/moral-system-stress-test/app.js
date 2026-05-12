@@ -1,4 +1,5 @@
 const STORAGE_KEY = "moral-system-stress-test-v3";
+let importedFromThreshold = false;
 
 const routes = [
   { id: "none", label: "Choose a primary route" },
@@ -600,12 +601,20 @@ const refs = {
   statusCompleteness: document.querySelector("#statusCompleteness"),
   statusCoreCovered: document.querySelector("#statusCoreCovered"),
   statusRouteCount: document.querySelector("#statusRouteCount"),
+  thresholdImportBanner: document.querySelector("#thresholdImportBanner"),
+  thresholdImportCopy: document.querySelector("#thresholdImportCopy"),
   topPressureList: document.querySelector("#topPressureList")
 };
 
 function loadState() {
-  const fromHash = loadStateFromHash();
-  if (fromHash) return normalizeState(fromHash);
+  const fromLocation = loadStateFromLocation();
+  if (fromLocation) {
+    importedFromThreshold = true;
+    const normalized = normalizeState(fromLocation);
+    persistState(normalized);
+    clearTransferredStateFromLocation();
+    return normalized;
+  }
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
     return normalizeState(stored);
@@ -628,17 +637,47 @@ function normalizeState(source) {
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  persistState(state);
 }
 
-function loadStateFromHash() {
-  if (!window.location.hash.startsWith("#state=")) return null;
+function persistState(snapshot) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+}
+
+function loadStateFromLocation() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const queryState = searchParams.get("state");
+  if (queryState) return decodeStatePayload(queryState);
+  return loadStateFromHash();
+}
+
+function decodeStatePayload(encoded) {
   try {
-    const encoded = window.location.hash.slice("#state=".length);
     return JSON.parse(decodeURIComponent(escape(window.atob(encoded))));
   } catch {
     return null;
   }
+}
+
+function loadStateFromHash() {
+  if (!window.location.hash.startsWith("#state=")) return null;
+  const encoded = window.location.hash.slice("#state=".length);
+  return decodeStatePayload(encoded);
+}
+
+function clearTransferredStateFromLocation() {
+  const url = new URL(window.location.href);
+  let changed = false;
+  if (url.searchParams.has("state")) {
+    url.searchParams.delete("state");
+    changed = true;
+  }
+  if (url.hash.startsWith("#state=")) {
+    url.hash = "";
+    changed = true;
+  }
+  if (!changed) return;
+  window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
 function escapeHtml(value) {
@@ -1562,6 +1601,7 @@ function applyPreset(presetId) {
 }
 
 function renderAll() {
+  renderThresholdImportNotice();
   renderClaimPositions();
   renderPresets();
   renderElements();
@@ -1569,6 +1609,23 @@ function renderAll() {
   renderPrompts();
   renderSummary();
   renderReports();
+}
+
+function renderThresholdImportNotice() {
+  if (!refs.thresholdImportBanner || !refs.thresholdImportCopy) return;
+  if (!importedFromThreshold) {
+    refs.thresholdImportBanner.hidden = true;
+    return;
+  }
+
+  const importedCount = elements.filter((element) => routeIsChosen(element.id)).length;
+  const hasClaim = Boolean(state.claim.trim());
+  refs.thresholdImportBanner.hidden = false;
+  refs.thresholdImportCopy.textContent = importedCount
+    ? `This stress test imported your ${hasClaim ? "claim, " : ""}${importedCount} threshold component${
+        importedCount === 1 ? "" : "s"
+      }, and any threshold notes as starting points. Now deepen the routes, support levels, and substantiation checks here.`
+    : `This stress test imported your ${hasClaim ? "claim" : "threshold setup"} from the preliminary checklist. Now add the component routes, support levels, and substantiation checks here.`;
 }
 
 function bindEvents() {
