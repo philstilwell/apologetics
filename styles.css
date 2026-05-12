@@ -6848,6 +6848,85 @@ body.app-moral-threshold #report-step {
   line-height: 1.5;
 }
 
+.morality-import-claim {
+  margin-top: 8px !important;
+  padding: 10px 11px;
+  border: 1px solid rgba(184, 144, 101, 0.42);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--moral-ink);
+  font-size: 0.86rem !important;
+  font-weight: 760;
+  line-height: 1.45;
+}
+
+.morality-import-claim:empty {
+  display: none;
+}
+
+.morality-pipeline-panel,
+.morality-handoff-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.morality-handoff-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.morality-handoff-card {
+  display: grid;
+  gap: 12px;
+}
+
+.morality-handoff-card h3 {
+  color: var(--moral-ink);
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  line-height: 1.16;
+}
+
+.morality-handoff-card p:not(.app-step) {
+  margin: 0;
+  color: var(--moral-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.morality-transfer-legend {
+  display: grid;
+  gap: 8px;
+}
+
+.morality-transfer-legend strong {
+  color: var(--moral-ink);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.morality-transfer-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.morality-transfer-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid rgba(184, 144, 101, 0.52);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--moral-ink);
+  font-size: 0.78rem;
+  font-weight: 820;
+  line-height: 1.35;
+  text-align: center;
+}
+
 body.app-morality .moral-steps {
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
@@ -8237,11 +8316,13 @@ body.app-morality .moral-steps {
 
 .threshold-diagnosis-grid {
   grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  align-items: start;
 }
 
 .threshold-diagnosis-panel {
   display: grid;
   gap: 12px;
+  align-content: start;
 }
 
 .threshold-diagnosis-panel h3 {
@@ -8254,6 +8335,39 @@ body.app-morality .moral-steps {
   margin: 0;
   color: var(--moral-muted);
   line-height: 1.5;
+}
+
+.threshold-transfer-panel {
+  display: grid;
+  gap: 12px;
+  background:
+    linear-gradient(135deg, rgba(50, 86, 112, 0.08), rgba(255, 255, 255, 0) 58%),
+    var(--moral-card);
+}
+
+.threshold-transfer-copy {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.threshold-transfer-copy h3 {
+  color: var(--moral-ink);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1.14;
+}
+
+.threshold-transfer-copy p:not(.app-step) {
+  margin: 6px 0 0;
+  color: var(--moral-muted);
+  font-size: 0.92rem;
+  font-weight: 720;
+  line-height: 1.5;
+}
+
+.threshold-transfer-copy .button {
+  flex: 0 0 auto;
 }
 
 .threshold-mini-ledger {
@@ -8312,6 +8426,8 @@ body.app-morality .moral-steps {
 }
 
 @media (max-width: 1120px) {
+  .morality-handoff-grid,
+  .morality-transfer-chip-grid,
   .threshold-preset-grid,
   .threshold-checklist,
   .threshold-diagnosis-grid,
@@ -8330,6 +8446,11 @@ body.app-morality .moral-steps {
 @media (max-width: 760px) {
   .threshold-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .threshold-transfer-copy {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .threshold-item-head {

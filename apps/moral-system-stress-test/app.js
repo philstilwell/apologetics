@@ -1,5 +1,34 @@
 const STORAGE_KEY = "moral-system-stress-test-v3";
+const THRESHOLD_BASE_URL = "../moral-system-threshold/";
+const PARTICULARS_BASE_URL = "../moral-particulars-audit/";
 let importedFromThreshold = false;
+
+const stressToThresholdRouteMap = {
+  "divine-command": "divine-command",
+  scripture: "scripture",
+  "god-nature": "god-nature",
+  "holy-spirit": "holy-spirit",
+  conscience: "conscience",
+  "church-tradition": "church-tradition",
+  "natural-law": "reason-natural-law",
+  "human-flourishing": "harm-flourishing",
+  hybrid: "hybrid"
+};
+
+const claimPositionThresholdRouteMap = {
+  "divine-command": "divine-command",
+  "god-nature": "god-nature",
+  "scripture-authority": "scripture",
+  "scripture-spirit": "holy-spirit",
+  "natural-law": "reason-natural-law",
+  conscience: "conscience",
+  "church-tradition": "church-tradition",
+  "great-commandments": "scripture",
+  "virtue-character": "god-nature",
+  "kingdom-ethic": "scripture",
+  "flourishing-in-god": "harm-flourishing",
+  "moral-lawgiver": "divine-command"
+};
 
 const routes = [
   { id: "none", label: "Choose a primary route" },
@@ -603,6 +632,9 @@ const refs = {
   statusRouteCount: document.querySelector("#statusRouteCount"),
   thresholdImportBanner: document.querySelector("#thresholdImportBanner"),
   thresholdImportCopy: document.querySelector("#thresholdImportCopy"),
+  thresholdImportClaim: document.querySelector("#thresholdImportClaim"),
+  thresholdLinks: document.querySelectorAll("[data-threshold-link]"),
+  particularsLinks: document.querySelectorAll("[data-particulars-link]"),
   topPressureList: document.querySelector("#topPressureList")
 };
 
@@ -680,6 +712,10 @@ function clearTransferredStateFromLocation() {
   window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
+function encodeStatePayload(payload) {
+  return window.btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -691,6 +727,10 @@ function escapeHtml(value) {
 
 function routeLabel(routeId) {
   return routes.find((route) => route.id === routeId)?.label || "Choose a primary route";
+}
+
+function mapStressRouteToThresholdRoute(routeId) {
+  return stressToThresholdRouteMap[routeId] || null;
 }
 
 function claimPositionForClaim(claim) {
@@ -750,6 +790,23 @@ function getSelectedRoutes() {
     .map((element) => state.routes[element.id] || "none")
     .filter((routeId) => routeId !== "none");
   return [...new Set(selected)];
+}
+
+function summarizeSelectedRoutes() {
+  const counts = getCoreElements().reduce((acc, element) => {
+    const routeId = state.routes[element.id] || "none";
+    if (routeId === "none") return acc;
+    acc[routeId] = (acc[routeId] || 0) + 1;
+    return acc;
+  }, {});
+
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1] || routeLabel(a[0]).localeCompare(routeLabel(b[0])))
+    .map(([routeId, count]) => ({
+      id: routeId,
+      label: routeLabel(routeId),
+      count
+    }));
 }
 
 function routeIsChosen(elementId) {
@@ -1402,6 +1459,88 @@ function renderStaticStatus({ boundaryRisk, completeness, matched, routeItems })
     : `<p class="app-step">Top pressure</p><article><strong>No challenge match yet</strong><span>none</span></article>`;
 }
 
+function inferThresholdRoute() {
+  const mappedRoutes = [
+    ...new Set(
+      getCoreElements()
+        .map((element) => mapStressRouteToThresholdRoute(state.routes[element.id] || "none"))
+        .filter(Boolean)
+    )
+  ];
+
+  if (mappedRoutes.length === 1) return mappedRoutes[0];
+  if (mappedRoutes.length > 1) return "hybrid";
+  return claimPositionThresholdRouteMap[state.claimPosition] || "divine-command";
+}
+
+function buildThresholdState() {
+  const thresholdState = {
+    route: inferThresholdRoute(),
+    claim: state.claim.trim(),
+    elements: {}
+  };
+
+  getCoreElements().forEach((element) => {
+    const routeChosen = routeIsChosen(element.id);
+    const strength = strengthValue(element.id);
+    const hasChecks = Object.values(selectedChecks(element.id)).some(Boolean);
+    const note = (state.notes[element.id] || "").trim();
+    let status = "missing";
+
+    if (routeChosen || strength > 0 || hasChecks || note) {
+      status = strength >= 3 ? "substantiated" : "asserted";
+    }
+
+    thresholdState.elements[element.id] = {
+      status,
+      note
+    };
+  });
+
+  return thresholdState;
+}
+
+function buildThresholdHref() {
+  return `${THRESHOLD_BASE_URL}?state=${encodeStatePayload(buildThresholdState())}`;
+}
+
+function buildParticularsState() {
+  const readyComponents = getCoreElements().filter((element) => elementIsReady(element.id));
+  const routeSummary = summarizeSelectedRoutes();
+  const noteCount = getCoreElements().filter((element) => Boolean((state.notes[element.id] || "").trim())).length;
+
+  return {
+    pipelineContext: {
+      source: "moral-system-stress-test",
+      claim: state.claim.trim(),
+      claimPosition: state.claimPosition || claimPositionForClaim(state.claim),
+      selectedRoutes: routeSummary,
+      readyComponentIds: readyComponents.map((element) => element.id),
+      readyComponentTitles: readyComponents.map((element) => element.title),
+      noteCount,
+      completeness: calculateCompleteness(),
+      boundaryRisk: getBoundaryTests().filter((test) => test.status === "fail").length,
+      matchedChallengeCount: getMatchedChallenges().length
+    }
+  };
+}
+
+function buildParticularsHref() {
+  return `${PARTICULARS_BASE_URL}?state=${encodeStatePayload(buildParticularsState())}`;
+}
+
+function updatePipelineLinks() {
+  const thresholdHref = buildThresholdHref();
+  const particularsHref = buildParticularsHref();
+
+  refs.thresholdLinks.forEach((link) => {
+    link.href = thresholdHref;
+  });
+  refs.particularsLinks.forEach((link) => {
+    link.href = particularsHref;
+  });
+}
+
 function selectedElementsLines() {
   const required = getCoreElements();
   return required.flatMap((element) => {
@@ -1533,6 +1672,7 @@ function renderReports() {
   refs.reportMode.value = state.reportMode;
   refs.finalReport.value = buildReport(state.reportMode);
   refs.aiPrompt.value = buildAiPrompt();
+  updatePipelineLinks();
 }
 
 function generatePromptsText() {
@@ -1612,7 +1752,7 @@ function renderAll() {
 }
 
 function renderThresholdImportNotice() {
-  if (!refs.thresholdImportBanner || !refs.thresholdImportCopy) return;
+  if (!refs.thresholdImportBanner || !refs.thresholdImportCopy || !refs.thresholdImportClaim) return;
   if (!importedFromThreshold) {
     refs.thresholdImportBanner.hidden = true;
     return;
@@ -1626,6 +1766,7 @@ function renderThresholdImportNotice() {
         importedCount === 1 ? "" : "s"
       }, and any threshold notes as starting points. Now deepen the routes, support levels, and substantiation checks here.`
     : `This stress test imported your ${hasClaim ? "claim" : "threshold setup"} from the preliminary checklist. Now add the component routes, support levels, and substantiation checks here.`;
+  refs.thresholdImportClaim.textContent = hasClaim ? `Imported claim: ${state.claim.trim()}` : "";
 }
 
 function bindEvents() {

@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Run a preliminary checklist to see whether an alleged Christian moral system has the minimum architecture to count as a coherent moral system at all.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260512-threshold-qa-warning">
+    <link rel="stylesheet" href="../../styles.css?v=20260512-morality-pipeline">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -190,6 +190,16 @@
           This page does not decide whether the claimed moral system is true. It checks whether
           the minimum architecture has even been supplied before the advanced stress test begins.
         </aside>
+      </section>
+
+      <section class="morality-import-notice" id="stressImportBanner" hidden aria-live="polite">
+        <p class="app-step">Imported setup</p>
+        <strong>Preloaded from Moral System Stress Test</strong>
+        <p id="stressImportCopy">
+          This threshold checklist imported your current stress-test setup so you can revise the
+          preliminary architecture without rebuilding it from scratch.
+        </p>
+        <p class="morality-import-claim" id="stressImportClaim"></p>
       </section>
 
       <nav class="guided-steps threshold-steps" aria-label="Threshold steps">
@@ -384,6 +394,30 @@
             <ul class="flag-list threshold-collapse-list" id="collapseList"></ul>
           </article>
         </div>
+        <article class="moral-card threshold-transfer-panel">
+          <div class="threshold-transfer-copy">
+            <div>
+              <p class="app-step">Next move</p>
+              <h3>Continue to Stress Test with this setup</h3>
+              <p>
+                Carry the current claim, route, threshold statuses, and support notes into the
+                advanced audit without rebuilding the same starting map.
+              </p>
+            </div>
+            <a class="button primary" href="../moral-system-stress-test/" data-stress-link>
+              Continue to Stress Test with this setup
+            </a>
+          </div>
+          <div class="morality-transfer-legend" aria-label="Threshold to stress-test transfer legend">
+            <strong>Transfer legend</strong>
+            <div class="morality-transfer-chip-grid">
+              <span class="morality-transfer-chip">Missing -> not preloaded</span>
+              <span class="morality-transfer-chip">Asserted -> strength 1</span>
+              <span class="morality-transfer-chip">Substantiated -> strength 3</span>
+              <span class="morality-transfer-chip">Grounding note -> optional note</span>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section class="audit-step full-step" id="next-step">
@@ -622,6 +656,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260512-threshold-qa-warning"></script>
+    <script src="app.js?v=20260512-morality-pipeline"></script>
   </body>
 </html>

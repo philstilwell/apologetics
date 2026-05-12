@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Test whether Christian moral arguments yield a workable moral system with truth-makers, obligations, authority, and clear action guidance.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260511-moral-system-qa">
+    <link rel="stylesheet" href="../../styles.css?v=20260512-morality-pipeline">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -304,13 +304,13 @@
           <p class="app-step">Tool sequence</p>
           <h2 id="morality-sequence-title">This page begins where the threshold checklist ends</h2>
           <p>
-            Use <a href="../moral-system-threshold/">Moral System Threshold</a> to show that the
+            Use <a href="../moral-system-threshold/" data-threshold-link>Moral System Threshold</a> to show that the
             eight required elements have at least been named. Then use this page to stress-test
             the routes, strength claims, and collapse risks inside that larger moral architecture.
           </p>
         </div>
         <div class="morality-sequence-grid">
-          <a class="morality-sequence-step" href="../moral-system-threshold/">
+          <a class="morality-sequence-step" href="../moral-system-threshold/" data-threshold-link>
             <span>Step 1</span>
             <strong>Moral System Threshold</strong>
             <p>Preliminary checklist: do you actually have a moral system yet?</p>
@@ -320,7 +320,7 @@
             <strong>Moral System Stress Test</strong>
             <p>Advanced pressure test: can the proposed moral system survive scrutiny?</p>
           </article>
-          <a class="morality-sequence-step" href="../moral-particulars-audit/">
+          <a class="morality-sequence-step" href="../moral-particulars-audit/" data-particulars-link>
             <span>Step 3</span>
             <strong>Moral Particulars Audit</strong>
             <p>Concrete follow-up: do the same grounders survive hard moral cases?</p>
@@ -335,6 +335,7 @@
           This stress test started with the claim and component setup from the preliminary
           threshold checklist.
         </p>
+        <p class="morality-import-claim" id="thresholdImportClaim"></p>
       </section>
 
       <nav class="guided-steps moral-steps" aria-label="Audit steps">
@@ -878,6 +879,59 @@
         </article>
       </section>
 
+      <section class="morality-pipeline-panel" aria-labelledby="morality-pipeline-title">
+        <div class="morality-sequence-copy">
+          <p class="app-step">Keep the sequence connected</p>
+          <h2 id="morality-pipeline-title">Iterate backward or carry the current setup forward</h2>
+          <p>
+            Use the same encoded state handoff in both directions so the preliminary threshold,
+            the advanced stress test, and the particulars audit read like one connected pipeline.
+          </p>
+        </div>
+        <div class="morality-handoff-grid">
+          <article class="moral-card morality-handoff-card">
+            <p class="app-step">Reverse handoff</p>
+            <h3>Send this claim back to Threshold</h3>
+            <p>
+              Collapse the current stress-test work back into the preliminary checklist so you can
+              rethink whether the larger architecture is still being overclaimed.
+            </p>
+            <div class="morality-transfer-legend" aria-label="Stress test back to threshold legend">
+              <strong>Return legend</strong>
+              <div class="morality-transfer-chip-grid">
+                <span class="morality-transfer-chip">0 + blank -> Missing</span>
+                <span class="morality-transfer-chip">1-2 or route-only -> Asserted</span>
+                <span class="morality-transfer-chip">3-4 -> Substantiated</span>
+                <span class="morality-transfer-chip">Optional note -> grounding box</span>
+              </div>
+            </div>
+            <a class="button secondary" href="../moral-system-threshold/" data-threshold-link>
+              Send current claim back to Threshold
+            </a>
+          </article>
+          <article class="moral-card morality-handoff-card">
+            <p class="app-step">Forward handoff</p>
+            <h3>Continue to Particulars with this setup</h3>
+            <p>
+              Carry the current claim, active routes, ready components, and notes into the
+              concrete-case audit so the case work begins with the same system-level context.
+            </p>
+            <div class="morality-transfer-legend" aria-label="Stress test to particulars legend">
+              <strong>Forward legend</strong>
+              <div class="morality-transfer-chip-grid">
+                <span class="morality-transfer-chip">Claim -> imported context</span>
+                <span class="morality-transfer-chip">Active routes -> route summary</span>
+                <span class="morality-transfer-chip">Ready components -> pressure context</span>
+                <span class="morality-transfer-chip">Notes -> case-level reference</span>
+              </div>
+            </div>
+            <a class="button primary" href="../moral-particulars-audit/" data-particulars-link>
+              Continue to Particulars with this setup
+            </a>
+          </article>
+        </div>
+      </section>
+
       <section class="seo-related" aria-labelledby="related-audits-title">
         <div class="seo-related-copy">
           <p class="eyebrow">Related audits</p>
@@ -888,11 +942,11 @@
           </p>
         </div>
         <div class="seo-related-grid">
-          <a class="seo-related-card" href="../moral-system-threshold/">
+          <a class="seo-related-card" href="../moral-system-threshold/" data-threshold-link>
             <strong>Moral System Threshold</strong>
             <span>Use the preliminary checklist first if you need to show that a moral source is not yet a full moral system.</span>
           </a>
-          <a class="seo-related-card" href="../moral-particulars-audit/">
+          <a class="seo-related-card" href="../moral-particulars-audit/" data-particulars-link>
             <strong>Moral Particulars Audit</strong>
             <span>Move from system-level moral theory to concrete Christian ethics cases and disagreement patterns.</span>
           </a>
@@ -908,6 +962,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260511-moral-system-qa"></script>
+    <script src="app.js?v=20260512-morality-pipeline"></script>
   </body>
 </html>

@@ -1,4 +1,5 @@
 const STORAGE_KEY = "moral-particulars-audit-v1";
+let importedFromStress = false;
 
 const issues = [
   {
@@ -637,7 +638,8 @@ function defaultState() {
   return {
     selectedIssueId: issues[0].id,
     issueStates: Object.fromEntries(issues.map((issue) => [issue.id, defaultIssueState()])),
-    reportMode: "all"
+    reportMode: "all",
+    pipelineContext: null
   };
 }
 
@@ -675,6 +677,9 @@ const refs = {
   reportMode: document.querySelector("#reportMode"),
   resetButton: document.querySelector("#resetButton"),
   selectedIssueText: document.querySelector("#selectedIssueText"),
+  stressImportBanner: document.querySelector("#stressImportBanner"),
+  stressImportClaim: document.querySelector("#stressImportClaim"),
+  stressImportCopy: document.querySelector("#stressImportCopy"),
   stanceGrid: document.querySelector("#stanceGrid"),
   supportCount: document.querySelector("#supportCount"),
   topGrounderList: document.querySelector("#topGrounderList"),
@@ -682,12 +687,52 @@ const refs = {
 };
 
 function loadState() {
+  const fromLocation = loadStateFromLocation();
+  if (fromLocation) {
+    importedFromStress = true;
+    const normalized = normalizeState(fromLocation);
+    persistState(normalized);
+    clearTransferredStateFromLocation();
+    return normalized;
+  }
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
     return normalizeState(stored);
   } catch {
     return defaultState();
   }
+}
+
+function normalizePipelineContext(source) {
+  if (!source || typeof source !== "object") return null;
+  const selectedRoutes = Array.isArray(source.selectedRoutes)
+    ? source.selectedRoutes
+        .map((item) => ({
+          id: typeof item?.id === "string" ? item.id : "",
+          label: typeof item?.label === "string" ? item.label : "",
+          count: Math.max(0, Number(item?.count) || 0)
+        }))
+        .filter((item) => item.id && item.label)
+    : [];
+  const readyComponentIds = Array.isArray(source.readyComponentIds)
+    ? source.readyComponentIds.filter((item) => typeof item === "string")
+    : [];
+  const readyComponentTitles = Array.isArray(source.readyComponentTitles)
+    ? source.readyComponentTitles.filter((item) => typeof item === "string")
+    : [];
+
+  return {
+    source: typeof source.source === "string" ? source.source : "moral-system-stress-test",
+    claim: typeof source.claim === "string" ? source.claim : "",
+    claimPosition: typeof source.claimPosition === "string" ? source.claimPosition : "",
+    selectedRoutes,
+    readyComponentIds,
+    readyComponentTitles,
+    noteCount: Math.max(0, Number(source.noteCount) || 0),
+    completeness: Math.max(0, Number(source.completeness) || 0),
+    boundaryRisk: Math.max(0, Number(source.boundaryRisk) || 0),
+    matchedChallengeCount: Math.max(0, Number(source.matchedChallengeCount) || 0)
+  };
 }
 
 function normalizeState(source) {
@@ -717,12 +762,53 @@ function normalizeState(source) {
     ...base,
     selectedIssueId,
     issueStates,
-    reportMode: ["all", "patterns"].includes(source.reportMode) ? source.reportMode : "all"
+    reportMode: ["all", "patterns"].includes(source.reportMode) ? source.reportMode : "all",
+    pipelineContext: normalizePipelineContext(source.pipelineContext)
   };
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  persistState(state);
+}
+
+function persistState(snapshot) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+}
+
+function loadStateFromLocation() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const queryState = searchParams.get("state");
+  if (queryState) return decodeStatePayload(queryState);
+  return loadStateFromHash();
+}
+
+function decodeStatePayload(encoded) {
+  try {
+    return JSON.parse(decodeURIComponent(escape(window.atob(encoded))));
+  } catch {
+    return null;
+  }
+}
+
+function loadStateFromHash() {
+  if (!window.location.hash.startsWith("#state=")) return null;
+  const encoded = window.location.hash.slice("#state=".length);
+  return decodeStatePayload(encoded);
+}
+
+function clearTransferredStateFromLocation() {
+  const url = new URL(window.location.href);
+  let changed = false;
+  if (url.searchParams.has("state")) {
+    url.searchParams.delete("state");
+    changed = true;
+  }
+  if (url.hash.startsWith("#state=")) {
+    url.hash = "";
+    changed = true;
+  }
+  if (!changed) return;
+  window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
 function escapeHtml(value) {
@@ -823,6 +909,7 @@ function disagreementProfile(issueState) {
 }
 
 function render() {
+  renderStressImportNotice();
   renderIssueGrid();
   renderPresetButtons();
   renderSelectedIssue();
@@ -834,6 +921,28 @@ function render() {
   renderPatterns();
   renderReports();
   updateMetrics();
+}
+
+function renderStressImportNotice() {
+  if (!refs.stressImportBanner || !refs.stressImportCopy || !refs.stressImportClaim) return;
+  if (!importedFromStress) {
+    refs.stressImportBanner.hidden = true;
+    return;
+  }
+
+  const context = state.pipelineContext;
+  const claim = context?.claim?.trim() || "";
+  const routeCount = context?.selectedRoutes?.length || 0;
+  const readyCount = context?.readyComponentTitles?.length || 0;
+  const noteCount = context?.noteCount || 0;
+
+  refs.stressImportBanner.hidden = false;
+  refs.stressImportCopy.textContent = `This particulars audit imported your ${
+    claim ? "stress-test claim, " : ""
+  }${routeCount} active route${routeCount === 1 ? "" : "s"}, ${readyCount} ready component${
+    readyCount === 1 ? "" : "s"
+  }, and ${noteCount} note${noteCount === 1 ? "" : "s"} as case-level context for the ledger below.`;
+  refs.stressImportClaim.textContent = claim ? `Imported claim: ${claim}` : "";
 }
 
 function renderIssueGrid() {
@@ -1445,9 +1554,34 @@ function formatIssueSummary(issue) {
 function buildAllCasesReport() {
   const mapped = issues.filter((issue) => issueIsMapped(issue.id));
   const cases = issues.map((issue) => formatIssueSummary(issue)).join("\n\n---\n\n");
+  const pipelineContext = state.pipelineContext
+    ? [
+        "Imported system context:",
+        `Claim: ${state.pipelineContext.claim || "No claim transferred."}`,
+        `Claim position: ${state.pipelineContext.claimPosition || "Not specified"}`,
+        `Stress completeness: ${state.pipelineContext.completeness}%`,
+        `Boundary risk: ${state.pipelineContext.boundaryRisk}`,
+        `Matched challenges: ${state.pipelineContext.matchedChallengeCount}`,
+        `Active routes: ${
+          state.pipelineContext.selectedRoutes.length
+            ? state.pipelineContext.selectedRoutes
+                .map((route) => `${route.label} (${route.count})`)
+                .join("; ")
+            : "None transferred"
+        }`,
+        `Ready components: ${
+          state.pipelineContext.readyComponentTitles.length
+            ? state.pipelineContext.readyComponentTitles.join("; ")
+            : "None transferred"
+        }`,
+        `Transferred notes: ${state.pipelineContext.noteCount}`,
+        ""
+      ]
+    : [];
   return [
     "Moral Particulars Audit - Full Input Ledger",
     "",
+    ...pipelineContext,
     `Mapped cases: ${mapped.length}/${issues.length}`,
     `Selected case: ${currentIssue().label}`,
     "",
@@ -1513,6 +1647,7 @@ function buildAiPrompt() {
     selectedIssueId: currentIssue().id,
     mappedCaseCount: issues.filter((issue) => issueIsMapped(issue.id)).length,
     totalCaseCount: issues.length,
+    pipelineContext: state.pipelineContext,
     allCaseInputs,
     patterns: buildPatterns()
   };

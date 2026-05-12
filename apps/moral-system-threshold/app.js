@@ -1,5 +1,6 @@
 const STORAGE_KEY = "moral-system-threshold-v1";
 const STRESS_TEST_BASE_URL = "../moral-system-stress-test/";
+let importedFromStress = false;
 
 const stressRouteMap = {
   "divine-command": "divine-command",
@@ -187,7 +188,10 @@ const els = {
   copyAiPromptButton: document.getElementById("copyAiPromptButton"),
   summaryCopyStatus: document.getElementById("summaryCopyStatus"),
   aiCopyStatus: document.getElementById("aiCopyStatus"),
-  stressLinks: document.querySelectorAll("[data-stress-link]")
+  stressLinks: document.querySelectorAll("[data-stress-link]"),
+  stressImportBanner: document.getElementById("stressImportBanner"),
+  stressImportCopy: document.getElementById("stressImportCopy"),
+  stressImportClaim: document.getElementById("stressImportClaim")
 };
 
 function createDefaultState() {
@@ -200,28 +204,40 @@ function createDefaultState() {
   };
 }
 
+function normalizeState(source) {
+  const defaults = createDefaultState();
+  if (!source || typeof source !== "object") return defaults;
+  return {
+    route: routes.some((route) => route.id === source.route) ? source.route : defaults.route,
+    claim: typeof source.claim === "string" ? source.claim : defaults.claim,
+    elements: Object.fromEntries(
+      elements.map((element) => {
+        const current = source.elements?.[element.id] || {};
+        return [
+          element.id,
+          {
+            status: statusRank[current.status] >= 0 ? current.status : "missing",
+            note: typeof current.note === "string" ? current.note : ""
+          }
+        ];
+      })
+    )
+  };
+}
+
 function loadState() {
+  const fromLocation = loadStateFromLocation();
+  if (fromLocation) {
+    importedFromStress = true;
+    const normalized = normalizeState(fromLocation);
+    persistState(normalized);
+    clearTransferredStateFromLocation();
+    return normalized;
+  }
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return createDefaultState();
-    const parsed = JSON.parse(raw);
-    const defaults = createDefaultState();
-    return {
-      route: parsed.route || defaults.route,
-      claim: typeof parsed.claim === "string" ? parsed.claim : defaults.claim,
-      elements: Object.fromEntries(
-        elements.map((element) => {
-          const current = parsed.elements?.[element.id] || {};
-          return [
-            element.id,
-            {
-              status: statusRank[current.status] >= 0 ? current.status : "missing",
-              note: typeof current.note === "string" ? current.note : ""
-            }
-          ];
-        })
-      )
-    };
+    return normalizeState(JSON.parse(raw));
   } catch (error) {
     return createDefaultState();
   }
@@ -230,7 +246,47 @@ function loadState() {
 const state = loadState();
 
 function saveState() {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  persistState(state);
+}
+
+function persistState(snapshot) {
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+}
+
+function loadStateFromLocation() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const queryState = searchParams.get("state");
+  if (queryState) return decodeStatePayload(queryState);
+  return loadStateFromHash();
+}
+
+function decodeStatePayload(encoded) {
+  try {
+    return JSON.parse(decodeURIComponent(escape(window.atob(encoded))));
+  } catch {
+    return null;
+  }
+}
+
+function loadStateFromHash() {
+  if (!window.location.hash.startsWith("#state=")) return null;
+  const encoded = window.location.hash.slice("#state=".length);
+  return decodeStatePayload(encoded);
+}
+
+function clearTransferredStateFromLocation() {
+  const url = new URL(window.location.href);
+  let changed = false;
+  if (url.searchParams.has("state")) {
+    url.searchParams.delete("state");
+    changed = true;
+  }
+  if (url.hash.startsWith("#state=")) {
+    url.hash = "";
+    changed = true;
+  }
+  if (!changed) return;
+  window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
 function getRouteById(routeId) {
@@ -602,6 +658,24 @@ function updateStressLinks() {
   });
 }
 
+function renderStressImportNotice() {
+  if (!els.stressImportBanner || !els.stressImportCopy || !els.stressImportClaim) return;
+  if (!importedFromStress) {
+    els.stressImportBanner.hidden = true;
+    return;
+  }
+
+  const importedCount = elements.filter((element) => state.elements[element.id].status !== "missing").length;
+  const claim = state.claim.trim();
+  els.stressImportBanner.hidden = false;
+  els.stressImportCopy.textContent = importedCount
+    ? `This threshold checklist imported your current stress-test claim, ${importedCount} component${
+        importedCount === 1 ? "" : "s"
+      }, and any notes so you can tighten the preliminary architecture before pushing forward again.`
+    : "This threshold checklist imported your current stress-test setup so you can revise the preliminary architecture before pushing forward again.";
+  els.stressImportClaim.textContent = claim ? `Imported claim: ${claim}` : "";
+}
+
 function updateOutputs() {
   const counts = countStatuses();
   const diagnosis = classifyThreshold(counts);
@@ -628,6 +702,7 @@ function updateOutputs() {
   els.summaryOutput.value = buildSummary(counts, diagnosis);
   els.aiPromptOutput.value = buildAiPrompt(counts, diagnosis);
   updateStressLinks();
+  renderStressImportNotice();
 }
 
 function syncFormValues() {
