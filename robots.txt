@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://xhairs.com/sitemap.xml
+Host: xhairs.com
