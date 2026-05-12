@@ -2125,6 +2125,29 @@ input[type="range"] {
   background: #fff9e7;
 }
 
+.qa-section {
+  margin-top: 18px;
+  padding: 18px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.qa-list {
+  display: grid;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.qa-item {
+  background: #ffe899;
+}
+
+.qa-item summary {
+  font-size: 0.88rem;
+}
+
 .hidden {
   display: none !important;
 }
