@@ -343,10 +343,11 @@ const qaItems = [
   {
     id: "purpose",
     category: "Purpose",
-    question: "What is this audit trying to reveal?",
+    question: "What is this Moral Particulars Audit trying to reveal?",
     answer: [
-      "The tool does not try to settle the moral questions for the user. It asks the user to name what is doing the work when a concrete moral statement is supported, opposed, or treated as uncertain.",
-      "The central output is a map of dependencies: which judgments are carried by Scripture, conscience, Holy Spirit guidance, church tradition, social norms, reason, harm, love of neighbor, or consequences. Once several cases are mapped, the pattern checks ask whether similar cases are being treated by similar principles."
+      "This tool is specifically about concrete moral particulars, not morality in the abstract. It asks the user to map their stance on 13 named statements, including cases about lethal force, remarriage, apostates, civil law, sexual conduct, bodily alteration, truthfulness, hell, war, divorce, and urgent aid.",
+      "The tool does not try to settle the moral questions for the user. It asks the user to name what is doing the work when each concrete moral statement is supported, opposed, or treated as uncertain.",
+      "The central output is a case-by-case map of dependencies: which judgments are carried by Scripture, conscience, Holy Spirit guidance, church tradition, social norms, reason, harm, love of neighbor, or consequences. Once several cases are mapped, the pattern checks ask whether similar cases are being treated by similar principles."
     ],
     bullets: [
       "Use it to expose hidden grounders.",
@@ -395,6 +396,104 @@ const qaItems = [
       "Use the stance for the actual sentence.",
       "Use qualifiers for exceptions and narrowing conditions.",
       "Use pattern checks to see whether those exceptions are principled or ad hoc."
+    ]
+  },
+  {
+    id: "case-set",
+    category: "Case Set",
+    question: "Why does this tool use these particular 13 statements?",
+    answer: [
+      "The list is intentionally uneven and concrete. Some statements are about ordinary conduct, such as speeding or helping someone starving. Others are about severe or socially explosive cases, such as private killing, state execution, sexuality, and bodily alteration. That spread forces the user's moral method to operate across easy, hard, private, public, sexual, violent, and generosity cases.",
+      "The point is not that all 13 cases are equally plausible, equally important, or equally settled. The point is that a moral grounding system often looks clearer in abstraction than it does when it must decide particulars with different emotional, social, textual, and factual pressures."
+    ],
+    bullets: [
+      "The cases are pressure points, not a catechism.",
+      "A user can oppose a statement while still learning what grounders carry that opposition.",
+      "The most revealing patterns usually appear when several very different cases are mapped."
+    ]
+  },
+  {
+    id: "abortion-doctor-pair",
+    category: "Case Set",
+    question: "Why are 1a and 1b separated into obligation and permission?",
+    answer: [
+      "Case 1a says it would be immoral not to kill abortion doctors if doing so protected the unborn. Case 1b says it would be morally permissible to kill abortion doctors under that condition. Those are not identical claims. One is about obligation; the other is about permission.",
+      "Separating them lets the ledger catch an important logical pressure. If someone says failing to kill would be immoral, then the tool asks how killing could fail to be at least permissible. If someone says killing is not permissible, the tool asks what blocks the move from fetal-personhood premises to private lethal action."
+    ],
+    bullets: [
+      "Use 1a for duty language.",
+      "Use 1b for permission language.",
+      "Use qualifiers to name authority, legal, certainty, intention, and proportionality limits."
+    ]
+  },
+  {
+    id: "violent-particulars",
+    category: "Case Set",
+    question: "How should I treat the lethal-force and state-punishment cases?",
+    answer: [
+      "Cases 1a, 1b, and 7 are included because severe moral claims expose whether a user's principles have stable boundaries. They should be treated as diagnostic cases only. The tool is not asking anyone to act, plan, threaten, or infer permission outside the page.",
+      "If a user supports one of these statements, the important next question is not merely which verse or intuition supports it. The important question is what limiting principle prevents the same structure from licensing rival groups, private actors, or governments to kill under their own contested moral premises."
+    ],
+    bullets: [
+      "Name who has authority to use force.",
+      "Name the evidence threshold required before force is even morally considered.",
+      "Name why the same reasoning cannot be used symmetrically by opposing communities."
+    ]
+  },
+  {
+    id: "circumcision-clitoridectomy",
+    category: "Case Set",
+    question: "Why does the bodily-alteration case put circumcision and clitoridectomies together?",
+    answer: [
+      "Case 6 is designed to test whether the user is applying one principle or several different principles. A single broad principle might focus on children's consent, irreversible bodily alteration, covenantal identity, medical harm, sexual function, parental authority, or religious tradition. Different principles may separate the practices sharply.",
+      "The tool is not assuming the two practices are morally identical. It asks the user to state whether they are being judged by the same rule or by different facts about anatomy, harm, cultural meaning, religious command, consent, and long-term effects."
+    ],
+    bullets: [
+      "If the same rule covers both, state that rule clearly.",
+      "If the cases differ, state the morally relevant difference.",
+      "Avoid letting familiarity with one practice do the moral work silently."
+    ]
+  },
+  {
+    id: "sexual-particulars",
+    category: "Case Set",
+    question: "Why include sexual cases such as married sex acts and homosexual state punishment?",
+    answer: [
+      "Cases 5 and 7 test whether sexual morality is being grounded in Scripture, natural law, consent, disgust, tradition, harm, covenant categories, civil-law categories, or social identity. They also test whether a user separates private moral judgment from state coercion.",
+      "A user might oppose a sexual act while also opposing criminal punishment, or might ground both in different routes. The point of the tool is to keep those distinctions visible instead of letting a single moral label carry every legal, pastoral, and relational conclusion."
+    ],
+    bullets: [
+      "Separate moral wrongness from civil punishment.",
+      "Separate consent, harm, nature, tradition, and textual authority.",
+      "Use qualifiers when a stance depends on marriage, covenant, law, or pastoral context."
+    ]
+  },
+  {
+    id: "hell-pleasure-aid",
+    category: "Case Set",
+    question: "Why include the pleasure, Hell, and starvation-aid cases?",
+    answer: [
+      "Cases 9 and 12 test whether eternal stakes and urgent earthly need create maximal obligations. If unGospelled unbelievers face eternity in Hell, the tool asks what principle permits ordinary earthly enjoyment. If someone known to the user is starving, the tool asks what principle permits withholding aid.",
+      "These cases are useful because many moral systems become strict about sexual or doctrinal cases but permissive about comfort, money, attention, and sacrifice. The audit invites the user to see whether love of neighbor, consequences, stewardship, mission, and personal enjoyment are being applied consistently."
+    ],
+    bullets: [
+      "Name the threshold where need becomes obligation.",
+      "Name what degree of sacrifice is required.",
+      "Name what permits rest, enjoyment, and discretionary spending if the danger is treated as urgent."
+    ]
+  },
+  {
+    id: "ordinary-cases",
+    category: "Case Set",
+    question: "Why include ordinary cases like speeding, meals, kissing, and emotional misdirection?",
+    answer: [
+      "The ordinary cases keep the ledger from becoming only a set of culture-war questions. Speed limits, meals with apostates, romantic kissing, and making someone believe the opposite of what one feels test how the user handles common behavior, social trust, church boundaries, civil obedience, deception, and proportionality.",
+      "These cases can reveal whether a grounder is being applied selectively. A user may be strict about obedience to authority in one domain but casual about civil law in another. A user may be strict about truthfulness in doctrine but permissive about emotional misdirection. The tool makes those differences visible."
+    ],
+    bullets: [
+      "Map ordinary cases too, not only dramatic ones.",
+      "Notice when social tolerance lowers a moral standard.",
+      "Notice when a principle applied severely elsewhere becomes flexible in daily life."
     ]
   },
   {
