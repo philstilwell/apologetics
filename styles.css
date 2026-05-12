@@ -7910,6 +7910,17 @@ body.app-morality .moral-steps {
   background: #fff6f6;
 }
 
+.particular-seed-note {
+  margin-top: -2px !important;
+  padding: 10px 11px;
+  border: 1px solid rgba(178, 76, 74, 0.32);
+  border-left: 4px solid var(--moral-red);
+  border-radius: var(--radius);
+  background: rgba(255, 232, 232, 0.56);
+  font-size: 0.82rem !important;
+  font-weight: 760;
+}
+
 .particulars-preset-panel .moral-lens-button:hover,
 .particulars-preset-panel .moral-lens-button:focus-visible {
   background: var(--moral-red-soft);
