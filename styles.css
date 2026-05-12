@@ -8071,12 +8071,20 @@ body.app-morality .moral-steps {
 }
 
 .threshold-steps {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 .threshold-claim-panel {
   display: grid;
   gap: 12px;
+}
+
+.threshold-tool .audit-step.full-step > .annotation.plain-help {
+  margin-top: 8px;
+}
+
+.threshold-checklist-copy {
+  margin-bottom: 10px;
 }
 
 .threshold-route-note {
@@ -8131,6 +8139,25 @@ body.app-morality .moral-steps {
   padding: 14px;
 }
 
+.threshold-item-card.is-supported-substantiated {
+  border-color: rgba(61, 114, 84, 0.78);
+  background:
+    linear-gradient(135deg, rgba(61, 114, 84, 0.14), rgba(255, 255, 255, 0) 58%),
+    #fbfefb;
+}
+
+.threshold-item-card.is-supported-substantiated .threshold-collapse-tag {
+  background: var(--moral-green-soft);
+  color: var(--moral-green);
+}
+
+.threshold-item-card.needs-support-note-warning {
+  border-color: rgba(178, 76, 74, 0.82);
+  background:
+    linear-gradient(135deg, rgba(178, 76, 74, 0.08), rgba(255, 255, 255, 0) 56%),
+    #fff8f7;
+}
+
 .threshold-item-head {
   display: flex;
   align-items: start;
@@ -8178,8 +8205,34 @@ body.app-morality .moral-steps {
   margin-bottom: 0;
 }
 
+.threshold-item-card.needs-support-note-warning .threshold-note-field label {
+  color: var(--moral-red);
+}
+
 .threshold-note-field textarea {
   min-height: 96px;
+}
+
+.threshold-item-card.needs-support-note-warning .threshold-note-field textarea {
+  border-color: rgba(178, 76, 74, 0.78);
+  background: #fffdfd;
+}
+
+.threshold-card-warning {
+  margin: -2px 0 0;
+  padding: 10px 11px;
+  border: 1px solid rgba(178, 76, 74, 0.28);
+  border-left: 4px solid var(--moral-red);
+  border-radius: var(--radius);
+  background: var(--moral-red-soft);
+  color: var(--moral-red);
+  font-size: 0.83rem;
+  font-weight: 820;
+  line-height: 1.42;
+}
+
+.threshold-card-warning[hidden] {
+  display: none;
 }
 
 .threshold-diagnosis-grid {
@@ -8293,6 +8346,7 @@ body.app-morality .moral-steps {
   body.app-moral-threshold #checklist-step,
   body.app-moral-threshold #diagnosis-step,
   body.app-moral-threshold #next-step,
+  body.app-moral-threshold #qa-step,
   body.app-moral-threshold .seo-related {
     display: none !important;
   }

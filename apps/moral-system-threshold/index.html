@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Run a preliminary checklist to see whether an alleged Christian moral system has the minimum architecture to count as a coherent moral system at all.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260512-moral-threshold">
+    <link rel="stylesheet" href="../../styles.css?v=20260512-threshold-qa-warning">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -166,6 +166,7 @@
         <a href="#checklist-step">Checklist</a>
         <a href="#diagnosis-step">Diagnosis</a>
         <a href="#next-step">Next</a>
+        <a href="#qa-step">Q&amp;A</a>
         <a href="#report-step">Report</a>
       </nav>
     </header>
@@ -228,8 +229,17 @@
             advanced system stress test and then the concrete case audit.
           </span>
         </a>
-        <a href="#report-step" aria-describedby="threshold-step-report-help">
+        <a href="#qa-step" aria-describedby="threshold-step-qa-help">
           <span class="step-number">5</span>
+          <span class="step-label">Q&amp;A</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="threshold-step-qa-help" role="tooltip">
+            Open tool-specific questions when you need help interpreting the threshold categories,
+            warning states, or handoff into the larger morality sequence.
+          </span>
+        </a>
+        <a href="#report-step" aria-describedby="threshold-step-report-help">
+          <span class="step-number">6</span>
           <span class="step-label">Report</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="threshold-step-report-help" role="tooltip">
@@ -305,7 +315,7 @@
       </section>
 
       <section class="audit-step full-step" id="checklist-step">
-        <div class="step-copy">
+        <div class="step-copy threshold-checklist-copy">
           <p class="app-step">Step 2</p>
           <h2>Mark the eight threshold components</h2>
           <p>
@@ -409,9 +419,148 @@
         </div>
       </section>
 
+      <section class="moral-qa-panel" id="qa-step" aria-labelledby="qa-title">
+        <div class="moral-section-head">
+          <div>
+            <p class="app-step">Step 5</p>
+            <h2 id="qa-title">Moral System Threshold Q&amp;A</h2>
+            <p>
+              Tool-specific questions for reading the threshold categories, the new support-note
+              warning, and the handoff into the more advanced morality audits.
+            </p>
+          </div>
+        </div>
+        <div class="moral-qa-grid">
+          <details class="moral-qa-item" open>
+            <summary>
+              <span>What does this tool mean by a moral-system threshold?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                The threshold is the minimum point at which an alleged moral system has supplied
+                enough architecture to count as a system at all. It does not ask whether the system
+                is true yet. It asks whether the system has actually named the parts that a truth
+                claim, authority claim, duty claim, or case judgment would need.
+              </p>
+              <p>
+                If those parts are still missing, the view may still be a rule source, a moral
+                instinct, a favored conclusion, or a practical framework. That is why this page
+                comes before the larger stress test.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>What is the difference between Missing, Asserted, and Substantiated?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                <strong>Missing</strong> means the component is not really present yet. <strong>Asserted</strong>
+                means the component is named or implied, but the support is still thin, circular,
+                vague, or borrowed from elsewhere. <strong>Substantiated</strong> means the user can
+                explain how that component actually works in the claimed system.
+              </p>
+              <p>
+                The threshold is not rewarding confidence. It is asking whether the component is
+                doing genuine explanatory work rather than being treated as a familiar religious phrase.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>Why does Substantiated now require text in the grounding box?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Because clicking <strong>Substantiated</strong> without naming the actual support
+                lets the tool drift back into slogans. The grounding box is where the user has to
+                say what is really carrying that component: scripture, nature, conscience, a rule
+                of interpretation, a duty-ranking principle, or something else specific.
+              </p>
+              <p>
+                The visible warning does not say the claim is false. It says the component has been
+                rated more strongly than the current written support shows. The warning disappears
+                once the grounding note is supplied.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>Does meeting the threshold prove the moral system is coherent or true?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                No. Meeting the threshold only means the claim has supplied enough visible structure
+                to move into the advanced test without relying on hidden assumptions. It is a
+                readiness judgment, not a final verdict.
+              </p>
+              <p>
+                The next question is whether those supplied components survive scrutiny, circularity
+                checks, disagreement strain, and hard cases. That is the job of the Moral System Stress Test.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>What if I can name a moral source but not yet explain the architecture?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Then this tool is doing exactly what it should. Many people can name a source such
+                as scripture, God’s nature, conscience, or flourishing before they can explain how
+                that source yields moral meaning, truth, authority, access, obligation, scope, and correction.
+              </p>
+              <p>
+                That does not make the source useless. It means the source is still a starting point
+                rather than a full moral system. Use the missing components as the architectural to-do list.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>When should I move from this page into the Stress Test?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Move forward when the page no longer looks like mere conclusion-trading or source-naming.
+                In practice, that usually means most components are at least asserted, several are
+                genuinely substantiated, and the remaining gaps are specific enough to debate directly.
+              </p>
+              <p>
+                The preloaded handoff is there so the advanced tool can start from the same claim,
+                route, and threshold notes rather than forcing the user to rebuild them from scratch.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>How should I use this with another person without sounding combative?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Treat it as a map of clarifying questions rather than as a scoreboard. Ask one
+                component at a time: “What makes that moral claim true?” “How do you know the
+                standard?” “What is doing the binding work here?” That keeps the discussion focused
+                on structure instead of personalities.
+              </p>
+              <p>
+                The most constructive framing is, “I’m trying to see whether this is already a full
+                moral system or whether one part is carrying more weight than it can yet support.”
+              </p>
+            </div>
+          </details>
+        </div>
+      </section>
+
       <section class="audit-step full-step" id="report-step">
         <div class="step-copy">
-          <p class="app-step">Step 5</p>
+          <p class="app-step">Step 6</p>
           <h2>Export the threshold report</h2>
           <p>
             Use the compact summary for notes or debate prep, or copy the AI prompt to keep the
@@ -473,6 +622,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260512-moral-threshold"></script>
+    <script src="app.js?v=20260512-threshold-qa-warning"></script>
   </body>
 </html>

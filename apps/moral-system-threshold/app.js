@@ -252,6 +252,18 @@ function hasStatusAtLeast(elementId, target) {
   return statusRank[state.elements[elementId].status] >= statusRank[target];
 }
 
+function noteIsPresent(elementId) {
+  return Boolean(state.elements[elementId].note.trim());
+}
+
+function needsSubstantiationWarning(elementId) {
+  return state.elements[elementId].status === "substantiated" && !noteIsPresent(elementId);
+}
+
+function hasConfirmedSubstantiation(elementId) {
+  return state.elements[elementId].status === "substantiated" && noteIsPresent(elementId);
+}
+
 function getReadiness(counts) {
   if (counts.substantiated === elements.length) return "Yes";
   if (counts.missing === 0 && counts.substantiated >= 5) return "Almost";
@@ -378,8 +390,17 @@ function renderChecklist() {
   els.checklistGrid.innerHTML = elements
     .map((element) => {
       const current = state.elements[element.id];
+      const warningVisible = needsSubstantiationWarning(element.id);
+      const groundedSubstantiation = hasConfirmedSubstantiation(element.id);
+      const cardClasses = [
+        "threshold-item-card",
+        groundedSubstantiation ? "is-supported-substantiated" : "",
+        warningVisible ? "needs-support-note-warning" : ""
+      ]
+        .filter(Boolean)
+        .join(" ");
       return `
-        <article class="threshold-item-card" data-element-id="${element.id}">
+        <article class="${cardClasses}" data-element-id="${element.id}">
           <div class="threshold-item-head">
             <div>
               <p class="app-step">${element.title}</p>
@@ -404,12 +425,38 @@ function renderChecklist() {
           </div>
           <div class="field-group threshold-note-field">
             <label for="note-${element.id}">What support is actually doing the work here?</label>
-            <textarea id="note-${element.id}" data-note-id="${element.id}" rows="3" placeholder="Name the support, not just the conclusion.">${escapeHtml(current.note)}</textarea>
+            <textarea id="note-${element.id}" data-note-id="${element.id}" rows="3" placeholder="Name the support, not just the conclusion." aria-invalid="${warningVisible ? "true" : "false"}">${escapeHtml(current.note)}</textarea>
           </div>
+          <p class="threshold-card-warning" data-threshold-warning="${element.id}" aria-live="polite" ${warningVisible ? "" : "hidden"}>
+            Add actual grounding in the support box before marking this component substantiated.
+          </p>
         </article>
       `;
     })
     .join("");
+}
+
+function syncChecklistVisualState() {
+  elements.forEach((element) => {
+    const card = els.checklistGrid.querySelector(`[data-element-id="${element.id}"]`);
+    if (!card) return;
+
+    const warningVisible = needsSubstantiationWarning(element.id);
+    const groundedSubstantiation = hasConfirmedSubstantiation(element.id);
+    const warning = card.querySelector(`[data-threshold-warning="${element.id}"]`);
+    const textarea = card.querySelector(`textarea[data-note-id="${element.id}"]`);
+
+    card.classList.toggle("is-supported-substantiated", groundedSubstantiation);
+    card.classList.toggle("needs-support-note-warning", warningVisible);
+
+    if (warning) {
+      warning.hidden = !warningVisible;
+    }
+
+    if (textarea) {
+      textarea.setAttribute("aria-invalid", warningVisible ? "true" : "false");
+    }
+  });
 }
 
 function formatRouteLabel() {
@@ -560,6 +607,7 @@ function updateOutputs() {
   const diagnosis = classifyThreshold(counts);
   const readiness = getReadiness(counts);
 
+  syncChecklistVisualState();
   els.statusLabel.textContent = diagnosis.status;
   els.statusCopy.textContent = diagnosis.copy;
   els.substantiatedCount.textContent = `${counts.substantiated} / ${elements.length}`;
