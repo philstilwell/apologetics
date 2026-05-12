@@ -69,6 +69,21 @@
         line-height: 1.16;
       }
 
+      .belief-faq-item .accordion-toggle-label {
+        flex: 0 0 auto;
+        border-color: rgba(42, 97, 114, 0.22);
+        background: rgba(42, 97, 114, 0.08);
+        color: var(--overreach-blue);
+      }
+
+      .belief-faq-item > summary:hover .accordion-toggle-label,
+      .belief-faq-item > summary:focus-visible .accordion-toggle-label {
+        border-color: rgba(42, 97, 114, 0.42);
+        background: var(--overreach-blue);
+        box-shadow: 0 8px 18px rgba(42, 97, 114, 0.18);
+        color: #fff;
+      }
+
       .belief-faq-item .accordion-toggle-label::before {
         content: "Show answer";
       }
