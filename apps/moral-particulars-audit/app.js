@@ -339,6 +339,192 @@ const presets = [
   }
 ];
 
+const qaItems = [
+  {
+    id: "purpose",
+    category: "Purpose",
+    question: "What is this audit trying to reveal?",
+    answer: [
+      "The tool does not try to settle the moral questions for the user. It asks the user to name what is doing the work when a concrete moral statement is supported, opposed, or treated as uncertain.",
+      "The central output is a map of dependencies: which judgments are carried by Scripture, conscience, Holy Spirit guidance, church tradition, social norms, reason, harm, love of neighbor, or consequences. Once several cases are mapped, the pattern checks ask whether similar cases are being treated by similar principles."
+    ],
+    bullets: [
+      "Use it to expose hidden grounders.",
+      "Use it to compare nearby cases.",
+      "Use it to notice when disagreement is being diagnosed more severely than the evidence warrants."
+    ]
+  },
+  {
+    id: "not-permission",
+    category: "Safety",
+    question: "Does selecting support ever authorize violence or real-world action?",
+    answer: [
+      "No. The audit treats each statement as an object of moral reflection, not as a permission slip, strategy, instruction, or practical recommendation. This matters especially for the lethal-force and state-punishment cases.",
+      "When a user supports a violent statement, the tool intentionally creates pressure for a limiting principle. It asks what authority, evidence threshold, legal boundary, and non-reciprocal rule would prevent the same reasoning from being used by rival groups or private actors."
+    ],
+    bullets: [
+      "Do not use the page as planning guidance.",
+      "Do use it to inspect whether a principle has dangerous implications.",
+      "If a case concerns harm to persons, the audit should make the boundary more explicit, not less."
+    ]
+  },
+  {
+    id: "selected-case",
+    category: "Workflow",
+    question: "Why does selecting a moral particular matter so much?",
+    answer: [
+      "Every stance, grounder slider, disagreement rating, qualifier, and starter profile applies only to the currently selected case. The case list is the ledger. The editing panels are the workspace for whichever case is active.",
+      "This prevents a common confusion: a user may be thinking about remarriage while accidentally changing the sliders for speed limits. The green, gold, and open status markers are meant to keep that per-case bookkeeping visible."
+    ],
+    bullets: [
+      "Choose a case first.",
+      "Set the stance as written.",
+      "Add grounder and disagreement weights.",
+      "Return to the case list to compare the resulting ledger."
+    ]
+  },
+  {
+    id: "as-written",
+    category: "Judgment",
+    question: "What does 'position on the statement as written' mean?",
+    answer: [
+      "The stance should initially answer the sentence on the card, not a revised version that already includes exceptions. If the statement is too broad, mark your stance on that broad statement and then put the needed distinctions in the qualifiers field.",
+      "For example, a user might oppose a statement as written while adding that a narrower version could be defensible under specified covenant, authority, consent, harm, or factual assumptions. The split between stance and qualifiers helps show how much of the judgment depends on hidden amendments."
+    ],
+    bullets: [
+      "Use the stance for the actual sentence.",
+      "Use qualifiers for exceptions and narrowing conditions.",
+      "Use pattern checks to see whether those exceptions are principled or ad hoc."
+    ]
+  },
+  {
+    id: "grounder-weights",
+    category: "Grounders",
+    question: "How should I interpret the grounder sliders?",
+    answer: [
+      "A slider is not a vote total and not a claim that a grounder is objectively strong. It is the user's report of how much that grounder is carrying the user's current judgment.",
+      "A high Scripture score means the judgment is being carried strongly by texts, canonical patterns, or interpretive rules. A high conscience score means inner moral recognition is doing visible work. A high social norms score means inherited community expectations are part of the load-bearing structure."
+    ],
+    bullets: [
+      "Zero means the route is not doing real work for this case.",
+      "A high number means the route would be hard to remove without changing the judgment.",
+      "Ties are allowed when several routes genuinely share the load."
+    ]
+  },
+  {
+    id: "scripture-spirit",
+    category: "Grounders",
+    question: "How should Scripture and Holy Spirit guidance be handled when Christians disagree?",
+    answer: [
+      "The tool lets users name Scripture and Holy Spirit guidance as real grounders, but it also asks what happens when sincere Christians report incompatible readings or incompatible guidance. The pressure is methodological, not dismissive.",
+      "If a private grounder decides the case, the useful follow-up is: what public rule distinguishes correct guidance from mistaken guidance? If a scriptural grounder decides the case, the useful follow-up is: what text and interpretive rule do the decisive work, and would the same rule decide nearby cases consistently?"
+    ],
+    bullets: [
+      "Scripture-heavy answers should name texts and interpretive rules.",
+      "Spirit-heavy answers should name how conflicts between reported guidance are resolved.",
+      "Both can be used, but both become clearer when the conflict-resolution method is named."
+    ]
+  },
+  {
+    id: "social-norms",
+    category: "Grounders",
+    question: "Why include social norms if the user believes morality is objective?",
+    answer: [
+      "Including social norms does not imply that morality is merely social. It gives the user a way to mark when a judgment feels obvious partly because a family, church, denomination, political group, or era has trained that response.",
+      "That distinction matters because a judgment can be true while still being socially reinforced. The audit asks whether the user can separate the objective reason offered for the judgment from the social environment that made the judgment feel immediate."
+    ],
+    bullets: [
+      "High social-norm weight is not automatically bad.",
+      "It does mean the case should be tested under a norm-reversal question.",
+      "If the same judgment survives without social reinforcement, name the independent grounder that carries it."
+    ]
+  },
+  {
+    id: "disagreement-diagnosis",
+    category: "Disagreement",
+    question: "What are disagreement diagnoses for?",
+    answer: [
+      "They ask the user to say why someone would disagree with the user's stance. This is deliberately separate from the user's own grounders. A person might ground a judgment in Scripture while diagnosing dissent as confusion, rebellion, cultural formation, trauma, compassion emphasis, or different factual beliefs.",
+      "The purpose is to make attribution visible. Some users may quickly explain disagreement as spiritual failure. Others may explain almost every disagreement as facts, interpretation, or social conditioning. The attribution balance shows whether the user is applying charity, severity, and epistemic humility consistently."
+    ],
+    bullets: [
+      "A diagnosis is not proof about the other person's motives.",
+      "It is a report of the explanation the user is tempted to give.",
+      "Strong diagnoses should be paired with evidence that could change the diagnosis."
+    ]
+  },
+  {
+    id: "soul-diagnosis",
+    category: "Disagreement",
+    question: "Is it unfair to include spiritual rebellion and unredeemed soul?",
+    answer: [
+      "Those categories are included because many Christian moral disagreements are actually explained that way in real apologetic and pastoral contexts. Leaving them out would hide an important part of the moral ecology the tool is trying to map.",
+      "But the audit treats those categories as high-stakes attributions. If they dominate, the tool asks what would count as a sincere, informed, non-rebellious disagreement. That question protects against turning every disagreement into a diagnosis that cannot be corrected by evidence, interpretation, or empathy."
+    ],
+    bullets: [
+      "Use soul diagnoses only when they are genuinely part of your explanation.",
+      "Do not use them as a shortcut around hard interpretive or factual disputes.",
+      "If no evidence could move the diagnosis, the diagnosis itself needs scrutiny."
+    ]
+  },
+  {
+    id: "partial-vs-mapped",
+    category: "Status",
+    question: "What is the difference between Open, Partial, and Mapped?",
+    answer: [
+      "Open means the case has no visible input. Partial means the case has some input - a stance, notes, grounder weight, or disagreement weight - but not enough to count as fully mapped. Mapped means the case has a stance, at least one grounder weight, and at least one disagreement weight.",
+      "The distinction exists because an isolated stance is not yet a moral map. The tool needs both the user's reason for the judgment and the user's explanation of disagreement before cross-case patterns become meaningful."
+    ],
+    bullets: [
+      "Open: no input yet.",
+      "Partial: started, but not fully interpretable.",
+      "Mapped: ready to contribute to cross-case pattern checks."
+    ]
+  },
+  {
+    id: "pattern-checks",
+    category: "Patterns",
+    question: "How seriously should I take the consistency checks?",
+    answer: [
+      "A pattern card is a review priority, not a verdict. It says the ledger has detected a concentration, missing support structure, sharp stance combination, or risky implication that deserves a limiting principle.",
+      "The strongest response is not to dismiss the card and not to obey it automatically. The strongest response is to compare nearby cases, state the rule that separates them, and revise the sliders or qualifiers if the first map was too quick."
+    ],
+    bullets: [
+      "High pressure means the issue may change the moral map.",
+      "Medium pressure means the ledger is not yet stable.",
+      "Low pressure usually means one dependency is carrying a lot of work."
+    ]
+  },
+  {
+    id: "ai-prompt",
+    category: "Export",
+    question: "How should the AI stress-test prompt be used?",
+    answer: [
+      "The AI prompt exports the full allCaseInputs ledger, not just the selected case. That matters because the most useful critique often comes from cross-case comparison: the AI can see whether the same grounder, exception, or disagreement diagnosis is being applied consistently.",
+      "The prompt asks for critique and for the strongest fair Christian repair attempt. That second part matters. The goal is not just to attack the map; it is to see whether the map can be repaired without hiding tensions, special pleading, or unexamined assumptions."
+    ],
+    bullets: [
+      "Use the prompt after several cases are mapped.",
+      "Ask for concrete contradictions and missing limiting principles.",
+      "Do not treat the AI response as authority; treat it as a pressure test."
+    ]
+  },
+  {
+    id: "denomination",
+    category: "Use Cases",
+    question: "Can this be used by Christians from different traditions?",
+    answer: [
+      "Yes. The tool is not built around one denomination's moral theology. It is built around explicit grounders and explicit disagreement diagnoses. A Catholic, Reformed, Orthodox, Pentecostal, evangelical, progressive, or non-denominational user may weight the sliders very differently.",
+      "That difference is part of the point. If two users reach opposite stances, the ledger can show whether the difference is mainly textual, traditional, pastoral, experiential, social, natural-law, harm-based, or rooted in different views of authority."
+    ],
+    bullets: [
+      "Different traditions can use the same cases.",
+      "Their slider maps will likely differ.",
+      "Those differences become material for comparison rather than hidden background."
+    ]
+  }
+];
+
 function defaultIssueState() {
   return {
     stance: "",
@@ -386,6 +572,7 @@ const refs = {
   patternList: document.querySelector("#patternList"),
   presetButtons: document.querySelector("#presetButtons"),
   printReportButton: document.querySelector("#printReportButton"),
+  qaAccordion: document.querySelector("#qaAccordion"),
   reportMode: document.querySelector("#reportMode"),
   resetButton: document.querySelector("#resetButton"),
   selectedIssueText: document.querySelector("#selectedIssueText"),
@@ -904,6 +1091,45 @@ function promptsForIssue(issue, item) {
   return prompts.slice(0, 5);
 }
 
+function renderQa() {
+  refs.qaAccordion.innerHTML = qaItems
+    .map((item, index) => {
+      const bullets = item.bullets?.length
+        ? `
+          <ul>
+            ${item.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}
+          </ul>
+        `
+        : "";
+      return `
+        <details class="particular-qa-item" data-qa-item ${index === 0 ? "open" : ""}>
+          <summary>
+            <span class="particular-qa-index">${String(index + 1).padStart(2, "0")}</span>
+            <span class="particular-qa-heading">
+              <span>${escapeHtml(item.category)}</span>
+              <strong>${escapeHtml(item.question)}</strong>
+            </span>
+            <span class="particular-qa-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="particular-qa-body">
+            ${item.answer.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+            ${bullets}
+          </div>
+        </details>
+      `;
+    })
+    .join("");
+
+  refs.qaAccordion.querySelectorAll("[data-qa-item]").forEach((details) => {
+    details.addEventListener("toggle", () => {
+      if (!details.open) return;
+      refs.qaAccordion.querySelectorAll("[data-qa-item]").forEach((other) => {
+        if (other !== details) other.open = false;
+      });
+    });
+  });
+}
+
 function renderPatterns() {
   const patterns = buildPatterns();
   refs.patternList.innerHTML = patterns
@@ -1260,4 +1486,5 @@ refs.resetButton.addEventListener("click", () => {
   render();
 });
 
+renderQa();
 render();
