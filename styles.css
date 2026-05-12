@@ -6161,6 +6161,7 @@ body.app-morality #elements-step,
 body.app-morality #boundary-step,
 body.app-morality #challenge-step,
 body.app-morality #dialogue-step,
+body.app-morality #qa-step,
 body.app-morality #report-step {
   scroll-margin-top: 92px;
 }
@@ -6228,9 +6229,14 @@ body.app-moral-particulars #report-step {
 .moral-control-panel,
 .moral-workspace,
 .moral-status-panels,
+.moral-qa-grid,
 .moral-report-grid {
   display: grid;
   gap: 14px;
+}
+
+body.app-morality .moral-steps {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
 .moral-control-panel {
@@ -6243,7 +6249,8 @@ body.app-moral-particulars #report-step {
 .moral-main-panel,
 .moral-card,
 .moral-challenge-panel,
-.moral-dialogue-panel {
+.moral-dialogue-panel,
+.moral-qa-panel {
   border: 1px solid var(--moral-line);
   border-radius: var(--radius);
   background: var(--moral-card);
@@ -6255,7 +6262,8 @@ body.app-moral-particulars #report-step {
 .moral-main-panel,
 .moral-card,
 .moral-challenge-panel,
-.moral-dialogue-panel {
+.moral-dialogue-panel,
+.moral-qa-panel {
   padding: 14px;
 }
 
@@ -7183,6 +7191,90 @@ body.app-moral-particulars #report-step {
   background: rgba(240, 227, 210, 0.72);
 }
 
+.moral-qa-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.moral-qa-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.moral-qa-item {
+  overflow: hidden;
+  border: 1px solid rgba(184, 144, 101, 0.72);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(47, 87, 143, 0.08), rgba(255, 250, 240, 0) 52%),
+    #fff8e8;
+}
+
+.moral-qa-item summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 54px;
+  padding: 12px 13px;
+  color: var(--moral-ink);
+  cursor: pointer;
+  font-size: 0.96rem;
+  font-weight: 920;
+  line-height: 1.2;
+  list-style: none;
+}
+
+.moral-qa-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.moral-qa-item summary::after {
+  content: "+";
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border: 1px solid rgba(47, 87, 143, 0.32);
+  border-radius: 50%;
+  background: var(--moral-blue-soft);
+  color: var(--moral-blue);
+  font-size: 0.86rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.moral-qa-item[open] summary {
+  border-bottom: 1px solid rgba(184, 144, 101, 0.55);
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.moral-qa-item[open] summary::after {
+  content: "-";
+  border-color: rgba(155, 47, 39, 0.32);
+  background: var(--moral-red-soft);
+  color: var(--moral-red);
+}
+
+.moral-qa-item summary:hover,
+.moral-qa-item summary:focus-visible {
+  color: var(--moral-blue);
+  outline: none;
+}
+
+.moral-qa-body {
+  display: grid;
+  gap: 10px;
+  padding: 12px 13px 14px;
+}
+
+.moral-qa-body p {
+  margin: 0;
+  color: var(--moral-muted);
+  font-size: 0.91rem;
+  line-height: 1.52;
+}
+
 .source-card a,
 .challenge-card a {
   color: var(--moral-blue);
@@ -7235,8 +7327,13 @@ body.app-moral-particulars #report-step {
 @media (max-width: 1120px) {
   .moral-dashboard,
   .moral-status-panels,
+  .moral-qa-grid,
   .moral-report-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.app-morality .moral-steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .moral-control-panel,
@@ -7256,8 +7353,13 @@ body.app-moral-particulars #report-step {
   .claim-position-grid,
   .element-grid,
   .moral-status-panels,
+  .moral-qa-grid,
   .moral-report-grid {
     grid-template-columns: 1fr;
+  }
+
+  body.app-morality .moral-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .moral-steps .label-tooltip {
@@ -7321,6 +7423,7 @@ body.app-moral-particulars #report-step {
   body.app-morality .moral-workspace,
   body.app-morality .moral-status-panels,
   body.app-morality .moral-challenge-panel,
+  body.app-morality .moral-qa-panel,
   body.app-morality .moral-dialogue-panel {
     display: none !important;
   }

@@ -24,7 +24,7 @@
     <meta name="twitter:description" content="Test whether Christian moral claims supply an objective moral system or collapse into emotion, obedience, social strategy, or practical advice.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260506-moral-system-challenge-cards">
+    <link rel="stylesheet" href="../../styles.css?v=20260511-moral-system-qa">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -68,6 +68,7 @@
         <a href="#elements-step">Components</a>
         <a href="#boundary-step">Boundaries</a>
         <a href="#challenge-step">Challenges</a>
+        <a href="#qa-step">Q&amp;A</a>
         <a href="#report-step">Report</a>
       </nav>
     </header>
@@ -100,7 +101,9 @@
             <li><strong>Step 2:</strong> review why each required component is mandatory, choose a substantiation route, set support strength, and tick the checks that apply.</li>
             <li><strong>Step 3:</strong> read the boundary tests for collapse into emotion, obedience, or practical advice.</li>
             <li><strong>Step 4:</strong> review matched counterfactuals and cross-examination questions.</li>
-            <li><strong>Step 5:</strong> export the report or AI prompt for a fuller stress test.</li>
+            <li><strong>Step 5:</strong> use the dialogue prompts to turn the audit into focused questions.</li>
+            <li><strong>Step 6:</strong> consult the anticipated Q&amp;A when a result or control is unclear.</li>
+            <li><strong>Step 7:</strong> export the report or AI prompt for a fuller stress test.</li>
           </ul>
         </details>
       </section>
@@ -151,8 +154,16 @@
             conversation without needing to quote the whole report.
           </span>
         </a>
-        <a href="#report-step" aria-describedby="moral-step-report-help">
+        <a href="#qa-step" aria-describedby="moral-step-qa-help">
           <span class="step-number">6</span>
+          <span class="step-label">Q&amp;A</span>
+          <span class="label-help-dot" aria-hidden="true">?</span>
+          <span class="label-tooltip" id="moral-step-qa-help" role="tooltip">
+            Anticipated questions explain what the controls mean and how to read the audit without overclaiming.
+          </span>
+        </a>
+        <a href="#report-step" aria-describedby="moral-step-report-help">
+          <span class="step-number">7</span>
           <span class="step-label">Report</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="moral-step-report-help" role="tooltip">
@@ -334,11 +345,270 @@
         <div class="prompt-board" id="promptBoard"></div>
       </section>
 
+      <section class="moral-qa-panel" id="qa-step" aria-labelledby="qa-title">
+        <div class="moral-section-head">
+          <div>
+            <p class="app-step">Step 6</p>
+            <h2 id="qa-title">Anticipated Q&amp;A</h2>
+            <p>
+              Common questions about what the audit is testing, what the controls mean,
+              and how to read a result without mistaking it for a final verdict.
+            </p>
+          </div>
+        </div>
+        <div class="moral-qa-grid">
+          <details class="moral-qa-item" open>
+            <summary>
+              <span>What counts as a coherent objective moral system in this tool?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                The tool treats a coherent objective moral system as more than a list of moral
+                claims. It must explain what moral terms mean, whether moral claims can be true,
+                what makes them true, how agents can know them, why they bind, how they guide
+                hard cases, who falls under their scope, and how mistaken interpretations are corrected.
+              </p>
+              <p>
+                The word objective is used here in the demanding sense: the truth or authority of
+                the moral claim cannot depend merely on personal feeling, group approval, bare command,
+                social usefulness, or the convenience of a favored conclusion.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>Why are the required components mandatory instead of optional?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Each component blocks a different collapse. Moral Meaning blocks collapse into
+                undefined language. Truth Maker blocks collapse into attitudes or slogans. Authority
+                Check blocks collapse into mere obedience. Moral Access blocks inaccessible standards.
+                Binding Force blocks practical advice. Case Guidance blocks abstract but unusable ideals.
+                Consistent Scope blocks special pleading. Correction Method blocks ad hoc revision.
+              </p>
+              <p>
+                A view may reject one of these requirements, but then the burden shifts: it should
+                explain how the system remains objective and coherent without the job that component
+                was meant to perform.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>Why do common Christian starts leave the Substantiation checks blank?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                The presets are only starting positions. They seed a claim, routes, strength ratings,
+                and notes so the user does not begin from an empty screen. They deliberately do not
+                check the substantiation boxes because those boxes are the actual argumentative work.
+              </p>
+              <p>
+                A checkbox should mean, "I can explain how my account really supplies this part."
+                If a preset checked those boxes automatically, the tool would reward familiarity
+                with a position rather than reflection on whether the position has supplied the needed support.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>What is a substantiation route?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                A substantiation route is the kind of resource being used to support a component:
+                divine command, God's nature, scripture, Holy Spirit guidance, church tradition,
+                conscience, human flourishing, natural law, or a hybrid account.
+              </p>
+              <p>
+                The route is not itself a proof. It tells the audit where the support is supposed
+                to come from so the tool can ask the right follow-up questions. For example, a
+                scripture route raises questions about interpretation and access; a conscience route
+                raises questions about disagreement and emotional projection.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>What does Support strength measure?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Support strength is an honesty control. It asks how much argumentative weight the
+                selected route currently carries for that component. "None" means no support has
+                been offered. Lower settings mean the component is asserted or gestured toward.
+                Supported or Strong means the user is prepared to give an actual account.
+              </p>
+              <p>
+                A high strength rating should not be used as a confidence badge. It should mean
+                the user can answer objections, define terms, handle rival interpretations, and
+                explain why the support is not circular.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>Does a high completeness score prove the moral system is coherent?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                No. Completeness means the current selections have filled the required architecture:
+                routes are chosen, strength is high enough, and the user has checked the required
+                substantiation boxes. It does not prove the checked claims are true.
+              </p>
+              <p>
+                A complete audit is the beginning of a more serious test, not the end. Once the
+                structure is filled, the important question becomes whether the chosen substantiations
+                survive boundary tests, counterfactual challenges, and hard cases.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>Does a failed boundary test prove the Christian claim is false?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                No. A failed boundary test identifies a collapse risk in the current construction.
+                It says, "Given these selections, the account has not yet clearly distinguished
+                itself from emotion, obedience, practical advice, or vague guidance."
+              </p>
+              <p>
+                The right response is not automatically to abandon the claim. The user can strengthen
+                the relevant component, choose a better route, refine the claim, or explain why the
+                boundary has been misread. The tool is designed to make those repair moves visible.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>Why is obedience not enough for morality?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Obedience can explain compliance, but it does not by itself explain moral truth.
+                If an act is good only because an authority commands it, the account must explain
+                why command creates goodness rather than merely creating obligation to obey. If the
+                authority commands it because it is already good, then the account must explain the
+                standard by which goodness is recognized.
+              </p>
+              <p>
+                This is why Authority Check matters. A coherent moral system needs a way to identify
+                legitimate moral authority without making "the authority says so" the entire argument.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>What if the claim is grounded in God's nature rather than divine commands?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Grounding morality in God's nature may avoid some problems with bare command theory,
+                but it creates its own questions. The account still has to explain what "good" means,
+                how God's nature is recognized as good without circularity, how humans access that
+                standard, and how the standard decides disputed cases.
+              </p>
+              <p>
+                The tool is not asking whether "God's nature" is a familiar theological phrase. It
+                is asking whether that phrase performs the needed work: truth-making, authority
+                checking, access, obligation, guidance, scope, and correction.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>Why are hard cases central to the audit?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Easy cases often hide the structure of a moral system because most people already
+                agree on the answer. Hard cases expose whether the system has a method. They ask
+                what happens when scripture is disputed, duties conflict, intuitions diverge, or
+                an authority appears to command something morally troubling.
+              </p>
+              <p>
+                A coherent system should not only affirm conclusions after they are culturally
+                safe. It should explain how users could have reached those conclusions by the stated
+                method before the preferred answer was obvious.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>How should I use the Counterfactual repository?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Treat each counterfactual as a stress test, not a gotcha. A good answer should
+                identify the relevant component, state the route that substantiates it, and explain
+                why the answer does not rely on a special exception for the favored view.
+              </p>
+              <p>
+                If a counterfactual feels unfair, ask what would make it fair: a clearer definition,
+                a better access method, a principled conflict rule, or a stronger correction method.
+                That repair often reveals which component still needs work.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>What should a strong Christian response look like?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                A strong response should do more than quote a conclusion. It should define the
+                moral terms, name the truth-maker, explain authority without circularity, give an
+                access method, distinguish obligation from benefit, decide hard cases, apply the
+                standard consistently, and explain how moral mistakes are corrected.
+              </p>
+              <p>
+                The strongest version will also admit remaining costs. For example, if scripture
+                is the access route, it should face interpretation and disagreement directly. If
+                God's nature is the truth-maker, it should explain how goodness is recognized rather
+                than merely renamed.
+              </p>
+            </div>
+          </details>
+
+          <details class="moral-qa-item">
+            <summary>
+              <span>How can this be used in a conversation without sounding hostile?</span>
+            </summary>
+            <div class="moral-qa-body">
+              <p>
+                Use the audit as a map of questions, not as a scorecard to throw at someone. Start
+                with one component: "What do you mean by objective moral wrong?" or "How do you
+                distinguish duty from prudence?" Let the person choose their route, then ask how
+                that route substantiates the component.
+              </p>
+              <p>
+                The most productive tone is collaborative pressure: "I am trying to see whether
+                this is a full moral system or whether one part is doing too much work." That keeps
+                the focus on coherence rather than personal accusation.
+              </p>
+            </div>
+          </details>
+        </div>
+      </section>
+
       <section class="moral-report-grid" id="report-step" aria-labelledby="report-title">
         <article class="output-card">
           <div class="output-card-head">
             <div>
-              <p class="app-step">Step 6</p>
+              <p class="app-step">Step 7</p>
               <h2 id="report-title">Audit report</h2>
               <p>A readable export of the current claim, mandatory components, boundary tests, and matched challenges.</p>
             </div>
@@ -380,6 +650,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260506-moral-system-challenge-cards"></script>
+    <script src="app.js?v=20260511-moral-system-qa"></script>
   </body>
 </html>
