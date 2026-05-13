@@ -1071,7 +1071,7 @@ function renderImportedBridgeAudit() {
   nodes.bridgeImportBanner.hidden = false;
   nodes.bridgeImportCopy.textContent = `This Theism Gradient session imported a ${route} result from the Fine-Tuning Bridge Audit. Reported status: ${imported.status || "not provided"}. Reported strict ceiling: ${ceiling}.`;
   nodes.bridgeImportClaims.textContent = claimIds.length
-    ? `Suggested focus claims: ${claimIds.join(", ")}`
+    ? `Suggested focus claims: ${claimIds.join(", ")}. The C0## labels are claim IDs in this audit.`
     : "Suggested focus area: Design Deism.";
 }
 

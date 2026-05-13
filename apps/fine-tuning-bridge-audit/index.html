@@ -492,7 +492,7 @@
 
           <div class="step-panel fine-world-panel">
             <div class="field-group">
-              <label for="worldSummary">Why this comparison matters</label>
+              <label for="worldSummary">What your beach choices currently imply</label>
               <p class="fine-world-summary" id="worldSummary">
                 Use the selects below to say which beach best matches the actual universe and which beach each model would naturally predict.
               </p>
@@ -511,12 +511,29 @@
           <p class="app-step">Step 5</p>
           <h2>Keep target ambiguity visible</h2>
           <p>
-            Even if a fine-tuner existed, the argument still has to say why humans should count as
-            the target rather than order, stars, black holes, sparse life, abundant life, or ends
-            we do not understand.
+            Even if a fine-tuner existed, the argument still has to say what looks most like the
+            intended target. This step asks whether the observed universe looks more aimed at
+            order, large-scale structure, a little life, abundant life, humans, or some still
+            unclear end.
           </p>
         </div>
         <div class="step-panel fine-goal-panel">
+          <article class="fine-goal-guide" aria-label="How to read the target sliders">
+            <div>
+              <p class="app-step">How to use this step</p>
+              <h3>Score each possible target, not just the one you prefer</h3>
+            </div>
+            <p>
+              Move a slider to the right when that option seems more plausible as the intended
+              target <strong>if</strong> fine-tuning were real. A higher number does not mean you
+              personally like that option. It means you think it better fits what the universe
+              actually looks like.
+            </p>
+            <div class="fine-goal-scale" aria-hidden="true">
+              <span>Lower = less plausible as the target</span>
+              <span>Higher = more plausible as the target</span>
+            </div>
+          </article>
           <div class="fine-goal-grid" id="goalGrid"></div>
           <label class="field-group">
             <span class="field-label">What makes humans or Christian purposes the target rather than some other end?</span>
@@ -530,38 +547,53 @@
           <p class="app-step">Step 6</p>
           <h2>Read the current honest ceiling</h2>
           <p>
-            A useful result is not necessarily pro-design or anti-design. A useful result is a
-            cleaner statement of how far the current evidence and bridge work really go.
+            This step compares the conclusion you wanted fine-tuning to support with the strongest
+            conclusion the current bridge work actually earns. The goal is not to force a pro- or
+            anti-design answer, but to state the current limit more plainly.
           </p>
         </div>
         <div class="fine-diagnosis-grid">
           <article class="app-card fine-diagnosis-panel">
+            <div class="fine-diagnosis-guide-inline">
+              <p class="app-step">How to read this box</p>
+              <p>
+                <strong>Selected target</strong> is the conclusion you wanted fine-tuning to
+                support. <strong>Highest fully earned claim</strong> is as far as the
+                substantiated bridges actually take you. <strong>Highest still tentatively
+                live</strong> is how far the case could go if the merely asserted bridges later
+                hold up.
+              </p>
+            </div>
             <p class="app-step">Current read</p>
             <h3 id="statusLabel">Bridge not yet earned</h3>
             <p id="statusCopy"></p>
             <div class="fine-mini-ledger">
               <div>
-                <span>Selected target</span>
+                <span>Claim You Asked For</span>
                 <strong id="diagnosisTarget">Design only</strong>
+                <small>This is the route you wanted fine-tuning to carry.</small>
               </div>
               <div>
-                <span>Strict ceiling</span>
+                <span>Highest Fully Earned Claim</span>
                 <strong id="diagnosisCeiling">Below design</strong>
+                <small>This is the furthest the fully substantiated bridges currently take you.</small>
               </div>
               <div>
-                <span>Tentative ceiling</span>
+                <span>Highest Still Tentatively Live</span>
                 <strong id="diagnosisTentative">Below design</strong>
+                <small>This is how far the case could go if the asserted bridges later hold up.</small>
               </div>
               <div>
-                <span>Human-target pressure</span>
+                <span>Pressure Toward A Human-Centered Reading</span>
                 <strong id="diagnosisTargetPressure">0</strong>
+                <small>Higher means the argument is leaning toward humans faster than the visible support allows.</small>
               </div>
             </div>
           </article>
 
           <article class="app-card fine-diagnosis-panel">
             <p class="app-step">Pressure list</p>
-            <h3>What is currently carrying the most strain?</h3>
+            <h3>Why does the current ceiling stop where it does?</h3>
             <ul class="flag-list" id="collapseList"></ul>
           </article>
         </div>
@@ -580,12 +612,16 @@
         <div class="fine-next-grid">
           <article class="app-card fine-next-panel">
             <p class="app-step">Guided handoff</p>
-            <h3>Open Theism Gradient with fine-tuning context attached</h3>
+            <h3>Open the "Theism Gradient" tool with your fine-tuning context attached</h3>
             <p id="gradientTransferCopy">
               The handoff will carry your route, honest ceiling, pressure summary, and recommended
               fine-tuning claims into the downstream audit.
             </p>
             <div class="fine-focus-chiplist" id="gradientFocusClaims" aria-label="Recommended Theism Gradient claims"></div>
+            <p class="fine-focus-note" id="gradientFocusHelp">
+              The C0## labels below are claim IDs inside the "Theism Gradient" tool. They mark the
+              specific fine-tuning-related claims to review first.
+            </p>
             <a class="button primary" href="../theism-gradient-audit/app.html" id="gradientLink" data-gradient-link>
               Open Theism Gradient
             </a>
@@ -693,7 +729,7 @@
             <div class="summary-head">
               <div>
                 <h3>Structured AI prompt</h3>
-                <p>Ask another AI assistant to challenge the current fine-tuning bridge without losing the details.</p>
+                <p>Use this prompt to give another AI assistant the full context, so it can test the current fine-tuning argument, question weak bridge steps, and respond without losing the key details from this audit.</p>
               </div>
               <button class="ghost" id="copyAiPromptButton" type="button">Copy AI Prompt</button>
             </div>

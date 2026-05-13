@@ -182,38 +182,70 @@ const worldQuestions = [
 const goalDefinitions = [
   {
     id: "orderElegance",
+    group: "Non-life targets",
     label: "Order or elegance",
-    help: "Higher means ordered law, mathematical beauty, or stable structure could itself be the target."
+    prompt: "Could ordered law, beauty, or stable structure itself be the target?",
+    help: "Move right if you think mathematical beauty, elegant law, or stable order fits the observed universe better than life-centered goals do."
   },
   {
     id: "blackHolesStars",
+    group: "Non-life targets",
     label: "Stars, black holes, or grand astrophysical structure",
-    help: "Higher means a fine-tuner could be satisfied by large-scale structure rather than biology."
+    prompt: "Could large-scale astrophysical structure be the target rather than biology?",
+    help: "Move right if a fine-tuner could reasonably look satisfied with stars, black holes, galaxies, or other large-scale structure even without much life."
   },
   {
     id: "sparseLife",
+    group: "Life targets",
     label: "A little life somewhere",
-    help: "Higher means a designer could be content with a tiny life pocket rather than a life-saturated cosmos."
+    prompt: "Could one small pocket of life be enough for the intended goal?",
+    help: "Move right if you think a designer could be content with a rare local life pocket rather than a universe crowded with life."
   },
   {
     id: "abundantLife",
+    group: "Life targets",
     label: "Abundant life",
-    help: "Higher means you think the target would look more like life everywhere life can flourish."
+    prompt: "Would a life-targeted universe look more full of life wherever life could flourish?",
+    help: "Move right if you think life as the target should look more widespread, common, or easy to find than our universe currently appears."
   },
   {
     id: "humansPersons",
+    group: "Human or personal targets",
     label: "Humans or human-like persons",
-    help: "Higher means you think conscious moral persons are the visible target rather than one option among others."
+    prompt: "Do humans or conscious moral persons look like the visible target?",
+    help: "Move right if you think the universe looks more aimed at persons like us than at one possible byproduct among many."
   },
   {
     id: "unknownEnds",
+    group: "Human or personal targets",
     label: "Unknown or opaque ends",
-    help: "Higher means you are willing to admit that, even under design, the target could remain unclear."
+    prompt: "Could the target still remain unclear even if design were true?",
+    help: "Move right if you think the universe may reflect a purpose we do not understand, rather than a clearly human-centered or life-centered goal."
   },
   {
     id: "economyExpectation",
+    group: "Life targets",
     label: "Economical sufficiency",
-    help: "Higher means you expect a designer to permit enough life for the goal without needing life everywhere."
+    prompt: "Would an economical designer allow only enough life for the goal rather than life everywhere?",
+    help: "Move right if you expect a designer to allow just enough life for the intended purpose without filling the cosmos with it."
+  }
+];
+
+const goalGroups = [
+  {
+    id: "non-life",
+    title: "Non-life targets",
+    description: "These options treat order or large-scale structure as the goal rather than life."
+  },
+  {
+    id: "life",
+    title: "Life targets",
+    description: "These options treat life itself as the goal, while still distinguishing sparse life from abundant life."
+  },
+  {
+    id: "human",
+    title: "Human or personal targets",
+    description: "These options test whether persons like us look like the target, or whether the target still remains unclear."
   }
 ];
 
@@ -1071,16 +1103,41 @@ function renderWorldSelectors() {
 }
 
 function renderGoals() {
-  els.goalGrid.innerHTML = goalDefinitions
-    .map(
-      (goal) => `
-        <label class="field-group fine-goal-item">
-          <span class="field-label">${escapeHtml(goal.label)} <strong>${state.goals[goal.id]}</strong></span>
-          <input data-goal-id="${escapeHtml(goal.id)}" type="range" min="0" max="100" step="1" value="${state.goals[goal.id]}">
-          <small>${escapeHtml(goal.help)}</small>
-        </label>
-      `
-    )
+  const goalsByGroup = Object.fromEntries(goalGroups.map((group) => [group.title, []]));
+  goalDefinitions.forEach((goal) => {
+    goalsByGroup[goal.group].push(goal);
+  });
+
+  els.goalGrid.innerHTML = goalGroups
+    .map((group) => `
+      <section class="fine-goal-group">
+        <div class="fine-goal-group-head">
+          <h3>${escapeHtml(group.title)}</h3>
+          <p>${escapeHtml(group.description)}</p>
+        </div>
+        <div class="fine-goal-group-items">
+          ${goalsByGroup[group.title]
+            .map(
+              (goal) => `
+                <label class="field-group fine-goal-item">
+                  <span class="fine-goal-top">
+                    <span class="fine-goal-title">${escapeHtml(goal.label)}</span>
+                    <strong class="fine-goal-score">${state.goals[goal.id]}</strong>
+                  </span>
+                  <span class="fine-goal-prompt">${escapeHtml(goal.prompt)}</span>
+                  <input data-goal-id="${escapeHtml(goal.id)}" type="range" min="0" max="100" step="1" value="${state.goals[goal.id]}" aria-label="${escapeHtml(goal.label)}">
+                  <span class="fine-goal-scale-text" aria-hidden="true">
+                    <span>Less plausible target</span>
+                    <span>More plausible target</span>
+                  </span>
+                  <small>${escapeHtml(goal.help)}</small>
+                </label>
+              `
+            )
+            .join("")}
+        </div>
+      </section>
+    `)
     .join("");
   els.goalNote.value = state.goals.goalNote;
 }
@@ -1131,7 +1188,13 @@ function updateDiagnosis() {
   const model = state.world[relevantWorldModelKey()]
     ? scenarioDetails[state.world[relevantWorldModelKey()]]
     : "not set";
-  els.worldSummary.textContent = `Actual universe: ${actual}. Route-relevant comparison model: ${model}. Keep the distinction between one rare success pocket and life-abundance visible.`;
+  if (actual === "not set" || model === "not set") {
+    els.worldSummary.textContent = "Choose one beach for the actual universe and one beach for the model tied to your current route. This box will then say whether those two look aligned or whether they pull apart.";
+  } else if (actual === model) {
+    els.worldSummary.textContent = `You said the actual universe looks like ${actual}. For the route you selected, you also said the expected universe looks like ${model}. Those two match, so this comparison is not currently adding world-shape pressure against the route.`;
+  } else {
+    els.worldSummary.textContent = `You said the actual universe looks like ${actual}, but for the route you selected you said the expected universe looks like ${model}. Because those two do not match, this comparison is creating world-shape pressure against the route.`;
+  }
 }
 
 function updateReports() {
