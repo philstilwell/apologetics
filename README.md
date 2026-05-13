@@ -4,6 +4,7 @@ Static GitHub Pages suite for Crosshairs audits: compact tools that inspect Chri
 
 ## Apps
 
+- Fine-Tuning Bridge Audit: an upstream bridge audit for checking whether fine-tuning really licenses design, life-purpose, human-purpose, or thicker theistic conclusions.
 - Inductive Symmetry Audit: an interactive diagnostic for spotting cherry-picked inductive standards.
 - Theism Gradient: a Christianity-focused assessment of confidence, substantiation gaps, dependency tensions, and divine-action claims.
 - Resurrection Evidence Audit: a Bayesian self-audit for resurrection and miracle claims, including explicit priors, likelihoods, dependence weights, required Bayes factors, pitfall flags, and a postdiction comparator.
@@ -33,6 +34,7 @@ Then open `http://localhost:8080`.
 Useful paths:
 
 - Hub: `http://localhost:8080/`
+- Fine-Tuning Bridge Audit: `http://localhost:8080/apps/fine-tuning-bridge-audit/`
 - Inductive Symmetry Audit: `http://localhost:8080/apps/inductive-symmetry-audit/`
 - Theism Gradient: `http://localhost:8080/apps/theism-gradient-audit/app.html`
 - Resurrection Evidence Audit: `http://localhost:8080/apps/resurrection-evidence-audit/`

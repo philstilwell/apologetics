@@ -4313,6 +4313,13 @@ body:has(.guided-resurrection) a:focus-visible {
   --app-line: #a8c4c7;
 }
 
+.hub-landing .hub-card-fine-tuning {
+  --app-accent: #2a4a3d;
+  --app-accent-dark: #163126;
+  --app-tint: #eef3e7;
+  --app-line: #a7bda7;
+}
+
 body.app-falsifiability {
   --ink: #121817;
   --muted: #4f5d59;
@@ -11187,5 +11194,185 @@ circle.belief-line-zeke {
   .roll-strip-head {
     align-items: start;
     flex-direction: column;
+  }
+}
+
+body.app-fine-tuning {
+  --ink: #152017;
+  --muted: #4d5d4d;
+  --line: #9fbaa2;
+  --paper: #f4f0df;
+  --soft: #dde7d7;
+  --teal: #2a4a3d;
+  --teal-dark: #163126;
+  --rust: #6d5a2f;
+  --wine: #5a3b22;
+  --green: #4f6b44;
+  --amber: #857241;
+  --card: #fffdf5;
+  --shadow: 0 18px 40px rgba(27, 43, 31, 0.12);
+  background:
+    radial-gradient(circle at top left, rgba(170, 197, 173, 0.32), transparent 36%),
+    linear-gradient(180deg, #eef3e7 0, var(--paper) 300px, #fbf8ec 100%);
+}
+
+body.app-fine-tuning .site-header {
+  background: rgba(244, 240, 223, 0.94);
+}
+
+.fine-tool .guided-steps {
+  margin-bottom: 24px;
+}
+
+.fine-dashboard {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.fine-route-panel,
+.fine-prior-panel,
+.fine-world-panel,
+.fine-goal-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.fine-route-note,
+.fine-world-summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.fine-slider-grid,
+.fine-select-grid,
+.fine-goal-grid,
+.fine-diagnosis-grid,
+.fine-next-grid,
+.fine-report-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.fine-slider-grid,
+.fine-select-grid,
+.fine-goal-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fine-world-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.fine-scenario-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fine-scenario-card {
+  padding: 18px;
+}
+
+.fine-scenario-card p:not(.app-step) {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.fine-bridge-card p:not(.app-step):not(.threshold-card-warning),
+.fine-goal-item small,
+.fine-world-select small {
+  color: var(--muted);
+}
+
+.fine-goal-item strong,
+.fine-mini-ledger strong {
+  color: var(--teal-dark);
+}
+
+.fine-mini-ledger {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+.fine-mini-ledger div {
+  padding: 12px;
+  border: 1px solid rgba(21, 32, 23, 0.12);
+  border-radius: var(--radius);
+  background: rgba(221, 231, 215, 0.42);
+}
+
+.fine-mini-ledger span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fine-focus-chiplist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 18px;
+}
+
+.fine-focus-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid rgba(21, 32, 23, 0.14);
+  border-radius: 999px;
+  background: rgba(221, 231, 215, 0.38);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.fine-diagnosis-panel p:not(.app-step),
+.fine-next-panel p:not(.app-step) {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.fine-preset-grid .moral-lens-button {
+  min-height: 132px;
+}
+
+@media (max-width: 1100px) {
+  .fine-dashboard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fine-scenario-grid,
+  .fine-slider-grid,
+  .fine-select-grid,
+  .fine-goal-grid,
+  .fine-diagnosis-grid,
+  .fine-next-grid,
+  .fine-report-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .fine-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  body.app-fine-tuning .guided-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fine-mini-ledger {
+    grid-template-columns: 1fr;
   }
 }

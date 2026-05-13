@@ -21,6 +21,7 @@ const state = {
     mode: "All",
     search: ""
   },
+  importedBridgeAudit: null,
   reportMode: "full"
 };
 
@@ -28,6 +29,10 @@ const nodes = {
   aggregate: document.querySelector("#aggregate-position"),
   alerts: document.querySelector("#alerts"),
   avgGap: document.querySelector("#avg-gap"),
+  bridgeImportBanner: document.querySelector("#bridge-import-banner"),
+  bridgeImportClaims: document.querySelector("#bridge-import-claims"),
+  bridgeImportCopy: document.querySelector("#bridge-import-copy"),
+  bridgeImportFocus: document.querySelector("#bridge-import-focus"),
   categoryBars: document.querySelector("#category-bars"),
   categoryFilter: document.querySelector("#category-filter"),
   categoryProgress: document.querySelector("#category-progress"),
@@ -199,6 +204,33 @@ function loadProfile() {
 
 function saveProfile() {
   localStorage.setItem(storageKey, JSON.stringify(state.profile));
+}
+
+function decodeStatePayload(encoded) {
+  try {
+    const normalized = String(encoded ?? "")
+      .replaceAll(" ", "+")
+      .replaceAll("-", "+")
+      .replaceAll("_", "/");
+    const padded = `${normalized}${"=".repeat((4 - (normalized.length % 4)) % 4)}`;
+    return JSON.parse(decodeURIComponent(escape(window.atob(padded))));
+  } catch {
+    return null;
+  }
+}
+
+function loadImportedBridgeAudit() {
+  const url = new URL(window.location.href);
+  const encoded = url.searchParams.get("state");
+  if (!encoded) return null;
+
+  const payload = decodeStatePayload(encoded);
+  url.searchParams.delete("state");
+  const nextQuery = url.searchParams.toString();
+  const nextUrl = `${url.pathname}${nextQuery ? `?${nextQuery}` : ""}${url.hash}`;
+  window.history.replaceState(null, "", nextUrl);
+
+  return payload?.source === "fine-tuning-bridge-audit" ? payload : null;
 }
 
 function formatNumber(value, digits = 1) {
@@ -1024,6 +1056,25 @@ function renderPresetComparison() {
   }).join("");
 }
 
+function renderImportedBridgeAudit() {
+  if (!nodes.bridgeImportBanner || !nodes.bridgeImportCopy || !nodes.bridgeImportClaims) return;
+  const imported = state.importedBridgeAudit;
+  if (!imported) {
+    nodes.bridgeImportBanner.hidden = true;
+    return;
+  }
+
+  const route = imported.route ? imported.route.replaceAll("-", " ") : "fine-tuning";
+  const ceiling = imported.strictCeiling ? imported.strictCeiling.replaceAll("-", " ") : "not provided";
+  const claimIds = Array.isArray(imported.recommendedClaimIds) ? imported.recommendedClaimIds : [];
+
+  nodes.bridgeImportBanner.hidden = false;
+  nodes.bridgeImportCopy.textContent = `This Theism Gradient session imported a ${route} result from the Fine-Tuning Bridge Audit. Reported status: ${imported.status || "not provided"}. Reported strict ceiling: ${ceiling}.`;
+  nodes.bridgeImportClaims.textContent = claimIds.length
+    ? `Suggested focus claims: ${claimIds.join(", ")}`
+    : "Suggested focus area: Design Deism.";
+}
+
 function render() {
   renderFilters();
   renderMetrics();
@@ -1032,6 +1083,7 @@ function render() {
   renderScatter();
   renderAlerts();
   renderDependencyMap();
+  renderImportedBridgeAudit();
   renderPresetComparison();
   renderExports();
   renderLensButtons();
@@ -1122,6 +1174,17 @@ function goToHighestPressure() {
   const row = ratedClaimRows()
     .sort((a, b) => (b.gap + b.tension) - (a.gap + a.tension))[0];
   if (row) showClaim(row.claim.id);
+}
+
+function showDesignBand() {
+  state.filters.category = "Design Deism";
+  state.filters.mode = "All";
+  state.filters.search = "";
+  render();
+  window.requestAnimationFrame(() => {
+    const target = document.querySelector("#claim-explorer-title");
+    if (target) scrollToTarget(target);
+  });
 }
 
 function downloadTextFile(filename, text, type = "application/json") {
@@ -1229,6 +1292,7 @@ function bindEvents() {
   nodes.nextUnrated.addEventListener("click", goToNextUnrated);
   nodes.reviewPressure.addEventListener("click", goToHighestPressure);
   nodes.exportProfile.addEventListener("click", exportProfile);
+  nodes.bridgeImportFocus?.addEventListener("click", showDesignBand);
   nodes.importProfile.addEventListener("click", () => nodes.importProfileFile.click());
   nodes.importProfileFile.addEventListener("change", async (event) => {
     const [file] = event.target.files;
@@ -1313,6 +1377,7 @@ function bindEvents() {
 async function init() {
   const response = await fetch("./public/claims.json");
   state.claims = await response.json();
+  state.importedBridgeAudit = loadImportedBridgeAudit();
   loadProfile();
   renderFilters();
   renderLensButtons();

@@ -1440,3 +1440,35 @@ textarea {
     justify-items: start;
   }
 }
+
+.bridge-import-notice {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 22px;
+  padding: 18px;
+  border: 1px solid rgba(63, 75, 30, 0.2);
+  border-left: 6px solid var(--olive-dark);
+  border-radius: var(--radius);
+  background: rgba(238, 242, 220, 0.74);
+  box-shadow: var(--shadow);
+}
+
+.bridge-import-notice strong {
+  color: var(--ink);
+}
+
+.bridge-import-notice p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.bridge-import-claims {
+  font-weight: 700;
+}
+
+.bridge-import-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
