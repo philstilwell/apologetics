@@ -1160,7 +1160,12 @@ function applyPreset(presetId) {
     || state.commitments.priorNote.trim()
     || state.world.worldNote.trim()
     || state.goals.goalNote.trim();
-  if (hasWork && !window.confirm(`Replace the current audit with the ${preset.label} preset?`)) return;
+  if (
+    hasWork
+    && !window.confirm(
+      `Replace the current audit with the ${preset.label} preset?\n\nThis will also fill many of the settings, sliders, and degrees with values that reflect the general disposition of that preset persona.`
+    )
+  ) return;
 
   const nextState = normalizeState(preset.state);
   state.route = nextState.route;

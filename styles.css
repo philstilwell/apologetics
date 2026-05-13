@@ -11236,6 +11236,19 @@ body.app-fine-tuning .site-header {
   gap: 18px;
 }
 
+.fine-route-field label {
+  font-size: 1.22rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.fine-route-field select {
+  min-height: 58px;
+  padding: 0.9rem 1rem;
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
 .fine-route-note,
 .fine-world-summary {
   margin: 0;
@@ -11263,6 +11276,28 @@ body.app-fine-tuning .site-header {
 .fine-world-grid {
   display: grid;
   gap: 18px;
+}
+
+.fine-scenario-figure {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(21, 32, 23, 0.14);
+  border-radius: calc(var(--radius) + 4px);
+  background: rgba(255, 253, 245, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.fine-scenario-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fine-scenario-figure figcaption {
+  padding: 14px 18px 18px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .fine-scenario-grid {
@@ -11341,6 +11376,15 @@ body.app-fine-tuning .site-header {
 .fine-next-panel p:not(.app-step) {
   color: var(--muted);
   line-height: 1.55;
+}
+
+.fine-tool .qa-accordion {
+  display: grid;
+  gap: 0;
+}
+
+.fine-tool .qa-accordion details + details {
+  border-top: 1px solid rgba(21, 32, 23, 0.12);
 }
 
 .fine-preset-grid .moral-lens-button {
