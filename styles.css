@@ -11350,6 +11350,22 @@ body.app-fine-tuning .site-header {
   line-height: 1.55;
 }
 
+.fine-bridge-explainer {
+  display: grid;
+  gap: 10px;
+}
+
+.fine-bridge-explainer p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.62;
+}
+
+.fine-bridge-explainer p:last-child {
+  padding-top: 10px;
+  border-top: 1px solid rgba(21, 32, 23, 0.1);
+}
+
 .fine-bridge-card p:not(.app-step):not(.threshold-card-warning),
 .fine-goal-item small,
 .fine-world-select small {

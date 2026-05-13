@@ -36,50 +36,82 @@ const bridgeDefinitions = [
   {
     id: "narrow-range",
     title: "Narrow Range",
-    description: "Show that the life-permitting region is antecedently narrow rather than simply the region inside which we observe ourselves.",
-    question: "What turns life-permitting from a description of our location into a genuinely narrow target?"
+    question: "What turns life-permitting from a description of our location into a genuinely narrow target?",
+    explanation: [
+      "This bridge asks whether the life-permitting region is actually narrow in a meaningful sense, or whether the argument is only pointing out that we exist in one of the regions where beings like us could exist. Simply saying that life depends on certain constants is not yet enough. The case still has to show that the life-friendly region is small relative to a relevant wider range of alternatives.",
+      "That matters because fine-tuning only starts to look surprising if life really occupies a sharply limited target. If the argument never establishes a genuinely narrow target, then 'life-permitting' may function more like a description of where observers can appear than like evidence of improbable calibration.",
+      "A stronger answer here would explain what the relevant comparison range is, why that range is not arbitrary, and why the life-permitting region should be treated as impressively small rather than merely different from nearby cases."
+    ]
   },
   {
     id: "probability-measure",
     title: "Probability Measure",
-    description: "Show that there is some responsible way to talk about alternative constants, initial conditions, or ranges without silently assuming the measure.",
-    question: "What measure over alternatives is being used, and why is it not merely smuggled in?"
+    question: "What measure over alternatives is being used, and why is it not merely smuggled in?",
+    explanation: [
+      "This bridge asks how the argument is assigning probability across alternative constants, initial conditions, or cosmic setups. Once someone says a life-permitting universe is 'unlikely,' they are already assuming some way of weighting the alternatives. But that weighting cannot simply be taken for granted.",
+      "Without a responsible measure, a probability claim can become rhetorical rather than evidential. The argument may sound mathematically serious while silently relying on an undefined or biased space of possibilities. In that case, 'unlikely' may mean little more than 'I find this striking.'",
+      "A stronger answer here would say what alternatives are being compared, why they are being treated as comparable, and why the probability distribution is not being chosen merely because it makes life look rare."
+    ]
   },
   {
     id: "observer-selection",
     title: "Observer Selection",
-    description: "Show why observers finding themselves in an observer-permitting region is not already a major part of the explanation.",
-    question: "What keeps anthropic selection from doing most of the explanatory work here?"
+    question: "What keeps anthropic selection from doing most of the explanatory work here?",
+    explanation: [
+      "This bridge asks what explanatory work is still left once anthropic selection is taken seriously. Observers can only find themselves in regions where observers are possible. So the bare fact that we observe an observer-permitting universe is not automatically surprising in the way it first appears.",
+      "That matters because a fine-tuning argument can overstate the puzzle if it ignores the filtering effect built into our situation. If observation-selection already explains a large part of why we should expect to see life-permitting conditions, then design has less remaining work to do.",
+      "A stronger answer here would explain why anthropic selection is not enough on its own, and why there is still a residual feature of the universe that remains more surprising under impersonal processes than under the proposed design conclusion."
+    ]
   },
   {
     id: "impersonal-alternatives",
     title: "Impersonal Alternatives",
-    description: "Keep chance, necessity, unknown physics, multiverse-style generation, and impersonal search-space explanations live until they are actually handled.",
-    question: "Which impersonal alternatives remain live, and why do they fail relative to design?"
+    question: "Which impersonal alternatives remain live, and why do they fail relative to design?",
+    explanation: [
+      "This bridge asks whether live non-design explanations are being kept on the table long enough to receive a fair hearing. These can include brute chance, deeper physical necessity, unknown future physics, multiverse-style generation, or other impersonal search-space processes that could produce some observer-friendly outcomes without intention.",
+      "That matters because design only gains explanatory force if the remaining impersonal alternatives really perform worse. If those alternatives are dismissed too quickly, caricatured, or treated as obviously absurd before they are examined, the argument may be moving to design by default rather than by comparison.",
+      "A stronger answer here would name the most serious live impersonal competitors, explain what they would predict, and show why they handle the evidence less well than purposive calibration does."
+    ]
   },
   {
     id: "design-step",
     title: "Design Step",
-    description: "Show why purposive calibration explains the setup better than the remaining impersonal competitors.",
-    question: "Why does the case move from fine-tuning to design rather than merely to unexplained selectivity?"
+    question: "Why does the case move from fine-tuning to design rather than merely to unexplained selectivity?",
+    explanation: [
+      "This bridge is the actual move from an interesting pattern to purposive calibration. Even if the universe looks selective in a way that invites explanation, that does not yet mean intention is the best explanation. There is still a big difference between 'this is striking' and 'this was aimed at an end.'",
+      "That matters because many arguments quietly slide from surprise to agency. But unexplained selectivity could still remain just that: unexplained. To earn design, the case has to show not only that the universe is interesting, but that purposive choice explains the interesting feature better than the live impersonal alternatives do.",
+      "A stronger answer here would say what design specifically explains, why it explains that feature better than the alternatives, and what makes purposive calibration more than a label attached to our sense of improbability."
+    ]
   },
   {
     id: "life-step",
     title: "Life Target",
-    description: "Show why the target should be life itself rather than only stable order, stars, black holes, or some unknown output.",
-    question: "What makes life the target instead of one more byproduct inside a vast physical process?"
+    question: "What makes life the target instead of one more byproduct inside a vast physical process?",
+    explanation: [
+      "This bridge asks why life should be treated as the intended target rather than merely one byproduct inside a much larger physical setup. A universe could display elegant order, long-lived stars, black holes, stable laws, or some other large-scale output without life being the central point of the arrangement.",
+      "That matters because a life-permitting universe is not automatically a life-aimed universe. The mere existence of one local life pocket inside an enormous mostly lifeless cosmos does not by itself show that life is what the universe was mainly trying to produce.",
+      "A stronger answer here would explain why the observed universe looks more like a life-targeted system than a system whose main output is order, structure, or some non-biological end, and why life should be treated as the goal rather than an accidental passenger."
+    ]
   },
   {
     id: "human-step",
     title: "Human Target",
-    description: "Show why conscious beings or human-like persons are the target rather than sparse life, rare observers, or a nonhuman endpoint.",
-    question: "What licenses the move from life-permitting to human-centered or person-centered purpose?"
+    question: "What licenses the move from life-permitting to human-centered or person-centered purpose?",
+    explanation: [
+      "This bridge asks why the case should move from life in general to humans, persons, or conscious moral beings in particular. Even if one grants that life is somehow intended, that still leaves open whether the target is sparse life, abundant life, intelligence, consciousness, persons, or something else entirely.",
+      "That matters because human-centered conclusions are much thicker than life-permitting ones. A universe with one tiny pocket of life does not obviously look optimized for beings like us, and the fact that we care about persons is not by itself evidence that persons are the cosmic target.",
+      "A stronger answer here would explain what features of the observed universe make a person-centered reading more plausible than sparse-life, rare-observer, or nonhuman-purpose readings."
+    ]
   },
   {
     id: "theistic-step",
     title: "Theistic Step",
-    description: "Show why the fine-tuning case points beyond generic design to a personal, caring, revelatory, or Christian God.",
-    question: "What bridge turns generic design into anything like personal theism or Christianity?"
+    question: "What bridge turns generic design into anything like personal theism or Christianity?",
+    explanation: [
+      "This bridge asks how the argument moves beyond thin design to anything recognizably theistic, personal, caring, revelatory, or Christian. Fine-tuning, even at its strongest, would at most seem to point toward some kind of purposive calibration. It does not automatically tell us that the calibrator loves humans, answers prayer, reveals moral truths, or stands behind Christianity.",
+      "That matters because many apologetic arguments borrow later religious conclusions too early. A generic designer, a deistic architect, a mind with opaque goals, and the God of Christian theology are not interchangeable outcomes. Each further step needs its own bridge.",
+      "A stronger answer here would say what features of the evidence move the case from generic calibration to personal agency, then from personal agency to moral or revelatory concern, and then from there to anything specifically Christian."
+    ]
   }
 ];
 
@@ -483,6 +515,7 @@ function validScenario(value) {
 
 function createDefaultState() {
   return {
+    lastPresetId: "",
     route: "design-only",
     claim: routes[0].claim,
     commitments: {
@@ -522,6 +555,9 @@ function normalizeState(source) {
   const candidate = source && typeof source === "object" ? source : {};
 
   return {
+    lastPresetId: presets.some((preset) => preset.id === candidate.lastPresetId)
+      ? candidate.lastPresetId
+      : defaults.lastPresetId,
     route: routes.some((route) => route.id === candidate.route) ? candidate.route : defaults.route,
     claim: typeof candidate.claim === "string" ? candidate.claim : defaults.claim,
     commitments: {
@@ -1022,7 +1058,7 @@ function renderPresets() {
     .map(
       (preset) => `
         <button class="moral-lens-button" type="button" data-preset="${escapeHtml(preset.id)}">
-          <strong>${escapeHtml(preset.label)}</strong>
+          <strong>${escapeHtml(state.lastPresetId === preset.id ? `◉ ${preset.label}` : preset.label)}</strong>
           <span>${escapeHtml(preset.description)}</span>
         </button>
       `
@@ -1046,7 +1082,11 @@ function renderChecklist() {
             <span class="threshold-collapse-tag">${escapeHtml(current.status)}</span>
           </div>
           <p class="threshold-question">${escapeHtml(bridge.question)}</p>
-          <p>${escapeHtml(bridge.description)}</p>
+          <div class="fine-bridge-explainer">
+            ${bridge.explanation
+              .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+              .join("")}
+          </div>
           <div class="segmented three" role="radiogroup" aria-label="${escapeHtml(bridge.title)} status">
             ${statusOptions
               .map(
@@ -1231,6 +1271,7 @@ function applyPreset(presetId) {
   ) return;
 
   const nextState = normalizeState(preset.state);
+  state.lastPresetId = preset.id;
   state.route = nextState.route;
   state.claim = nextState.claim;
   state.commitments = nextState.commitments;
@@ -1244,6 +1285,7 @@ function applyPreset(presetId) {
 function resetState() {
   if (!window.confirm("Reset the claim, prior-commitment sliders, bridge checklist, world-shape mapping, and goal sliders?")) return;
   const defaults = createDefaultState();
+  state.lastPresetId = defaults.lastPresetId;
   state.route = defaults.route;
   state.claim = defaults.claim;
   state.commitments = defaults.commitments;
