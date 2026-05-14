@@ -8391,12 +8391,15 @@ body.app-morality .moral-steps {
 }
 
 body.app-morality :is(
+  .app-title h1,
   #claim-title,
   #elements-title,
   #boundary-title,
   #challenge-title,
   #dialogue-title,
+  #lens-title,
   #qa-title,
+  #related-audits-title,
   #report-title
 ) {
   font-size: clamp(1.55rem, 3vw, 2.4rem);
