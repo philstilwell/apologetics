@@ -1521,7 +1521,7 @@ function renderPromiseMap() {
     const excusePenalty = excusePenaltyFor(claim.id);
     const excuseCount = current.excuses.size;
     const x = index * laneWidth + laneWidth / 2;
-    const size = Math.round(16 + (study.rigor / 100) * 24);
+    const size = Math.round(30 + (study.rigor / 100) * 28);
     const opacity = clamp(1 - excusePenalty / 88, 0.42, 1);
     const ringWidth = clamp(2 + excusePenalty / 9 + (score < 50 ? 1.2 : 0), 2, 10);
     const ringColor = excuseCount > 0 ? "#8c3f2d" : score >= 50 ? "#2d6a4f" : "#8b610f";

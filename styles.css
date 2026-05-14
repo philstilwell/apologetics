@@ -6243,9 +6243,9 @@ body.app-falsifiability #summary {
 
 .promise-map {
   position: relative;
-  min-width: 680px;
-  min-height: 318px;
-  padding: 38px 18px 72px 58px;
+  min-width: 920px;
+  min-height: 356px;
+  padding: 38px 18px 96px 58px;
   border: 1px solid #a8c4c7;
   border-radius: var(--radius);
   background:
@@ -6255,7 +6255,7 @@ body.app-falsifiability #summary {
 
 .promise-map-plot {
   position: absolute;
-  inset: 42px 18px 68px 58px;
+  inset: 42px 18px 92px 58px;
   border-left: 1px solid rgba(5, 11, 10, 0.42);
   border-bottom: 1px solid rgba(5, 11, 10, 0.42);
   background:
@@ -6390,8 +6390,8 @@ body.app-falsifiability #summary {
 
 .promise-map-icon {
   display: grid;
-  width: 62%;
-  height: 62%;
+  width: 66%;
+  height: 66%;
   place-items: center;
 }
 
@@ -6454,13 +6454,13 @@ body.app-falsifiability #summary {
 }
 
 .promise-map-x-label {
-  bottom: -47px;
-  width: 62px;
+  bottom: -64px;
+  width: 92px;
   color: var(--ff-ink);
-  font-size: 0.55rem;
+  font-size: 0.72rem;
   font-weight: 950;
-  letter-spacing: 0.04em;
-  line-height: 1.08;
+  letter-spacing: 0.035em;
+  line-height: 1.12;
   text-align: center;
   text-transform: uppercase;
   transform: translateX(-50%);
