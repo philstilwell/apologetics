@@ -521,20 +521,20 @@
               <p class="app-step">Source map</p>
               <h2 id="source-map-title">Moral truth source map</h2>
               <p>
-                Each dot is a required component. The source lane shows which route is being used;
-                the height shows support strength, and larger darker dots have more substantiation
-                checks completed.
+                Each line is a selected source route. The lane shows which route is being used,
+                the height shows average support strength, and thicker darker lines have more
+                substantiation checks completed.
               </p>
             </div>
             <button class="section-help" type="button" aria-label="Explain moral truth source map" aria-describedby="source-map-help">
               <span class="label-help-dot" aria-hidden="true">?</span>
               <span class="section-tooltip source-map-tooltip" id="source-map-help" role="tooltip">
-                The numbered lanes correspond to the source labels below the graph. A dot appears when a required component has a chosen substantiation route. The vertical scale is the user's support-strength setting: 0 means none, 1 asserted, 2 thin, 3 supported, and 4 strong. Larger darker dots mean more of that component's substantiation checks are marked. Green dots are currently ready; gold dots still need stronger support or completed checks.
+                The numbered lanes correspond to the source labels below the graph. A line appears when one or more required components use that source route. The vertical scale summarizes the average support-strength setting for components assigned to that route: 0 means none, 1 asserted, 2 thin, 3 supported, and 4 strong. Thicker darker lines mean a higher share of substantiation checks are marked. Green lines mean every component assigned to that source is currently ready; gold lines still need stronger support or completed checks.
               </span>
             </button>
           </div>
           <div class="moral-source-plot-wrap">
-            <div id="truthSourcePlot" class="moral-source-plot" role="img" aria-label="Scatter plot of moral truth sources by support strength"></div>
+            <div id="truthSourcePlot" class="moral-source-plot" role="img" aria-label="Line plot of moral truth sources by support strength"></div>
           </div>
           <div id="truthSourceLegend" class="moral-source-legend" aria-label="Moral truth source lane legend"></div>
         </section>

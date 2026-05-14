@@ -1082,12 +1082,6 @@ function getComponentStatus(element) {
   };
 }
 
-function componentSourceClass(element) {
-  if (elementIsReady(element.id)) return "ready";
-  if (routeIsChosen(element.id)) return "thin";
-  return "missing";
-}
-
 function filteredElements() {
   return elements;
 }
@@ -1365,7 +1359,26 @@ function renderTruthSourceMap() {
         .sort((a, b) => a.title.localeCompare(b.title))
     ])
   );
-  const plottedElements = coreElements.filter((element) => routeIsChosen(element.id));
+  const sourceSummaries = sourceRoutes
+    .map((route, index) => {
+      const laneElements = elementsByRoute.get(route.id) || [];
+      if (!laneElements.length) return null;
+      const averageStrength =
+        laneElements.reduce((total, element) => total + strengthValue(element.id), 0) / laneElements.length;
+      const averageChecks =
+        laneElements.reduce((total, element) => total + checkCompletion(element), 0) / laneElements.length;
+      const readyCount = laneElements.filter((element) => elementIsReady(element.id)).length;
+      return {
+        route,
+        index,
+        count: laneElements.length,
+        averageStrength,
+        averageChecks,
+        readyCount,
+        allReady: readyCount === laneElements.length
+      };
+    })
+    .filter(Boolean);
 
   refs.truthSourcePlot.innerHTML = `
     <div class="source-axis source-x-axis">Source lanes</div>
@@ -1381,44 +1394,46 @@ function renderTruthSourceMap() {
     ${[0, 1, 2, 3, 4]
       .map((value) => `<span class="source-y-tick" style="bottom:${value * 25}%">${value}</span>`)
       .join("")}
-    ${plottedElements
-      .map((element) => {
-        const routeId = state.routes[element.id];
-        const routeIndex = Math.max(0, sourceRoutes.findIndex((route) => route.id === routeId));
-        const laneElements = elementsByRoute.get(routeId) || [];
-        const itemIndex = Math.max(0, laneElements.findIndex((item) => item.id === element.id));
-        const itemCount = Math.max(1, laneElements.length);
-        const x = routeIndex * laneWidth + laneWidth * 0.12 + ((itemIndex + 0.5) / itemCount) * laneWidth * 0.76;
-        const y = strengthValue(element.id) * 25;
-        const checks = checkCompletion(element);
-        const size = 13 + checks * 8;
-        const opacity = 0.52 + checks * 0.46;
-        const statusClass = componentSourceClass(element);
-        const strength = strengthValue(element.id);
-        const label = `${element.title}: ${routeLabel(routeId)}, support: ${strengthLabel(strength)} (${strength}/4), ${Math.round(checks * 100)}% checks complete`;
+    ${sourceSummaries
+      .map((summary) => {
+        const x = summary.index * laneWidth + laneWidth * 0.17;
+        const width = laneWidth * 0.66;
+        const y = summary.averageStrength * 25;
+        const thickness = 5 + summary.averageChecks * 6;
+        const opacity = 0.55 + summary.averageChecks * 0.43;
+        const statusClass = summary.allReady ? "ready" : "thin";
+        const componentNames = (elementsByRoute.get(summary.route.id) || [])
+          .map((element) => element.title)
+          .join(", ");
+        const label = `${summary.route.label}: ${summary.count} component${summary.count === 1 ? "" : "s"} (${componentNames}), average support ${summary.averageStrength.toFixed(1)}/4, ${Math.round(summary.averageChecks * 100)}% checks complete`;
         return `
           <button
             type="button"
-            class="source-point ${statusClass}"
-            data-source-element="${escapeHtml(element.id)}"
-            style="left:${x}%; bottom:${y}%; width:${size}px; height:${size}px; opacity:${opacity}"
+            class="source-line ${statusClass}"
+            data-source-route="${escapeHtml(summary.route.id)}"
+            style="left:${x}%; bottom:${y}%; width:${width}%; height:${thickness}px; opacity:${opacity}"
             title="${escapeHtml(label)}"
             aria-label="${escapeHtml(`Open ${label}`)}"
           ></button>
         `;
       })
       .join("")}
-    ${plottedElements.length ? "" : `<div class="source-empty">Choose substantiation routes to plot the claimed sources of moral truth.</div>`}
+    ${sourceSummaries.length ? "" : `<div class="source-empty">Choose substantiation routes to plot the claimed sources of moral truth.</div>`}
   `;
 
   refs.truthSourceLegend.innerHTML = sourceRoutes
     .map((route, index) => {
-      const count = elementsByRoute.get(route.id)?.length || 0;
+      const laneElements = elementsByRoute.get(route.id) || [];
+      const count = laneElements.length;
+      const componentList = count
+        ? laneElements.map((element) => element.title).join(", ")
+        : "No components assigned";
       return `
         <article class="source-legend-item${count ? " has-points" : ""}">
           <strong>${index + 1}</strong>
           <span>${escapeHtml(route.label)}</span>
           <em>${count}</em>
+          <small class="source-component-list${count ? "" : " empty"}">${escapeHtml(componentList)}</small>
         </article>
       `;
     })
@@ -1935,10 +1950,10 @@ function bindEvents() {
   });
 
   refs.truthSourcePlot?.addEventListener("click", (event) => {
-    const point = event.target.closest("[data-source-element]");
-    if (!point) return;
+    const line = event.target.closest("[data-source-route]");
+    if (!line) return;
     const card = [...refs.elementGrid.querySelectorAll("[data-element-card]")]
-      .find((item) => item.dataset.elementCard === point.dataset.sourceElement);
+      .find((item) => state.routes[item.dataset.elementCard] === line.dataset.sourceRoute);
     if (!card) return;
     card.scrollIntoView({
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
