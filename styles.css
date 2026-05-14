@@ -10440,6 +10440,8 @@ body.app-moral-particulars .moral-static-status {
 }
 
 .particular-concentration-coverage {
+  position: relative;
+  z-index: 5;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -10493,7 +10495,8 @@ body.app-moral-particulars .moral-static-status {
 
 .particular-coverage-tooltip {
   position: absolute;
-  top: calc(100% + 8px);
+  top: auto;
+  bottom: calc(100% + 8px);
   left: -8px;
   z-index: 70;
   width: min(430px, calc(100vw - 48px));
