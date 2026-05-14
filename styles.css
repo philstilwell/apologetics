@@ -4149,6 +4149,14 @@ body:has(.guided-resurrection) a:focus-visible {
   font-size: 0.84rem;
 }
 
+.contribution-assessment-card .contribution-assessment-warning {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(138, 75, 24, 0.2);
+  color: #5c3518;
+  font-size: 0.84rem;
+}
+
 .evidence-contribution-chart-wrap {
   max-width: 100%;
   min-width: 0;
@@ -4253,7 +4261,7 @@ body:has(.guided-resurrection) a:focus-visible {
 
 .evidence-contribution-legend {
   display: grid;
-  grid-template-columns: repeat(5, minmax(86px, 1fr));
+  grid-template-columns: repeat(var(--contribution-lanes, 5), minmax(86px, 1fr));
   min-width: 640px;
   margin: 0 14px 4px 66px;
   border-right: 1px solid rgba(31, 90, 58, 0.18);

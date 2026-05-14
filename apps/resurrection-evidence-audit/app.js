@@ -60,6 +60,15 @@ const claimPresets = [
         pAlt: 45,
         weight: 50,
       },
+      {
+        id: "record-latency",
+        title: "Record latency",
+        type: "documentation",
+        note: "If the first written resurrection accounts appear decades later, the delay leaves more room for oral reshaping, missing context, and theological development.",
+        pTrue: 35,
+        pAlt: 70,
+        weight: 65,
+      },
     ],
   },
   {
@@ -1155,7 +1164,10 @@ function renderEvidenceLive(assessment) {
     const live = document.querySelector(`#${item.id}-live`);
     if (!live) return;
     live.querySelector("strong").textContent = formatLift(item.adjustedBf);
-    live.querySelector("span").textContent = `${formatPercentWithRatio(item.share)} of evidence added`;
+    live.querySelector("span").textContent =
+      item.adjustedBf < 1
+        ? "Counterpressure on the claim"
+        : `${formatPercentWithRatio(item.share)} of evidence added`;
   });
 }
 
@@ -1244,8 +1256,13 @@ function renderCredenceMix(assessment) {
 function renderEvidenceContributionMap(assessment) {
   const laneCount = Math.max(1, assessment.items.length);
   const laneWidth = 100 / laneCount;
+  const minMapWidth = Math.max(640, laneCount * 108);
   const yTicks = [0, 0.25, 0.5, 0.75, 1];
   renderEvidenceContributionAssessment(assessment);
+
+  els.evidenceContributionChart.style.minWidth = `${minMapWidth}px`;
+  els.evidenceContributionLegend.style.minWidth = `${minMapWidth}px`;
+  els.evidenceContributionLegend.style.setProperty("--contribution-lanes", laneCount);
 
   els.evidenceContributionChart.innerHTML = `
     <div class="evidence-contribution-axis contribution-y-axis">Positive movement share</div>
@@ -1315,7 +1332,11 @@ function renderEvidenceContributionAssessment(assessment) {
   const positiveItems = [...assessment.items]
     .filter((item) => item.share > 0)
     .sort((a, b) => b.share - a.share);
+  const counterItems = [...assessment.items]
+    .filter((item) => item.adjustedBf < 1)
+    .sort((a, b) => a.adjustedBf - b.adjustedBf);
   const topDriver = positiveItems[0];
+  const topCounter = counterItems[0];
   const topShare = topDriver?.share || 0;
   const weightedIndependence = positiveItems.reduce((sum, item) => sum + item.share * (item.weight / 100), 0);
   const concentration =
@@ -1351,6 +1372,11 @@ function renderEvidenceContributionAssessment(assessment) {
       <p class="contribution-assessment-note">
         Average independence across the positive movers is ${formatPercentWithRatio(weightedIndependence)}. Lower independence means the item may be repeating the same source, memory stream, community, or assumption rather than adding fully separate support.
       </p>
+      ${
+        topCounter
+          ? `<p class="contribution-assessment-warning"><strong>${escapeHtml(getContributionLaneLabel(topCounter.title))}</strong> currently pushes against the claim with a ${formatLift(topCounter.adjustedBf)} factor. That does not settle the case, but it means this item is subtracting support rather than adding it.</p>`
+          : ""
+      }
     </div>
   `;
 }
@@ -1360,6 +1386,7 @@ function getContributionLaneLabel(title) {
     "Post-mortem appearance reports": "Appearance reports",
     "Conversions and costly commitment": "Costly commitment",
     "Early creed and movement growth": "Creed and growth",
+    "Record latency": "Record latency",
     "Driver says the wheel was pulled": "Driver report",
     "Crash-site physical evidence": "Crash evidence",
     "Pattern of similar events": "Similar cases",
