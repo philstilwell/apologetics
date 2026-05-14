@@ -86,6 +86,7 @@ const elements = [
   {
     id: "moral-meaning",
     title: "Moral Meaning",
+    shortLabel: "Meaning",
     description: "Defines what moral words mean before using them as if they already carry objective content.",
     question: "What do you mean by wrong, good, duty, and obligation?",
     collapse: "Vocabulary without content",
@@ -94,6 +95,7 @@ const elements = [
   {
     id: "truth-ground",
     title: "Truth Maker",
+    shortLabel: "Truth",
     description: "Explains whether moral claims can be true and what in reality makes them true.",
     question: "What makes a moral claim true beyond preference, power, or agreement?",
     collapse: "Preference or power",
@@ -102,6 +104,7 @@ const elements = [
   {
     id: "authority-check",
     title: "Authority Check",
+    shortLabel: "Authority",
     description: "Explains how a claimed moral authority is recognized as morally trustworthy without circularity.",
     question: "Why trust the claimed moral authority as good before simply obeying it?",
     collapse: "Obedience without moral test",
@@ -110,6 +113,7 @@ const elements = [
   {
     id: "moral-access",
     title: "Moral Access",
+    shortLabel: "Access",
     description: "Gives accountable agents a usable method for knowing the standard and checking disputes.",
     question: "How can ordinary accountable people know the standard and resolve disagreement?",
     collapse: "Hidden standard",
@@ -118,6 +122,7 @@ const elements = [
   {
     id: "binding-force",
     title: "Binding Force",
+    shortLabel: "Binding",
     description: "Explains why the moral claim binds rather than merely advising, rewarding, or warning.",
     question: "Why ought anyone comply even when doing so is costly or unrewarded?",
     collapse: "Practical advice",
@@ -126,6 +131,7 @@ const elements = [
   {
     id: "case-guidance",
     title: "Case Guidance",
+    shortLabel: "Cases",
     description: "Shows how the claimed system decides actual cases and ranks duties when they conflict.",
     question: "How does the system decide hard cases before the preferred answer is known?",
     collapse: "Abstraction without decisions",
@@ -134,6 +140,7 @@ const elements = [
   {
     id: "consistent-scope",
     title: "Consistent Scope",
+    shortLabel: "Scope",
     description: "States who is bound and applies the same standard to like cases across persons and times.",
     question: "Who is bound, and why are like cases treated alike across people, eras, and groups?",
     collapse: "Special pleading",
@@ -142,6 +149,7 @@ const elements = [
   {
     id: "correction",
     title: "Correction Method",
+    shortLabel: "Repair",
     description: "Explains how mistaken moral interpretations are identified and revised without ad hoc convenience.",
     question: "How does the system detect and repair mistaken moral judgments?",
     collapse: "Ad hoc revision",
@@ -181,6 +189,8 @@ const els = {
   diagnosisMissing: document.getElementById("diagnosisMissing"),
   diagnosisAsserted: document.getElementById("diagnosisAsserted"),
   diagnosisSubstantiated: document.getElementById("diagnosisSubstantiated"),
+  thresholdReadinessPlot: document.getElementById("thresholdReadinessPlot"),
+  thresholdReadinessCopy: document.getElementById("thresholdReadinessCopy"),
   collapseList: document.getElementById("collapseList"),
   summaryOutput: document.getElementById("summaryOutput"),
   aiPromptOutput: document.getElementById("aiPromptOutput"),
@@ -531,6 +541,10 @@ function formatRouteLabel() {
   return getRouteById(state.route).label;
 }
 
+function formatStatusLabel(statusId) {
+  return statusOptions.find((option) => option.id === statusId)?.label || "Missing";
+}
+
 function buildCollapseItems() {
   return elements
     .filter((element) => state.elements[element.id].status !== "substantiated")
@@ -694,6 +708,52 @@ function renderStressImportNotice() {
   els.stressImportClaim.textContent = claim ? `Imported claim: ${claim}` : "";
 }
 
+function renderThresholdReadinessMap(readiness) {
+  if (!els.thresholdReadinessPlot || !els.thresholdReadinessCopy) return;
+
+  els.thresholdReadinessCopy.textContent = `${formatRouteLabel()} route · ${readiness} ready for Stress Test · click any lane to revise it.`;
+  els.thresholdReadinessPlot.setAttribute(
+    "aria-label",
+    `${formatRouteLabel()} route. ${readiness} ready for Stress Test. Each lane shows whether a required component is missing, asserted, or substantiated.`
+  );
+
+  els.thresholdReadinessPlot.innerHTML = elements
+    .map((element) => {
+      const currentStatus = state.elements[element.id].status;
+      const statusLabel = formatStatusLabel(currentStatus);
+      const noteText = state.elements[element.id].note.trim()
+        ? ` Support note: ${state.elements[element.id].note.trim()}`
+        : "";
+      return `
+        <button
+          type="button"
+          class="threshold-readiness-column status-${currentStatus}"
+          data-readiness-jump="${element.id}"
+          title="${escapeHtml(`${element.title}: ${statusLabel}.${noteText}`)}"
+          aria-label="${escapeHtml(`Jump to ${element.title}. Current status: ${statusLabel}.${noteText}`)}"
+        >
+          <span class="threshold-readiness-track" aria-hidden="true">
+            <span class="threshold-readiness-state state-substantiated${currentStatus === "substantiated" ? " is-active" : ""}"></span>
+            <span class="threshold-readiness-state state-asserted${currentStatus === "asserted" ? " is-active" : ""}"></span>
+            <span class="threshold-readiness-state state-missing${currentStatus === "missing" ? " is-active" : ""}"></span>
+          </span>
+          <span class="threshold-readiness-label">${escapeHtml(element.shortLabel || element.title)}</span>
+        </button>
+      `;
+    })
+    .join("");
+}
+
+function jumpToChecklistElement(elementId) {
+  const target = els.checklistGrid.querySelector(`[data-element-id="${elementId}"]`);
+  if (!target) return;
+  target.scrollIntoView({
+    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    block: "start"
+  });
+  target.focus({ preventScroll: true });
+}
+
 function updateOutputs() {
   const counts = countStatuses();
   const diagnosis = classifyThreshold(counts);
@@ -714,6 +774,7 @@ function updateOutputs() {
   els.diagnosisMissing.textContent = String(counts.missing);
   els.diagnosisAsserted.textContent = String(counts.asserted);
   els.diagnosisSubstantiated.textContent = String(counts.substantiated);
+  renderThresholdReadinessMap(readiness);
   els.collapseList.innerHTML =
     buildCollapseItems() ||
     `<li><strong>All eight components are substantiated.</strong><p>The threshold has been cleared. The main question now is whether the account survives the advanced system-level pressure test.</p></li>`;
@@ -770,6 +831,12 @@ function attachEvents() {
     state.elements[elementId].note = event.target.value;
     saveState();
     updateOutputs();
+  });
+
+  els.thresholdReadinessPlot?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-readiness-jump]");
+    if (!button) return;
+    jumpToChecklistElement(button.getAttribute("data-readiness-jump"));
   });
 
   els.resetButton.addEventListener("click", () => {
