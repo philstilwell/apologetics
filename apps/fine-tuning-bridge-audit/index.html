@@ -342,7 +342,7 @@
         <article class="metric-card">
           <span class="metric-label">Prior pressure</span>
           <strong id="priorPressureValue">0</strong>
-          <small>Higher means identity pull, delegated trust, or asymmetry may already be carrying confidence.</small>
+          <small>Background commitment pressure. This is different from human-target pressure.</small>
         </article>
         <article class="metric-card">
           <span class="metric-label">Substantiated bridges</span>
@@ -370,6 +370,16 @@
               </p>
             </article>
             <article class="fine-score-card">
+              <h3>Prior pressure</h3>
+              <p>
+                This tracks whether identity pull, delegated trust, or one-sided standards may
+                already be carrying confidence before the bridge work is done. It is
+                <strong>not</strong> the same as human-target pressure. You can have high prior
+                pressure even if the argument is not leaning hard toward humans, and you can have
+                strong human-target pressure even if prior pressure is low.
+              </p>
+            </article>
+            <article class="fine-score-card">
               <h3>World-shape tension</h3>
               <p>
                 This compares the actual-universe beach with the route-relevant expected beach.
@@ -381,9 +391,10 @@
             <article class="fine-score-card">
               <h3>Human-target pressure</h3>
               <p>
-                This rises when the target sliders lean toward humans or persons more strongly than
-                toward order, stars, black holes, or unknown ends. It rises again on thicker routes,
-                and it rises further if the human-target bridge is still not substantiated.
+                This is different from prior pressure. It measures whether the argument is leaning
+                toward humans or persons more strongly than toward order, stars, black holes, or
+                unknown ends. It rises again on thicker routes, and it rises further if the
+                human-target bridge is still not substantiated.
               </p>
             </article>
           </div>
@@ -421,19 +432,6 @@
             <button class="ghost" id="resetButton" type="button">Reset audit</button>
           </div>
           <div class="moral-lens-grid fine-preset-grid" id="presetButtons"></div>
-          <div class="fine-snapshot-panel">
-            <div class="route-panel-heading">
-              <div>
-                <p class="app-step">Local snapshots</p>
-                <h3>Save 3 comparison states</h3>
-              </div>
-            </div>
-            <p class="fine-route-note">
-              Save the current audit into a slot, then load it later without overwriting the other
-              saved comparisons.
-            </p>
-            <div class="fine-snapshot-grid" id="snapshotSlots" aria-label="Saved comparison snapshots"></div>
-          </div>
         </div>
       </section>
 
@@ -640,7 +638,7 @@
               <div>
                 <span>Pressure Toward A Human-Centered Reading</span>
                 <strong id="diagnosisTargetPressure">0</strong>
-                <small>Higher means the argument is leaning toward humans faster than the visible support allows.</small>
+                <small>This is different from prior pressure. It tracks human-centered overreach.</small>
               </div>
             </div>
           </article>

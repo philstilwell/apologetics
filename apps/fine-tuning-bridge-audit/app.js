@@ -1,6 +1,4 @@
 const STORAGE_KEY = "fine-tuning-bridge-audit-v1";
-const SNAPSHOT_STORAGE_KEY = "fine-tuning-bridge-audit-snapshots-v1";
-const SNAPSHOT_SLOT_COUNT = 3;
 const THEISM_GRADIENT_BASE_URL = "../theism-gradient-audit/app.html";
 
 const routes = [
@@ -497,7 +495,6 @@ const els = {
   useRouteClaimButton: document.getElementById("useRouteClaimButton"),
   presetButtons: document.getElementById("presetButtons"),
   resetButton: document.getElementById("resetButton"),
-  snapshotSlots: document.getElementById("snapshotSlots"),
   checklistGrid: document.getElementById("checklistGrid"),
   worldSelectGrid: document.getElementById("worldSelectGrid"),
   worldRouteCue: document.getElementById("worldRouteCue"),
@@ -588,18 +585,6 @@ function createDefaultState() {
   };
 }
 
-function createDefaultSnapshots() {
-  return Array.from({ length: SNAPSHOT_SLOT_COUNT }, (_, index) => ({
-    id: `slot-${index + 1}`,
-    label: `Snapshot ${index + 1}`,
-    savedAt: "",
-    route: "",
-    claim: "",
-    status: "",
-    data: null
-  }));
-}
-
 function normalizeState(source) {
   const defaults = createDefaultState();
   const candidate = source && typeof source === "object" ? source : {};
@@ -651,27 +636,6 @@ function normalizeState(source) {
   };
 }
 
-function normalizeSnapshots(source) {
-  const defaults = createDefaultSnapshots();
-  const candidate = Array.isArray(source) ? source : [];
-
-  return defaults.map((slot) => {
-    const current = candidate.find((item) => item?.id === slot.id) || {};
-    const hasData = current.data && typeof current.data === "object";
-    const normalizedData = hasData ? normalizeState(current.data) : null;
-
-    return {
-      id: slot.id,
-      label: slot.label,
-      savedAt: typeof current.savedAt === "string" ? current.savedAt : "",
-      route: normalizedData ? normalizedData.route : "",
-      claim: typeof current.claim === "string" ? current.claim : normalizedData?.claim || "",
-      status: typeof current.status === "string" ? current.status : "",
-      data: normalizedData
-    };
-  });
-}
-
 function loadState() {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -684,24 +648,8 @@ function loadState() {
 
 const state = loadState();
 
-function loadSnapshots() {
-  try {
-    const raw = window.localStorage.getItem(SNAPSHOT_STORAGE_KEY);
-    if (!raw) return createDefaultSnapshots();
-    return normalizeSnapshots(JSON.parse(raw));
-  } catch {
-    return createDefaultSnapshots();
-  }
-}
-
-const snapshots = loadSnapshots();
-
 function saveState() {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-function saveSnapshots() {
-  window.localStorage.setItem(SNAPSHOT_STORAGE_KEY, JSON.stringify(snapshots));
 }
 
 function escapeHtml(value) {
@@ -715,10 +663,6 @@ function escapeHtml(value) {
 
 function routeById(id) {
   return routes.find((route) => route.id === id) || routes[0];
-}
-
-function snapshotById(snapshotId) {
-  return snapshots.find((slot) => slot.id === snapshotId) || null;
 }
 
 function routeWorldCue() {
@@ -755,26 +699,6 @@ function requiredBridgeIds(routeId) {
 
 function countStrictBridges() {
   return bridgeDefinitions.filter((bridge) => bridgeStrictReady(bridge.id)).length;
-}
-
-function truncateText(value, maxLength = 120) {
-  const text = String(value ?? "").trim();
-  if (text.length <= maxLength) return text;
-  return `${text.slice(0, maxLength - 1).trimEnd()}...`;
-}
-
-function formatSavedAt(value) {
-  if (!value) return "";
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return "";
-
-  return new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit"
-  }).format(parsed);
 }
 
 function comparableStateSnapshot(source) {
@@ -1101,10 +1025,10 @@ function buildSummary() {
     "",
     `Strict honest ceiling: ${ceilingLabel(diagnosis.strictCeiling)}`,
     `Tentative ceiling: ${ceilingLabel(diagnosis.tentativeCeiling)}`,
-    `Prior pressure: ${priorPressure()}/100`,
+    `Prior pressure: ${priorPressure()}/100 (background commitment pressure)`,
     `Substantiated bridges: ${countStrictBridges()}/${bridgeDefinitions.length}`,
     `World-shape tension: ${worldMismatchLabel(mismatch)}${mismatch === null ? "" : ` (${mismatch}/100)`}`,
-    `Human-target pressure: ${targetPressure()}/100`,
+    `Human-target pressure: ${targetPressure()}/100 (pressure toward a human-centered reading)`,
     "",
     "Prior-commitment notes:",
     `- Identity pull: ${state.commitments.identityPull}/100`,
@@ -1154,10 +1078,10 @@ function buildMarkdownSummary() {
     `- **Status:** ${diagnosis.status}`,
     `- **Strict honest ceiling:** ${ceilingLabel(diagnosis.strictCeiling)}`,
     `- **Tentative ceiling:** ${ceilingLabel(diagnosis.tentativeCeiling)}`,
-    `- **Prior pressure:** ${priorPressure()}/100`,
+    `- **Prior pressure:** ${priorPressure()}/100 (background commitment pressure)`,
     `- **Substantiated bridges:** ${countStrictBridges()}/${bridgeDefinitions.length}`,
     `- **World-shape tension:** ${worldMismatchLabel(mismatch)}${mismatch === null ? "" : ` (${mismatch}/100)`}`,
-    `- **Human-target pressure:** ${targetPressure()}/100`,
+    `- **Human-target pressure:** ${targetPressure()}/100 (pressure toward a human-centered reading)`,
     "",
     `> ${diagnosis.copy}`,
     "",
@@ -1221,9 +1145,9 @@ function buildAiPrompt() {
     `Summary: ${diagnosis.copy}`,
     `Strict ceiling: ${ceilingLabel(diagnosis.strictCeiling)}`,
     `Tentative ceiling: ${ceilingLabel(diagnosis.tentativeCeiling)}`,
-    `Prior pressure: ${priorPressure()}/100`,
+    `Prior pressure: ${priorPressure()}/100 (background commitment pressure)`,
     `World-shape tension: ${worldMismatchLabel(worldMismatchScore())}`,
-    `Human-target pressure: ${targetPressure()}/100`,
+    `Human-target pressure: ${targetPressure()}/100 (pressure toward a human-centered reading)`,
     "",
     "Audit data:",
     buildSummary(),
@@ -1269,38 +1193,6 @@ function renderPresets() {
         </button>
       `
     )
-    .join("");
-}
-
-function renderSnapshots() {
-  els.snapshotSlots.innerHTML = snapshots
-    .map((slot) => {
-      const routeLabel = slot.data ? routeById(slot.route).label : "Empty slot";
-      const claimPreview = slot.data
-        ? truncateText(slot.claim || slot.data.claim || routeById(slot.route).claim, 128)
-        : "No saved audit in this slot yet.";
-      const savedMeta = slot.savedAt ? `Saved ${formatSavedAt(slot.savedAt)}` : "No snapshot saved yet.";
-      const statusLabel = slot.status || (slot.data ? "Saved" : "Empty");
-
-      return `
-        <article class="fine-snapshot-card ${slot.data ? "is-filled" : "is-empty"}">
-          <div class="fine-snapshot-head">
-            <div>
-              <p class="app-step">${escapeHtml(slot.label)}</p>
-              <h3>${escapeHtml(routeLabel)}</h3>
-            </div>
-            <span class="fine-snapshot-status">${escapeHtml(statusLabel)}</span>
-          </div>
-          <p class="fine-snapshot-meta">${escapeHtml(savedMeta)}</p>
-          <p class="fine-snapshot-claim">${escapeHtml(claimPreview)}</p>
-          <div class="fine-action-row">
-            <button class="ghost" type="button" data-snapshot-save="${escapeHtml(slot.id)}">Save Current</button>
-            <button class="ghost" type="button" data-snapshot-load="${escapeHtml(slot.id)}" ${slot.data ? "" : "disabled"}>Load</button>
-            <button class="ghost" type="button" data-snapshot-clear="${escapeHtml(slot.id)}" ${slot.data ? "" : "disabled"}>Clear</button>
-          </div>
-        </article>
-      `;
-    })
     .join("");
 }
 
@@ -1532,7 +1424,6 @@ function updateReports() {
 function render() {
   renderRouteOptions();
   renderPresets();
-  renderSnapshots();
   renderChecklist();
   renderWorldSelectors();
   renderGoals();
@@ -1564,42 +1455,6 @@ function resetState() {
   assignState(createDefaultState());
   saveState();
   render();
-}
-
-function saveSnapshotSlot(snapshotId) {
-  const slot = snapshotById(snapshotId);
-  if (!slot) return;
-  if (slot.data && !window.confirm(`Overwrite ${slot.label} with the current audit?`)) return;
-
-  const diagnosis = classifyAudit();
-  slot.savedAt = new Date().toISOString();
-  slot.route = state.route;
-  slot.claim = state.claim.trim() || routeById(state.route).claim;
-  slot.status = diagnosis.status;
-  slot.data = normalizeState(state);
-  saveSnapshots();
-  renderSnapshots();
-}
-
-function loadSnapshotSlot(snapshotId) {
-  const slot = snapshotById(snapshotId);
-  if (!slot?.data) return;
-  if (hasMeaningfulWork() && !window.confirm(`Load ${slot.label} and replace the current audit?`)) return;
-
-  assignState(slot.data);
-  saveState();
-  render();
-}
-
-function clearSnapshotSlot(snapshotId) {
-  const slot = snapshotById(snapshotId);
-  if (!slot?.data) return;
-  if (!window.confirm(`Clear ${slot.label}?`)) return;
-
-  const defaults = createDefaultSnapshots().find((item) => item.id === snapshotId);
-  Object.assign(slot, defaults);
-  saveSnapshots();
-  renderSnapshots();
 }
 
 async function copyText(text, statusEl, successMessage) {
@@ -1641,25 +1496,6 @@ function bindEvents() {
   });
 
   els.resetButton.addEventListener("click", resetState);
-
-  els.snapshotSlots.addEventListener("click", (event) => {
-    const saveButton = event.target.closest("[data-snapshot-save]");
-    if (saveButton) {
-      saveSnapshotSlot(saveButton.getAttribute("data-snapshot-save"));
-      return;
-    }
-
-    const loadButton = event.target.closest("[data-snapshot-load]");
-    if (loadButton) {
-      loadSnapshotSlot(loadButton.getAttribute("data-snapshot-load"));
-      return;
-    }
-
-    const clearButton = event.target.closest("[data-snapshot-clear]");
-    if (clearButton) {
-      clearSnapshotSlot(clearButton.getAttribute("data-snapshot-clear"));
-    }
-  });
 
   els.identityPull.addEventListener("input", (event) => {
     state.commitments.identityPull = clampScore(event.target.value);
