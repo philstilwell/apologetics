@@ -11258,6 +11258,12 @@ body.app-fine-tuning .site-header {
   margin-bottom: 16px;
 }
 
+.fine-score-note {
+  margin: 0 0 16px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .fine-score-grid {
   display: grid;
   gap: 14px;
@@ -11443,6 +11449,18 @@ body.app-fine-tuning .site-header {
 .fine-bridge-explainer p:last-child {
   padding-top: 10px;
   border-top: 1px solid rgba(21, 32, 23, 0.1);
+}
+
+.fine-bridge-card .segmented {
+  gap: 6px;
+}
+
+.fine-bridge-card .segmented label {
+  min-height: 30px;
+  padding: 5px 6px;
+  font-size: 0.72rem;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .fine-bridge-card p:not(.app-step):not(.threshold-card-warning),
@@ -11663,13 +11681,22 @@ body.app-fine-tuning .site-header {
 
 .fine-preset-grid {
   align-items: start;
+  gap: 6px;
 }
 
 .fine-preset-grid .moral-lens-button {
   align-content: start;
-  gap: 10px;
-  min-height: 104px;
-  padding: 14px 16px;
+  gap: 6px;
+  min-height: 0;
+  padding: 12px 14px;
+}
+
+.fine-preset-grid .moral-lens-button strong {
+  line-height: 1.15;
+}
+
+.fine-preset-grid .moral-lens-button span {
+  line-height: 1.28;
 }
 
 @media (max-width: 1100px) {
