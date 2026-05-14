@@ -2257,6 +2257,33 @@ input[type="range"] {
   line-height: 1.12;
 }
 
+.pressure-anchor-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 8px 0 0;
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 900;
+  line-height: 1.22;
+}
+
+.pressure-anchor-badge {
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 2px solid #fffaf0;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 4px rgba(95, 84, 0, 0.16);
+  color: #fffaf0;
+  font-size: 0.68rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
 .pressure-plot-head p:not(.app-step) {
   margin: 6px 0 0;
   color: var(--muted);

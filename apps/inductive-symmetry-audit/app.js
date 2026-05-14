@@ -97,6 +97,7 @@ const els = {
   scoreSummary: document.querySelector("#score-summary"),
   miniBars: document.querySelector("#mini-bars"),
   scoreDrivers: document.querySelector("#score-drivers"),
+  pressureAnchorTitle: document.querySelector("#pressure-anchor-title"),
   pressurePlot: document.querySelector("#pressure-plot"),
   pressurePlotSummary: document.querySelector("#pressure-plot-summary"),
   pressureLegend: document.querySelector("#pressure-legend"),
@@ -485,6 +486,10 @@ function renderScoreDrivers(assessment) {
 
 function renderPressurePlot(assessment) {
   const anchorLabel = formatClaim(els.rule.value.trim() || assessment.pattern.rule, 1);
+  els.pressureAnchorTitle.innerHTML = `
+    <span class="pressure-anchor-badge">1</span>
+    <span>${escapeHtml(assessment.pattern.title)}</span>
+  `;
   const sortedItems = [...assessment.items].sort((a, b) => {
     const aPriority = a.similarity * 100 + a.risk;
     const bPriority = b.similarity * 100 + b.risk;
