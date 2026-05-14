@@ -11592,6 +11592,11 @@ body.app-fine-tuning .site-header {
   border-top: 1px solid rgba(21, 32, 23, 0.1);
 }
 
+.fine-bridge-card {
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto auto;
+  align-content: start;
+}
+
 .fine-bridge-card .segmented {
   gap: 6px;
 }
