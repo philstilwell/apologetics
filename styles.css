@@ -7758,6 +7758,28 @@ body.app-morality .moral-steps {
   background: var(--moral-red-soft);
 }
 
+.boundary-tests-card .boundary-list {
+  gap: 7px;
+}
+
+.boundary-tests-card .boundary-item {
+  padding: 8px 9px;
+}
+
+.boundary-tests-card .boundary-item p {
+  font-size: 0.88rem;
+  line-height: 1.32;
+}
+
+.boundary-tests-card .boundary-item-head {
+  margin-bottom: 2px;
+}
+
+.boundary-tests-card .boundary-item-head > strong {
+  font-size: 0.94rem;
+  line-height: 1.18;
+}
+
 .boundary-item-head {
   display: flex;
   align-items: start;
