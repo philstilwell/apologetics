@@ -7015,6 +7015,7 @@ body.app-moral-threshold #report-step {
 .morality-handoff-card {
   display: grid;
   gap: 12px;
+  align-content: start;
 }
 
 .morality-handoff-card h3 {
@@ -7023,12 +7024,48 @@ body.app-moral-threshold #report-step {
   line-height: 1.16;
 }
 
+.morality-handoff-card .button {
+  justify-content: center;
+  width: 100%;
+  margin-top: auto;
+}
+
 .morality-handoff-card p:not(.app-step) {
   margin: 0;
   color: var(--moral-muted);
   font-size: 0.9rem;
   font-weight: 700;
   line-height: 1.5;
+}
+
+.morality-tool-destination {
+  display: grid;
+  gap: 5px;
+  padding: 10px 11px;
+  border: 1px solid rgba(47, 87, 143, 0.3);
+  border-left: 4px solid var(--moral-blue);
+  border-radius: 10px;
+  background: var(--moral-blue-soft);
+}
+
+.morality-tool-destination span {
+  color: var(--moral-blue);
+  font-size: 0.67rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.morality-tool-destination strong {
+  color: var(--moral-ink);
+  font-size: 0.94rem;
+  line-height: 1.15;
+}
+
+.morality-tool-destination p {
+  font-size: 0.82rem !important;
+  line-height: 1.38 !important;
 }
 
 .morality-transfer-legend {
