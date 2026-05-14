@@ -1,532 +1,27 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = "/Users/philstilwell/Documents/New project 3/apologetics";
-const LASTMOD = "2026-05-11";
-const SITE_URL = "https://xhairs.com/";
-const SITE_NAME = "Crosshairs Audit Lab";
-const PERSON_ID = `${SITE_URL}#phil-stilwell`;
-const WEBSITE_ID = `${SITE_URL}#website`;
-const GITHUB_URL = "https://github.com/philstilwell/apologetics";
+import {
+  ALL_PAGES,
+  CLOUDFLARE_ANALYTICS_SNIPPET,
+  GITHUB_URL,
+  HOME_PAGE,
+  HUB_CATALOG_INTRO,
+  HUB_PATHWAYS,
+  HUB_PATHWAYS_INTRO,
+  LASTMOD,
+  PERSON_ID,
+  SITE_NAME,
+  SITE_URL,
+  TOOLS,
+  WEBSITE_ID,
+} from "./tool-manifest.mjs";
 
-const pages = [
-  {
-    file: "index.html",
-    kind: "home",
-    title: "Christian Apologetics Audit Tools | Crosshairs Audit Lab",
-    description:
-      "Explore interactive Christian apologetics audit tools for resurrection evidence, prayer claims, moral arguments, theism gradients, and belief overreach.",
-    ogType: "website",
-    url: SITE_URL,
-    keywords: [
-      "Christian apologetics",
-      "apologetics tools",
-      "resurrection evidence",
-      "moral argument",
-      "prayer claims",
-      "belief audit",
-    ],
-    about: [
-      "Christian apologetics",
-      "epistemology",
-      "resurrection evidence",
-      "moral reasoning",
-      "religious belief",
-    ],
-    faqContainerId: "hub-general-qa",
-    itemList: [
-      ["Inductive Symmetry Audit", "https://xhairs.com/apps/inductive-symmetry-audit/"],
-      ["Deism-Theism Gradient Audit", "https://xhairs.com/apps/theism-gradient-audit/app.html"],
-      ["Resurrection Evidence Audit", "https://xhairs.com/apps/resurrection-evidence-audit/"],
-      ["Earthly Promise Test Field", "https://xhairs.com/apps/falsifiability-field/"],
-      ["Moral System Stress Test", "https://xhairs.com/apps/moral-system-stress-test/"],
-      ["Moral Particulars Audit", "https://xhairs.com/apps/moral-particulars-audit/"],
-      ["Belief Overreach Audit", "https://xhairs.com/apps/belief-overreach-audit/"],
-    ],
-    sitemap: { changefreq: "weekly", priority: "1.0" },
-  },
-  {
-    file: "apps/inductive-symmetry-audit/index.html",
-    kind: "app",
-    title: "Inductive Symmetry Audit | Christian Apologetics Tool",
-    description:
-      "Test whether Christian apologetics arguments apply one inductive standard to favored evidence and a different standard to rival explanations or counterexamples.",
-    ogType: "website",
-    url: "https://xhairs.com/apps/inductive-symmetry-audit/",
-    name: "Inductive Symmetry Audit",
-    keywords: [
-      "inductive symmetry",
-      "Christian apologetics",
-      "evidence standards",
-      "special pleading",
-      "religious arguments",
-    ],
-    about: [
-      "Christian apologetics",
-      "inductive reasoning",
-      "evidential symmetry",
-      "special pleading",
-    ],
-    features: [
-      "Compare apologetic arguments with structurally similar counter-patterns",
-      "Surface modal smuggling, scope drift, and specificity inflation",
-      "Review stance maps, examples, and audit guidance",
-    ],
-    breadcrumbs: [
-      { name: SITE_NAME, href: "../../" },
-      { name: "Inductive Symmetry Audit" },
-    ],
-    related: [
-      {
-        href: "./theory.html",
-        name: "Inductive Symmetry Theory Notes",
-        summary:
-          "Read the concepts behind modal smuggling, scope drift, specificity inflation, and fair inductive comparison.",
-      },
-      {
-        href: "../resurrection-evidence-audit/",
-        name: "Resurrection Evidence Audit",
-        summary:
-          "Pressure-test miracle and resurrection arguments with priors, alternatives, and dependence checks.",
-      },
-      {
-        href: "../belief-overreach-audit/",
-        name: "Belief Overreach Audit",
-        summary:
-          "See how confidence can outrun support across religion and other real-world decision domains.",
-      },
-    ],
-    sitemap: { changefreq: "monthly", priority: "0.8" },
-    faqContainerId: "qa",
-  },
-  {
-    file: "apps/inductive-symmetry-audit/theory.html",
-    kind: "article",
-    title: "Inductive Symmetry Theory Notes | Christian Apologetics",
-    description:
-      "Read the theory behind the Inductive Symmetry Audit, including modal smuggling, scope drift, specificity inflation, and fair inductive comparison.",
-    ogType: "article",
-    url: "https://xhairs.com/apps/inductive-symmetry-audit/theory.html",
-    name: "Inductive Symmetry Theory Notes",
-    keywords: [
-      "inductive symmetry theory",
-      "Christian apologetics",
-      "modal smuggling",
-      "scope drift",
-      "specificity inflation",
-    ],
-    about: [
-      "Christian apologetics",
-      "inductive reasoning",
-      "argument analysis",
-    ],
-    breadcrumbs: [
-      { name: SITE_NAME, href: "../../" },
-      { name: "Inductive Symmetry Audit", href: "./" },
-      { name: "Theory Notes" },
-    ],
-    related: [
-      {
-        href: "./",
-        name: "Run the Inductive Symmetry Audit",
-        summary:
-          "Apply the theory directly to Christian apologetics arguments and comparison cases.",
-      },
-      {
-        href: "../belief-overreach-audit/",
-        name: "Belief Overreach Audit",
-        summary:
-          "Pair the inductive model with a simulator focused on confidence outrunning support.",
-      },
-      {
-        href: "../theism-gradient-audit/app.html",
-        name: "Deism-Theism Gradient Audit",
-        summary:
-          "Track where Christian claims gain specificity faster than personal substantiation keeps pace.",
-      },
-    ],
-    sitemap: { changefreq: "monthly", priority: "0.6" },
-  },
-  {
-    file: "apps/theism-gradient-audit/index.html",
-    kind: "collection",
-    title: "Theism Gradient Audit | Christian Apologetics Claims Tool",
-    description:
-      "Start the Theism Gradient Audit to rate 50 Christian claims by confidence, personal substantiation, and dependency tension across a deism-to-theism spectrum.",
-    ogType: "website",
-    url: "https://xhairs.com/apps/theism-gradient-audit/",
-    name: "Theism Gradient Audit",
-    keywords: [
-      "theism gradient",
-      "Christian apologetics",
-      "belief substantiation",
-      "dependency tension",
-      "deism to theism",
-    ],
-    about: [
-      "Christian apologetics",
-      "religious belief",
-      "deism",
-      "theism",
-      "epistemology",
-    ],
-    breadcrumbs: [
-      { name: SITE_NAME, href: "../../" },
-      { name: "Theism Gradient Audit" },
-    ],
-    related: [
-      {
-        href: "./app.html",
-        name: "Open the Deism-Theism Gradient App",
-        summary:
-          "Work through all 50 claims, compare category profiles, and inspect substantiation gaps.",
-      },
-      {
-        href: "../belief-overreach-audit/",
-        name: "Belief Overreach Audit",
-        summary:
-          "Compare the gradient results with a simulator focused on faith outrunning evidence.",
-      },
-      {
-        href: "../resurrection-evidence-audit/",
-        name: "Resurrection Evidence Audit",
-        summary:
-          "Zoom in on miracle and resurrection claims after mapping the wider theism profile.",
-      },
-    ],
-    sitemap: { changefreq: "monthly", priority: "0.6" },
-  },
-  {
-    file: "apps/theism-gradient-audit/app.html",
-    kind: "app",
-    title: "Deism-Theism Gradient Audit | Christian Apologetics Tool",
-    description:
-      "Rate 50 Christian apologetics claims across a deism-to-Christian-theism gradient, then inspect substantiation gaps, bridge claims, and dependency tension.",
-    ogType: "website",
-    url: "https://xhairs.com/apps/theism-gradient-audit/app.html",
-    name: "Deism-Theism Gradient Audit",
-    keywords: [
-      "deism theism gradient",
-      "Christian apologetics",
-      "belief substantiation",
-      "bridge claims",
-      "dependency tension",
-    ],
-    about: [
-      "Christian apologetics",
-      "deism",
-      "theism",
-      "religious belief",
-      "epistemology",
-    ],
-    features: [
-      "Rate 50 claims across a deism-to-Christian-theism gradient",
-      "Compare confidence with personal substantiation",
-      "Inspect category profiles, bridge claims, and dependency tension",
-    ],
-    breadcrumbs: [
-      { name: SITE_NAME, href: "../../" },
-      { name: "Theism Gradient Audit", href: "./" },
-      { name: "Interactive App" },
-    ],
-    related: [
-      {
-        href: "../belief-overreach-audit/",
-        name: "Belief Overreach Audit",
-        summary:
-          "Compare claim-level gradients with a simulator of overconfident commitments in practice.",
-      },
-      {
-        href: "../resurrection-evidence-audit/",
-        name: "Resurrection Evidence Audit",
-        summary:
-          "Drill into miracle and resurrection evidence after mapping your wider theism profile.",
-      },
-      {
-        href: "../moral-system-stress-test/",
-        name: "Moral System Stress Test",
-        summary:
-          "Test whether the moral commitments in your profile cash out as a workable moral system.",
-      },
-    ],
-    sitemap: { changefreq: "monthly", priority: "0.8" },
-    faqContainerId: "qa-title",
-  },
-  {
-    file: "apps/resurrection-evidence-audit/index.html",
-    kind: "app",
-    title: "Resurrection Evidence Audit | Christian Apologetics Tool",
-    description:
-      "Audit resurrection, miracle, and answered-prayer arguments with priors, evidence comparisons, source dependence checks, and alternative explanations.",
-    ogType: "website",
-    url: "https://xhairs.com/apps/resurrection-evidence-audit/",
-    name: "Resurrection Evidence Audit",
-    keywords: [
-      "resurrection evidence",
-      "Christian apologetics",
-      "miracle claims",
-      "Bayesian reasoning",
-      "historical evidence",
-    ],
-    about: [
-      "Christian apologetics",
-      "resurrection",
-      "miracle claims",
-      "Bayesian reasoning",
-    ],
-    features: [
-      "Compare priors, likelihoods, and alternatives for resurrection claims",
-      "Stress-test miracle evidence with source dependence and pressure checks",
-      "Generate summaries that keep assumptions explicit",
-    ],
-    breadcrumbs: [
-      { name: SITE_NAME, href: "../../" },
-      { name: "Resurrection Evidence Audit" },
-    ],
-    related: [
-      {
-        href: "../falsifiability-field/",
-        name: "Earthly Promise Test Field",
-        summary:
-          "Check whether miracle, healing, and prayer claims are actually exposed to ordinary tests.",
-      },
-      {
-        href: "../inductive-symmetry-audit/",
-        name: "Inductive Symmetry Audit",
-        summary:
-          "See whether the same evidential standards are applied to favored and rival miracle claims.",
-      },
-      {
-        href: "../theism-gradient-audit/app.html",
-        name: "Deism-Theism Gradient Audit",
-        summary:
-          "Place resurrection conclusions inside a broader map of Christian claim substantiation.",
-      },
-    ],
-    sitemap: { changefreq: "monthly", priority: "0.8" },
-    faqContainerId: "qa-step",
-  },
-  {
-    file: "apps/falsifiability-field/index.html",
-    kind: "app",
-    title: "Earthly Promise Test Field | Prayer Claim Audit",
-    description:
-      "Test prayer, healing, protection, wisdom, prophecy, and other Christian promise claims to see whether they stay open to ordinary verification.",
-    ogType: "website",
-    url: "https://xhairs.com/apps/falsifiability-field/",
-    name: "Earthly Promise Test Field",
-    keywords: [
-      "prayer claims",
-      "healing claims",
-      "Christian apologetics",
-      "falsifiability",
-      "religious verification",
-    ],
-    about: [
-      "Christian apologetics",
-      "prayer",
-      "healing",
-      "falsifiability",
-      "religious claims",
-    ],
-    features: [
-      "Test whether earthly divine promises remain open to public checks",
-      "Compare study strength, escape hatches, and mind-change commitments",
-      "Map how claims move between protected and testable positions",
-    ],
-    breadcrumbs: [
-      { name: SITE_NAME, href: "../../" },
-      { name: "Earthly Promise Test Field" },
-    ],
-    related: [
-      {
-        href: "../resurrection-evidence-audit/",
-        name: "Resurrection Evidence Audit",
-        summary:
-          "Compare earthly promise claims with a dedicated tool for miracle and resurrection evidence.",
-      },
-      {
-        href: "../theism-gradient-audit/app.html",
-        name: "Deism-Theism Gradient Audit",
-        summary:
-          "See how prayer and healing claims fit inside a wider Christian substantiation profile.",
-      },
-      {
-        href: "../inductive-symmetry-audit/",
-        name: "Inductive Symmetry Audit",
-        summary:
-          "Check whether your standard for religious promise claims matches the standard used elsewhere.",
-      },
-    ],
-    sitemap: { changefreq: "monthly", priority: "0.8" },
-    faqContainerId: "qa-step",
-  },
-  {
-    file: "apps/moral-system-stress-test/index.html",
-    kind: "app",
-    title: "Moral System Stress Test | Christian Morality Audit",
-    description:
-      "Test whether Christian moral arguments yield a workable moral system with truth-makers, obligations, authority, and clear action guidance.",
-    ogType: "website",
-    url: "https://xhairs.com/apps/moral-system-stress-test/",
-    name: "Moral System Stress Test",
-    keywords: [
-      "Christian morality",
-      "moral argument",
-      "divine command",
-      "objective morality",
-      "Christian apologetics",
-    ],
-    about: [
-      "Christian apologetics",
-      "moral philosophy",
-      "divine command theory",
-      "objective morality",
-    ],
-    features: [
-      "Test whether Christian moral claims form a coherent moral system",
-      "Probe truth-makers, obligations, authority, and action guidance",
-      "Compare the moral system with counterfactual and disagreement pressure",
-    ],
-    breadcrumbs: [
-      { name: SITE_NAME, href: "../../" },
-      { name: "Moral System Stress Test" },
-    ],
-    related: [
-      {
-        href: "../moral-particulars-audit/",
-        name: "Moral Particulars Audit",
-        summary:
-          "Move from system-level moral theory to concrete Christian ethics cases and disagreement patterns.",
-      },
-      {
-        href: "../theism-gradient-audit/app.html",
-        name: "Deism-Theism Gradient Audit",
-        summary:
-          "See how moral claims interact with a wider map of Christian substantiation and bridge pressure.",
-      },
-      {
-        href: "../belief-overreach-audit/",
-        name: "Belief Overreach Audit",
-        summary:
-          "Compare moral certainty with a simulator focused on confidence that outruns support.",
-      },
-    ],
-    sitemap: { changefreq: "monthly", priority: "0.8" },
-    faqContainerId: "qa-step",
-  },
-  {
-    file: "apps/moral-particulars-audit/index.html",
-    kind: "app",
-    title: "Moral Particulars Audit | Christian Ethics Tool",
-    description:
-      "Map concrete Christian ethics judgments to scripture, conscience, community, and Spirit-based grounders, then compare how disagreement is explained.",
-    ogType: "website",
-    url: "https://xhairs.com/apps/moral-particulars-audit/",
-    name: "Moral Particulars Audit",
-    keywords: [
-      "Christian ethics",
-      "moral particulars",
-      "scripture and conscience",
-      "Christian apologetics",
-      "moral disagreement",
-    ],
-    about: [
-      "Christian apologetics",
-      "Christian ethics",
-      "moral disagreement",
-      "scripture",
-      "conscience",
-    ],
-    features: [
-      "Map moral judgments to scripture, conscience, Spirit, and community grounders",
-      "Compare severity, weight, and disagreement explanations across case types",
-      "Spot where confidence outruns the stated moral basis",
-    ],
-    breadcrumbs: [
-      { name: SITE_NAME, href: "../../" },
-      { name: "Moral Particulars Audit" },
-    ],
-    related: [
-      {
-        href: "../moral-system-stress-test/",
-        name: "Moral System Stress Test",
-        summary:
-          "Step back from case-level ethics and ask whether the larger moral system holds together.",
-      },
-      {
-        href: "../theism-gradient-audit/app.html",
-        name: "Deism-Theism Gradient Audit",
-        summary:
-          "Compare moral case judgments with the broader profile of Christian claim substantiation.",
-      },
-      {
-        href: "../belief-overreach-audit/",
-        name: "Belief Overreach Audit",
-        summary:
-          "See how confidence can get ahead of support across ethics, religion, and everyday risk.",
-      },
-    ],
-    sitemap: { changefreq: "monthly", priority: "0.8" },
-    faqContainerId: "qa-step",
-  },
-  {
-    file: "apps/belief-overreach-audit/index.html",
-    kind: "app",
-    title: "Belief Overreach Audit | Faith vs Evidence Simulator",
-    description:
-      "Compare faith and evidence across gambling, investing, romance, and religion to see how overconfidence can outrun warranted belief.",
-    ogType: "website",
-    url: "https://xhairs.com/apps/belief-overreach-audit/",
-    name: "Belief Overreach Audit",
-    keywords: [
-      "faith vs evidence",
-      "belief overreach",
-      "Christian apologetics",
-      "confidence and substantiation",
-      "epistemic risk",
-    ],
-    about: [
-      "Christian apologetics",
-      "epistemology",
-      "faith and evidence",
-      "belief calibration",
-    ],
-    features: [
-      "Compare four epistemic agents across religion and other stochastic domains",
-      "Watch how confidence above support changes practical outcomes over repeated trials",
-      "Use a simulator that makes overcommitment and ruin pressure visible",
-    ],
-    breadcrumbs: [
-      { name: SITE_NAME, href: "../../" },
-      { name: "Belief Overreach Audit" },
-    ],
-    related: [
-      {
-        href: "../theism-gradient-audit/app.html",
-        name: "Deism-Theism Gradient Audit",
-        summary:
-          "Compare simulation-based overreach with a claim-by-claim map of Christian substantiation.",
-      },
-      {
-        href: "../inductive-symmetry-audit/",
-        name: "Inductive Symmetry Audit",
-        summary:
-          "Check whether favored beliefs are also being protected by asymmetric reasoning standards.",
-      },
-      {
-        href: "../resurrection-evidence-audit/",
-        name: "Resurrection Evidence Audit",
-        summary:
-          "Apply the same confidence-versus-support discipline to miracle and resurrection claims.",
-      },
-    ],
-    sitemap: { changefreq: "monthly", priority: "0.8" },
-    faqContainerId: "qa-step",
-  },
-];
-
-const sitemapPages = pages
+const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = resolveRoot();
+const toolById = new Map(TOOLS.map((tool) => [tool.id, tool]));
+const sitemapPages = ALL_PAGES
   .filter((page) => page.kind === "home" || page.sitemap)
   .map((page) => ({
     url: page.url,
@@ -534,12 +29,52 @@ const sitemapPages = pages
     priority: page.sitemap?.priority ?? "0.8",
   }));
 
+function resolveRoot() {
+  const candidates = [process.cwd(), path.resolve(SCRIPT_DIR, "..")];
+  return candidates.find(isRepoRoot) || path.resolve(SCRIPT_DIR, "..");
+}
+
+function isRepoRoot(candidate) {
+  return [
+    "package.json",
+    "README.md",
+    "index.html",
+    "apps",
+    "scripts",
+  ].every((entry) => fs.existsSync(path.join(candidate, entry)));
+}
+
 function read(relativePath) {
   return fs.readFileSync(path.join(ROOT, relativePath), "utf8");
 }
 
 function write(relativePath, content) {
   fs.writeFileSync(path.join(ROOT, relativePath), content);
+}
+
+function listHtmlFiles(relativeDir = ".") {
+  const absoluteDir = path.join(ROOT, relativeDir);
+  const entries = fs.readdirSync(absoluteDir, { withFileTypes: true });
+  const htmlFiles = [];
+
+  for (const entry of entries) {
+    const childRelativePath = path.join(relativeDir, entry.name);
+
+    if (entry.isDirectory()) {
+      if (entry.name === ".git" || entry.name === "node_modules") {
+        continue;
+      }
+
+      htmlFiles.push(...listHtmlFiles(childRelativePath));
+      continue;
+    }
+
+    if (entry.isFile() && entry.name.endsWith(".html")) {
+      htmlFiles.push(childRelativePath.replace(/^\.\//, ""));
+    }
+  }
+
+  return htmlFiles.sort();
 }
 
 function escapeRegExp(value) {
@@ -616,6 +151,15 @@ function extractFaqEntries(html, containerId) {
     .slice(0, 10);
 }
 
+function buildHomeItemList() {
+  return TOOLS.map((tool, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: tool.name,
+    url: tool.primaryPage.url,
+  }));
+}
+
 function buildPageGraph(page, faqEntries) {
   const graph = [];
   const webpageId = `${page.url}#webpage`;
@@ -625,8 +169,7 @@ function buildPageGraph(page, faqEntries) {
     "@id": WEBSITE_ID,
     name: SITE_NAME,
     url: SITE_URL,
-    description:
-      "Explore interactive Christian apologetics audit tools for resurrection evidence, prayer claims, moral arguments, theism gradients, and belief overreach.",
+    description: HOME_PAGE.description,
     inLanguage: "en-US",
     publisher: {
       "@id": PERSON_ID,
@@ -658,9 +201,7 @@ function buildPageGraph(page, faqEntries) {
       about: page.about,
       keywords: page.keywords.join(", "),
     });
-
     graph.push(personEntity);
-
     graph.push({
       "@type": "CollectionPage",
       "@id": webpageId,
@@ -677,22 +218,15 @@ function buildPageGraph(page, faqEntries) {
         "@id": itemListId,
       },
     });
-
     graph.push({
       "@type": "ItemList",
       "@id": itemListId,
       name: "Crosshairs Audit Lab tools",
-      itemListElement: page.itemList.map(([name, url], index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        name,
-        url,
-      })),
+      itemListElement: buildHomeItemList(),
     });
   } else {
     graph.push(websiteEntity);
     graph.push(personEntity);
-
     graph.push({
       "@type": "WebPage",
       "@id": webpageId,
@@ -709,7 +243,6 @@ function buildPageGraph(page, faqEntries) {
         "@id": breadcrumbId,
       },
     });
-
     graph.push({
       "@type": "BreadcrumbList",
       "@id": breadcrumbId,
@@ -809,19 +342,19 @@ function buildJsonLd(graph) {
     .join("\n")}\n    </script>`;
 }
 
+function extractMetaContent(relativePath, name) {
+  const html = read(relativePath);
+  const match = html.match(new RegExp(`<meta\\s+name="${escapeRegExp(name)}"\\s+content="([^"]*)"`, "i"));
+  return match ? match[1] : "#111111";
+}
+
 function buildMetaBlock(page) {
   const alternates =
     page.kind === "home"
       ? ""
       : `\n    <link rel="alternate" hreflang="en-US" href="${page.url}">\n    <link rel="alternate" hreflang="x-default" href="${page.url}">`;
 
-  return `    <meta name="author" content="Phil Stilwell">\n    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">\n    <meta name="theme-color" content="${extractMetaContent(page, "theme-color")}">\n    <link rel="canonical" href="${page.url}">${alternates}\n    <meta property="og:site_name" content="${SITE_NAME}">\n    <meta property="og:type" content="${page.ogType}">\n    <meta property="og:locale" content="en_US">\n    <meta property="og:title" content="${page.title}">\n    <meta property="og:description" content="${page.description}">\n    <meta property="og:url" content="${page.url}">\n    <meta property="og:image" content="https://xhairs.com/assets/crosshairs-og.svg">\n    <meta property="og:image:alt" content="Crosshairs Audit Lab: belief under inspection.">\n    <meta name="twitter:card" content="summary_large_image">\n    <meta name="twitter:title" content="${page.title}">\n    <meta name="twitter:description" content="${page.description}">\n    <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">`;
-}
-
-function extractMetaContent(page, name) {
-  const html = read(page.file);
-  const match = html.match(new RegExp(`<meta\\s+name="${escapeRegExp(name)}"\\s+content="([^"]*)"`, "i"));
-  return match ? match[1] : "#111111";
+  return `    <meta name="author" content="Phil Stilwell">\n    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">\n    <meta name="theme-color" content="${extractMetaContent(page.file, "theme-color")}">\n    <link rel="canonical" href="${page.url}">${alternates}\n    <meta property="og:site_name" content="${SITE_NAME}">\n    <meta property="og:type" content="${page.ogType}">\n    <meta property="og:locale" content="en_US">\n    <meta property="og:title" content="${page.title}">\n    <meta property="og:description" content="${page.description}">\n    <meta property="og:url" content="${page.url}">\n    <meta property="og:image" content="https://xhairs.com/assets/crosshairs-og.svg">\n    <meta property="og:image:alt" content="Crosshairs Audit Lab: belief under inspection.">\n    <meta name="twitter:card" content="summary_large_image">\n    <meta name="twitter:title" content="${page.title}">\n    <meta name="twitter:description" content="${page.description}">\n    <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">`;
 }
 
 function buildBreadcrumbHtml(page) {
@@ -832,9 +365,10 @@ function buildBreadcrumbHtml(page) {
   const items = page.breadcrumbs
     .map((crumb, index) => {
       const isLast = index === page.breadcrumbs.length - 1;
-      const content = crumb.href && !isLast
-        ? `<a href="${crumb.href}">${crumb.name}</a>`
-        : `<span aria-current="page">${crumb.name}</span>`;
+      const content =
+        crumb.href && !isLast
+          ? `<a href="${crumb.href}">${crumb.name}</a>`
+          : `<span aria-current="page">${crumb.name}</span>`;
       return `${index ? '<span aria-hidden="true">/</span>' : ""}${content}`;
     })
     .join("");
@@ -853,21 +387,7 @@ function buildRelatedHtml(page) {
     )
     .join("\n");
 
-  return `
-
-      <section class="seo-related" aria-labelledby="related-audits-title">
-        <div class="seo-related-copy">
-          <p class="eyebrow">Related audits</p>
-          <h2 id="related-audits-title">Explore nearby pressure tests</h2>
-          <p>
-            Follow the same Christian claim into adjacent tools so the evidence, bridge premises,
-            and confidence standards stay visible from more than one angle.
-          </p>
-        </div>
-        <div class="seo-related-grid">
-${cards}
-        </div>
-      </section>`;
+  return `\n\n      <section class="seo-related" aria-labelledby="related-audits-title">\n        <div class="seo-related-copy">\n          <p class="eyebrow">Related audits</p>\n          <h2 id="related-audits-title">Explore nearby pressure tests</h2>\n          <p>\n            Follow the same Christian claim into adjacent tools so the evidence, bridge premises,\n            and confidence standards stay visible from more than one angle.\n          </p>\n        </div>\n        <div class="seo-related-grid">\n${cards}\n        </div>\n      </section>`;
 }
 
 function updateHead(html, page, jsonLd) {
@@ -913,6 +433,14 @@ function insertRelatedLinks(html, page) {
   return html.replace(/\n\s*<\/main>/i, `${buildRelatedHtml(page)}\n    </main>`);
 }
 
+function ensureCloudflareAnalytics(html) {
+  if (html.includes(CLOUDFLARE_ANALYTICS_SNIPPET)) {
+    return html;
+  }
+
+  return html.replace(/<\/head>/i, `    ${CLOUDFLARE_ANALYTICS_SNIPPET}\n  </head>`);
+}
+
 function applyPage(page) {
   let html = read(page.file);
   const faqEntries = extractFaqEntries(html, page.faqContainerId);
@@ -921,8 +449,107 @@ function applyPage(page) {
   html = updateHead(html, page, jsonLd);
   html = insertBreadcrumbs(html, page);
   html = insertRelatedLinks(html, page);
+  html = ensureCloudflareAnalytics(html);
 
   write(page.file, html);
+}
+
+function replaceGeneratedBlock(content, key, replacement) {
+  const startMarker = `<!-- GENERATED:${key}:start -->`;
+  const endMarker = `<!-- GENERATED:${key}:end -->`;
+  const pattern = new RegExp(
+    `${escapeRegExp(startMarker)}[\\s\\S]*?${escapeRegExp(endMarker)}`
+  );
+
+  if (!pattern.test(content)) {
+    throw new Error(`Missing generated block markers for ${key}`);
+  }
+
+  return content.replace(pattern, `${startMarker}\n${replacement}\n${endMarker}`);
+}
+
+function renderCardLink(action) {
+  const secondaryClass = action.secondary ? " secondary-link" : "";
+  return `<a class="card-link${secondaryClass}" href="${action.href}">${action.label}</a>`;
+}
+
+function renderHubCard(tool) {
+  const { hub } = tool;
+  const tags = hub.tags
+    .map((tag) => `                  <span>${tag}</span>`)
+    .join("\n");
+  const actions =
+    hub.actions.length === 1
+      ? `              ${renderCardLink(hub.actions[0])}`
+      : `              <div class="card-actions">\n${hub.actions
+          .map((action) => `                ${renderCardLink(action)}`)
+          .join("\n")}\n              </div>`;
+  const note = hub.note
+    ? `\n                <p class="card-note">\n                  ${hub.note}\n                </p>`
+    : "";
+
+  return `            <article class="app-card ${hub.cardClass}">\n              <div>\n                <p class="card-kicker">${hub.kicker}</p>\n                <div class="difficulty-tags" aria-label="Ease of use">\n${tags}\n                </div>\n                <h3>${tool.name}</h3>\n                <p>\n                  ${hub.summary}\n                </p>${note}\n              </div>\n${actions}\n            </article>`;
+}
+
+function renderHubPathway(pathway) {
+  const steps = pathway.steps
+    .map((step) => {
+      const tool = toolById.get(step.toolId);
+      if (!tool) {
+        throw new Error(`Unknown tool id in pathway: ${step.toolId}`);
+      }
+
+      const href = tool.hub.actions[0].href;
+      return `            <li>\n              <div>\n                <strong><a href="${href}">${tool.name}</a></strong>\n                <span>${step.detail}</span>\n              </div>\n            </li>`;
+    })
+    .join("\n");
+
+  return `          <article class="hub-pathway ${pathway.className}">\n            <p class="card-kicker">${pathway.kicker}</p>\n            <h3>${pathway.title}</h3>\n            <p>${pathway.summary}</p>\n            <ol class="hub-pathway-steps">\n${steps}\n            </ol>\n          </article>`;
+}
+
+function renderHubCatalog() {
+  const pathways = HUB_PATHWAYS.map(renderHubPathway).join("\n\n");
+  const cards = TOOLS.map(renderHubCard).join("\n\n");
+
+  return `          <p class="section-note">\n            ${HUB_CATALOG_INTRO.note}\n          </p>\n\n          <div class="hub-catalog-intro">\n            <p class="eyebrow">${HUB_PATHWAYS_INTRO.eyebrow}</p>\n            <h3 id="pathways-title">${HUB_PATHWAYS_INTRO.title}</h3>\n            <p>\n              ${HUB_PATHWAYS_INTRO.copy}\n            </p>\n          </div>\n\n          <div class="hub-pathways" aria-labelledby="pathways-title">\n${pathways}\n          </div>\n\n          <div class="hub-catalog-intro">\n            <p class="eyebrow">${HUB_CATALOG_INTRO.eyebrow}</p>\n            <h3>${HUB_CATALOG_INTRO.title}</h3>\n            <p>\n              ${HUB_CATALOG_INTRO.copy}\n            </p>\n          </div>\n\n          <div class="app-grid">\n${cards}\n          </div>`;
+}
+
+function renderReadmeApps() {
+  return TOOLS.map((tool) => `- ${tool.name}: ${tool.readmeDescription}`).join("\n");
+}
+
+function renderReadmePaths() {
+  const localBase = "http://localhost:8080";
+  const entries = [
+    `- Hub: \`${localBase}/\``,
+    ...TOOLS.map((tool) => `- ${tool.name}: \`${localBase}${tool.previewPath}\``),
+  ];
+
+  return entries.join("\n");
+}
+
+function updateHubCatalog() {
+  const html = read("index.html");
+  const updated = replaceGeneratedBlock(html, "hub-catalog", renderHubCatalog());
+  write("index.html", updated);
+}
+
+function updateReadme() {
+  let readme = read("README.md");
+  readme = replaceGeneratedBlock(readme, "readme-apps", renderReadmeApps());
+  readme = replaceGeneratedBlock(readme, "readme-paths", renderReadmePaths());
+  write("README.md", readme);
+}
+
+function ensureCloudflareAnalyticsOnAllHtmlFiles() {
+  for (const file of listHtmlFiles()) {
+    const html = read(file);
+    const updatedHtml = ensureCloudflareAnalytics(html);
+
+    if (updatedHtml !== html) {
+      write(file, updatedHtml);
+    }
+  }
 }
 
 function writeSitemap() {
@@ -931,12 +558,14 @@ function writeSitemap() {
       (page) => `  <url>\n    <loc>${page.url}</loc>\n    <lastmod>${LASTMOD}</lastmod>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>`
     )
     .join("\n")}\n</urlset>\n`;
-
   write("sitemap.xml", xml);
 }
 
-for (const page of pages) {
+for (const page of ALL_PAGES) {
   applyPage(page);
 }
 
+updateHubCatalog();
+updateReadme();
 writeSitemap();
+ensureCloudflareAnalyticsOnAllHtmlFiles();

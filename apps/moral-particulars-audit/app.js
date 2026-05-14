@@ -782,11 +782,23 @@ function loadStateFromLocation() {
   return loadStateFromHash();
 }
 
+function decodeStatePayloadBytes(encoded) {
+  const normalized = encoded.replace(/ /g, "+").replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+  const binary = window.atob(padded);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
 function decodeStatePayload(encoded) {
   try {
-    return JSON.parse(decodeURIComponent(escape(window.atob(encoded))));
+    return decodeStatePayloadBytes(encoded);
   } catch {
-    return null;
+    try {
+      return JSON.parse(decodeURIComponent(escape(window.atob(encoded))));
+    } catch {
+      return null;
+    }
   }
 }
 
