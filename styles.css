@@ -7712,32 +7712,32 @@ body.app-morality .moral-steps {
 }
 
 .top-pressure-list .top-pressure-tooltip {
-  position: static;
-  top: auto;
-  right: auto;
+  position: fixed;
+  top: 96px;
+  right: 24px;
   left: auto;
-  grid-column: 1 / -1;
-  width: 100%;
-  max-height: 0;
-  margin-top: 0;
-  padding: 0 10px;
-  border-width: 0;
-  overflow: hidden;
+  width: min(460px, calc(100vw - 48px));
+  max-height: calc(100vh - 128px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  pointer-events: none;
+  scrollbar-gutter: stable;
+  visibility: hidden;
   opacity: 0;
-  transform: none;
-  transition: opacity 150ms ease, max-height 180ms ease, margin 150ms ease, padding 150ms ease, border-width 150ms ease;
+  transform: translateY(-4px);
+  transition: opacity 150ms ease, transform 150ms ease, visibility 0s linear 150ms;
 }
 
+.top-pressure-item:hover .top-pressure-tooltip,
 .top-pressure-help:hover + .top-pressure-tooltip,
 .top-pressure-help:focus-visible + .top-pressure-tooltip,
 .top-pressure-help:focus + .top-pressure-tooltip,
 .top-pressure-item:focus-within .top-pressure-tooltip {
-  max-height: 560px;
-  margin-top: 4px;
-  padding: 10px;
-  border-width: 1px;
+  pointer-events: auto;
+  visibility: visible;
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
+  transition-delay: 0s;
 }
 
 .optional-note summary {
@@ -8521,15 +8521,6 @@ body.app-morality :is(
     left: 16px !important;
     width: auto !important;
     max-width: none;
-  }
-
-  .top-pressure-list .top-pressure-tooltip {
-    position: static !important;
-    top: auto !important;
-    right: auto !important;
-    left: auto !important;
-    width: 100% !important;
-    max-width: 100%;
   }
 
   .moral-section-head,
