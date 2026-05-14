@@ -6287,6 +6287,15 @@ body.app-falsifiability #summary {
   font-size: 0.78rem;
 }
 
+.all-stance-copy {
+  max-width: 900px;
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 680;
+  line-height: 1.42;
+}
+
 .all-promises-result {
   padding: 13px;
   border: 1px solid #a8c4c7;
@@ -6297,6 +6306,85 @@ body.app-falsifiability #summary {
   font-size: 0.94rem;
   font-weight: 720;
   line-height: 1.48;
+}
+
+.all-promises-result p {
+  margin: 0;
+}
+
+.all-promises-result.is-built {
+  background:
+    linear-gradient(90deg, rgba(34, 87, 122, 0.08), rgba(255, 255, 255, 0) 52%),
+    #fbfff9;
+}
+
+.suite-result-card {
+  display: grid;
+  gap: 12px;
+}
+
+.suite-result-main {
+  display: grid;
+  gap: 4px;
+}
+
+.suite-result-main span,
+.suite-result-stats span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  line-height: 1.12;
+  text-transform: uppercase;
+}
+
+.suite-result-main strong {
+  color: var(--ff-blue-dark);
+  font-size: 1.22rem;
+  line-height: 1.12;
+}
+
+.suite-result-main p,
+.suite-result-detail,
+.suite-result-note {
+  color: var(--ff-ink);
+  font-size: 0.9rem;
+  font-weight: 720;
+  line-height: 1.42;
+}
+
+.suite-result-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.suite-result-stats div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid rgba(168, 196, 199, 0.8);
+  border-radius: 8px;
+  background: #f3faf8;
+}
+
+.suite-result-stats strong {
+  color: var(--ff-blue-dark);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.suite-result-detail strong {
+  color: var(--ff-blue-dark);
+}
+
+.suite-result-note {
+  padding: 9px 10px;
+  border-left: 4px solid var(--ff-gold);
+  border-radius: 8px;
+  background: #fff8e7;
+  color: #6f5321;
 }
 
 .promise-map-panel {
@@ -7044,6 +7132,10 @@ body.app-falsifiability #summary {
     grid-template-columns: 1fr;
   }
 
+  .suite-result-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .compact-head,
   .prompt-actions,
   .report-actions,
@@ -7108,6 +7200,10 @@ body.app-falsifiability #summary {
 
   .active-promise-factors {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .suite-result-stats {
+    grid-template-columns: 1fr;
   }
 
   .ff-tooltip,

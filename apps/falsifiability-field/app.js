@@ -1061,7 +1061,7 @@ function allPromiseSnapshots() {
   return claims.map((item) => claimSnapshotLine(item)).join("\n");
 }
 
-function buildAllPromisesResult() {
+function getAllPromisesSummary() {
   const snapshots = claims.map((claim) => {
     const score = scoreClaim(claim);
     return {
@@ -1088,8 +1088,72 @@ function buildAllPromisesResult() {
       : protectedCount >= 5 || totalExcuses >= 6
         ? "Overall, the suite still functions mostly as protected rhetoric."
         : "Overall, the suite is mixed: some promises are allowed onto the field, while others remain protected.";
+  const label =
+    farRight >= 6 && totalExcuses === 0
+      ? "Broadly open"
+      : protectedCount >= 5 || totalExcuses >= 6
+        ? "Mostly protected"
+        : "Mixed stance";
 
-  return `${overall} Average field position: ${average}/100. ${farRight} promise${farRight === 1 ? "" : "s"} are exposed to clean disconfirmation, ${partlyOpen} are meaningfully or partly testable, and ${protectedCount} remain near the protected side. Strongest current stance: ${strongest.claim.title} at ${strongest.score}/100 using "${strongest.study.title}". Most protected stance: ${weakest.claim.title} at ${weakest.score}/100 using "${weakest.study.title}". Total active escape hatches across the suite: ${totalExcuses}.`;
+  return {
+    average,
+    farRight,
+    label,
+    overall,
+    partlyOpen,
+    protectedCount,
+    snapshots,
+    strongest,
+    totalExcuses,
+    weakest,
+  };
+}
+
+function buildAllPromisesResult() {
+  const summary = getAllPromisesSummary();
+  return `${summary.overall} Average field position: ${summary.average}/100. ${summary.farRight} promise${summary.farRight === 1 ? "" : "s"} are exposed to clean disconfirmation, ${summary.partlyOpen} are meaningfully or partly testable, and ${summary.protectedCount} remain near the protected side. Strongest current stance: ${summary.strongest.claim.title} at ${summary.strongest.score}/100 using "${summary.strongest.study.title}". Most protected stance: ${summary.weakest.claim.title} at ${summary.weakest.score}/100 using "${summary.weakest.study.title}". Total active escape hatches across the suite: ${summary.totalExcuses}.`;
+}
+
+function buildAllPromisesResultMarkup() {
+  const summary = getAllPromisesSummary();
+  return `
+    <div class="suite-result-card">
+      <div class="suite-result-main">
+        <span>Suite diagnosis</span>
+        <strong>${escapeHtml(summary.label)}</strong>
+        <p>${escapeHtml(summary.overall)}</p>
+      </div>
+      <div class="suite-result-stats" aria-label="Suite-wide result numbers">
+        <div>
+          <strong>${summary.average}/100</strong>
+          <span>Average field score</span>
+        </div>
+        <div>
+          <strong>${summary.farRight}</strong>
+          <span>Open to clean disconfirmation</span>
+        </div>
+        <div>
+          <strong>${summary.partlyOpen}</strong>
+          <span>Partly testable</span>
+        </div>
+        <div>
+          <strong>${summary.protectedCount}</strong>
+          <span>Still protected</span>
+        </div>
+      </div>
+      <p class="suite-result-detail">
+        Strongest current stance: <strong>${escapeHtml(summary.strongest.claim.title)}</strong>
+        at ${summary.strongest.score}/100 using "${escapeHtml(summary.strongest.study.title)}".
+        Most protected stance: <strong>${escapeHtml(summary.weakest.claim.title)}</strong>
+        at ${summary.weakest.score}/100 using "${escapeHtml(summary.weakest.study.title)}".
+        Total active escape hatches across the suite: ${summary.totalExcuses}.
+      </p>
+      <p class="suite-result-note">
+        AI Review is now set to analyze all promises. Use the "Use active promise" button in AI Review
+        to return the prompt to the single highlighted promise.
+      </p>
+    </div>
+  `;
 }
 
 function buildReportText() {
@@ -1858,10 +1922,15 @@ function updateMetrics() {
     useSelectedPromptButton.disabled = selectedPromptMode;
     useSelectedPromptButton.setAttribute("aria-pressed", selectedPromptMode ? "true" : "false");
   }
+  if (buildAllResultButton) {
+    buildAllResultButton.textContent = allResultBuilt ? "Refresh suite analysis" : "Analyze all promises";
+    buildAllResultButton.setAttribute("aria-pressed", allResultBuilt ? "true" : "false");
+  }
   if (allPromisesResult) {
-    allPromisesResult.textContent = allResultBuilt
-      ? buildAllPromisesResult()
-      : "Build a comprehensive result to review every promise at once.";
+    allPromisesResult.classList.toggle("is-built", allResultBuilt);
+    allPromisesResult.innerHTML = allResultBuilt
+      ? buildAllPromisesResultMarkup()
+      : `<p>Click <strong>Analyze all promises</strong> to generate a suite-wide diagnosis and prepare the AI Review prompt for every promise at once.</p>`;
   }
   renderPromiseMap();
   renderAllStanceTable();

@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Test prayer, healing, protection, wisdom, prophecy, and other Christian promise claims to see whether they stay open to ordinary verification.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260514-active-halo-all">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-suite-result-clarity">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -926,13 +926,21 @@
                       </span>
                     </span>
                   </div>
+                  <p class="all-stance-copy" id="all-stance-copy">
+                    This checks whether the full set of promises is being handled consistently.
+                    It summarizes every promise's score, study choice, willingness to count misses,
+                    and escape hatches. Running it also switches the AI Review prompt to all promises.
+                  </p>
                 </div>
-                <button class="button secondary" type="button" id="build-all-result">
-                  Build all-promises result
+                <button class="button secondary" type="button" id="build-all-result" aria-describedby="all-stance-copy">
+                  Analyze all promises
                 </button>
               </div>
               <div class="all-promises-result" id="all-promises-result" aria-live="polite">
-                Build a comprehensive result to review every promise at once.
+                <p>
+                  Click <strong>Analyze all promises</strong> to generate a suite-wide diagnosis and
+                  prepare the AI Review prompt for every promise at once.
+                </p>
               </div>
               <section class="promise-map-panel" aria-labelledby="promise-map-title">
                 <div class="summary-head compact-head">
@@ -1417,6 +1425,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260514-active-halo-all"></script>
+    <script src="./app.js?v=20260514-suite-result-clarity"></script>
   </body>
 </html>
