@@ -2343,18 +2343,17 @@ input[type="range"] {
 }
 
 .pressure-anchor-marker {
-  right: 0;
-  bottom: 0;
+  right: 8px;
+  bottom: 10px;
   z-index: 5;
   display: grid;
-  gap: 3px;
-  justify-items: end;
+  gap: 4px;
+  justify-items: center;
   color: var(--green);
   font-size: 0.62rem;
   font-weight: 950;
   line-height: 1;
   pointer-events: none;
-  transform: translate(8px, 22px);
 }
 
 .pressure-anchor-marker i {
@@ -2373,7 +2372,7 @@ input[type="range"] {
 }
 
 .pressure-anchor-marker em {
-  padding: 3px 5px;
+  padding: 3px 6px;
   border: 1px solid rgba(95, 84, 0, 0.24);
   border-radius: 999px;
   background: rgba(255, 250, 240, 0.94);

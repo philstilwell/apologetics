@@ -511,8 +511,8 @@ function renderPressurePlot(assessment) {
       title="${escapeHtml(`${anchorLabel}: comparison baseline`)}"
       aria-label="${escapeHtml(`${anchorLabel}: comparison baseline at 100% similarity and 0 residual tension`)}"
     >
-      <i>1</i>
       <em>Anchor</em>
+      <i>1</i>
     </span>
     ${assessment.items
       .map((item) => {
