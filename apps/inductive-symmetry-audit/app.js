@@ -441,7 +441,7 @@ function renderResults() {
   renderScoreDrivers(assessment);
   renderPressurePlot(assessment);
   els.flagList.innerHTML = assessment.flags
-    .map((flag) => `<li><strong>${escapeHtml(flag.title)}:</strong> ${escapeHtml(flag.body)}</li>`)
+    .map((flag) => `<li><strong>${escapeHtml(flag.title)}</strong><span>${escapeHtml(flag.body)}</span></li>`)
     .join("");
 
   els.repairList.innerHTML = assessment.repairs
@@ -492,7 +492,7 @@ function renderPressurePlot(assessment) {
   const strongest = sortedItems.find((item) => item.risk >= 15) || sortedItems[0];
 
   els.pressurePlotSummary.textContent = strongest
-    ? `Watch the upper-right: ${formatClaim(strongest.title, strongest.stanceNumber)} is currently ${Math.round(strongest.similarity * 100)}% similar with ${strongest.risk}/100 unresolved tension.`
+    ? `Highest pressure: ${formatClaim(strongest.title, strongest.stanceNumber)}. Similarity ${Math.round(strongest.similarity * 100)}%; tension ${strongest.risk}/100.`
     : "Upper-right points are the parallels most similar to the anchor and carrying the most unresolved tension.";
 
   els.pressurePlot.innerHTML = `
@@ -504,15 +504,15 @@ function renderPressurePlot(assessment) {
     ${[0, 25, 50, 75, 100]
       .map((value) => `<span class="pressure-y-tick" style="bottom:${value}%">${value}</span>`)
       .join("")}
-    <span class="pressure-zone-label">Most asymmetric</span>
+    <span class="pressure-zone-label">Highest pressure zone</span>
     ${assessment.items
       .map((item) => {
         const x = clamp(Math.round(item.similarity * 100), 0, 100);
         const y = clamp(item.risk, 0, 100);
         const allowancePercent = Math.round(item.allowance * 100);
-        const ringSize = 2 + Math.round(item.allowance * 7);
+        const ringSize = 1 + Math.round(item.allowance * 5);
         const opacity = 0.58 + item.allowance * 0.38;
-        const size = 24 + Math.round(Math.max(0.06, item.residual) * 28);
+        const size = 20 + Math.round(Math.max(0.05, item.residual) * 18);
         const label = `${formatClaim(item.title, item.stanceNumber)}: ${x}% similar, ${item.risk}/100 residual tension, ${treatmentLabels[item.response.treatment]}, differentiator allowance ${allowancePercent}%`;
 
         return `
