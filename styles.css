@@ -4144,6 +4144,14 @@ body:has(.guided-resurrection) a:focus-visible {
   white-space: nowrap;
 }
 
+.contribution-assessment-card li.is-counter {
+  color: #5c3518;
+}
+
+.contribution-assessment-card li.is-counter strong {
+  color: #8c2335;
+}
+
 .contribution-assessment-card .contribution-assessment-note {
   color: var(--muted);
   font-size: 0.84rem;
@@ -4153,6 +4161,11 @@ body:has(.guided-resurrection) a:focus-visible {
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid rgba(138, 75, 24, 0.2);
+  color: #5c3518;
+  font-size: 0.84rem;
+}
+
+.contribution-assessment-card .contribution-assessment-warning p {
   color: #5c3518;
   font-size: 0.84rem;
 }
@@ -4167,8 +4180,8 @@ body:has(.guided-resurrection) a:focus-visible {
 .evidence-contribution-chart {
   position: relative;
   min-width: 640px;
-  height: 210px;
-  min-height: 210px;
+  height: 250px;
+  min-height: 250px;
   margin: 6px 14px 8px 66px;
   border-left: 1px solid rgba(18, 32, 23, 0.4);
   border-bottom: 1px solid rgba(18, 32, 23, 0.4);
@@ -4176,6 +4189,14 @@ body:has(.guided-resurrection) a:focus-visible {
     linear-gradient(to top, rgba(18, 32, 23, 0.07) 1px, transparent 1px),
     linear-gradient(to right, rgba(31, 90, 58, 0.045) 1px, transparent 1px),
     linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(234, 244, 237, 0.68));
+  background-size: 100% 25%, 20% 100%, 100% 100%;
+}
+
+.evidence-contribution-chart.has-negative-contributions {
+  background:
+    linear-gradient(to top, rgba(18, 32, 23, 0.07) 1px, transparent 1px),
+    linear-gradient(to right, rgba(31, 90, 58, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(234, 244, 237, 0.72) 50%, rgba(255, 246, 236, 0.78));
   background-size: 100% 25%, 20% 100%, 100% 100%;
 }
 
@@ -4225,6 +4246,21 @@ body:has(.guided-resurrection) a:focus-visible {
   transform: translateY(50%);
 }
 
+.contribution-y-tick.is-zero {
+  left: -18px;
+}
+
+.contribution-y-tick.is-zero::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  width: var(--zero-line-width, 100vw);
+  height: 2px;
+  background: rgba(138, 75, 24, 0.32);
+  transform: translateY(-50%);
+}
+
 .contribution-mark {
   position: absolute;
   z-index: 4;
@@ -4250,6 +4286,12 @@ body:has(.guided-resurrection) a:focus-visible {
 
 .contribution-mark.weak {
   background: #8a4b18;
+}
+
+.contribution-mark.counter {
+  border-color: rgba(255, 255, 255, 0.95);
+  background: #8c2335;
+  box-shadow: 0 8px 18px rgba(92, 20, 34, 0.22);
 }
 
 .contribution-mark:hover,
@@ -4298,6 +4340,16 @@ body:has(.guided-resurrection) a:focus-visible {
   background:
     linear-gradient(180deg, rgba(102, 117, 44, 0.13), rgba(255, 255, 255, 0) 72%),
     rgba(255, 255, 255, 0.78);
+}
+
+.contribution-legend-item.counter {
+  background:
+    linear-gradient(180deg, rgba(140, 35, 53, 0.15), rgba(255, 255, 255, 0) 72%),
+    rgba(255, 249, 246, 0.82);
+}
+
+.contribution-legend-item.counter small {
+  color: #8c2335;
 }
 
 .contribution-legend-item:focus-visible {

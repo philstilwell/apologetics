@@ -65,9 +65,20 @@ const claimPresets = [
         title: "Record latency",
         type: "documentation",
         note: "If the first written resurrection accounts appear decades later, the delay leaves more room for oral reshaping, missing context, and theological development.",
+        counterEvidence: true,
         pTrue: 35,
         pAlt: 70,
         weight: 65,
+      },
+      {
+        id: "external-source-silence",
+        title: "External-source silence",
+        type: "documentation",
+        note: "If a public resurrection was being proclaimed, thin mention from neutral or hostile external sources keeps more room for later community development and missing confirmation.",
+        counterEvidence: true,
+        pTrue: 30,
+        pAlt: 75,
+        weight: 70,
       },
     ],
   },
@@ -907,15 +918,28 @@ function applyPosture(kind) {
   state.activePosture = kind;
 
   state.evidence = preset.evidence.map((item) => ({
-    ...item,
-    pTrue: clamp(item.pTrue * posture.evidence.pTrueBoost, 1, 99.9),
-    pAlt: clamp(item.pAlt * posture.evidence.pAltFactor, 0.01, 99.9),
+    ...applyEvidencePosture(item, posture),
     weight: posture.evidence.weightFloor ? Math.max(item.weight, posture.evidence.weightFloor) : item.weight,
   }));
 
   renderLedger();
   renderPostureState();
   render();
+}
+
+function applyEvidencePosture(item, posture) {
+  const pTrue = clamp(item.pTrue * posture.evidence.pTrueBoost, 1, 99.9);
+  const pAlt = clamp(item.pAlt * posture.evidence.pAltFactor, 0.01, 99.9);
+  if (!item.counterEvidence) {
+    return { ...item, pTrue, pAlt };
+  }
+
+  const softenedAlt = clamp(item.pAlt * Math.max(posture.evidence.pAltFactor, 0.9), 0.01, 99.9);
+  return {
+    ...item,
+    pTrue,
+    pAlt: Math.max(softenedAlt, pTrue + 5),
+  };
 }
 
 function getPosturePrior(kind, preset, posture) {
@@ -1257,15 +1281,22 @@ function renderEvidenceContributionMap(assessment) {
   const laneCount = Math.max(1, assessment.items.length);
   const laneWidth = 100 / laneCount;
   const minMapWidth = Math.max(640, laneCount * 108);
-  const yTicks = [0, 0.25, 0.5, 0.75, 1];
+  const positiveLog = assessment.items.reduce((sum, item) => sum + Math.max(0, item.adjustedLogBf), 0);
+  const negativeLog = assessment.items.reduce((sum, item) => sum + Math.max(0, -item.adjustedLogBf), 0);
+  const hasNegative = negativeLog > 0.000001;
+  const yMin = hasNegative ? -1 : 0;
+  const yTicks = hasNegative ? [-1, -0.5, 0, 0.5, 1] : [0, 0.25, 0.5, 0.75, 1];
+  const axisLabel = hasNegative ? "Claim pressure" : "Positive movement share";
   renderEvidenceContributionAssessment(assessment);
 
   els.evidenceContributionChart.style.minWidth = `${minMapWidth}px`;
+  els.evidenceContributionChart.style.setProperty("--zero-line-width", `${minMapWidth}px`);
   els.evidenceContributionLegend.style.minWidth = `${minMapWidth}px`;
   els.evidenceContributionLegend.style.setProperty("--contribution-lanes", laneCount);
+  els.evidenceContributionChart.classList.toggle("has-negative-contributions", hasNegative);
 
   els.evidenceContributionChart.innerHTML = `
-    <div class="evidence-contribution-axis contribution-y-axis">Positive movement share</div>
+    <div class="evidence-contribution-axis contribution-y-axis">${axisLabel}</div>
     ${assessment.items
       .map((item, index) => {
         const left = index * laneWidth;
@@ -1279,17 +1310,30 @@ function renderEvidenceContributionMap(assessment) {
       })
       .join("")}
     ${yTicks
-      .map((value) => `<span class="contribution-y-tick" style="bottom:${value * 100}%">${formatPercent(value)}</span>`)
+      .map((value) => `
+        <span
+          class="contribution-y-tick ${value === 0 ? "is-zero" : ""}"
+          style="bottom:${mapContributionToBottom(value, yMin)}%"
+        >${formatSignedContributionTick(value, hasNegative)}</span>
+      `)
       .join("")}
     ${assessment.items
       .map((item, index) => {
         const width = Math.min(8.5, laneWidth * 0.62);
         const left = index * laneWidth + laneWidth / 2 - width / 2;
-        const bottom = clamp(item.share * 100, 0, 100);
+        const signedShare =
+          item.adjustedLogBf < 0
+            ? -(negativeLog > 0 ? -item.adjustedLogBf / negativeLog : 0)
+            : positiveLog > 0
+              ? item.adjustedLogBf / positiveLog
+              : 0;
+        const bottom = mapContributionToBottom(signedShare, yMin);
         const height = 7 + (item.weight / 100) * 10;
         const opacity = 0.32 + (item.weight / 100) * 0.68;
         const tone = getContributionTone(item);
-        const label = `${item.title}: ${formatPercentWithRatio(item.share)} of positive movement, ${formatLift(item.adjustedBf)} evidence lift after ${formatPercentWithRatio(item.weight / 100)} independence weight. Type: ${item.type}.`;
+        const direction = item.adjustedLogBf < 0 ? "counterpressure against the claim" : "positive movement";
+        const shareText = item.adjustedLogBf < 0 ? formatPercentWithRatio(Math.abs(signedShare)) : formatPercentWithRatio(item.share);
+        const label = `${item.title}: ${shareText} of ${direction}, ${formatLift(item.adjustedBf)} evidence lift after ${formatPercentWithRatio(item.weight / 100)} independence weight. Type: ${item.type}.`;
         return `
           <button
             type="button"
@@ -1307,7 +1351,7 @@ function renderEvidenceContributionMap(assessment) {
   els.evidenceContributionChart.setAttribute(
     "aria-label",
     `Evidence contribution map. ${assessment.items
-      .map((item, index) => `${index + 1}. ${item.title}: ${formatPercent(item.share)} of positive movement`)
+      .map((item, index) => `${index + 1}. ${item.title}: ${formatSignedItemContribution(item, positiveLog, negativeLog)}.`)
       .join(". ")}`,
   );
 
@@ -1317,15 +1361,41 @@ function renderEvidenceContributionMap(assessment) {
         type="button"
         class="contribution-legend-item ${getContributionTone(item)}"
         data-evidence-map="${escapeHtml(item.id)}"
-        title="${escapeHtml(`${item.title}: ${formatPercentWithRatio(item.share)} of positive movement, ${formatLift(item.adjustedBf)} evidence lift, ${formatPercentWithRatio(item.weight / 100)} independent.`)}"
-        aria-label="${escapeHtml(`${index + 1}. ${item.title}: ${formatPercent(item.share)} of positive movement, ${formatLift(item.adjustedBf)} evidence lift.`)}"
+        title="${escapeHtml(`${item.title}: ${formatSignedItemContribution(item, positiveLog, negativeLog)}, ${formatLift(item.adjustedBf)} evidence lift, ${formatPercentWithRatio(item.weight / 100)} independent.`)}"
+        aria-label="${escapeHtml(`${index + 1}. ${item.title}: ${formatSignedItemContribution(item, positiveLog, negativeLog)}, ${formatLift(item.adjustedBf)} evidence lift.`)}"
       >
         <strong>${index + 1}</strong>
-        <small>${formatPercent(item.share)}</small>
+        <small>${formatSignedContributionBadge(item, positiveLog, negativeLog)}</small>
         <span>${escapeHtml(getContributionLaneLabel(item.title))}</span>
       </button>
     `)
     .join("");
+}
+
+function mapContributionToBottom(value, min) {
+  return clamp(((value - min) / (1 - min)) * 100, 0, 100);
+}
+
+function formatSignedContributionTick(value, hasNegative) {
+  if (!hasNegative) return formatPercent(value);
+  if (value === 0) return "0";
+  return `${value > 0 ? "+" : ""}${Math.round(value * 100)}%`;
+}
+
+function formatSignedContributionBadge(item, positiveLog, negativeLog) {
+  if (item.adjustedLogBf < 0) {
+    const drag = negativeLog > 0 ? -item.adjustedLogBf / negativeLog : 0;
+    return drag > 0.995 ? "all drag" : `-${formatPercent(drag)}`;
+  }
+  return formatPercent(item.share);
+}
+
+function formatSignedItemContribution(item, positiveLog, negativeLog) {
+  if (item.adjustedLogBf < 0) {
+    const drag = negativeLog > 0 ? -item.adjustedLogBf / negativeLog : 0;
+    return `${formatPercentWithRatio(drag)} of counterpressure against the claim`;
+  }
+  return `${formatPercentWithRatio(item.share)} of positive movement`;
 }
 
 function renderEvidenceContributionAssessment(assessment) {
@@ -1335,6 +1405,12 @@ function renderEvidenceContributionAssessment(assessment) {
   const counterItems = [...assessment.items]
     .filter((item) => item.adjustedBf < 1)
     .sort((a, b) => a.adjustedBf - b.adjustedBf);
+  const negativeLog = counterItems.reduce((sum, item) => sum + Math.max(0, -item.adjustedLogBf), 0);
+  const positiveLog = positiveItems.reduce((sum, item) => sum + Math.max(0, item.adjustedLogBf), 0);
+  const positiveOnlyLift = Math.exp(positiveLog);
+  const counterDrag = Math.exp(-negativeLog);
+  const positiveOnlyOdds = assessment.priorOdds * positiveOnlyLift;
+  const positiveOnlyPosterior = positiveOnlyOdds / (1 + positiveOnlyOdds);
   const topDriver = positiveItems[0];
   const topCounter = counterItems[0];
   const topShare = topDriver?.share || 0;
@@ -1357,6 +1433,12 @@ function renderEvidenceContributionAssessment(assessment) {
       <strong>${formatPercent(item.share)}</strong>
     </li>
   `);
+  const counterRows = counterItems.map((item) => `
+    <li class="is-counter">
+      <span>${escapeHtml(getContributionLaneLabel(item.title))}</span>
+      <strong>${formatSignedContributionBadge(item, positiveLog, negativeLog)}</strong>
+    </li>
+  `);
 
   els.evidenceContributionAssessment.innerHTML = `
     <div class="contribution-assessment-card">
@@ -1374,7 +1456,7 @@ function renderEvidenceContributionAssessment(assessment) {
       </p>
       ${
         topCounter
-          ? `<p class="contribution-assessment-warning"><strong>${escapeHtml(getContributionLaneLabel(topCounter.title))}</strong> currently pushes against the claim with a ${formatLift(topCounter.adjustedBf)} factor. That does not settle the case, but it means this item is subtracting support rather than adding it.</p>`
+          ? `<div class="contribution-assessment-warning"><p><strong>Negative evidence is reducing the aggregate lift.</strong> The positive evidence alone would add ${formatLift(positiveOnlyLift)}, but the counter-evidence applies a combined ${formatLift(counterDrag)} drag, leaving ${formatLift(assessment.totalBf)} overall evidence lift. In credence terms, that changes the positive-only result from ${formatPercentWithRatio(positiveOnlyPosterior)} to ${formatPercentWithRatio(assessment.posterior)}.</p><ul>${counterRows.join("")}</ul></div>`
           : ""
       }
     </div>
@@ -1387,6 +1469,7 @@ function getContributionLaneLabel(title) {
     "Conversions and costly commitment": "Costly commitment",
     "Early creed and movement growth": "Creed and growth",
     "Record latency": "Record latency",
+    "External-source silence": "External silence",
     "Driver says the wheel was pulled": "Driver report",
     "Crash-site physical evidence": "Crash evidence",
     "Pattern of similar events": "Similar cases",
@@ -1397,6 +1480,7 @@ function getContributionLaneLabel(title) {
 }
 
 function getContributionTone(item) {
+  if (item.adjustedLogBf < 0) return "counter";
   if (item.adjustedBf <= 1.05 || item.share < 0.03) return "weak";
   if (item.adjustedBf < 1.5 || item.share < 0.12) return "neutral";
   return "positive";
