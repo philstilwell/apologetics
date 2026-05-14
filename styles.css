@@ -11810,6 +11810,17 @@ body.app-fine-tuning .site-header {
   margin-top: 2px;
 }
 
+.fine-pressure-note {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(21, 32, 23, 0.12);
+  border-radius: var(--radius);
+  background: rgba(221, 231, 215, 0.28);
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .fine-diagnosis-panel p:not(.app-step),
 .fine-next-panel p:not(.app-step) {
   color: var(--muted);
