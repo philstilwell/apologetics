@@ -656,6 +656,13 @@ const refs = {
   copyAiPromptButton: document.querySelector("#copyAiPromptButton"),
   copyReportButton: document.querySelector("#copyReportButton"),
   copyStatus: document.querySelector("#copyStatus"),
+  currentParticularCase: document.querySelector("#currentParticularCase"),
+  currentParticularDisagreement: document.querySelector("#currentParticularDisagreement"),
+  currentParticularGrounder: document.querySelector("#currentParticularGrounder"),
+  currentParticularJudgment: document.querySelector("#currentParticularJudgment"),
+  currentParticularStatement: document.querySelector("#currentParticularStatement"),
+  currentParticularStatus: document.querySelector("#currentParticularStatus"),
+  currentParticularStrip: document.querySelector("#currentParticularStrip"),
   currentJudgment: document.querySelector("#currentJudgment"),
   currentJudgmentNote: document.querySelector("#currentJudgmentNote"),
   disagreementIssueText: document.querySelector("#disagreementIssueText"),
@@ -981,6 +988,7 @@ function renderIssueGrid() {
             <strong>${escapeHtml(issue.statement)}</strong>
             <small>${escapeHtml(stance?.short || "Unset")} - ${escapeHtml(status.label)}</small>
           </span>
+          ${active ? '<span class="particular-marker particular-card-marker" aria-hidden="true"></span>' : ""}
         </button>
       `;
     })
@@ -1024,10 +1032,12 @@ function renderPresetButtons() {
 function renderSelectedIssue() {
   const issue = currentIssue();
   refs.selectedIssueText.innerHTML = `
+    <span class="particular-marker particular-marker-inline" aria-hidden="true"></span>
     <span class="particular-selected-label">Case ${escapeHtml(issue.label)}</span>
     ${escapeHtml(issue.statement)}
   `;
   refs.disagreementIssueText.innerHTML = `
+    <span class="particular-marker particular-marker-inline" aria-hidden="true"></span>
     <span class="particular-selected-label">Case ${escapeHtml(issue.label)}</span>
     ${escapeHtml(issue.statement)}
   `;
@@ -1126,11 +1136,18 @@ function renderLedger() {
       const status = issueStatus(issue.id);
       const statusClass = status.className === "mapped" ? "ready" : status.className === "partial" ? "thin" : "";
       const top = topWeighted(grounders, item.grounders, 1)[0];
+      const active = issue.id === state.selectedIssueId;
       return `
-        <button class="component-status ledger-case ${statusClass}" type="button" data-ledger-issue="${escapeHtml(issue.id)}">
+        <button
+          class="component-status ledger-case ${statusClass} ${active ? "active" : ""}"
+          type="button"
+          data-ledger-issue="${escapeHtml(issue.id)}"
+          aria-current="${active ? "true" : "false"}"
+        >
           <span>${escapeHtml(issue.label)}. ${escapeHtml(stance?.short || "Unset")}</span>
           <strong>${escapeHtml(status.label)}</strong>
           <small>${escapeHtml(top ? `${top.short} ${top.value}/10` : "No lead grounder")}</small>
+          ${active ? '<span class="particular-marker particular-ledger-marker" aria-hidden="true"></span>' : ""}
         </button>
       `;
     })
@@ -1170,10 +1187,12 @@ function updateMetrics() {
   const stance = stanceById(item.stance);
   const topGrounder = topWeighted(grounders, item.grounders, 1)[0];
   const profile = disagreementProfile(item);
+  const status = issueStatus(currentIssue().id);
   const supportCount = issues.filter((issue) => (stanceById(state.issueStates[issue.id].stance)?.score || 0) > 0).length;
   const opposeCount = issues.filter((issue) => (stanceById(state.issueStates[issue.id].stance)?.score || 0) < 0).length;
   const unsureCount = issues.filter((issue) => state.issueStates[issue.id].stance === "unsure").length;
 
+  renderCurrentParticularSetting({ stance, topGrounder, profile, status });
   refs.completedCases.textContent = `${completed}/${issues.length}`;
   refs.currentJudgment.textContent = stance?.short || "Unset";
   refs.currentJudgmentNote.textContent = stance ? `Case ${currentIssue().label}` : "No stance selected";
@@ -1184,6 +1203,38 @@ function updateMetrics() {
   refs.supportCount.textContent = supportCount;
   refs.opposeCount.textContent = opposeCount;
   refs.unsureCount.textContent = unsureCount;
+}
+
+function renderCurrentParticularSetting({ stance, topGrounder, profile, status } = {}) {
+  if (
+    !refs.currentParticularCase ||
+    !refs.currentParticularStatement ||
+    !refs.currentParticularJudgment ||
+    !refs.currentParticularGrounder ||
+    !refs.currentParticularDisagreement ||
+    !refs.currentParticularStatus
+  ) {
+    return;
+  }
+
+  const issue = currentIssue();
+  const item = currentData();
+  const currentStance = stance || stanceById(item.stance);
+  const currentTopGrounder = topGrounder || topWeighted(grounders, item.grounders, 1)[0];
+  const currentProfile = profile || disagreementProfile(item);
+  const currentStatus = status || issueStatus(issue.id);
+
+  refs.currentParticularCase.textContent = `Case ${issue.label}`;
+  refs.currentParticularStatement.textContent = issue.statement;
+  refs.currentParticularJudgment.textContent = currentStance?.short || "Unset";
+  refs.currentParticularGrounder.textContent = currentTopGrounder
+    ? `${currentTopGrounder.short} ${currentTopGrounder.value}/10`
+    : "None";
+  refs.currentParticularDisagreement.textContent = currentProfile.label;
+  refs.currentParticularStatus.textContent = currentStatus.label;
+  if (refs.currentParticularStrip) {
+    refs.currentParticularStrip.dataset.status = currentStatus.className || "open";
+  }
 }
 
 function renderAttributionBoard() {
@@ -1913,6 +1964,7 @@ refs.caseNotes.addEventListener("input", () => {
   saveState();
   renderIssueGrid();
   renderLedger();
+  renderCurrentParticularSetting();
   renderReports();
 });
 
