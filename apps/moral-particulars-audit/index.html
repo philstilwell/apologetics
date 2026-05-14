@@ -555,7 +555,7 @@
                   </span>
                   <span class="tooltip-check-item">
                     <strong>Click</strong>
-                    <span>Select a mark or legend row to jump to the case where that grounder is doing the most work.</span>
+                    <span>Select a mark or lane label to jump to the case where that grounder is doing the most work.</span>
                   </span>
                 </span>
               </span>
@@ -568,13 +568,13 @@
               role="img"
               aria-label="Grounder concentration map showing average weight by grounder lane and case-dependence thickness"
             ></div>
+            <div
+              class="particular-concentration-legend"
+              id="grounderConcentrationLegend"
+              aria-label="Grounder concentration lane labels"
+            ></div>
           </div>
           <p class="particular-concentration-insight" id="grounderConcentrationInsight"></p>
-          <div
-            class="particular-concentration-legend"
-            id="grounderConcentrationLegend"
-            aria-label="Grounder concentration lane legend"
-          ></div>
         </section>
         <div class="challenge-list" id="patternList"></div>
       </section>
@@ -585,10 +585,6 @@
             <span class="particular-qa-group-copy">
               <span class="app-step">Tool-specific questions</span>
               <span id="qa-title">Moral Particulars Audit Q&A</span>
-              <span>
-                Open these when a term, slider, warning, or hard case in this specific moral-particulars
-                map needs more context before you continue.
-              </span>
             </span>
             <span class="particular-qa-group-toggle" aria-hidden="true"></span>
           </summary>

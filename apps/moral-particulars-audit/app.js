@@ -1517,7 +1517,6 @@ function renderGrounderConcentrationMap() {
           style="left: ${row.index * laneWidth}%; width: ${laneWidth}%"
           aria-hidden="true"
         ></span>
-        <span class="particular-concentration-x-tick" style="left: ${(row.index + 0.5) * laneWidth}%">${row.index + 1}</span>
       `
     )
     .join("");
@@ -1548,7 +1547,6 @@ function renderGrounderConcentrationMap() {
   refs.grounderConcentrationPlot.innerHTML = `
     ${laneMarkup}
     ${yTicks}
-    <span class="particular-concentration-axis particular-concentration-x-axis">Grounder lanes</span>
     <span class="particular-concentration-axis particular-concentration-y-axis">Average weight</span>
     ${markMarkup}
     ${
@@ -1571,11 +1569,12 @@ function renderGrounderConcentrationMap() {
           data-grounder-map="${escapeHtml(row.grounder.id)}"
           ${disabled}
           title="${escapeHtml(title)}"
+          aria-label="${escapeHtml(`${row.index + 1}. ${row.grounder.label}: ${row.activeCount}/${mappedCount || 0} mapped cases, ${row.average.toFixed(1)} average weight. ${title}`)}"
         >
           <strong>${row.index + 1}</strong>
-          <span>${escapeHtml(row.grounder.short)}</span>
           <em>${row.activeCount}/${mappedCount || 0}</em>
-          <small>${row.average.toFixed(1)} avg</small>
+          <small>${row.average.toFixed(1)} AVG</small>
+          <span>${escapeHtml(row.grounder.short)}</span>
         </button>
       `;
     })
