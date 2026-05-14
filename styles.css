@@ -7796,6 +7796,225 @@ body.app-morality .moral-steps {
   color: var(--moral-blue);
 }
 
+.moral-source-panel {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.moral-source-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.moral-source-head h2 {
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+}
+
+.moral-source-head p:not(.app-step) {
+  max-width: 780px;
+  margin: 7px 0 0;
+  color: var(--moral-muted);
+  line-height: 1.45;
+}
+
+.source-map-tooltip {
+  width: min(520px, calc(100vw - 48px));
+}
+
+.moral-source-plot-wrap {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 4px 0 2px;
+}
+
+.moral-source-plot {
+  position: relative;
+  min-width: 780px;
+  height: 172px;
+  min-height: 172px;
+  margin: 8px 12px 38px 44px;
+  border-left: 1px solid rgba(93, 69, 51, 0.42);
+  border-bottom: 1px solid rgba(93, 69, 51, 0.42);
+  background:
+    linear-gradient(to top, rgba(35, 19, 5, 0.065) 1px, transparent 1px),
+    linear-gradient(to right, rgba(35, 19, 5, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 248, 232, 0.72));
+  background-size: 100% 25%, 11.111% 100%, 100% 100%;
+}
+
+.source-axis,
+.source-x-tick,
+.source-y-tick,
+.source-lane,
+.source-point,
+.source-empty {
+  position: absolute;
+}
+
+.source-axis,
+.source-x-tick,
+.source-y-tick {
+  z-index: 2;
+  color: var(--moral-muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.source-x-axis {
+  left: 50%;
+  bottom: -31px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.source-y-axis {
+  top: 50%;
+  left: -48px;
+  transform: rotate(-90deg) translateX(-50%);
+  transform-origin: left top;
+  white-space: nowrap;
+}
+
+.source-x-tick {
+  bottom: -20px;
+  transform: translateX(-50%);
+}
+
+.source-y-tick {
+  left: -28px;
+  transform: translateY(50%);
+}
+
+.source-lane {
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  border-right: 1px solid rgba(184, 144, 101, 0.32);
+}
+
+.source-lane.is-alt {
+  background: rgba(47, 87, 143, 0.035);
+}
+
+.source-point {
+  z-index: 4;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 2px solid rgba(255, 250, 240, 0.94);
+  border-radius: 999px;
+  background: var(--moral-gold);
+  box-shadow: 0 8px 18px rgba(35, 19, 5, 0.22);
+  transform: translate(-50%, 50%);
+  transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+}
+
+.source-point.ready {
+  background: var(--moral-green);
+}
+
+.source-point.thin {
+  background: var(--moral-gold);
+}
+
+.source-point.missing {
+  background: var(--moral-red);
+}
+
+.source-point:hover,
+.source-point:focus-visible {
+  box-shadow: 0 0 0 5px rgba(47, 87, 143, 0.18), 0 12px 24px rgba(35, 19, 5, 0.24);
+  outline: none;
+  transform: translate(-50%, 50%) scale(1.18);
+}
+
+.source-empty {
+  inset: 38px 26px 24px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  border: 1px dashed rgba(184, 144, 101, 0.74);
+  border-radius: var(--radius);
+  background: rgba(255, 250, 240, 0.82);
+  color: var(--moral-muted);
+  font-weight: 850;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.moral-source-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 7px;
+  margin-left: 44px;
+}
+
+.source-legend-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 8px;
+  border: 1px solid rgba(184, 144, 101, 0.62);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.source-legend-item.has-points {
+  border-color: rgba(47, 87, 143, 0.42);
+  background:
+    linear-gradient(90deg, rgba(47, 87, 143, 0.1), rgba(255, 255, 255, 0) 72%),
+    rgba(255, 255, 255, 0.72);
+}
+
+.source-legend-item strong {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--moral-blue-soft);
+  color: var(--moral-blue);
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.source-legend-item span {
+  min-width: 0;
+  color: var(--moral-muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+  line-height: 1.15;
+}
+
+.source-legend-item em {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--moral-gold-soft);
+  color: var(--moral-gold);
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.source-legend-item.has-points em {
+  background: var(--moral-blue);
+  color: #fff;
+}
+
 .challenge-card {
   position: relative;
   display: grid;
@@ -8217,9 +8436,18 @@ body.app-morality .moral-steps {
   }
 
   .moral-section-head,
+  .moral-source-head,
   .output-card-head {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .moral-source-head .section-help {
+    align-self: flex-start;
+  }
+
+  .moral-source-legend {
+    margin-left: 0;
   }
 
   .challenge-card {

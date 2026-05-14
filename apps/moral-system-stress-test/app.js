@@ -634,6 +634,8 @@ const refs = {
   thresholdImportCopy: document.querySelector("#thresholdImportCopy"),
   thresholdImportClaim: document.querySelector("#thresholdImportClaim"),
   thresholdLinks: document.querySelectorAll("[data-threshold-link]"),
+  truthSourceLegend: document.querySelector("#truthSourceLegend"),
+  truthSourcePlot: document.querySelector("#truthSourcePlot"),
   particularsLinks: document.querySelectorAll("[data-particulars-link]"),
   topPressureList: document.querySelector("#topPressureList")
 };
@@ -825,6 +827,10 @@ function summarizeSelectedRoutes() {
       label: routeLabel(routeId),
       count
     }));
+}
+
+function getTruthSourceRoutes() {
+  return routes.filter((route) => route.id !== "none");
 }
 
 function routeIsChosen(elementId) {
@@ -1076,6 +1082,12 @@ function getComponentStatus(element) {
   };
 }
 
+function componentSourceClass(element) {
+  if (elementIsReady(element.id)) return "ready";
+  if (routeIsChosen(element.id)) return "thin";
+  return "missing";
+}
+
 function filteredElements() {
   return elements;
 }
@@ -1167,7 +1179,7 @@ function renderElements() {
             })
             .join("");
           return `
-            <article class="element-card${readyClass}" data-element-card="${element.id}">
+            <article class="element-card${readyClass}" data-element-card="${element.id}" tabindex="-1">
               <div class="element-head">
                 <div>
                   <div class="element-title">
@@ -1339,6 +1351,80 @@ function renderPresets() {
     .join("");
 }
 
+function renderTruthSourceMap() {
+  if (!refs.truthSourcePlot || !refs.truthSourceLegend) return;
+
+  const sourceRoutes = getTruthSourceRoutes();
+  const coreElements = getCoreElements();
+  const laneWidth = 100 / sourceRoutes.length;
+  const elementsByRoute = new Map(
+    sourceRoutes.map((route) => [
+      route.id,
+      coreElements
+        .filter((element) => state.routes[element.id] === route.id)
+        .sort((a, b) => a.title.localeCompare(b.title))
+    ])
+  );
+  const plottedElements = coreElements.filter((element) => routeIsChosen(element.id));
+
+  refs.truthSourcePlot.innerHTML = `
+    <div class="source-axis source-x-axis">Source lanes</div>
+    <div class="source-axis source-y-axis">Support strength</div>
+    ${sourceRoutes
+      .map(
+        (route, index) => `
+          <span class="source-lane${index % 2 ? " is-alt" : ""}" style="left:${index * laneWidth}%; width:${laneWidth}%"></span>
+          <span class="source-x-tick" style="left:${index * laneWidth + laneWidth / 2}%">${index + 1}</span>
+        `
+      )
+      .join("")}
+    ${[0, 1, 2, 3, 4]
+      .map((value) => `<span class="source-y-tick" style="bottom:${value * 25}%">${value}</span>`)
+      .join("")}
+    ${plottedElements
+      .map((element) => {
+        const routeId = state.routes[element.id];
+        const routeIndex = Math.max(0, sourceRoutes.findIndex((route) => route.id === routeId));
+        const laneElements = elementsByRoute.get(routeId) || [];
+        const itemIndex = Math.max(0, laneElements.findIndex((item) => item.id === element.id));
+        const itemCount = Math.max(1, laneElements.length);
+        const x = routeIndex * laneWidth + laneWidth * 0.12 + ((itemIndex + 0.5) / itemCount) * laneWidth * 0.76;
+        const y = strengthValue(element.id) * 25;
+        const checks = checkCompletion(element);
+        const size = 13 + checks * 8;
+        const opacity = 0.52 + checks * 0.46;
+        const statusClass = componentSourceClass(element);
+        const strength = strengthValue(element.id);
+        const label = `${element.title}: ${routeLabel(routeId)}, support: ${strengthLabel(strength)} (${strength}/4), ${Math.round(checks * 100)}% checks complete`;
+        return `
+          <button
+            type="button"
+            class="source-point ${statusClass}"
+            data-source-element="${escapeHtml(element.id)}"
+            style="left:${x}%; bottom:${y}%; width:${size}px; height:${size}px; opacity:${opacity}"
+            title="${escapeHtml(label)}"
+            aria-label="${escapeHtml(`Open ${label}`)}"
+          ></button>
+        `;
+      })
+      .join("")}
+    ${plottedElements.length ? "" : `<div class="source-empty">Choose substantiation routes to plot the claimed sources of moral truth.</div>`}
+  `;
+
+  refs.truthSourceLegend.innerHTML = sourceRoutes
+    .map((route, index) => {
+      const count = elementsByRoute.get(route.id)?.length || 0;
+      return `
+        <article class="source-legend-item${count ? " has-points" : ""}">
+          <strong>${index + 1}</strong>
+          <span>${escapeHtml(route.label)}</span>
+          <em>${count}</em>
+        </article>
+      `;
+    })
+    .join("");
+}
+
 function renderSummary() {
   const required = getCoreElements();
   const readyCount = required.filter((element) => elementIsReady(element.id)).length;
@@ -1410,6 +1496,7 @@ function renderSummary() {
         .join("")
     : `<article class="route-item"><strong>No routes chosen</strong><span>0</span></article>`;
 
+  renderTruthSourceMap();
   renderStaticStatus({
     boundaryRisk,
     completeness,
@@ -1845,6 +1932,19 @@ function bindEvents() {
     renderChallenges();
     renderPrompts();
     renderReports();
+  });
+
+  refs.truthSourcePlot?.addEventListener("click", (event) => {
+    const point = event.target.closest("[data-source-element]");
+    if (!point) return;
+    const card = [...refs.elementGrid.querySelectorAll("[data-element-card]")]
+      .find((item) => item.dataset.elementCard === point.dataset.sourceElement);
+    if (!card) return;
+    card.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "center"
+    });
+    card.focus({ preventScroll: true });
   });
 
   refs.challengeFilter.addEventListener("change", (event) => {

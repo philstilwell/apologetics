@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Test whether Christian moral arguments yield a workable moral system with truth-makers, obligations, authority, and clear action guidance.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260512-morality-pipeline">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-moral-source-map">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -515,6 +515,30 @@
       </section>
 
       <section class="moral-status-panels" id="boundary-step" aria-labelledby="boundary-title">
+        <section class="moral-card moral-source-panel" aria-labelledby="source-map-title">
+          <div class="moral-source-head">
+            <div>
+              <p class="app-step">Source map</p>
+              <h2 id="source-map-title">Moral truth source map</h2>
+              <p>
+                Each dot is a required component. The source lane shows which route is being used;
+                the height shows support strength, and larger darker dots have more substantiation
+                checks completed.
+              </p>
+            </div>
+            <button class="section-help" type="button" aria-label="Explain moral truth source map" aria-describedby="source-map-help">
+              <span class="label-help-dot" aria-hidden="true">?</span>
+              <span class="section-tooltip source-map-tooltip" id="source-map-help" role="tooltip">
+                The numbered lanes correspond to the source labels below the graph. A dot appears when a required component has a chosen substantiation route. The vertical scale is the user's support-strength setting: 0 means none, 1 asserted, 2 thin, 3 supported, and 4 strong. Larger darker dots mean more of that component's substantiation checks are marked. Green dots are currently ready; gold dots still need stronger support or completed checks.
+              </span>
+            </button>
+          </div>
+          <div class="moral-source-plot-wrap">
+            <div id="truthSourcePlot" class="moral-source-plot" role="img" aria-label="Scatter plot of moral truth sources by support strength"></div>
+          </div>
+          <div id="truthSourceLegend" class="moral-source-legend" aria-label="Moral truth source lane legend"></div>
+        </section>
+
         <section class="moral-card">
           <div class="section-title-inline compact-title-inline">
             <div>
@@ -962,6 +986,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260512-morality-pipeline"></script>
+    <script src="app.js?v=20260514-moral-source-map"></script>
   </body>
 </html>
