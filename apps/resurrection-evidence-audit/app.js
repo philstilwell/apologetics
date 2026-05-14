@@ -187,7 +187,7 @@ const claimPresets = [
       },
       {
         id: "prior-demon-belief",
-        title: "Demon explanation appears quickly",
+        title: "Quick demon default",
         type: "social",
         note: "A community may quickly interpret an unclear event through its existing beliefs. That can explain the label without establishing the cause.",
         pTrue: 70,
@@ -1474,7 +1474,7 @@ function getContributionLaneLabel(title) {
     "Sudden wheel movement": "Wheel movement",
     "Driver says the wheel was pulled": "Driver report",
     "No obvious cause at first": "No clear cause",
-    "Demon explanation appears quickly": "Demon label",
+    "Quick demon default": "Quick demon default",
     "Crash-site physical evidence": "Crash evidence",
     "Pattern of similar events": "Similar cases",
     "Medical or mechanical review": "Expert review",
