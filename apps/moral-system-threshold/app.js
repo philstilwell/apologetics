@@ -90,7 +90,11 @@ const elements = [
     description: "Defines what moral words mean before using them as if they already carry objective content.",
     question: "What do you mean by wrong, good, duty, and obligation?",
     collapse: "Vocabulary without content",
-    collapseCopy: "Without this, the view uses moral language before saying what that language means."
+    collapseCopy: "Without this, the view uses moral language before saying what that language means.",
+    collapseWhy:
+      "The argument can keep using words like wrong, good, duty, and obligation while quietly shifting what those words mean from case to case.",
+    collapseRepair:
+      "Define the core moral terms and show how those definitions connect to the route you selected, so later claims are using stable content rather than borrowed rhetoric."
   },
   {
     id: "truth-ground",
@@ -99,7 +103,11 @@ const elements = [
     description: "Explains whether moral claims can be true and what in reality makes them true.",
     question: "What makes a moral claim true beyond preference, power, or agreement?",
     collapse: "Preference or power",
-    collapseCopy: "Without this, the view sounds moral but functions like approval, command, or social pressure."
+    collapseCopy: "Without this, the view sounds moral but functions like approval, command, or social pressure.",
+    collapseWhy:
+      "A moral claim can sound objective while still operating only as endorsement, force, consensus, or emotional weight if nothing in reality has been named as its truth-maker.",
+    collapseRepair:
+      "Name what in reality makes the moral claim true and explain why that grounding does more than restate preference, command, or collective approval."
   },
   {
     id: "authority-check",
@@ -108,7 +116,11 @@ const elements = [
     description: "Explains how a claimed moral authority is recognized as morally trustworthy without circularity.",
     question: "Why trust the claimed moral authority as good before simply obeying it?",
     collapse: "Obedience without moral test",
-    collapseCopy: "Without this, authority itself quietly becomes the definition of morality."
+    collapseCopy: "Without this, authority itself quietly becomes the definition of morality.",
+    collapseWhy:
+      "The system starts asking for obedience before it has shown why the authority counts as morally good, rather than merely powerful, inherited, or familiar.",
+    collapseRepair:
+      "Show how the authority is identified as morally trustworthy without using that same authority as the only proof that it is good."
   },
   {
     id: "moral-access",
@@ -117,7 +129,11 @@ const elements = [
     description: "Gives accountable agents a usable method for knowing the standard and checking disputes.",
     question: "How can ordinary accountable people know the standard and resolve disagreement?",
     collapse: "Hidden standard",
-    collapseCopy: "Without this, people can be judged by a moral standard they cannot reliably access."
+    collapseCopy: "Without this, people can be judged by a moral standard they cannot reliably access.",
+    collapseWhy:
+      "The standard may be said to exist somewhere, but ordinary accountable agents still lack a clear public route for knowing it, applying it, and resolving serious disagreement.",
+    collapseRepair:
+      "Explain the access route, how conflicting interpretations are tested, and what counts as a misreading rather than a mere difference of preference."
   },
   {
     id: "binding-force",
@@ -126,7 +142,11 @@ const elements = [
     description: "Explains why the moral claim binds rather than merely advising, rewarding, or warning.",
     question: "Why ought anyone comply even when doing so is costly or unrewarded?",
     collapse: "Practical advice",
-    collapseCopy: "Without this, the framework may be useful, but it does not yet explain obligation."
+    collapseCopy: "Without this, the framework may be useful, but it does not yet explain obligation.",
+    collapseWhy:
+      "The framework may recommend, warn, reward, or threaten, but it still has not said why anyone is actually obligated rather than merely encouraged.",
+    collapseRepair:
+      "Show why the claim creates genuine duty even when desire, convenience, and reward all pull in the other direction."
   },
   {
     id: "case-guidance",
@@ -135,7 +155,11 @@ const elements = [
     description: "Shows how the claimed system decides actual cases and ranks duties when they conflict.",
     question: "How does the system decide hard cases before the preferred answer is known?",
     collapse: "Abstraction without decisions",
-    collapseCopy: "Without this, the view offers slogans or values but not an action-guiding system."
+    collapseCopy: "Without this, the view offers slogans or values but not an action-guiding system.",
+    collapseWhy:
+      "General values may be present, but the system still lacks a procedure for deciding concrete cases or ranking duties when those values collide.",
+    collapseRepair:
+      "Give a decision path, ordering principle, or conflict rule that can guide hard cases before the preferred answer is simply assumed."
   },
   {
     id: "consistent-scope",
@@ -144,7 +168,11 @@ const elements = [
     description: "States who is bound and applies the same standard to like cases across persons and times.",
     question: "Who is bound, and why are like cases treated alike across people, eras, and groups?",
     collapse: "Special pleading",
-    collapseCopy: "Without this, exceptions can protect favored authorities, tribes, or historical moments."
+    collapseCopy: "Without this, exceptions can protect favored authorities, tribes, or historical moments.",
+    collapseWhy:
+      "The view can preserve its favored judgments by carving out exceptions for insiders, traditions, authorities, or eras without a stable rule for why those exceptions are allowed.",
+    collapseRepair:
+      "State who is bound and why like cases stay like across persons, cultures, and times rather than shifting with favored communities or moments."
   },
   {
     id: "correction",
@@ -153,7 +181,11 @@ const elements = [
     description: "Explains how mistaken moral interpretations are identified and revised without ad hoc convenience.",
     question: "How does the system detect and repair mistaken moral judgments?",
     collapse: "Ad hoc revision",
-    collapseCopy: "Without this, every later change can simply be redescribed as correctness."
+    collapseCopy: "Without this, every later change can simply be redescribed as correctness.",
+    collapseWhy:
+      "If no correction standard is named, any later revision can be framed as deeper insight, leaving no principled way to distinguish growth from convenient adjustment.",
+    collapseRepair:
+      "Name the correction mechanism, the standards it uses, and what would count as a genuine interpretive mistake rather than a preferred update."
   }
 ];
 
@@ -552,10 +584,30 @@ function buildCollapseItems() {
       const current = state.elements[element.id];
       const note = current.note.trim();
       const statusLabel = current.status === "asserted" ? "Asserted only" : "Missing";
+      const tooltipId = `threshold-collapse-tooltip-${element.id}`;
       return `
-        <li>
-          <strong>${element.title}: ${element.collapse}</strong>
-          <p>${element.collapseCopy} <em>${statusLabel}.</em>${note ? ` Current note: ${escapeHtml(note)}` : ""}</p>
+        <li class="threshold-collapse-item" tabindex="0" aria-describedby="${tooltipId}">
+          <strong>${escapeHtml(element.title)}: ${escapeHtml(element.collapse)}</strong>
+          <p>${escapeHtml(element.collapseCopy)} <em>${escapeHtml(statusLabel)}.</em>${note ? ` Current note: ${escapeHtml(note)}` : ""}</p>
+          <span class="section-tooltip threshold-collapse-tooltip" id="${tooltipId}" role="tooltip">
+            <strong>${escapeHtml(element.title)}: ${escapeHtml(element.collapse)}</strong>
+            <span class="tooltip-intro">${escapeHtml(element.collapseCopy)} Right now this component is ${escapeHtml(statusLabel.toLowerCase())}.</span>
+            <span class="tooltip-check-list">
+              <span class="tooltip-check-item">
+                <strong>Why this collapse appears</strong>
+                <span>${escapeHtml(element.collapseWhy)}</span>
+              </span>
+              <span class="tooltip-check-item">
+                <strong>What would repair it</strong>
+                <span>${escapeHtml(element.collapseRepair)}</span>
+              </span>
+              <span class="tooltip-check-item">
+                <strong>Question to press next</strong>
+                <span>${escapeHtml(element.question)}</span>
+              </span>
+            </span>
+            ${note ? `<span class="tooltip-coda">Current note: ${escapeHtml(note)}</span>` : ""}
+          </span>
         </li>
       `;
     })

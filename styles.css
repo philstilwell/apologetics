@@ -10283,6 +10283,52 @@ body.app-morality :is(
   gap: 12px;
 }
 
+.threshold-collapse-item {
+  position: relative;
+  cursor: help;
+  outline: none;
+}
+
+.threshold-collapse-item:hover,
+.threshold-collapse-item:focus,
+.threshold-collapse-item:focus-visible {
+  border-color: rgba(47, 87, 143, 0.48);
+  box-shadow: 0 16px 28px rgba(35, 19, 5, 0.12);
+}
+
+.threshold-collapse-tooltip {
+  position: fixed;
+  top: 104px;
+  right: 24px;
+  left: auto;
+  z-index: 34;
+  width: min(460px, calc(100vw - 48px));
+  max-height: calc(100vh - 136px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 150ms ease, transform 150ms ease, visibility 0s linear 150ms;
+}
+
+.threshold-collapse-tooltip strong + .tooltip-intro {
+  margin-top: 6px;
+}
+
+.threshold-collapse-item:hover .threshold-collapse-tooltip,
+.threshold-collapse-item:focus .threshold-collapse-tooltip,
+.threshold-collapse-item:focus-visible .threshold-collapse-tooltip,
+.threshold-collapse-item:focus-within .threshold-collapse-tooltip {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+
 .threshold-collapse-list li {
   padding: 14px 15px;
   border-color: rgba(139, 97, 15, 0.28);
@@ -10340,6 +10386,14 @@ body.app-morality :is(
   .threshold-sequence,
   .threshold-mini-ledger {
     grid-template-columns: 1fr;
+  }
+
+  .threshold-collapse-tooltip {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: min(100%, 440px);
+    max-height: none;
   }
 }
 
