@@ -170,6 +170,7 @@ async function run() {
       assert.equal(response.status(), 200, `Expected 200 for ${pageDef.file}`);
 
       await page.locator("h1").first().waitFor();
+      await page.locator(".small-screen-notice").waitFor({ state: "attached" });
       await page.waitForTimeout(500);
 
       const title = await page.title();
@@ -177,6 +178,11 @@ async function run() {
 
       const h1 = normalizeText(await page.locator("h1").first().innerText());
       assert.equal(h1, pageDef.expectedH1, `Unexpected h1 for ${pageDef.file}`);
+      assert.equal(
+        await page.locator(".small-screen-notice").isVisible(),
+        false,
+        `Small-screen notice should be hidden on desktop for ${pageDef.file}`
+      );
 
       assert.equal(
         pageErrors.length,
@@ -185,6 +191,41 @@ async function run() {
       );
 
       await page.close();
+
+      const mobilePage = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      const mobilePageErrors = [];
+      mobilePage.on("pageerror", (error) => {
+        mobilePageErrors.push(error);
+      });
+
+      const mobileResponse = await mobilePage.goto(`${baseUrl}${routeForFile(pageDef.file)}`, {
+        waitUntil: "load",
+      });
+      assert(mobileResponse, `No mobile response returned for ${pageDef.file}`);
+      assert.equal(mobileResponse.status(), 200, `Expected mobile 200 for ${pageDef.file}`);
+
+      const notice = mobilePage.locator(".small-screen-notice");
+      await notice.waitFor({ state: "visible" });
+
+      const noticeText = normalizeText(await notice.innerText());
+      assert.match(
+        noticeText,
+        /greater resolution/i,
+        `Small-screen notice text missing expected warning for ${pageDef.file}`
+      );
+      assert.match(
+        noticeText,
+        /iPad-size screen or larger/i,
+        `Small-screen notice text missing device guidance for ${pageDef.file}`
+      );
+
+      assert.equal(
+        mobilePageErrors.length,
+        0,
+        `pageerror on mobile ${pageDef.file}: ${mobilePageErrors.map((error) => error.message).join(" | ")}`
+      );
+
+      await mobilePage.close();
       console.log(`PASS ${pageDef.file}`);
     }
   } finally {
