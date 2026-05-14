@@ -4170,6 +4170,10 @@ body:has(.guided-resurrection) a:focus-visible {
   font-size: 0.84rem;
 }
 
+.evidence-contribution-visuals {
+  min-width: 0;
+}
+
 .evidence-contribution-chart-wrap {
   max-width: 100%;
   min-width: 0;
@@ -4395,6 +4399,96 @@ body:has(.guided-resurrection) a:focus-visible {
   transform: rotate(180deg);
   writing-mode: vertical-rl;
   white-space: nowrap;
+}
+
+.evidence-candidate-details {
+  margin: 12px 14px 0 66px;
+  border: 1px solid rgba(31, 90, 58, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.evidence-candidate-details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  color: var(--plain-ink);
+  font-size: 0.86rem;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.evidence-candidate-details summary::after {
+  content: "+";
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--plain-green);
+  color: #fff;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.evidence-candidate-details[open] summary {
+  border-bottom: 1px solid rgba(31, 90, 58, 0.16);
+}
+
+.evidence-candidate-details[open] summary::after {
+  content: "-";
+}
+
+.evidence-candidate-grid {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.evidence-candidate-grid article {
+  padding: 12px;
+  border: 1px solid rgba(31, 90, 58, 0.16);
+  border-radius: 8px;
+  background: rgba(251, 255, 249, 0.88);
+}
+
+.evidence-candidate-grid h4 {
+  margin: 0 0 10px;
+  color: var(--plain-ink);
+  font-size: 0.96rem;
+  line-height: 1.2;
+}
+
+.evidence-candidate-grid div + div {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(31, 90, 58, 0.12);
+}
+
+.evidence-candidate-grid strong {
+  display: block;
+  color: var(--plain-green);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.evidence-candidate-grid .is-counter strong {
+  color: #8c2335;
+}
+
+.evidence-candidate-grid ul {
+  display: grid;
+  gap: 5px;
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
 }
 
 .selected-claim-swatch {
