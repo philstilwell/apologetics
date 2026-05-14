@@ -11228,12 +11228,127 @@ body.app-fine-tuning .site-header {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+.fine-score-panel {
+  margin-bottom: 28px;
+}
+
+.fine-score-details summary {
+  cursor: pointer;
+  font-weight: 850;
+  color: var(--teal-dark);
+}
+
+.fine-score-details[open] summary {
+  margin-bottom: 16px;
+}
+
+.fine-score-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fine-score-card {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid rgba(21, 32, 23, 0.12);
+  border-radius: var(--radius);
+  background: rgba(221, 231, 215, 0.28);
+}
+
+.fine-score-card h3,
+.fine-snapshot-card h3 {
+  margin: 0;
+  color: var(--teal-dark);
+  font-size: 1rem;
+}
+
+.fine-score-card p,
+.fine-snapshot-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .fine-route-panel,
 .fine-prior-panel,
 .fine-world-panel,
 .fine-goal-panel {
   display: grid;
   gap: 18px;
+}
+
+.fine-inline-field-head,
+.fine-action-row,
+.fine-snapshot-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fine-inline-field-head {
+  margin-bottom: 8px;
+}
+
+.fine-inline-field-head label {
+  margin: 0;
+}
+
+.fine-snapshot-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.fine-snapshot-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fine-snapshot-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(21, 32, 23, 0.12);
+  border-radius: calc(var(--radius) + 2px);
+  background: rgba(255, 253, 245, 0.82);
+}
+
+.fine-snapshot-card.is-empty {
+  background: rgba(221, 231, 215, 0.22);
+}
+
+.fine-snapshot-head {
+  align-items: start;
+}
+
+.fine-snapshot-head .app-step {
+  margin: 0 0 4px;
+}
+
+.fine-snapshot-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(21, 32, 23, 0.08);
+  color: var(--teal-dark);
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fine-snapshot-meta {
+  font-size: 0.88rem;
+}
+
+.fine-snapshot-claim {
+  min-height: 68px;
 }
 
 .fine-route-field label {
@@ -11250,11 +11365,16 @@ body.app-fine-tuning .site-header {
 }
 
 .fine-route-note,
+.fine-route-cue,
 .fine-world-summary {
   margin: 0;
   color: var(--muted);
   font-size: 0.95rem;
   line-height: 1.55;
+}
+
+.fine-route-cue {
+  font-weight: 700;
 }
 
 .fine-slider-grid,
@@ -11368,7 +11488,8 @@ body.app-fine-tuning .site-header {
 
 .fine-bridge-card p:not(.app-step):not(.threshold-card-warning),
 .fine-goal-item small,
-.fine-world-select small {
+.fine-world-select small,
+.fine-goal-panel .field-group small {
   color: var(--muted);
 }
 
@@ -11572,6 +11693,8 @@ body.app-fine-tuning .site-header {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .fine-score-grid,
+  .fine-snapshot-grid,
   .fine-scenario-grid,
   .fine-slider-grid,
   .fine-select-grid,
@@ -11597,5 +11720,11 @@ body.app-fine-tuning .site-header {
 
   .fine-mini-ledger {
     grid-template-columns: 1fr;
+  }
+
+  .fine-inline-field-head,
+  .fine-snapshot-head {
+    align-items: start;
+    flex-direction: column;
   }
 }

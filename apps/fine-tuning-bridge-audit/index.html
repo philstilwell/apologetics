@@ -356,6 +356,40 @@
         </article>
       </section>
 
+      <section class="app-card fine-score-panel" aria-labelledby="fine-score-explainer-title">
+        <details class="fine-score-details">
+          <summary id="fine-score-explainer-title">How these scores are computed</summary>
+          <div class="fine-score-grid">
+            <article class="fine-score-card">
+              <h3>Honest ceiling</h3>
+              <p>
+                This is the highest route whose required bridges are all marked
+                <strong>Substantiated</strong> and also have a real support note attached.
+                If even one required bridge is still <strong>Missing</strong>,
+                <strong>Asserted</strong>, or lacks a support note, the ceiling stops lower.
+              </p>
+            </article>
+            <article class="fine-score-card">
+              <h3>World-shape tension</h3>
+              <p>
+                This compares the actual-universe beach with the route-relevant expected beach.
+                If they match, the tension is low. If they are one step apart, the tension is
+                moderate. If they are two steps apart, the tension is high. It stays unset until
+                both beaches are chosen.
+              </p>
+            </article>
+            <article class="fine-score-card">
+              <h3>Human-target pressure</h3>
+              <p>
+                This rises when the target sliders lean toward humans or persons more strongly than
+                toward order, stars, black holes, or unknown ends. It rises again on thicker routes,
+                and it rises further if the human-target bridge is still not substantiated.
+              </p>
+            </article>
+          </div>
+        </details>
+      </section>
+
       <section class="audit-step" id="claim-step">
         <div class="step-copy">
           <p class="app-step">Step 1</p>
@@ -373,7 +407,10 @@
           </div>
           <p class="fine-route-note" id="routeHelp"></p>
           <div class="field-group">
-            <label for="claimInput">Current wording of the claim</label>
+            <div class="fine-inline-field-head">
+              <label for="claimInput">Current wording of the claim</label>
+              <button class="ghost" id="useRouteClaimButton" type="button">Use default wording for this route</button>
+            </div>
             <textarea id="claimInput" rows="4" placeholder="State the fine-tuning conclusion you want to audit."></textarea>
           </div>
           <div class="route-panel-heading">
@@ -384,6 +421,19 @@
             <button class="ghost" id="resetButton" type="button">Reset audit</button>
           </div>
           <div class="moral-lens-grid fine-preset-grid" id="presetButtons"></div>
+          <div class="fine-snapshot-panel">
+            <div class="route-panel-heading">
+              <div>
+                <p class="app-step">Local snapshots</p>
+                <h3>Save 3 comparison states</h3>
+              </div>
+            </div>
+            <p class="fine-route-note">
+              Save the current audit into a slot, then load it later without overwriting the other
+              saved comparisons.
+            </p>
+            <div class="fine-snapshot-grid" id="snapshotSlots" aria-label="Saved comparison snapshots"></div>
+          </div>
         </div>
       </section>
 
@@ -493,6 +543,9 @@
           <div class="step-panel fine-world-panel">
             <div class="field-group">
               <label for="worldSummary">What your beach choices currently imply</label>
+              <p class="fine-route-cue" id="worldRouteCue">
+                For Design only, the key beach comparison is between the actual universe and a designer who could be content with only a little life.
+              </p>
               <p class="fine-world-summary" id="worldSummary">
                 Use the selects below to say which beach best matches the actual universe and which beach each model would naturally predict.
               </p>
@@ -536,8 +589,9 @@
           </article>
           <div class="fine-goal-grid" id="goalGrid"></div>
           <label class="field-group">
-            <span class="field-label">What makes humans or Christian purposes the target rather than some other end?</span>
+            <span class="field-label" id="goalNoteLabel">What makes humans or Christian purposes the target rather than some other end?</span>
             <textarea id="goalNote" rows="3" placeholder="State the actual reason, or say clearly if the target remains opaque or unknown."></textarea>
+            <small id="goalNoteHelp">Name what bridges the case from generic design or life-purpose into personal or Christian purpose. If that bridge is still thin, say so plainly.</small>
           </label>
         </div>
       </section>
@@ -623,7 +677,7 @@
               specific fine-tuning-related claims to review first.
             </p>
             <a class="button primary" href="../theism-gradient-audit/app.html" id="gradientLink" data-gradient-link>
-              Open Theism Gradient
+              Open the "Theism Gradient" tool
             </a>
           </article>
 
@@ -719,7 +773,10 @@
                 <h3>Bridge audit summary</h3>
                 <p>A compact report of the selected claim, current ceiling, bridge ledger, and repair list.</p>
               </div>
-              <button class="ghost" id="copySummaryButton" type="button">Copy Summary</button>
+              <div class="fine-action-row">
+                <button class="ghost" id="copySummaryButton" type="button">Copy Summary</button>
+                <button class="ghost" id="copyMarkdownButton" type="button">Copy Markdown</button>
+              </div>
             </div>
             <textarea id="summaryOutput" class="export-box" rows="16" readonly></textarea>
             <p class="copy-status" id="summaryCopyStatus" role="status" aria-live="polite"></p>
@@ -731,7 +788,9 @@
                 <h3>Structured AI prompt</h3>
                 <p>Use this prompt to give another AI assistant the full context, so it can test the current fine-tuning argument, question weak bridge steps, and respond without losing the key details from this audit.</p>
               </div>
-              <button class="ghost" id="copyAiPromptButton" type="button">Copy AI Prompt</button>
+              <div class="fine-action-row">
+                <button class="ghost" id="copyAiPromptButton" type="button">Copy AI Prompt</button>
+              </div>
             </div>
             <textarea id="aiPromptOutput" class="export-box" rows="16" readonly></textarea>
             <p class="copy-status" id="aiCopyStatus" role="status" aria-live="polite"></p>

@@ -1,4 +1,6 @@
 const STORAGE_KEY = "fine-tuning-bridge-audit-v1";
+const SNAPSHOT_STORAGE_KEY = "fine-tuning-bridge-audit-snapshots-v1";
+const SNAPSHOT_SLOT_COUNT = 3;
 const THEISM_GRADIENT_BASE_URL = "../theism-gradient-audit/app.html";
 
 const routes = [
@@ -281,6 +283,36 @@ const goalGroups = [
   }
 ];
 
+const routeWorldCueByRoute = {
+  "design-only":
+    "For Design only, the key beach comparison is between the actual universe and a designer who could be content with only a little life.",
+  "life-purpose":
+    "For Life purpose, the key beach comparison is between the actual universe and a designer strongly optimizing for abundant life.",
+  "human-purpose":
+    "For Human purpose, the key beach comparison is between the actual universe and a designer strongly aiming at humans or human-like persons.",
+  "christian-purpose":
+    "For Christian purpose, the key beach comparison is still the human-centered one. The beach test can pressure the human-target step, but it does not by itself test the later Christian bridge."
+};
+
+const goalNoteGuidanceByRoute = {
+  "design-only": {
+    label: "If design remains live, what target looks most plausible rather than merely possible?",
+    help: "Name what in the observed universe points toward any specific target at all, or say clearly if the target still remains opaque."
+  },
+  "life-purpose": {
+    label: "What makes life itself look like the target rather than order, sparse structure, or unknown ends?",
+    help: "If life still does not stand out clearly as the goal, say that directly rather than borrowing a thicker conclusion."
+  },
+  "human-purpose": {
+    label: "What makes humans or human-like persons look like the target rather than life in general or some other end?",
+    help: "Name the feature of the observed universe that points beyond life in general. If that feature is weak, say so plainly."
+  },
+  "christian-purpose": {
+    label: "What makes human or Christian purposes look like the target rather than some other end?",
+    help: "Name what bridges the case from generic design or life-purpose into personal or Christian purpose. If that bridge is still thin, say so plainly."
+  }
+};
+
 const presets = [
   {
     id: "naturalist-seeker",
@@ -462,14 +494,19 @@ const els = {
   routeSelect: document.getElementById("routeSelect"),
   routeHelp: document.getElementById("routeHelp"),
   claimInput: document.getElementById("claimInput"),
+  useRouteClaimButton: document.getElementById("useRouteClaimButton"),
   presetButtons: document.getElementById("presetButtons"),
   resetButton: document.getElementById("resetButton"),
+  snapshotSlots: document.getElementById("snapshotSlots"),
   checklistGrid: document.getElementById("checklistGrid"),
   worldSelectGrid: document.getElementById("worldSelectGrid"),
+  worldRouteCue: document.getElementById("worldRouteCue"),
   worldSummary: document.getElementById("worldSummary"),
   worldNote: document.getElementById("worldNote"),
   goalGrid: document.getElementById("goalGrid"),
   goalNote: document.getElementById("goalNote"),
+  goalNoteLabel: document.getElementById("goalNoteLabel"),
+  goalNoteHelp: document.getElementById("goalNoteHelp"),
   identityPull: document.getElementById("identityPull"),
   delegatedTrust: document.getElementById("delegatedTrust"),
   symmetryWillingness: document.getElementById("symmetryWillingness"),
@@ -498,6 +535,7 @@ const els = {
   summaryOutput: document.getElementById("summaryOutput"),
   aiPromptOutput: document.getElementById("aiPromptOutput"),
   copySummaryButton: document.getElementById("copySummaryButton"),
+  copyMarkdownButton: document.getElementById("copyMarkdownButton"),
   copyAiPromptButton: document.getElementById("copyAiPromptButton"),
   summaryCopyStatus: document.getElementById("summaryCopyStatus"),
   aiCopyStatus: document.getElementById("aiCopyStatus")
@@ -548,6 +586,18 @@ function createDefaultState() {
       goalNote: ""
     }
   };
+}
+
+function createDefaultSnapshots() {
+  return Array.from({ length: SNAPSHOT_SLOT_COUNT }, (_, index) => ({
+    id: `slot-${index + 1}`,
+    label: `Snapshot ${index + 1}`,
+    savedAt: "",
+    route: "",
+    claim: "",
+    status: "",
+    data: null
+  }));
 }
 
 function normalizeState(source) {
@@ -601,6 +651,27 @@ function normalizeState(source) {
   };
 }
 
+function normalizeSnapshots(source) {
+  const defaults = createDefaultSnapshots();
+  const candidate = Array.isArray(source) ? source : [];
+
+  return defaults.map((slot) => {
+    const current = candidate.find((item) => item?.id === slot.id) || {};
+    const hasData = current.data && typeof current.data === "object";
+    const normalizedData = hasData ? normalizeState(current.data) : null;
+
+    return {
+      id: slot.id,
+      label: slot.label,
+      savedAt: typeof current.savedAt === "string" ? current.savedAt : "",
+      route: normalizedData ? normalizedData.route : "",
+      claim: typeof current.claim === "string" ? current.claim : normalizedData?.claim || "",
+      status: typeof current.status === "string" ? current.status : "",
+      data: normalizedData
+    };
+  });
+}
+
 function loadState() {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -613,8 +684,24 @@ function loadState() {
 
 const state = loadState();
 
+function loadSnapshots() {
+  try {
+    const raw = window.localStorage.getItem(SNAPSHOT_STORAGE_KEY);
+    if (!raw) return createDefaultSnapshots();
+    return normalizeSnapshots(JSON.parse(raw));
+  } catch {
+    return createDefaultSnapshots();
+  }
+}
+
+const snapshots = loadSnapshots();
+
 function saveState() {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function saveSnapshots() {
+  window.localStorage.setItem(SNAPSHOT_STORAGE_KEY, JSON.stringify(snapshots));
 }
 
 function escapeHtml(value) {
@@ -628,6 +715,18 @@ function escapeHtml(value) {
 
 function routeById(id) {
   return routes.find((route) => route.id === id) || routes[0];
+}
+
+function snapshotById(snapshotId) {
+  return snapshots.find((slot) => slot.id === snapshotId) || null;
+}
+
+function routeWorldCue() {
+  return routeWorldCueByRoute[state.route] || routeWorldCueByRoute["design-only"];
+}
+
+function goalNoteGuidance() {
+  return goalNoteGuidanceByRoute[state.route] || goalNoteGuidanceByRoute["design-only"];
 }
 
 function bridgeById(id) {
@@ -656,6 +755,38 @@ function requiredBridgeIds(routeId) {
 
 function countStrictBridges() {
   return bridgeDefinitions.filter((bridge) => bridgeStrictReady(bridge.id)).length;
+}
+
+function truncateText(value, maxLength = 120) {
+  const text = String(value ?? "").trim();
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength - 1).trimEnd()}...`;
+}
+
+function formatSavedAt(value) {
+  if (!value) return "";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "";
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  }).format(parsed);
+}
+
+function comparableStateSnapshot(source) {
+  const normalized = normalizeState(source);
+  return {
+    ...normalized,
+    lastPresetId: ""
+  };
+}
+
+function hasMeaningfulWork() {
+  return JSON.stringify(comparableStateSnapshot(state)) !== JSON.stringify(comparableStateSnapshot(createDefaultState()));
 }
 
 function strictCeilingId() {
@@ -1007,6 +1138,72 @@ function buildSummary() {
   ].join("\n");
 }
 
+function buildMarkdownSummary() {
+  const diagnosis = classifyAudit();
+  const mismatch = worldMismatchScore();
+  const actual = state.world.actualUniverse ? scenarioDetails[state.world.actualUniverse] : "not set";
+  const relevantWorld = state.world[relevantWorldModelKey()]
+    ? scenarioDetails[state.world[relevantWorldModelKey()]]
+    : "not set";
+
+  return [
+    "# Fine-Tuning Bridge Audit",
+    "",
+    `- **Selected route:** ${routeById(state.route).label}`,
+    `- **Claim:** ${state.claim.trim() || "No claim entered."}`,
+    `- **Status:** ${diagnosis.status}`,
+    `- **Strict honest ceiling:** ${ceilingLabel(diagnosis.strictCeiling)}`,
+    `- **Tentative ceiling:** ${ceilingLabel(diagnosis.tentativeCeiling)}`,
+    `- **Prior pressure:** ${priorPressure()}/100`,
+    `- **Substantiated bridges:** ${countStrictBridges()}/${bridgeDefinitions.length}`,
+    `- **World-shape tension:** ${worldMismatchLabel(mismatch)}${mismatch === null ? "" : ` (${mismatch}/100)`}`,
+    `- **Human-target pressure:** ${targetPressure()}/100`,
+    "",
+    `> ${diagnosis.copy}`,
+    "",
+    "## Prior-Commitment Notes",
+    "",
+    `- Identity pull: ${state.commitments.identityPull}/100`,
+    `- Delegated trust: ${state.commitments.delegatedTrust}/100`,
+    `- Symmetry willingness: ${state.commitments.symmetryWillingness}/100`,
+    `- Mind-change willingness: ${state.commitments.mindChangeReadiness}/100`,
+    `- Prior note: ${state.commitments.priorNote.trim() || "none"}`,
+    `- Mind-change note: ${state.commitments.mindChangeNote.trim() || "none"}`,
+    "",
+    "## Bridge Ledger",
+    "",
+    bridgeDefinitions.map((bridge) => formatBridgeLine(bridge.id)).join("\n"),
+    "",
+    "## Beach / World-Shape Mapping",
+    "",
+    worldQuestions
+      .map((question) => {
+        const choice = state.world[question.id];
+        return `- ${question.label}: ${choice ? scenarioDetails[choice] : "not set"}`;
+      })
+      .join("\n"),
+    `- World note: ${state.world.worldNote.trim() || "none"}`,
+    `- Actual universe: ${actual}`,
+    `- Route-relevant expectation: ${relevantWorld}`,
+    "",
+    "## Candidate Goals",
+    "",
+    goalDefinitions.map((goal) => `- ${goal.label}: ${state.goals[goal.id]}/100`).join("\n"),
+    `- Goal note: ${state.goals.goalNote.trim() || "none"}`,
+    "",
+    "## Main Pressure Points",
+    "",
+    diagnosis.flags.length
+      ? diagnosis.flags.slice(0, 6).map((flag) => `- **${flag.title}** ${flag.body}`).join("\n")
+      : "- No major pressure flags.",
+    "",
+    "## Downstream Theism Gradient Focus",
+    "",
+    `- Recommended claim IDs: ${gradientFocusClaims().join(", ")}`,
+    "- Recommended category: Design Deism"
+  ].join("\n");
+}
+
 function buildAiPrompt() {
   const diagnosis = classifyAudit();
   return [
@@ -1039,6 +1236,15 @@ function buildAiPrompt() {
   ].join("\n");
 }
 
+function updateRouteContextCopy() {
+  els.routeHelp.textContent = routeById(state.route).help;
+  els.worldRouteCue.textContent = routeWorldCue();
+
+  const guidance = goalNoteGuidance();
+  els.goalNoteLabel.textContent = guidance.label;
+  els.goalNoteHelp.textContent = guidance.help;
+}
+
 function renderRouteOptions() {
   els.routeSelect.innerHTML = routes
     .map(
@@ -1063,6 +1269,38 @@ function renderPresets() {
         </button>
       `
     )
+    .join("");
+}
+
+function renderSnapshots() {
+  els.snapshotSlots.innerHTML = snapshots
+    .map((slot) => {
+      const routeLabel = slot.data ? routeById(slot.route).label : "Empty slot";
+      const claimPreview = slot.data
+        ? truncateText(slot.claim || slot.data.claim || routeById(slot.route).claim, 128)
+        : "No saved audit in this slot yet.";
+      const savedMeta = slot.savedAt ? `Saved ${formatSavedAt(slot.savedAt)}` : "No snapshot saved yet.";
+      const statusLabel = slot.status || (slot.data ? "Saved" : "Empty");
+
+      return `
+        <article class="fine-snapshot-card ${slot.data ? "is-filled" : "is-empty"}">
+          <div class="fine-snapshot-head">
+            <div>
+              <p class="app-step">${escapeHtml(slot.label)}</p>
+              <h3>${escapeHtml(routeLabel)}</h3>
+            </div>
+            <span class="fine-snapshot-status">${escapeHtml(statusLabel)}</span>
+          </div>
+          <p class="fine-snapshot-meta">${escapeHtml(savedMeta)}</p>
+          <p class="fine-snapshot-claim">${escapeHtml(claimPreview)}</p>
+          <div class="fine-action-row">
+            <button class="ghost" type="button" data-snapshot-save="${escapeHtml(slot.id)}">Save Current</button>
+            <button class="ghost" type="button" data-snapshot-load="${escapeHtml(slot.id)}" ${slot.data ? "" : "disabled"}>Load</button>
+            <button class="ghost" type="button" data-snapshot-clear="${escapeHtml(slot.id)}" ${slot.data ? "" : "disabled"}>Clear</button>
+          </div>
+        </article>
+      `;
+    })
     .join("");
 }
 
@@ -1195,12 +1433,61 @@ function updateSliderViews() {
   els.mindChangeNote.value = state.commitments.mindChangeNote;
 }
 
+function updateCommitmentValueLabel(commitmentKey) {
+  const valueMap = {
+    identityPull: els.identityPullValue,
+    delegatedTrust: els.delegatedTrustValue,
+    symmetryWillingness: els.symmetryWillingnessValue,
+    mindChangeReadiness: els.mindChangeReadinessValue
+  };
+  valueMap[commitmentKey].textContent = String(state.commitments[commitmentKey]);
+}
+
+function updateBridgeCardUi(bridgeId) {
+  const card = els.checklistGrid.querySelector(`[data-bridge-id="${bridgeId}"]`);
+  if (!card) return;
+
+  const current = state.bridges[bridgeId];
+  const warningVisible = bridgeWarningVisible(bridgeId);
+  const statusTag = card.querySelector(".threshold-collapse-tag");
+  const textarea = card.querySelector(`[data-bridge-note="${bridgeId}"]`);
+  const warning = card.querySelector(".threshold-card-warning");
+
+  statusTag.textContent = current.status;
+  card.classList.toggle("needs-support-note-warning", warningVisible);
+  textarea.setAttribute("aria-invalid", warningVisible ? "true" : "false");
+  warning.hidden = !warningVisible;
+}
+
+function updateGoalCardUi(goalId) {
+  const goalInput = els.goalGrid.querySelector(`[data-goal-id="${goalId}"]`);
+  const score = goalInput?.closest(".fine-goal-item")?.querySelector(".fine-goal-score");
+  if (score) score.textContent = String(state.goals[goalId]);
+}
+
+function refreshDerivedUi() {
+  updateGradientLinks();
+  updateDiagnosis();
+  updateReports();
+}
+
+function assignState(nextState) {
+  const normalized = normalizeState(nextState);
+  state.lastPresetId = normalized.lastPresetId;
+  state.route = normalized.route;
+  state.claim = normalized.claim;
+  state.commitments = normalized.commitments;
+  state.bridges = normalized.bridges;
+  state.world = normalized.world;
+  state.goals = normalized.goals;
+}
+
 function updateGradientLinks() {
   const href = buildGradientHref();
   els.gradientLinks.forEach((link) => {
     link.href = href;
   });
-  els.gradientTransferCopy.textContent = `Open Theism Gradient with the current ${routeById(state.route).label.toLowerCase()} result attached, so the downstream audit starts with this bridge pressure already named.`;
+  els.gradientTransferCopy.textContent = `Open the "Theism Gradient" tool with your current ${routeById(state.route).label.toLowerCase()} result attached. The handoff carries your honest ceiling, pressure summary, and the first fine-tuning claim IDs to inspect there.`;
   els.gradientFocusClaims.innerHTML = gradientFocusClaims()
     .map((claimId) => `<span class="fine-focus-chip">${escapeHtml(claimId)}</span>`)
     .join("");
@@ -1229,11 +1516,11 @@ function updateDiagnosis() {
     ? scenarioDetails[state.world[relevantWorldModelKey()]]
     : "not set";
   if (actual === "not set" || model === "not set") {
-    els.worldSummary.textContent = "Choose one beach for the actual universe and one beach for the model tied to your current route. This box will then say whether those two look aligned or whether they pull apart.";
+    els.worldSummary.textContent = "Choose one beach for the actual universe and one beach for the route-relevant comparison model. This box will then say whether those two look aligned or whether they pull apart.";
   } else if (actual === model) {
-    els.worldSummary.textContent = `You said the actual universe looks like ${actual}. For the route you selected, you also said the expected universe looks like ${model}. Those two match, so this comparison is not currently adding world-shape pressure against the route.`;
+    els.worldSummary.textContent = `You said the actual universe looks like ${actual}. For ${routeById(state.route).label}, you also said the route-relevant model looks like ${model}. Those two match, so this comparison is not currently adding world-shape pressure against the route.`;
   } else {
-    els.worldSummary.textContent = `You said the actual universe looks like ${actual}, but for the route you selected you said the expected universe looks like ${model}. Because those two do not match, this comparison is creating world-shape pressure against the route.`;
+    els.worldSummary.textContent = `You said the actual universe looks like ${actual}, but for ${routeById(state.route).label} you said the route-relevant model looks like ${model}. Because those two do not match, this comparison is creating world-shape pressure against the route.`;
   }
 }
 
@@ -1245,55 +1532,74 @@ function updateReports() {
 function render() {
   renderRouteOptions();
   renderPresets();
+  renderSnapshots();
   renderChecklist();
   renderWorldSelectors();
   renderGoals();
   updateSliderViews();
-  updateGradientLinks();
-  updateDiagnosis();
-  updateReports();
+  updateRouteContextCopy();
+  refreshDerivedUi();
 }
 
 function applyPreset(presetId) {
   const preset = presets.find((item) => item.id === presetId);
   if (!preset) return;
-  const hasWork =
-    state.claim.trim() !== createDefaultState().claim
-    || countStrictBridges() > 0
-    || state.commitments.priorNote.trim()
-    || state.world.worldNote.trim()
-    || state.goals.goalNote.trim();
   if (
-    hasWork
+    hasMeaningfulWork()
     && !window.confirm(
       `Replace the current audit with the ${preset.label} preset?\n\nThis will also fill many of the settings, sliders, and degrees with values that reflect the general disposition of that preset persona.`
     )
   ) return;
 
-  const nextState = normalizeState(preset.state);
-  state.lastPresetId = preset.id;
-  state.route = nextState.route;
-  state.claim = nextState.claim;
-  state.commitments = nextState.commitments;
-  state.bridges = nextState.bridges;
-  state.world = nextState.world;
-  state.goals = nextState.goals;
+  assignState({
+    ...preset.state,
+    lastPresetId: preset.id
+  });
   saveState();
   render();
 }
 
 function resetState() {
   if (!window.confirm("Reset the claim, prior-commitment sliders, bridge checklist, world-shape mapping, and goal sliders?")) return;
-  const defaults = createDefaultState();
-  state.lastPresetId = defaults.lastPresetId;
-  state.route = defaults.route;
-  state.claim = defaults.claim;
-  state.commitments = defaults.commitments;
-  state.bridges = defaults.bridges;
-  state.world = defaults.world;
-  state.goals = defaults.goals;
+  assignState(createDefaultState());
   saveState();
   render();
+}
+
+function saveSnapshotSlot(snapshotId) {
+  const slot = snapshotById(snapshotId);
+  if (!slot) return;
+  if (slot.data && !window.confirm(`Overwrite ${slot.label} with the current audit?`)) return;
+
+  const diagnosis = classifyAudit();
+  slot.savedAt = new Date().toISOString();
+  slot.route = state.route;
+  slot.claim = state.claim.trim() || routeById(state.route).claim;
+  slot.status = diagnosis.status;
+  slot.data = normalizeState(state);
+  saveSnapshots();
+  renderSnapshots();
+}
+
+function loadSnapshotSlot(snapshotId) {
+  const slot = snapshotById(snapshotId);
+  if (!slot?.data) return;
+  if (hasMeaningfulWork() && !window.confirm(`Load ${slot.label} and replace the current audit?`)) return;
+
+  assignState(slot.data);
+  saveState();
+  render();
+}
+
+function clearSnapshotSlot(snapshotId) {
+  const slot = snapshotById(snapshotId);
+  if (!slot?.data) return;
+  if (!window.confirm(`Clear ${slot.label}?`)) return;
+
+  const defaults = createDefaultSnapshots().find((item) => item.id === snapshotId);
+  Object.assign(slot, defaults);
+  saveSnapshots();
+  renderSnapshots();
 }
 
 async function copyText(text, statusEl, successMessage) {
@@ -1309,13 +1615,23 @@ function bindEvents() {
   els.routeSelect.addEventListener("change", (event) => {
     state.route = event.target.value;
     saveState();
-    render();
+    updateRouteContextCopy();
+    refreshDerivedUi();
   });
 
   els.claimInput.addEventListener("input", (event) => {
     state.claim = event.target.value;
     saveState();
-    render();
+    updateGradientLinks();
+    updateReports();
+  });
+
+  els.useRouteClaimButton.addEventListener("click", () => {
+    state.claim = routeById(state.route).claim;
+    saveState();
+    els.claimInput.value = state.claim;
+    updateGradientLinks();
+    updateReports();
   });
 
   els.presetButtons.addEventListener("click", (event) => {
@@ -1326,25 +1642,48 @@ function bindEvents() {
 
   els.resetButton.addEventListener("click", resetState);
 
+  els.snapshotSlots.addEventListener("click", (event) => {
+    const saveButton = event.target.closest("[data-snapshot-save]");
+    if (saveButton) {
+      saveSnapshotSlot(saveButton.getAttribute("data-snapshot-save"));
+      return;
+    }
+
+    const loadButton = event.target.closest("[data-snapshot-load]");
+    if (loadButton) {
+      loadSnapshotSlot(loadButton.getAttribute("data-snapshot-load"));
+      return;
+    }
+
+    const clearButton = event.target.closest("[data-snapshot-clear]");
+    if (clearButton) {
+      clearSnapshotSlot(clearButton.getAttribute("data-snapshot-clear"));
+    }
+  });
+
   els.identityPull.addEventListener("input", (event) => {
     state.commitments.identityPull = clampScore(event.target.value);
     saveState();
-    render();
+    updateCommitmentValueLabel("identityPull");
+    refreshDerivedUi();
   });
   els.delegatedTrust.addEventListener("input", (event) => {
     state.commitments.delegatedTrust = clampScore(event.target.value);
     saveState();
-    render();
+    updateCommitmentValueLabel("delegatedTrust");
+    refreshDerivedUi();
   });
   els.symmetryWillingness.addEventListener("input", (event) => {
     state.commitments.symmetryWillingness = clampScore(event.target.value);
     saveState();
-    render();
+    updateCommitmentValueLabel("symmetryWillingness");
+    refreshDerivedUi();
   });
   els.mindChangeReadiness.addEventListener("input", (event) => {
     state.commitments.mindChangeReadiness = clampScore(event.target.value);
     saveState();
-    render();
+    updateCommitmentValueLabel("mindChangeReadiness");
+    refreshDerivedUi();
   });
   els.priorNote.addEventListener("input", (event) => {
     state.commitments.priorNote = event.target.value;
@@ -1362,7 +1701,8 @@ function bindEvents() {
     const bridgeId = event.target.getAttribute("data-bridge-status");
     state.bridges[bridgeId].status = event.target.value;
     saveState();
-    render();
+    updateBridgeCardUi(bridgeId);
+    refreshDerivedUi();
   });
 
   els.checklistGrid.addEventListener("input", (event) => {
@@ -1370,7 +1710,8 @@ function bindEvents() {
     const bridgeId = event.target.getAttribute("data-bridge-note");
     state.bridges[bridgeId].note = event.target.value;
     saveState();
-    render();
+    updateBridgeCardUi(bridgeId);
+    refreshDerivedUi();
   });
 
   els.worldSelectGrid.addEventListener("change", (event) => {
@@ -1392,7 +1733,8 @@ function bindEvents() {
     const goalId = event.target.getAttribute("data-goal-id");
     state.goals[goalId] = clampScore(event.target.value);
     saveState();
-    render();
+    updateGoalCardUi(goalId);
+    refreshDerivedUi();
   });
 
   els.goalNote.addEventListener("input", (event) => {
@@ -1403,6 +1745,10 @@ function bindEvents() {
 
   els.copySummaryButton.addEventListener("click", async () => {
     await copyText(els.summaryOutput.value, els.summaryCopyStatus, "Bridge summary copied.");
+  });
+
+  els.copyMarkdownButton.addEventListener("click", async () => {
+    await copyText(buildMarkdownSummary(), els.summaryCopyStatus, "Markdown summary copied.");
   });
 
   els.copyAiPromptButton.addEventListener("click", async () => {
