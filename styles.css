@@ -11682,21 +11682,45 @@ body.app-fine-tuning .site-header {
 
 .fine-tool .qa-accordion {
   display: grid;
-  gap: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
-.fine-tool .qa-accordion details + details {
-  border-top: 1px solid rgba(21, 32, 23, 0.12);
+.fine-tool .qa-accordion details {
+  border: 1px solid rgba(21, 32, 23, 0.14);
+  border-radius: var(--radius);
+  background: rgba(255, 253, 245, 0.82);
+  overflow: hidden;
+}
+
+.fine-tool .qa-accordion summary {
+  min-height: 40px;
+  padding: 10px 12px;
+  color: var(--ink);
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.fine-tool .qa-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.fine-tool .qa-accordion p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
 .fine-tool .qa-body {
   display: grid;
-  gap: 6px;
+  gap: 10px;
+  padding: 0 12px 14px;
 }
 
 .fine-tool .qa-body p {
-  margin: 0;
-  line-height: 1.42;
+  font-size: 0.88rem;
 }
 
 .fine-preset-grid {
@@ -11730,7 +11754,8 @@ body.app-fine-tuning .site-header {
   .fine-select-grid,
   .fine-diagnosis-grid,
   .fine-next-grid,
-  .fine-report-grid {
+  .fine-report-grid,
+  .fine-tool .qa-accordion {
     grid-template-columns: 1fr;
   }
 
