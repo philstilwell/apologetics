@@ -10064,6 +10064,19 @@ body.app-morality :is(
   line-height: 1.5;
 }
 
+.threshold-collapse-panel {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.threshold-collapse-panel h3 {
+  margin: 0;
+  color: var(--moral-ink);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1.15;
+}
+
 .threshold-readiness-panel {
   display: grid;
   gap: 14px;
@@ -10266,7 +10279,12 @@ body.app-morality :is(
   overflow-wrap: anywhere;
 }
 
+.threshold-collapse-list {
+  gap: 12px;
+}
+
 .threshold-collapse-list li {
+  padding: 14px 15px;
   border-color: rgba(139, 97, 15, 0.28);
   background: #fff8e8;
 }
