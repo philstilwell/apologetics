@@ -2,6 +2,8 @@
 
 Static Crosshairs audit for resurrection, miracle, and answered-prayer claims.
 
+Author: Phil Stilwell
+
 The app focuses on:
 
 - Explicit prior decomposition: general divine action, targeting specificity, and act-type rate.

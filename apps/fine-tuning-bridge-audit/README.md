@@ -2,6 +2,8 @@
 
 An upstream Crosshairs audit for checking what a fine-tuning argument is actually being asked to prove before it flows into thicker design, theism, or Christian claims.
 
+Author: Phil Stilwell
+
 The app focuses on:
 
 - prior-commitment pressure

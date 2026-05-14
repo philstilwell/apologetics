@@ -2,6 +2,8 @@
 
 Crosshairs audit for testing whether a Christian moral claim supplies the required components of an objective moral system, rather than collapsing into emotion, obedience, or practical advice.
 
+Author: Phil Stilwell
+
 ## Features
 
 - Crosshairs Hub header, domain link, guided steps, diagnostic note, and explanatory annotations.

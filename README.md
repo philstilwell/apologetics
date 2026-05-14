@@ -2,6 +2,8 @@
 
 Static GitHub Pages suite for Crosshairs audits: compact tools that inspect Christian claims, evidential standards, bridge premises, probabilistic assumptions, and substantiation gaps.
 
+Author: Phil Stilwell
+
 ## Apps
 
 <!-- GENERATED:readme-apps:start -->

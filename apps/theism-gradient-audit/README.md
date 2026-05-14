@@ -2,6 +2,8 @@
 
 A local, dependency-free dashboard inside the Crosshairs Audit Lab suite for assessing Christianity-focused God-related claims, especially general claims about divine action, prayer, healing, wisdom, foreknowledge, guidance, and transformation.
 
+Author: Phil Stilwell
+
 The app rates 50 auditable claims using confidence and personal-substantiation sliders, stores responses in `localStorage`, and computes:
 
 - aggregate gradient position
