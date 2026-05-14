@@ -1,6 +1,6 @@
 [
   {
-    "id": "C001",
+    "id": "C1",
     "text": "The physical universe has some explanation beyond merely describing its internal events.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -11,7 +11,7 @@
     "dependencyIds": []
   },
   {
-    "id": "C002",
+    "id": "C2",
     "text": "The universe is not ultimately self-explanatory.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -22,7 +22,7 @@
     "dependencyIds": []
   },
   {
-    "id": "C003",
+    "id": "C3",
     "text": "The universe depends on something that is not identical to the universe.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -33,7 +33,7 @@
     "dependencyIds": []
   },
   {
-    "id": "C004",
+    "id": "C4",
     "text": "The existence of physical reality is not a brute fact.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -44,7 +44,7 @@
     "dependencyIds": []
   },
   {
-    "id": "C005",
+    "id": "C5",
     "text": "The beginning or finite past of the universe points to a cause beyond ordinary physical events.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -55,7 +55,7 @@
     "dependencyIds": []
   },
   {
-    "id": "C006",
+    "id": "C6",
     "text": "The totality of physical reality requires an explanation not contained within that totality.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -66,7 +66,7 @@
     "dependencyIds": []
   },
   {
-    "id": "C007",
+    "id": "C7",
     "text": "The regularity of nature requires an explanation beyond simply naming physical laws.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -77,7 +77,7 @@
     "dependencyIds": []
   },
   {
-    "id": "C008",
+    "id": "C8",
     "text": "The initial conditions of the universe were not merely accidental or unexplained.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -88,7 +88,7 @@
     "dependencyIds": []
   },
   {
-    "id": "C009",
+    "id": "C9",
     "text": "The existence of contingent things points to some non-contingent explanatory ground.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -99,7 +99,7 @@
     "dependencyIds": []
   },
   {
-    "id": "C010",
+    "id": "C10",
     "text": "A minimal creator or source of the universe exists, even if nothing else is known about it.",
     "category": "Minimal Deism",
     "gradientPosition": 1,
@@ -108,14 +108,14 @@
       "source"
     ],
     "dependencyIds": [
-      "C001",
-      "C003",
-      "C006",
-      "C009"
+      "C1",
+      "C3",
+      "C6",
+      "C9"
     ]
   },
   {
-    "id": "C011",
+    "id": "C11",
     "text": "The universe was intentionally caused rather than accidentally caused.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -124,11 +124,11 @@
       "causation"
     ],
     "dependencyIds": [
-      "C010"
+      "C10"
     ]
   },
   {
-    "id": "C012",
+    "id": "C12",
     "text": "The universe was caused by something with goal-directed features.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -137,12 +137,12 @@
       "causation"
     ],
     "dependencyIds": [
-      "C010",
-      "C011"
+      "C10",
+      "C11"
     ]
   },
   {
-    "id": "C013",
+    "id": "C13",
     "text": "The structure of the universe is better explained by design than by chance, necessity, or unknown impersonal processes.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -151,12 +151,12 @@
       "explanation"
     ],
     "dependencyIds": [
-      "C011",
-      "C012"
+      "C11",
+      "C12"
     ]
   },
   {
-    "id": "C014",
+    "id": "C14",
     "text": "The apparent fine-tuning of physical constants is evidence of purposeful calibration.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -165,13 +165,13 @@
       "design"
     ],
     "dependencyIds": [
-      "C011",
-      "C012",
-      "C013"
+      "C11",
+      "C12",
+      "C13"
     ]
   },
   {
-    "id": "C015",
+    "id": "C15",
     "text": "The universe was created for the emergence of life.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -180,13 +180,13 @@
       "purpose"
     ],
     "dependencyIds": [
-      "C011",
-      "C012",
-      "C014"
+      "C11",
+      "C12",
+      "C14"
     ]
   },
   {
-    "id": "C016",
+    "id": "C16",
     "text": "The universe was created for the emergence of conscious beings.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -195,14 +195,14 @@
       "purpose"
     ],
     "dependencyIds": [
-      "C011",
-      "C012",
-      "C014",
-      "C015"
+      "C11",
+      "C12",
+      "C14",
+      "C15"
     ]
   },
   {
-    "id": "C017",
+    "id": "C17",
     "text": "The creator had some preference for order over chaos.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -211,12 +211,12 @@
       "preference"
     ],
     "dependencyIds": [
-      "C010",
-      "C011"
+      "C10",
+      "C11"
     ]
   },
   {
-    "id": "C018",
+    "id": "C18",
     "text": "The creator had some preference for life-permitting conditions over non-life-permitting conditions.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -225,13 +225,13 @@
       "preference"
     ],
     "dependencyIds": [
-      "C010",
-      "C011",
-      "C014"
+      "C10",
+      "C11",
+      "C14"
     ]
   },
   {
-    "id": "C019",
+    "id": "C19",
     "text": "The creator is more like an intelligent agent than an impersonal force.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -240,13 +240,13 @@
       "intelligence"
     ],
     "dependencyIds": [
-      "C011",
-      "C012",
-      "C017"
+      "C11",
+      "C12",
+      "C17"
     ]
   },
   {
-    "id": "C020",
+    "id": "C20",
     "text": "The creator intentionally established a stable order that could support meaningful interaction with conscious beings.",
     "category": "Design Deism",
     "gradientPosition": 2,
@@ -256,14 +256,14 @@
       "interaction"
     ],
     "dependencyIds": [
-      "C010",
-      "C011",
-      "C016",
-      "C017"
+      "C10",
+      "C11",
+      "C16",
+      "C17"
     ]
   },
   {
-    "id": "C021",
+    "id": "C21",
     "text": "The creator has something analogous to mind, intention, or awareness.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -272,11 +272,11 @@
       "awareness"
     ],
     "dependencyIds": [
-      "C019"
+      "C19"
     ]
   },
   {
-    "id": "C022",
+    "id": "C22",
     "text": "The creator is aware of the universe after creating it.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -285,11 +285,11 @@
       "creation"
     ],
     "dependencyIds": [
-      "C021"
+      "C21"
     ]
   },
   {
-    "id": "C023",
+    "id": "C23",
     "text": "The creator is aware of conscious creatures within the universe.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -298,12 +298,12 @@
       "humans"
     ],
     "dependencyIds": [
-      "C021",
-      "C022"
+      "C21",
+      "C22"
     ]
   },
   {
-    "id": "C024",
+    "id": "C24",
     "text": "The creator is capable of choosing between alternative possible actions.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -312,11 +312,11 @@
       "agency"
     ],
     "dependencyIds": [
-      "C021"
+      "C21"
     ]
   },
   {
-    "id": "C025",
+    "id": "C25",
     "text": "The creator has purposes related to human beings.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -325,13 +325,13 @@
       "humans"
     ],
     "dependencyIds": [
-      "C021",
-      "C023",
-      "C024"
+      "C21",
+      "C23",
+      "C24"
     ]
   },
   {
-    "id": "C026",
+    "id": "C26",
     "text": "The creator cares about whether humans understand reality accurately.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -340,12 +340,12 @@
       "humans"
     ],
     "dependencyIds": [
-      "C023",
-      "C025"
+      "C23",
+      "C25"
     ]
   },
   {
-    "id": "C027",
+    "id": "C27",
     "text": "The creator can act within the universe after its initial creation.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -354,12 +354,12 @@
       "agency"
     ],
     "dependencyIds": [
-      "C021",
-      "C024"
+      "C21",
+      "C24"
     ]
   },
   {
-    "id": "C028",
+    "id": "C28",
     "text": "The creator can communicate information to human beings.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -368,13 +368,13 @@
       "revelation-capacity"
     ],
     "dependencyIds": [
-      "C021",
-      "C023",
-      "C026"
+      "C21",
+      "C23",
+      "C26"
     ]
   },
   {
-    "id": "C029",
+    "id": "C29",
     "text": "The creator can respond differently to different human actions, prayers, or requests.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -383,13 +383,13 @@
       "prayer-capacity"
     ],
     "dependencyIds": [
-      "C023",
-      "C024",
-      "C027"
+      "C23",
+      "C24",
+      "C27"
     ]
   },
   {
-    "id": "C030",
+    "id": "C30",
     "text": "The creator is not merely the source of the universe but an ongoing personal agent.",
     "category": "Personal Theism",
     "gradientPosition": 3,
@@ -398,14 +398,14 @@
       "agency"
     ],
     "dependencyIds": [
-      "C021",
-      "C022",
-      "C024",
-      "C027"
+      "C21",
+      "C22",
+      "C24",
+      "C27"
     ]
   },
   {
-    "id": "C031",
+    "id": "C31",
     "text": "The Christian God actively responds to human persons rather than only sustaining the universe impersonally.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -415,13 +415,13 @@
       "personal agency"
     ],
     "dependencyIds": [
-      "C027",
-      "C029",
-      "C030"
+      "C27",
+      "C29",
+      "C30"
     ]
   },
   {
-    "id": "C032",
+    "id": "C32",
     "text": "The Christian God sometimes answers petitionary prayer in ways not reducible to chance, coincidence, or ordinary causation.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -431,12 +431,12 @@
       "causation"
     ],
     "dependencyIds": [
-      "C029",
-      "C031"
+      "C29",
+      "C31"
     ]
   },
   {
-    "id": "C033",
+    "id": "C33",
     "text": "The Christian God sometimes miraculously heals physical or psychological conditions.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -446,13 +446,13 @@
       "health"
     ],
     "dependencyIds": [
-      "C027",
-      "C031",
-      "C032"
+      "C27",
+      "C31",
+      "C32"
     ]
   },
   {
-    "id": "C034",
+    "id": "C34",
     "text": "The Christian God sometimes provides guidance or wisdom that improves human judgment beyond ordinary reflection.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -462,13 +462,13 @@
       "discernment"
     ],
     "dependencyIds": [
-      "C026",
-      "C028",
-      "C031"
+      "C26",
+      "C28",
+      "C31"
     ]
   },
   {
-    "id": "C035",
+    "id": "C35",
     "text": "The Christian God sometimes gives people morally corrective conviction or discernment.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -478,13 +478,13 @@
       "discernment"
     ],
     "dependencyIds": [
-      "C026",
-      "C028",
-      "C034"
+      "C26",
+      "C28",
+      "C34"
     ]
   },
   {
-    "id": "C036",
+    "id": "C36",
     "text": "The Christian God sometimes provides foreknowledge, warnings, or prophetic insight about future events.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -494,12 +494,12 @@
       "future events"
     ],
     "dependencyIds": [
-      "C034",
-      "C035"
+      "C34",
+      "C35"
     ]
   },
   {
-    "id": "C037",
+    "id": "C37",
     "text": "The Christian God sometimes communicates through dreams, impressions, visions, or other experiences without those experiences being merely psychological.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -509,12 +509,12 @@
       "religious experience"
     ],
     "dependencyIds": [
-      "C028",
-      "C034"
+      "C28",
+      "C34"
     ]
   },
   {
-    "id": "C038",
+    "id": "C38",
     "text": "The Christian God sometimes protects, delivers, or redirects people through providential events.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -524,13 +524,13 @@
       "guidance"
     ],
     "dependencyIds": [
-      "C025",
-      "C027",
-      "C031"
+      "C25",
+      "C27",
+      "C31"
     ]
   },
   {
-    "id": "C039",
+    "id": "C39",
     "text": "The Christian God sometimes brings durable moral or spiritual transformation that exceeds ordinary social or psychological explanation.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -540,13 +540,13 @@
       "character"
     ],
     "dependencyIds": [
-      "C025",
-      "C034",
-      "C031"
+      "C25",
+      "C34",
+      "C31"
     ]
   },
   {
-    "id": "C040",
+    "id": "C40",
     "text": "Some Christian claims of divine action can be responsibly distinguished from ordinary coincidence, suggestion, or social reinforcement.",
     "category": "Interventionist Theism",
     "gradientPosition": 4,
@@ -556,15 +556,15 @@
       "divine action"
     ],
     "dependencyIds": [
-      "C026",
-      "C031",
-      "C032",
-      "C033",
-      "C036"
+      "C26",
+      "C31",
+      "C32",
+      "C33",
+      "C36"
     ]
   },
   {
-    "id": "C041",
+    "id": "C41",
     "text": "The Christian God reveals truth about himself to humans rather than leaving humans to infer everything from nature alone.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -574,13 +574,13 @@
       "truth"
     ],
     "dependencyIds": [
-      "C028",
-      "C034",
-      "C040"
+      "C28",
+      "C34",
+      "C40"
     ]
   },
   {
-    "id": "C042",
+    "id": "C42",
     "text": "Christian scripture reliably conveys core truths that the Christian God wants humans to know.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -590,12 +590,12 @@
       "reliability"
     ],
     "dependencyIds": [
-      "C036",
-      "C041"
+      "C36",
+      "C41"
     ]
   },
   {
-    "id": "C043",
+    "id": "C43",
     "text": "Jesus is the central and uniquely authoritative revelation of the Christian God's character and purposes.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -605,13 +605,13 @@
       "authority"
     ],
     "dependencyIds": [
-      "C034",
-      "C041",
-      "C042"
+      "C34",
+      "C41",
+      "C42"
     ]
   },
   {
-    "id": "C044",
+    "id": "C44",
     "text": "Jesus' resurrection is a substantiable miracle that vindicates Christian claims about God.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -621,14 +621,14 @@
       "miracle"
     ],
     "dependencyIds": [
-      "C031",
-      "C032",
-      "C040",
-      "C043"
+      "C31",
+      "C32",
+      "C40",
+      "C43"
     ]
   },
   {
-    "id": "C045",
+    "id": "C45",
     "text": "The Christian God forgives sins and reconciles humans to himself through Jesus Christ.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -638,13 +638,13 @@
       "Jesus"
     ],
     "dependencyIds": [
-      "C025",
-      "C041",
-      "C044"
+      "C25",
+      "C41",
+      "C44"
     ]
   },
   {
-    "id": "C046",
+    "id": "C46",
     "text": "The Holy Spirit is an active divine agent who guides, teaches, empowers, and comforts believers.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -654,13 +654,13 @@
       "empowerment"
     ],
     "dependencyIds": [
-      "C030",
-      "C034",
-      "C041"
+      "C30",
+      "C34",
+      "C41"
     ]
   },
   {
-    "id": "C047",
+    "id": "C47",
     "text": "The Christian God can give spiritual gifts such as prophecy, healing, wisdom, discernment, or tongues.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -671,15 +671,15 @@
       "wisdom"
     ],
     "dependencyIds": [
-      "C032",
-      "C033",
-      "C034",
-      "C036",
-      "C046"
+      "C32",
+      "C33",
+      "C34",
+      "C36",
+      "C46"
     ]
   },
   {
-    "id": "C048",
+    "id": "C48",
     "text": "Christian prayer, worship, and obedience can become real channels of interaction with God rather than only human ritual.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -689,13 +689,13 @@
       "obedience"
     ],
     "dependencyIds": [
-      "C032",
-      "C034",
-      "C046"
+      "C32",
+      "C34",
+      "C46"
     ]
   },
   {
-    "id": "C049",
+    "id": "C49",
     "text": "The Christian God can guide communities as well as individuals toward truth, repentance, and moral correction.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -705,14 +705,14 @@
       "repentance"
     ],
     "dependencyIds": [
-      "C034",
-      "C040",
-      "C046",
-      "C048"
+      "C34",
+      "C40",
+      "C46",
+      "C48"
     ]
   },
   {
-    "id": "C050",
+    "id": "C50",
     "text": "The core Christian picture is true: God personally acts through Christ and the Spirit to save, guide, heal, and transform human beings.",
     "category": "Specific Christian Theism",
     "gradientPosition": 5,
@@ -724,12 +724,12 @@
       "transformation"
     ],
     "dependencyIds": [
-      "C043",
-      "C044",
-      "C045",
-      "C046",
-      "C047",
-      "C049"
+      "C43",
+      "C44",
+      "C45",
+      "C46",
+      "C47",
+      "C49"
     ]
   }
 ]

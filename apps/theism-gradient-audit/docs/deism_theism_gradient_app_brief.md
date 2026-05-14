@@ -80,4 +80,4 @@ The app should continue surfacing:
 
 ## Current Claim IDs
 
-Claims `C001-C030` build the general philosophical runway. Claims `C031-C050` now focus on general Christian divine-action and Christian-core claims rather than comparative Abrahamic claims.
+Claims `C1-C30` build the general philosophical runway. Claims `C31-C50` now focus on general Christian divine-action and Christian-core claims rather than comparative Abrahamic claims.

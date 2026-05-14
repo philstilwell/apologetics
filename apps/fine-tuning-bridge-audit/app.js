@@ -7,28 +7,28 @@ const routes = [
     label: "Design only",
     help: "Use this when fine-tuning is being asked only to support purposive calibration, not yet life-purpose, human-purpose, or Christianity.",
     claim: "The apparent fine-tuning of physical constants is evidence of purposive calibration.",
-    focusClaims: ["C011", "C012", "C013", "C014"]
+    focusClaims: ["C11", "C12", "C13", "C14"]
   },
   {
     id: "life-purpose",
     label: "Life purpose",
     help: "Use this when the argument wants to move from fine-tuning to a universe intended for life itself.",
     claim: "The universe was intentionally set so that life would emerge.",
-    focusClaims: ["C014", "C015", "C018"]
+    focusClaims: ["C14", "C15", "C18"]
   },
   {
     id: "human-purpose",
     label: "Human purpose",
     help: "Use this when the argument wants to move from life-permission to conscious beings, persons, or something close to human-centered purpose.",
     claim: "The universe was intentionally set for conscious beings or something close to human-purpose.",
-    focusClaims: ["C014", "C015", "C016", "C018", "C025"]
+    focusClaims: ["C14", "C15", "C16", "C18", "C25"]
   },
   {
     id: "christian-purpose",
     label: "Christian purpose",
     help: "Use this when fine-tuning is being asked to help carry a personal, revelatory, or specifically Christian conclusion.",
     claim: "The universe's fine-tuning points beyond generic design toward a personal or Christian God with purposes related to humans.",
-    focusClaims: ["C014", "C015", "C016", "C018", "C019", "C025", "C026", "C041"]
+    focusClaims: ["C14", "C15", "C16", "C18", "C19", "C25", "C26", "C41"]
   }
 ];
 
@@ -1131,14 +1131,30 @@ function buildMarkdownSummary() {
 function buildAiPrompt() {
   const diagnosis = classifyAudit();
   return [
-    "You are auditing a fine-tuning argument for hidden bridge inflation.",
+    "You are reviewing a fine-tuning argument for hidden bridge jumps.",
     "",
-    "Your job is not to affirm or deny the conclusion reflexively. Instead:",
-    "1. Identify the current honest ceiling of the argument.",
-    "2. Distinguish thin design from life-purpose, human-purpose, and Christian-purpose moves.",
-    "3. Evaluate whether observer selection, impersonal alternatives, or target ambiguity are still doing major work.",
-    "4. Use the beach analogy explicitly when discussing world-shape expectations.",
-    "5. Name the strongest repair move that would most improve the argument without overclaiming.",
+    "Write for a smart high school graduate.",
+    "- Use plain English.",
+    "- Use short, direct sentences.",
+    "- Avoid academic, philosophical, or theological jargon where possible.",
+    "- If you use a tool term like observer selection, impersonal alternatives, or target ambiguity, explain it in simple words.",
+    "",
+    "Do not overstate the result.",
+    "- Treat the strict ceiling as the real limit of the argument right now.",
+    "- Treat the tentative ceiling only as a maybe, not as an earned conclusion.",
+    "- Do not smuggle human-purpose or Christian-purpose into a thinner result.",
+    "",
+    "Please answer in these sections:",
+    "1. Current honest ceiling",
+    "Say plainly what the argument supports right now, and what it does not yet support.",
+    "2. The main steps",
+    "Briefly separate thin design, life-purpose, human-purpose, and Christian-purpose.",
+    "3. What is still doing the work",
+    "Say whether observer selection, impersonal alternatives, and target ambiguity still matter a lot, and explain why in simple terms.",
+    "4. Beach analogy",
+    "Use the A/B/C beach image directly. Say which picture fits the actual universe, and which picture the selected route would naturally predict.",
+    "5. Best repair move",
+    "Name the single best repair move that would improve the argument without making it sound stronger than it is.",
     "",
     `Current route: ${routeById(state.route).label}`,
     `Status: ${diagnosis.status}`,
@@ -1152,11 +1168,13 @@ function buildAiPrompt() {
     "Audit data:",
     buildSummary(),
     "",
-    "Finish with:",
-    "- the narrowest claim the current evidence seems to support",
-    "- the strongest live alternative explanation",
-    "- the bridge premise most in need of repair",
-    "- one suggested follow-up question for the Theism Gradient claims " + gradientFocusClaims().join(", ")
+    "Finish with four short items:",
+    "- Narrowest claim supported now",
+    "- Strongest live alternative explanation",
+    "- Bridge most in need of repair",
+    "- One follow-up question for Theism Gradient claims " + gradientFocusClaims().join(", "),
+    "",
+    "Keep the whole response clear, concrete, and readable. Prefer short paragraphs or bullets. Do not write like an academic paper."
   ].join("\n");
 }
 

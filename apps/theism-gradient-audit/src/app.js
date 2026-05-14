@@ -135,6 +135,22 @@ const categoryShortLabels = {
   "Specific Christian Theism": "Christian"
 };
 
+function normalizeClaimId(value) {
+  const text = String(value ?? "").trim().toUpperCase();
+  const match = text.match(/^C0*(\d+)$/);
+  if (!match) return text;
+  return `C${Number(match[1])}`;
+}
+
+function claimIdNumber(value) {
+  const match = normalizeClaimId(value).match(/^C(\d+)$/);
+  return match ? Number(match[1]) : Number.POSITIVE_INFINITY;
+}
+
+function sortClaimsById(a, b) {
+  return claimIdNumber(a.id) - claimIdNumber(b.id);
+}
+
 function evidenceFocusFor(claim) {
   const tags = claim.tags.map((tag) => tag.toLowerCase()).join(" ");
   if (tags.includes("prayer")) return "Look for cases where prayer is not merely followed by a desired event, but where timing, pattern, specificity, controls, and alternatives have been weighed.";
@@ -196,7 +212,10 @@ function dependencyAnnotationFor(claim) {
 function loadProfile() {
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey));
-    if (saved?.responses) state.profile = saved;
+    if (saved?.responses || saved?.profile?.responses) {
+      state.profile = normalizeImportedProfile(saved);
+      saveProfile();
+    }
   } catch {
     localStorage.removeItem(storageKey);
   }
@@ -230,7 +249,14 @@ function loadImportedBridgeAudit() {
   const nextUrl = `${url.pathname}${nextQuery ? `?${nextQuery}` : ""}${url.hash}`;
   window.history.replaceState(null, "", nextUrl);
 
-  return payload?.source === "fine-tuning-bridge-audit" ? payload : null;
+  if (payload?.source !== "fine-tuning-bridge-audit") return null;
+
+  return {
+    ...payload,
+    recommendedClaimIds: Array.isArray(payload.recommendedClaimIds)
+      ? payload.recommendedClaimIds.map(normalizeClaimId)
+      : []
+  };
 }
 
 function formatNumber(value, digits = 1) {
@@ -836,7 +862,7 @@ function renderScatter() {
   });
   const claimsByCategory = new Map(categories.map((category) => [
     category,
-    state.claims.filter((claim) => claim.category === category).sort((a, b) => a.id.localeCompare(b.id))
+    state.claims.filter((claim) => claim.category === category).sort(sortClaimsById)
   ]));
 
   nodes.scatter.innerHTML = `
@@ -1071,7 +1097,7 @@ function renderImportedBridgeAudit() {
   nodes.bridgeImportBanner.hidden = false;
   nodes.bridgeImportCopy.textContent = `This Theism Gradient session imported a ${route} result from the Fine-Tuning Bridge Audit. Reported status: ${imported.status || "not provided"}. Reported strict ceiling: ${ceiling}.`;
   nodes.bridgeImportClaims.textContent = claimIds.length
-    ? `Suggested focus claims: ${claimIds.join(", ")}. The C0## labels are claim IDs in this audit.`
+    ? `Suggested focus claims: ${claimIds.join(", ")}. The C-number labels are claim IDs in this audit.`
     : "Suggested focus area: Design Deism.";
 }
 
@@ -1215,9 +1241,13 @@ function normalizeImportedProfile(data) {
     throw new Error("No profile responses found.");
   }
 
+  const normalizedSourceResponses = Object.fromEntries(
+    Object.entries(source.responses).map(([claimId, response]) => [normalizeClaimId(claimId), response])
+  );
+
   const responses = {};
   for (const claim of state.claims) {
-    const response = source.responses[claim.id];
+    const response = normalizedSourceResponses[claim.id];
     if (!response) continue;
     responses[claim.id] = {
       confidence: Math.max(0, Math.min(100, Number(response.confidence) || 0)),
