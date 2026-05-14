@@ -484,6 +484,7 @@ function renderScoreDrivers(assessment) {
 }
 
 function renderPressurePlot(assessment) {
+  const anchorLabel = formatClaim(els.rule.value.trim() || assessment.pattern.rule, 1);
   const sortedItems = [...assessment.items].sort((a, b) => {
     const aPriority = a.similarity * 100 + a.risk;
     const bPriority = b.similarity * 100 + b.risk;
@@ -492,8 +493,8 @@ function renderPressurePlot(assessment) {
   const strongest = sortedItems.find((item) => item.risk >= 15) || sortedItems[0];
 
   els.pressurePlotSummary.textContent = strongest
-    ? `Highest pressure: ${formatClaim(strongest.title, strongest.stanceNumber)}. Similarity ${Math.round(strongest.similarity * 100)}%; tension ${strongest.risk}/100.`
-    : "Upper-right points are the parallels most similar to the anchor and carrying the most unresolved tension.";
+    ? `Anchor [1] is the baseline at 100% similarity and 0 tension. Highest parallel pressure: [${strongest.stanceNumber}] at ${Math.round(strongest.similarity * 100)}% similarity and ${strongest.risk}/100 tension.`
+    : "Anchor [1] is the baseline at 100% similarity and 0 tension.";
 
   els.pressurePlot.innerHTML = `
     <div class="pressure-axis pressure-x-axis">Similarity to anchor</div>
@@ -505,6 +506,14 @@ function renderPressurePlot(assessment) {
       .map((value) => `<span class="pressure-y-tick" style="bottom:${value}%">${value}</span>`)
       .join("")}
     <span class="pressure-zone-label">Highest pressure zone</span>
+    <span
+      class="pressure-anchor-marker"
+      title="${escapeHtml(`${anchorLabel}: comparison baseline`)}"
+      aria-label="${escapeHtml(`${anchorLabel}: comparison baseline at 100% similarity and 0 residual tension`)}"
+    >
+      <i>1</i>
+      <em>Anchor</em>
+    </span>
     ${assessment.items
       .map((item) => {
         const x = clamp(Math.round(item.similarity * 100), 0, 100);
@@ -532,6 +541,7 @@ function renderPressurePlot(assessment) {
   `;
 
   els.pressureLegend.innerHTML = `
+    <span><i class="legend-anchor"></i>Anchor baseline</span>
     <span><i class="legend-dot accept"></i>Accept</span>
     <span><i class="legend-dot weaken"></i>Weaken</span>
     <span><i class="legend-dot reject"></i>Reject</span>

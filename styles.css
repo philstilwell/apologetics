@@ -2288,6 +2288,7 @@ input[type="range"] {
 .pressure-x-tick,
 .pressure-y-tick,
 .pressure-zone-label,
+.pressure-anchor-marker,
 .pressure-point {
   position: absolute;
 }
@@ -2339,6 +2340,46 @@ input[type="range"] {
   font-size: 0.62rem;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+}
+
+.pressure-anchor-marker {
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  display: grid;
+  gap: 3px;
+  justify-items: end;
+  color: var(--green);
+  font-size: 0.62rem;
+  font-weight: 950;
+  line-height: 1;
+  pointer-events: none;
+  transform: translate(8px, 22px);
+}
+
+.pressure-anchor-marker i {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 2px solid #fffaf0;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow:
+    0 0 0 4px rgba(95, 84, 0, 0.16),
+    0 6px 12px rgba(35, 19, 5, 0.18);
+  color: #fffaf0;
+  font-style: normal;
+}
+
+.pressure-anchor-marker em {
+  padding: 3px 5px;
+  border: 1px solid rgba(95, 84, 0, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 250, 240, 0.94);
+  font-style: normal;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .pressure-point {
@@ -2396,11 +2437,18 @@ input[type="range"] {
 }
 
 .legend-dot,
+.legend-anchor,
 .legend-ring {
   display: inline-block;
   width: 12px;
   height: 12px;
   border-radius: 50%;
+}
+
+.legend-anchor {
+  border: 2px solid #fffaf0;
+  background: var(--green);
+  box-shadow: 0 0 0 3px rgba(95, 84, 0, 0.16);
 }
 
 .legend-dot.accept {
