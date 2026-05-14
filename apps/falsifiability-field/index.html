@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Test prayer, healing, protection, wisdom, prophecy, and other Christian promise claims to see whether they stay open to ordinary verification.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260514-promise-map-polish-6">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-single-column">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -177,7 +177,7 @@
                 "name": "Are anecdotes useless?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Anecdotes are not useless. They can suggest what to study, reveal what people\ncare about, and sometimes expose a claim that deserves a closer look. But an\nanecdote is weak evidence for a general promise because it usually hides the\ndenominator: the misses, ordinary recoveries, ambiguous cases, and comparable\nstories from other groups.\nThe field lets anecdotes move an icon a little because they are not nothing.\nThey just do not move it far unless they become logs, records, comparisons,\npreregistered outcomes, and repeated checks."
+                  "text": "Anecdotes are not useless. They can suggest what to study, reveal what people\ncare about, and sometimes expose a claim that deserves a closer look. But an\nanecdote is weak evidence for a general promise because it usually hides the\ndenominator: the misses, ordinary recoveries, ambiguous cases, and comparable\nstories from other groups.\nThe score lets anecdotes move a claim a little because they are not nothing.\nThey just do not move it far unless they become logs, records, comparisons,\npreregistered outcomes, and repeated checks."
                 }
               },
               {
@@ -258,7 +258,6 @@
       <nav class="top-nav" aria-label="Primary">
         <a class="hub-link" href="../../">Hub</a>
         <a href="#claims">Claims</a>
-        <a href="#field">Field</a>
         <a href="#testing">Studies</a>
         <a href="#mind-change">Commit</a>
         <a href="#excuses">Excuses</a>
@@ -289,8 +288,8 @@
           <summary>How to use this field</summary>
           <p>
             Choose a claim, pick the strongest test you would actually allow, then set whether
-            a clean failure would lower your confidence. The icon moves right when the claim is
-            made clear, risky, public, and checkable.
+            a clean failure would lower your confidence. The score and promise map move right
+            when the claim is made clear, risky, public, and checkable.
           </p>
           <p>
             Select escape hatches only if you would really use them. Each one moves the claim
@@ -309,17 +308,8 @@
             wisdom, better behavior, or longer life.
           </span>
         </a>
-        <a href="#field" aria-describedby="field-step-help">
-          <span class="step-number">2</span>
-          <span class="step-label">Watch the field</span>
-          <span class="label-help-dot" aria-hidden="true">?</span>
-          <span class="label-tooltip" id="field-step-help" role="tooltip">
-            Left means the claim is mostly protected from testing. Right means the claim is
-            exposed to public checks that could make confidence go down.
-          </span>
-        </a>
         <a href="#testing" aria-describedby="testing-step-help">
-          <span class="step-number">3</span>
+          <span class="step-number">2</span>
           <span class="step-label">Choose a study</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="testing-step-help" role="tooltip">
@@ -328,7 +318,7 @@
           </span>
         </a>
         <a href="#mind-change" aria-describedby="mind-change-step-help">
-          <span class="step-number">4</span>
+          <span class="step-number">3</span>
           <span class="step-label">Change your mind</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="mind-change-step-help" role="tooltip">
@@ -337,7 +327,7 @@
           </span>
         </a>
         <a href="#excuses" aria-describedby="excuses-step-help">
-          <span class="step-number">5</span>
+          <span class="step-number">4</span>
           <span class="step-label">Name excuses</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="excuses-step-help" role="tooltip">
@@ -346,7 +336,7 @@
           </span>
         </a>
         <a href="#summary" aria-describedby="summary-step-help">
-          <span class="step-number">6</span>
+          <span class="step-number">5</span>
           <span class="step-label">Read result</span>
           <span class="label-help-dot" aria-hidden="true">?</span>
           <span class="label-tooltip" id="summary-step-help" role="tooltip">
@@ -362,7 +352,7 @@
             Selected claim
             <span class="ff-tip" tabindex="0">?
               <span class="ff-tooltip" role="tooltip">
-                This is the icon and promise currently being edited. Other icons keep their own
+                This is the promise currently being edited. Other promises keep their own
                 settings, so you can compare different claims at once.
               </span>
             </span>
@@ -401,7 +391,7 @@
             Field position
             <span class="ff-tip" tabindex="0">?
               <span class="ff-tooltip" role="tooltip">
-                This shows how far right the selected icon has moved. The threshold line is a
+                This shows how far right the selected promise has moved. The threshold line is a
                 practical benchmark, not a natural boundary; the exact cutoff is somewhat arbitrary,
                 but moving right means stronger exposure to tests that could disappoint the claim.
               </span>
@@ -412,13 +402,76 @@
         </article>
       </section>
 
+      <section class="active-promise-card active-promise-sticky" aria-labelledby="active-promise-title" aria-live="polite">
+        <div class="active-promise-main">
+          <div>
+            <p class="app-step">Active promise</p>
+            <h2 id="active-promise-title">Answered prayer</h2>
+            <p id="active-promise-detail">
+              Prayer changes outcomes beyond ordinary timing, recovery, or coincidence.
+            </p>
+          </div>
+          <span class="active-promise-score" id="active-promise-score">9 / 100</span>
+        </div>
+        <div class="active-promise-actions">
+          <small id="active-promise-study">Current test: Anecdote</small>
+          <a class="active-promise-link" href="#claims">Choose a promise</a>
+        </div>
+        <div class="active-promise-factors" aria-label="Current score drivers">
+          <div class="active-factor">
+            <strong id="active-study-rigor">8/100</strong>
+            <span class="active-factor-label">Study
+              <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-study-tip">?
+                <span class="ff-tooltip active-factor-tooltip" id="active-study-tip" role="tooltip">
+                  The scientific rigor of the selected study. Stronger samples, blinding,
+                  preregistration, and replication push this number higher.
+                </span>
+              </span>
+            </span>
+          </div>
+          <div class="active-factor">
+            <strong id="active-run-setting">35%</strong>
+            <span class="active-factor-label">Run
+              <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-run-tip">?
+                <span class="ff-tooltip active-factor-tooltip" id="active-run-tip" role="tooltip">
+                  How willing the user is to actually submit this promise to the selected test.
+                  Lower values keep even a strong study from moving the claim very far.
+                </span>
+              </span>
+            </span>
+          </div>
+          <div class="active-factor">
+            <strong id="active-failure-setting">25%</strong>
+            <span class="active-factor-label">Miss
+              <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-miss-tip">?
+                <span class="ff-tooltip active-factor-tooltip" id="active-miss-tip" role="tooltip">
+                  Whether a clean, fair failure would count against the promise. If no miss
+                  would matter, the claim is being protected from falsification.
+                </span>
+              </span>
+            </span>
+          </div>
+          <div class="active-factor">
+            <strong id="active-excuse-drag">0</strong>
+            <span class="active-factor-label">Drag
+              <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-drag-tip">?
+                <span class="ff-tooltip active-factor-tooltip" id="active-drag-tip" role="tooltip">
+                  The leftward pull from selected escape hatches. More excuses mean poor results
+                  are easier to dismiss, so the claim becomes less testable.
+                </span>
+              </span>
+            </span>
+          </div>
+        </div>
+      </section>
+
       <details class="evidence-gradient-panel evidence-gradient-details">
         <summary aria-labelledby="evidence-gradient-title">
           <div class="gradient-copy">
             <p class="app-step">Evidence gradient</p>
             <h2 id="evidence-gradient-title">From story to robust science</h2>
             <p>
-              The field moves right as the claim accepts clearer outcomes, full miss-counting,
+              The score moves right as the claim accepts clearer outcomes, full miss-counting,
               comparison groups, blinding, preregistration, replication, and large samples.
             </p>
           </div>
@@ -531,7 +584,7 @@
 
           <section class="testing-layout" id="testing" aria-labelledby="testing-title">
             <section class="study-panel">
-              <p class="app-step">Step 3</p>
+              <p class="app-step">Step 2</p>
               <div class="section-title-inline">
                 <h2 id="testing-title">Choose a study</h2>
                 <span class="ff-tip" tabindex="0">?
@@ -638,7 +691,7 @@
                   <span class="range-value" id="willingness-value">35%</span>
                 </div>
                 <input id="willingness-range" type="range" min="0" max="100" step="5">
-                <p>Low values keep the icon left even if a strong study is listed.</p>
+                <p>Low values keep the score protected even if a strong study is listed.</p>
               </div>
 
               <div class="range-row promise-range">
@@ -760,7 +813,7 @@
           </section>
 
           <section class="mind-change-panel" id="mind-change" aria-labelledby="mind-change-title">
-            <p class="app-step">Step 4</p>
+            <p class="app-step">Step 3</p>
             <div class="section-title-inline">
               <h2 id="mind-change-title">Change your mind</h2>
               <span class="ff-tip" tabindex="0">?
@@ -784,7 +837,7 @@
           </section>
 
           <section class="excuse-panel" id="excuses" aria-labelledby="excuses-title">
-            <p class="app-step">Step 5</p>
+            <p class="app-step">Step 4</p>
             <h2 id="excuses-title">Name excuses</h2>
             <p class="panel-copy">
               Select the responses a defender could use after a poor result. The warning is simple:
@@ -797,11 +850,11 @@
           <section class="summary-panel" id="summary" aria-labelledby="summary-title">
             <div class="summary-head">
               <div>
-                <p class="app-step">Step 6</p>
+                <p class="app-step">Step 5</p>
                 <h2 id="summary-title">Read result</h2>
               </div>
-              <span class="field-help" tabindex="0">?
-                <span class="field-tooltip" role="tooltip">
+              <span class="ff-tip" tabindex="0">?
+                <span class="ff-tooltip" role="tooltip">
                   The summary uses your current choices. Change the study, sliders, or escape hatches
                   and the diagnosis will update immediately.
                 </span>
@@ -1023,7 +1076,7 @@
                       stories from other groups.
                     </p>
                     <p>
-                      The field lets anecdotes move an icon a little because they are not nothing.
+                      The score lets anecdotes move a claim a little because they are not nothing.
                       They just do not move it far unless they become logs, records, comparisons,
                       preregistered outcomes, and repeated checks.
                     </p>
@@ -1316,98 +1369,6 @@
           </section>
         </div>
 
-        <aside class="sticky-field-wrap">
-          <section class="active-promise-card" aria-labelledby="active-promise-title" aria-live="polite">
-            <div class="active-promise-head">
-              <div>
-                <p class="app-step">Active promise</p>
-                <h2 id="active-promise-title">Answered prayer</h2>
-              </div>
-              <span class="active-promise-score" id="active-promise-score">9 / 100</span>
-            </div>
-            <p id="active-promise-detail">
-              Prayer changes outcomes beyond ordinary timing, recovery, or coincidence.
-            </p>
-            <small id="active-promise-study">Current test: Anecdote</small>
-            <a class="active-promise-link" href="#claims">Choose a promise</a>
-            <div class="active-promise-factors" aria-label="Current score drivers">
-              <div class="active-factor">
-                <strong id="active-study-rigor">8/100</strong>
-                <span class="active-factor-label">Study
-                  <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-study-tip">?
-                    <span class="ff-tooltip active-factor-tooltip" id="active-study-tip" role="tooltip">
-                      The scientific rigor of the selected study. Stronger samples, blinding,
-                      preregistration, and replication push this number higher.
-                    </span>
-                  </span>
-                </span>
-              </div>
-              <div class="active-factor">
-                <strong id="active-run-setting">35%</strong>
-                <span class="active-factor-label">Run
-                  <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-run-tip">?
-                    <span class="ff-tooltip active-factor-tooltip" id="active-run-tip" role="tooltip">
-                      How willing the user is to actually submit this promise to the selected test.
-                      Lower values keep even a strong study from moving the claim very far.
-                    </span>
-                  </span>
-                </span>
-              </div>
-              <div class="active-factor">
-                <strong id="active-failure-setting">25%</strong>
-                <span class="active-factor-label">Miss
-                  <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-miss-tip">?
-                    <span class="ff-tooltip active-factor-tooltip" id="active-miss-tip" role="tooltip">
-                      Whether a clean, fair failure would count against the promise. If no miss
-                      would matter, the claim is being protected from falsification.
-                    </span>
-                  </span>
-                </span>
-              </div>
-              <div class="active-factor">
-                <strong id="active-excuse-drag">0</strong>
-                <span class="active-factor-label">Drag
-                  <span class="ff-tip active-factor-tip" tabindex="0" aria-describedby="active-drag-tip">?
-                    <span class="ff-tooltip active-factor-tooltip" id="active-drag-tip" role="tooltip">
-                      The leftward pull from selected escape hatches. More excuses mean poor results
-                      are easier to dismiss, so the claim becomes less testable.
-                    </span>
-                  </span>
-                </span>
-              </div>
-            </div>
-          </section>
-
-          <section class="field-panel" id="field" aria-labelledby="field-title">
-            <div class="field-head">
-              <div>
-                <p class="app-step">Step 2</p>
-                <h2 id="field-title">Watch the field</h2>
-              </div>
-              <span class="field-help" tabindex="0">?
-                <span class="field-tooltip" role="tooltip">
-                  The white line is a practical falsifiability benchmark. The exact cutoff is partly
-                  arbitrary; crossing it does not prove a claim true, but it does mean the claim is
-                  being allowed to face a test that could disappoint it.
-                </span>
-              </span>
-            </div>
-
-            <div class="field-stage" aria-label="Falsifiability field">
-              <div class="field-threshold-band" aria-hidden="true"></div>
-              <div class="field-threshold-line" aria-hidden="true"></div>
-              <div class="threshold-label">Falsifiability threshold</div>
-              <div id="claim-tokens"></div>
-              <div class="field-axis" aria-hidden="true">
-                <span>Protected claim</span>
-                <span>Falsifiability threshold</span>
-                <span>Open to robust science</span>
-              </div>
-            </div>
-
-            <div class="field-legend" id="field-legend"></div>
-          </section>
-        </aside>
       </section>
 
       <section class="seo-related" aria-labelledby="related-audits-title">
@@ -1436,6 +1397,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260514-promise-map-polish-3"></script>
+    <script src="./app.js?v=20260514-single-column"></script>
   </body>
 </html>

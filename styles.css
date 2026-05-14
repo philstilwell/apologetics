@@ -4781,12 +4781,11 @@ body.app-falsifiability .brand-mark {
 }
 
 body.app-falsifiability #claims,
-body.app-falsifiability #field,
 body.app-falsifiability #testing,
 body.app-falsifiability #mind-change,
 body.app-falsifiability #excuses,
 body.app-falsifiability #summary {
-  scroll-margin-top: 96px;
+  scroll-margin-top: 190px;
 }
 
 .promise-tool {
@@ -4821,7 +4820,7 @@ body.app-falsifiability #summary {
 
 .promise-steps {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -4879,11 +4878,7 @@ body.app-falsifiability #summary {
 .promise-steps a:hover .label-tooltip,
 .promise-steps a:focus-visible .label-tooltip,
 .ff-tip:hover .ff-tooltip,
-.ff-tip:focus-visible .ff-tooltip,
-.field-help:hover .field-tooltip,
-.field-help:focus-visible .field-tooltip,
-.claim-token:hover .claim-token-tooltip,
-.claim-token:focus-visible .claim-token-tooltip {
+.ff-tip:focus-visible .ff-tooltip {
   opacity: 1;
   transform: translateY(0);
   visibility: visible;
@@ -5154,8 +5149,7 @@ body.app-falsifiability #summary {
   line-height: 1.38;
 }
 
-.ff-tip,
-.field-help {
+.ff-tip {
   position: relative;
   display: inline-grid;
   width: 18px;
@@ -5171,9 +5165,7 @@ body.app-falsifiability #summary {
   cursor: help;
 }
 
-.ff-tooltip,
-.field-tooltip,
-.claim-token-tooltip {
+.ff-tooltip {
   position: absolute;
   bottom: calc(100% + 9px);
   left: 0;
@@ -5200,15 +5192,14 @@ body.app-falsifiability #summary {
   visibility: hidden;
 }
 
-.promise-metric:nth-child(n + 3) .ff-tooltip,
-.field-help .field-tooltip {
+.promise-metric:nth-child(n + 3) .ff-tooltip {
   right: 0;
   left: auto;
 }
 
 .promise-workbench {
   display: grid;
-  grid-template-columns: minmax(0, 0.62fr) minmax(360px, 0.38fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   align-items: start;
 }
@@ -5219,18 +5210,8 @@ body.app-falsifiability #summary {
   min-width: 0;
 }
 
-.sticky-field-wrap {
-  position: sticky;
-  top: 86px;
-  z-index: 10;
-  display: grid;
-  gap: 10px;
-  min-width: 0;
-}
-
 .claim-picker,
 .active-promise-card,
-.field-panel,
 .study-panel,
 .commitment-panel,
 .mind-change-panel,
@@ -5253,17 +5234,28 @@ body.app-falsifiability #summary {
 }
 
 .active-promise-card {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.2fr) minmax(170px, 0.44fr) minmax(360px, 1.55fr);
+  gap: 14px;
+  align-items: center;
   border-top: 5px solid var(--ff-blue);
   background:
     linear-gradient(90deg, rgba(34, 87, 122, 0.1), rgba(255, 255, 255, 0) 58%),
     #fbfff9;
 }
 
-.active-promise-head {
-  display: flex;
+.active-promise-sticky {
+  position: sticky;
+  top: 84px;
+  z-index: 18;
+}
+
+.active-promise-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
-  justify-content: space-between;
   gap: 12px;
+  min-width: 0;
 }
 
 .active-promise-card h2 {
@@ -5281,7 +5273,7 @@ body.app-falsifiability #summary {
 
 .active-promise-card small {
   display: inline-flex;
-  margin-top: 9px;
+  margin: 0;
   padding: 5px 8px;
   border-radius: 999px;
   background: #eef3ee;
@@ -5292,13 +5284,21 @@ body.app-falsifiability #summary {
   text-transform: uppercase;
 }
 
+.active-promise-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
 .active-promise-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 32px;
-  margin-top: 9px;
-  margin-left: 6px;
+  margin: 0;
   padding: 6px 10px;
   border: 1px solid #a8c4c7;
   border-radius: 999px;
@@ -5322,7 +5322,7 @@ body.app-falsifiability #summary {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
-  margin-top: 10px;
+  margin: 0;
 }
 
 .active-promise-factors > .active-factor {
@@ -5522,8 +5522,7 @@ body.app-falsifiability #summary {
   background: color-mix(in srgb, var(--claim-color) 10%, #fff);
 }
 
-.claim-choice-icon,
-.claim-token-icon {
+.claim-choice-icon {
   position: relative;
   display: grid;
   place-items: center;
@@ -5537,8 +5536,7 @@ body.app-falsifiability #summary {
   height: 40px;
 }
 
-.claim-choice-icon svg,
-.claim-token-icon svg {
+.claim-choice-icon svg {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -5586,18 +5584,6 @@ body.app-falsifiability #summary {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-.field-panel {
-  position: relative;
-  overflow: visible;
-  min-height: auto;
-  padding: 12px;
-  background:
-    linear-gradient(90deg, rgba(169, 71, 46, 0.08), rgba(255, 255, 255, 0) 36%),
-    linear-gradient(90deg, rgba(255, 255, 255, 0) 54%, rgba(78, 122, 60, 0.13)),
-    var(--ff-panel);
-}
-
-.field-head,
 .summary-head {
   display: flex;
   align-items: start;
@@ -5606,226 +5592,8 @@ body.app-falsifiability #summary {
   margin-bottom: 12px;
 }
 
-.field-head h2,
 .summary-head h2 {
   font-size: 1.22rem;
-}
-
-.field-stage {
-  --field-radius: calc(var(--radius) + 2px);
-  position: relative;
-  min-height: 456px;
-  isolation: isolate;
-  border: 1px solid #718775;
-  border-radius: var(--field-radius);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(56, 86, 67, 0.28), transparent 36%),
-    radial-gradient(circle at 84% 34%, rgba(255, 255, 255, 0.42), transparent 36%),
-    radial-gradient(circle at 88% 78%, rgba(154, 207, 142, 0.22), transparent 30%),
-    linear-gradient(90deg, #060908 0, #0d1512 31%, #243821 47%, #8caf83 63%, #d8edcf 82%, #f3fbef 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
-    inset 0 24px 52px rgba(255, 255, 255, 0.1),
-    inset 42px 0 82px rgba(0, 0, 0, 0.34),
-    inset -42px 0 72px rgba(255, 255, 255, 0.3),
-    0 16px 34px rgba(20, 38, 24, 0.15);
-  overflow: visible;
-}
-
-.field-stage::before,
-.field-stage::after {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  content: "";
-  pointer-events: none;
-}
-
-.field-stage::before {
-  z-index: 0;
-  background:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.075) 0 1px, transparent 1px 40px),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.1));
-  mix-blend-mode: screen;
-}
-
-.field-stage::after {
-  z-index: 5;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
-    inset 0 0 38px rgba(4, 8, 6, 0.18);
-}
-
-.field-threshold-band {
-  display: none;
-}
-
-.field-threshold-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  z-index: 4;
-  width: 2px;
-  border-radius: 0;
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: none;
-  transform: translateX(-50%);
-}
-
-.field-axis {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 6;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  min-height: 48px;
-  align-items: center;
-  padding: 8px 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0 0 var(--field-radius) var(--field-radius);
-  background: #030504;
-  color: #f7fff1;
-  font-size: 0.58rem;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  text-shadow: none;
-  text-transform: uppercase;
-}
-
-.field-axis span {
-  width: fit-content;
-  max-width: 100%;
-  padding: 0;
-  background: transparent;
-}
-
-.field-axis span:nth-child(2) {
-  justify-self: center;
-  color: #f7fff1;
-  text-align: center;
-  text-shadow: none;
-}
-
-.field-axis span:nth-child(3) {
-  justify-self: end;
-  color: #f7fff1;
-  text-align: right;
-  text-shadow: none;
-}
-
-.threshold-label {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  z-index: 7;
-  width: min(252px, 58%);
-  padding: 7px 10px;
-  border: 1px solid rgba(79, 110, 75, 0.54);
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, rgba(238, 220, 145, 0.95), rgba(225, 242, 208, 0.96)),
-    rgba(255, 255, 255, 0.9);
-  color: #12351f;
-  font-size: 0.6rem;
-  font-weight: 950;
-  letter-spacing: 0.06em;
-  box-shadow:
-    0 10px 22px rgba(5, 8, 7, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.65);
-  text-align: center;
-  text-transform: uppercase;
-  transform: translateX(-50%);
-}
-
-.claim-token {
-  position: absolute;
-  top: calc(68px + (var(--row) * 37px));
-  left: clamp(22px, calc(var(--x) * 1%), calc(100% - 22px));
-  z-index: 8;
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
-  border: 2px solid var(--claim-color);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.98), rgba(248, 251, 247, 0.88) 70%),
-    #fff;
-  color: var(--claim-color);
-  box-shadow:
-    0 10px 22px rgba(0, 0, 0, 0.28),
-    0 0 0 4px rgba(255, 255, 255, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-  transition:
-    left 260ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
-}
-
-.claim-token:hover,
-.claim-token:focus-visible,
-.claim-token.active {
-  box-shadow:
-    0 16px 34px rgba(0, 0, 0, 0.3),
-    0 0 0 5px color-mix(in srgb, var(--claim-color) 18%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transform: translate(-50%, -50%) scale(1.06);
-}
-
-.claim-token.active {
-  background: color-mix(in srgb, var(--claim-color) 12%, #fff);
-}
-
-.claim-token .claim-token-icon svg {
-  width: 19px;
-  height: 19px;
-}
-
-.claim-token-icon {
-  position: absolute;
-  inset: 0;
-  width: auto;
-  height: auto;
-}
-
-.claim-token-tooltip {
-  left: 50%;
-  width: min(280px, calc(100vw - 48px));
-  transform: translate(-50%, 4px);
-}
-
-.claim-token:hover .claim-token-tooltip,
-.claim-token:focus-visible .claim-token-tooltip {
-  transform: translate(-50%, 0);
-}
-
-.field-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 10px;
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 0.74rem;
-  font-weight: 760;
-}
-
-.legend-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: currentColor;
 }
 
 .testing-layout {
@@ -7092,11 +6860,6 @@ body.app-falsifiability #summary {
     grid-template-columns: 1fr;
   }
 
-  .sticky-field-wrap {
-    position: static;
-    order: -1;
-  }
-
   .evidence-gradient-track {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -7134,10 +6897,8 @@ body.app-falsifiability #summary {
   .promise-dashboard,
   .evidence-gradient-panel,
   .promise-workbench,
-  .sticky-field-wrap,
   .workbench-controls,
   .active-promise-card,
-  .field-panel,
   .claim-picker,
   .study-panel,
   .commitment-panel,
@@ -7218,73 +6979,33 @@ body.app-falsifiability #summary {
     backdrop-filter: none;
   }
 
-  .field-panel {
-    min-height: auto;
-    padding: 12px;
+  .active-promise-card {
+    position: static;
+    grid-template-columns: 1fr;
   }
 
-  .field-stage {
-    min-height: 512px;
+  .active-promise-main {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .claim-token {
-    top: calc(64px + (var(--row) * 39px));
-    width: 42px;
-    height: 42px;
+  .active-promise-actions {
+    justify-content: flex-start;
   }
 
-  .field-axis {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
-    min-height: 54px;
-    padding: 8px 10px;
-    font-size: 0.48rem;
-  }
-
-  .field-axis span,
-  .field-axis span:nth-child(2),
-  .field-axis span:nth-child(3) {
-    max-width: 100%;
-    overflow-wrap: anywhere;
-  }
-
-  .field-axis span {
-    justify-self: start;
-    text-align: left;
-  }
-
-  .field-axis span:nth-child(2) {
-    justify-self: center;
-    text-align: center;
-  }
-
-  .field-axis span:nth-child(3) {
-    justify-self: end;
-    text-align: right;
-  }
-
-  .threshold-label {
-    top: 8px;
-    width: min(190px, 62%);
+  .active-promise-factors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .ff-tooltip,
-  .field-tooltip,
-  .claim-token-tooltip,
   .label-tooltip {
     right: auto;
     left: 0;
     width: min(300px, calc(100vw - 36px));
   }
 
-  .ff-tip .ff-tooltip,
-  .field-help .field-tooltip {
+  .ff-tip .ff-tooltip {
     right: 0;
     left: auto;
-  }
-
-  .claim-token-tooltip {
-    left: 50%;
   }
 }
 
@@ -7297,12 +7018,12 @@ body.app-falsifiability #summary {
   body.app-falsifiability .app-header,
   body.app-falsifiability .promise-steps,
   body.app-falsifiability .promise-dashboard,
+  body.app-falsifiability .active-promise-card,
   body.app-falsifiability .evidence-gradient-panel,
   body.app-falsifiability .claim-picker,
   body.app-falsifiability .testing-layout,
   body.app-falsifiability .mind-change-panel,
   body.app-falsifiability .excuse-panel,
-  body.app-falsifiability .sticky-field-wrap,
   body.app-falsifiability .summary-panel > :not(.report-panel),
   body.app-falsifiability .report-actions,
   body.app-falsifiability .report-panel .copy-status {

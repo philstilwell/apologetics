@@ -84,7 +84,7 @@ const claims = [
         effort: "Easy",
         rigor: 8,
         detail: "One person gets better after people prayed.",
-        move: "Barely moves the icon because flu, pain, and many illnesses often improve anyway.",
+        move: "Barely moves the score because flu, pain, and many illnesses often improve anyway.",
       },
       {
         id: "prayer-log",
@@ -139,7 +139,7 @@ const claims = [
         effort: "Easy",
         rigor: 10,
         detail: "A person improves after prayer while also receiving normal care.",
-        move: "Barely moves the icon because treatment, time, and misdiagnosis are still live.",
+        move: "Barely moves the score because treatment, time, and misdiagnosis are still live.",
       },
       {
         id: "healing-records",
@@ -185,7 +185,7 @@ const claims = [
         effort: "Easy",
         rigor: 10,
         detail: "A person remembers a feeling or phrase after an event happens.",
-        move: "Barely moves the icon because the target can be reshaped after the fact.",
+        move: "Barely moves the score because the target can be reshaped after the fact.",
       },
       {
         id: "future-timestamps",
@@ -231,7 +231,7 @@ const claims = [
         effort: "Easy",
         rigor: 12,
         detail: "A person feels guided and later sees the choice as meaningful.",
-        move: "Barely moves the icon because meaning after the fact is easy to find.",
+        move: "Barely moves the score because meaning after the fact is easy to find.",
       },
       {
         id: "wisdom-log",
@@ -286,7 +286,7 @@ const claims = [
         effort: "Easy",
         rigor: 18,
         detail: "People describe how faith made them kinder or more honest.",
-        move: "Barely moves the icon because sincere stories can omit comparison and failures.",
+        move: "Barely moves the score because sincere stories can omit comparison and failures.",
       },
       {
         id: "behavior-log",
@@ -341,7 +341,7 @@ const claims = [
         effort: "Easy",
         rigor: 12,
         detail: "A person narrowly avoids harm and sees the timing as protection.",
-        move: "Barely moves the icon because near misses happen in every group.",
+        move: "Barely moves the score because near misses happen in every group.",
       },
       {
         id: "protection-log",
@@ -387,7 +387,7 @@ const claims = [
         effort: "Easy",
         rigor: 12,
         detail: "A believer survives a dangerous illness and the story is treated as protective care.",
-        move: "Barely moves the icon because survival stories do not show the uncounted severe cases.",
+        move: "Barely moves the score because survival stories do not show the uncounted severe cases.",
       },
       {
         id: "morbidity-church-log",
@@ -442,7 +442,7 @@ const claims = [
         effort: "Easy",
         rigor: 15,
         detail: "A group points to unusually old members as evidence of blessing.",
-        move: "Barely moves the icon because every large community has memorable old members.",
+        move: "Barely moves the score because every large community has memorable old members.",
       },
       {
         id: "longevity-verified",
@@ -488,7 +488,7 @@ const claims = [
         effort: "Easy",
         rigor: 14,
         detail: "A need is met soon after prayer or a faith decision.",
-        move: "Barely moves the icon because needs are often met by ordinary networks and timing.",
+        move: "Barely moves the score because needs are often met by ordinary networks and timing.",
       },
       {
         id: "provision-log",
@@ -790,8 +790,6 @@ let copyPromptResetTimer;
 
 const claimButtons = document.querySelector("#claim-buttons");
 const presetGrid = document.querySelector("#preset-grid");
-const claimTokens = document.querySelector("#claim-tokens");
-const fieldLegend = document.querySelector("#field-legend");
 const studyGrid = document.querySelector("#study-grid");
 const datasetList = document.querySelector("#dataset-list");
 const datasetActivePromise = document.querySelector("#dataset-active-promise");
@@ -1316,12 +1314,9 @@ function buildAiPrompt() {
 
 function renderClaims() {
   claimButtons.innerHTML = "";
-  claimTokens.innerHTML = "";
-  fieldLegend.innerHTML = "";
 
-  claims.forEach((claim, index) => {
+  claims.forEach((claim) => {
     const score = scoreClaim(claim);
-    const currentStudy = getStudy(claim);
 
     const button = document.createElement("button");
     button.type = "button";
@@ -1339,31 +1334,6 @@ function renderClaims() {
     `;
     button.addEventListener("click", () => selectClaim(claim.id));
     claimButtons.append(button);
-
-    const token = document.createElement("button");
-    token.type = "button";
-    token.className = `claim-token${claim.id === selectedClaimId ? " active" : ""}`;
-    token.dataset.claimId = claim.id;
-    token.style.setProperty("--claim-color", claim.color);
-    token.style.setProperty("--x", String(score));
-    token.style.setProperty("--row", String(index));
-    token.setAttribute("aria-label", `${claim.title}: ${score} out of 100`);
-    token.setAttribute("aria-pressed", String(claim.id === selectedClaimId));
-    token.innerHTML = `
-      <span class="claim-token-icon">${icons[claim.icon]}</span>
-      <span class="claim-token-tooltip" role="tooltip">
-        <strong>${escapeHtml(claim.title)}</strong><br>
-        ${score}/100. Current test: ${escapeHtml(currentStudy.tier)}.
-      </span>
-    `;
-    token.addEventListener("click", () => selectClaim(claim.id));
-    claimTokens.append(token);
-
-    const legendItem = document.createElement("span");
-    legendItem.className = "legend-chip";
-    legendItem.style.color = claim.color;
-    legendItem.innerHTML = `<span class="legend-dot"></span>${escapeHtml(claim.title)}`;
-    fieldLegend.append(legendItem);
   });
 }
 
