@@ -9710,6 +9710,15 @@ body.app-morality :is(
   color: var(--moral-ink);
 }
 
+body.app-moral-particulars :is(
+  .app-title h1,
+  .seo-related-copy h2,
+  .particular-qa-group-copy > span:nth-child(2)
+) {
+  font-size: clamp(1.55rem, 3vw, 2.4rem);
+  line-height: 1.05;
+}
+
 .particulars-dashboard .metric-card {
   position: relative;
   background:
@@ -9718,7 +9727,7 @@ body.app-morality :is(
 }
 
 .particulars-dashboard strong {
-  font-size: clamp(1.95rem, 3.4vw, 3rem);
+  font-size: clamp(1.8rem, 2.7vw, 2.4rem);
   line-height: 0.95;
   overflow-wrap: anywhere;
 }
@@ -10515,10 +10524,10 @@ body.app-moral-particulars .ai-output-card {
 
 .particular-qa-group-copy > span:nth-child(2) {
   color: var(--moral-ink);
-  font-size: clamp(2rem, 4.2vw, 3.7rem);
+  font-size: clamp(1.55rem, 3vw, 2.4rem);
   font-weight: 950;
   letter-spacing: 0;
-  line-height: 0.98;
+  line-height: 1.05;
 }
 
 .particular-qa-group-copy > span:nth-child(3) {
