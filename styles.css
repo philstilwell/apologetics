@@ -7820,11 +7820,24 @@ body.app-morality .moral-steps {
   margin-bottom: 4px;
 }
 
+.missing-item-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
 .boundary-item-head > strong {
   margin: 0;
 }
 
-.boundary-help {
+.missing-item-head > strong {
+  margin: 0;
+}
+
+.boundary-help,
+.missing-help {
   flex: 0 0 auto;
 }
 

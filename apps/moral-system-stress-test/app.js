@@ -1144,6 +1144,16 @@ function renderBoundaryTooltip(test, tooltipId) {
   `;
 }
 
+function renderMissingTooltip(element, tooltipId) {
+  return `
+    <span class="section-tooltip missing-tooltip" id="${tooltipId}" role="tooltip">
+      <strong>Why ${escapeHtml(element.title)} is necessary</strong>
+      <span class="tooltip-intro">${escapeHtml(element.why)}</span>
+      <span class="tooltip-coda">The box stays in this section until this component has a chosen route, supported strength, and completed substantiation checks.</span>
+    </span>
+  `;
+}
+
 function renderTopPressureTooltip(challenge, tooltipId) {
   const attemptedIds = getAttemptedElements().map((element) => element.id);
   const componentHits = challenge.elements
@@ -1513,12 +1523,21 @@ function renderSummary() {
     ? missing
         .slice(0, 8)
         .map(
-          (item) => `
+          (item) => {
+            const tooltipId = `missing-help-${item.id}`;
+            return `
             <article class="missing-item">
-              <strong>${escapeHtml(item.title)}</strong>
+              <div class="missing-item-head">
+                <strong>${escapeHtml(item.title)}</strong>
+                <button class="section-help missing-help" type="button" aria-label="Explain why ${escapeHtml(item.title)} is necessary" aria-describedby="${tooltipId}">
+                  <span class="label-help-dot" aria-hidden="true">?</span>
+                  ${renderMissingTooltip(item, tooltipId)}
+                </button>
+              </div>
               <p>${escapeHtml(item.reason)}</p>
             </article>
-          `
+          `;
+          }
         )
         .join("")
     : `<article class="boundary-item pass"><strong>Required set covered</strong><p>Within this audit, none of the eight mandatory components is currently marked incomplete: each one has a chosen substantiation route, a supported strength rating, and all required checks completed.</p><p>This does not prove the moral system is coherent. It means the component checklist is filled out enough for the harder questions to move to boundary tests, route dependency, and counterfactual challenges.</p></article>`;
