@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Map concrete Christian ethics judgments to scripture, conscience, community, and Spirit-based grounders, then compare how disagreement is explained.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260512-morality-pipeline">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-grounder-map">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -496,6 +496,57 @@
             <p>Compare nearby cases, name the rule that separates them, then revise sliders or notes if the pattern was accidental.</p>
           </div>
         </div>
+        <section class="particular-concentration-panel" aria-labelledby="grounder-concentration-title">
+          <div class="particular-concentration-head">
+            <div>
+              <p class="app-step">Grounder concentration map</p>
+              <h3 id="grounder-concentration-title">Where the ledger leans</h3>
+              <p>
+                Concentration means a grounder has visible total weight but is carried by only a small number
+                of mapped cases.
+              </p>
+            </div>
+            <button class="section-help" type="button" aria-label="How to read the grounder concentration map">
+              <span class="label-help-dot" aria-hidden="true">?</span>
+              <span class="section-tooltip source-map-tooltip" role="tooltip">
+                <strong>How to read this map</strong>
+                <span class="tooltip-intro">Each numbered lane is one possible moral grounder.</span>
+                <span class="tooltip-check-list">
+                  <span class="tooltip-check-item">
+                    <strong>Height</strong>
+                    <span>Higher marks mean that grounder has a higher average weight across mapped cases.</span>
+                  </span>
+                  <span class="tooltip-check-item">
+                    <strong>Thickness</strong>
+                    <span>Thicker marks mean more mapped cases give that grounder at least some weight.</span>
+                  </span>
+                  <span class="tooltip-check-item">
+                    <strong>Red marks</strong>
+                    <span>A red mark flags a spike: high weight concentrated in only a few cases.</span>
+                  </span>
+                  <span class="tooltip-check-item">
+                    <strong>Click</strong>
+                    <span>Select a mark or legend row to jump to the case where that grounder is doing the most work.</span>
+                  </span>
+                </span>
+              </span>
+            </button>
+          </div>
+          <div class="particular-concentration-wrap">
+            <div
+              class="particular-concentration-plot"
+              id="grounderConcentrationPlot"
+              role="img"
+              aria-label="Grounder concentration map showing average weight by grounder lane and case-dependence thickness"
+            ></div>
+          </div>
+          <p class="particular-concentration-insight" id="grounderConcentrationInsight"></p>
+          <div
+            class="particular-concentration-legend"
+            id="grounderConcentrationLegend"
+            aria-label="Grounder concentration lane legend"
+          ></div>
+        </section>
         <div class="challenge-list" id="patternList"></div>
       </section>
 

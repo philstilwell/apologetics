@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Test whether Christian apologetics arguments apply one inductive standard to favored evidence and a different standard to rival explanations or counterexamples.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260505-xhairs-url">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-pressure-scatter">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -553,6 +553,26 @@
             <div class="mini-bars" id="mini-bars"></div>
 
             <div class="score-drivers" id="score-drivers" aria-label="Why the score changed"></div>
+
+            <section class="pressure-plot-card" aria-labelledby="pressure-plot-title">
+              <div class="pressure-plot-head">
+                <div>
+                  <p class="app-step">Comparison map</p>
+                  <h3 id="pressure-plot-title">Parallel pressure scatter</h3>
+                  <p id="pressure-plot-summary">
+                    Upper-right points are the parallels most similar to the anchor and carrying the most unresolved tension.
+                  </p>
+                </div>
+              </div>
+              <div class="pressure-plot-wrap">
+                <div
+                  class="pressure-plot"
+                  id="pressure-plot"
+                  aria-label="Scatter plot of parallel similarity and unresolved tension"
+                ></div>
+              </div>
+              <div class="pressure-legend" id="pressure-legend" aria-label="Pressure scatter legend"></div>
+            </section>
 
             <ul class="flag-list" id="flag-list"></ul>
           </div>
@@ -1228,6 +1248,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260505-induction-anchor-fallback"></script>
+    <script src="app.js?v=20260514-pressure-scatter"></script>
   </body>
 </html>

@@ -663,6 +663,9 @@ const refs = {
   disagreementLens: document.querySelector("#disagreementLens"),
   disagreementLensNote: document.querySelector("#disagreementLensNote"),
   finalReport: document.querySelector("#finalReport"),
+  grounderConcentrationInsight: document.querySelector("#grounderConcentrationInsight"),
+  grounderConcentrationLegend: document.querySelector("#grounderConcentrationLegend"),
+  grounderConcentrationPlot: document.querySelector("#grounderConcentrationPlot"),
   grounderGrid: document.querySelector("#grounderGrid"),
   issueGrid: document.querySelector("#issueGrid"),
   leadGrounder: document.querySelector("#leadGrounder"),
@@ -930,6 +933,7 @@ function render() {
   renderLedger();
   renderAttributionBoard();
   renderPrompts();
+  renderGrounderConcentrationMap();
   renderPatterns();
   renderReports();
   updateMetrics();
@@ -1098,6 +1102,7 @@ function renderSliders() {
       renderLedger();
       renderAttributionBoard();
       renderPrompts();
+      renderGrounderConcentrationMap();
       renderPatterns();
       renderReports();
       updateMetrics();
@@ -1348,6 +1353,182 @@ function renderQa() {
       });
     });
   });
+}
+
+function mappedIssueEntries() {
+  return issues
+    .filter((issue) => issueIsMapped(issue.id))
+    .map((issue) => ({
+      issue,
+      item: state.issueStates[issue.id]
+    }));
+}
+
+function buildGrounderConcentrationRows() {
+  const mappedEntries = mappedIssueEntries();
+  const mappedCount = mappedEntries.length;
+  return grounders.map((grounder, index) => {
+    const caseWeights = mappedEntries
+      .map(({ issue, item }) => ({
+        issue,
+        value: sliderValue(item.grounders, grounder.id)
+      }))
+      .filter((entry) => entry.value > 0)
+      .sort((a, b) => b.value - a.value || a.issue.label.localeCompare(b.issue.label));
+    const total = caseWeights.reduce((sum, entry) => sum + entry.value, 0);
+    const activeCount = caseWeights.length;
+    const average = mappedCount ? total / mappedCount : 0;
+    const topShare = total && caseWeights[0] ? caseWeights[0].value / total : 0;
+    const concentrationCutoff = Math.max(1, Math.floor(mappedCount / 3));
+    const concentrated =
+      mappedCount >= 2 &&
+      total >= 7 &&
+      (activeCount <= concentrationCutoff || topShare >= 0.65);
+    const distributed = mappedCount >= 3 && activeCount >= Math.ceil(mappedCount * 0.6);
+    return {
+      index,
+      grounder,
+      total,
+      activeCount,
+      average,
+      topShare,
+      concentrated,
+      distributed,
+      caseWeights
+    };
+  });
+}
+
+function formatConcentrationCaseList(caseWeights) {
+  if (!caseWeights.length) return "No mapped cases weight this grounder.";
+  const visible = caseWeights.slice(0, 4).map((entry) => `${entry.issue.label} ${entry.value}/10`);
+  const remainder = caseWeights.length > visible.length ? ` +${caseWeights.length - visible.length} more` : "";
+  return `${visible.join(", ")}${remainder}`;
+}
+
+function concentrationInsight(rows, mappedCount) {
+  const weightedRows = rows
+    .filter((row) => row.total > 0)
+    .sort((a, b) => b.total - a.total || b.activeCount - a.activeCount || a.grounder.label.localeCompare(b.grounder.label));
+
+  if (!mappedCount) {
+    return "Map at least one case before reading dependence patterns; the graph uses only fully mapped cases.";
+  }
+
+  if (mappedCount === 1) {
+    const top = weightedRows[0];
+    return top
+      ? `${top.grounder.label} is highest in the only mapped case, but concentration needs multiple cases before it becomes a pattern.`
+      : "The single mapped case has no visible grounder weights yet.";
+  }
+
+  const concentrated = rows
+    .filter((row) => row.concentrated)
+    .sort((a, b) => b.total - a.total || b.topShare - a.topShare)[0];
+  if (concentrated) {
+    return `${concentrated.grounder.label} has ${concentrated.total} total weight but appears in ${concentrated.activeCount}/${mappedCount} mapped cases, so a headline dependency may be a case-specific spike.`;
+  }
+
+  const top = weightedRows[0];
+  const broadest = weightedRows
+    .slice()
+    .sort((a, b) => b.activeCount - a.activeCount || b.total - a.total || a.grounder.label.localeCompare(b.grounder.label))[0];
+
+  if (!top) {
+    return "No grounder has weight in the mapped ledger yet.";
+  }
+
+  if (broadest && broadest.grounder.id !== top.grounder.id) {
+    return `${top.grounder.label} has the highest total (${top.total}), while ${broadest.grounder.label} is broader across cases (${broadest.activeCount}/${mappedCount}).`;
+  }
+
+  return `${top.grounder.label} currently carries the largest cross-case load: ${top.total} total weight across ${top.activeCount}/${mappedCount} mapped cases.`;
+}
+
+function renderGrounderConcentrationMap() {
+  if (!refs.grounderConcentrationPlot || !refs.grounderConcentrationLegend || !refs.grounderConcentrationInsight) return;
+
+  const rows = buildGrounderConcentrationRows();
+  const mappedCount = mappedIssueEntries().length;
+  const laneWidth = 100 / grounders.length;
+  const yTicks = [0, 2, 4, 6, 8, 10]
+    .map(
+      (tick) => `
+        <span class="particular-concentration-y-tick" style="bottom: ${tick * 10}%">${tick}</span>
+      `
+    )
+    .join("");
+  const laneMarkup = rows
+    .map(
+      (row) => `
+        <span
+          class="particular-concentration-lane ${row.index % 2 ? "is-alt" : ""}"
+          style="left: ${row.index * laneWidth}%; width: ${laneWidth}%"
+          aria-hidden="true"
+        ></span>
+        <span class="particular-concentration-x-tick" style="left: ${(row.index + 0.5) * laneWidth}%">${row.index + 1}</span>
+      `
+    )
+    .join("");
+  const markMarkup = rows
+    .filter((row) => row.total > 0)
+    .map((row) => {
+      const width = Math.min(6.8, laneWidth * 0.64);
+      const left = row.index * laneWidth + laneWidth / 2 - width / 2;
+      const bottom = Math.max(0, Math.min(100, row.average * 10));
+      const height = Math.max(7, Math.min(25, 5 + row.activeCount * 4));
+      const opacity = Math.max(0.46, Math.min(1, 0.5 + row.average / 12));
+      const className = row.concentrated ? "is-concentrated" : row.distributed ? "is-distributed" : "";
+      const caseList = formatConcentrationCaseList(row.caseWeights);
+      const title = `${row.grounder.label}: ${row.total} total, ${row.average.toFixed(1)}/10 average, ${row.activeCount}/${mappedCount} mapped cases. ${caseList}`;
+      return `
+        <button
+          class="particular-concentration-mark ${className}"
+          type="button"
+          data-grounder-map="${escapeHtml(row.grounder.id)}"
+          style="left: ${left}%; bottom: ${bottom}%; width: ${width}%; height: ${height}px; opacity: ${opacity.toFixed(2)}"
+          title="${escapeHtml(title)}"
+          aria-label="${escapeHtml(title)}"
+        ></button>
+      `;
+    })
+    .join("");
+
+  refs.grounderConcentrationPlot.innerHTML = `
+    ${laneMarkup}
+    ${yTicks}
+    <span class="particular-concentration-axis particular-concentration-x-axis">Grounder lanes</span>
+    <span class="particular-concentration-axis particular-concentration-y-axis">Average weight</span>
+    ${markMarkup}
+    ${
+      mappedCount
+        ? ""
+        : '<span class="particular-concentration-empty">Fully map a case to plot cross-case dependence. A mapped case needs a stance, one grounder weight, and one disagreement rating.</span>'
+    }
+  `;
+
+  refs.grounderConcentrationInsight.textContent = concentrationInsight(rows, mappedCount);
+  refs.grounderConcentrationLegend.innerHTML = rows
+    .map((row) => {
+      const className = row.concentrated ? "is-concentrated" : row.distributed ? "is-distributed" : "";
+      const disabled = row.total > 0 ? "" : "disabled";
+      const title = formatConcentrationCaseList(row.caseWeights);
+      return `
+        <button
+          class="particular-concentration-legend-item ${row.total > 0 ? "has-weight" : ""} ${className}"
+          type="button"
+          data-grounder-map="${escapeHtml(row.grounder.id)}"
+          ${disabled}
+          title="${escapeHtml(title)}"
+        >
+          <strong>${row.index + 1}</strong>
+          <span>${escapeHtml(row.grounder.short)}</span>
+          <em>${row.activeCount}/${mappedCount || 0}</em>
+          <small>${row.average.toFixed(1)} avg</small>
+        </button>
+      `;
+    })
+    .join("");
 }
 
 function renderPatterns() {
@@ -1700,6 +1881,32 @@ async function copyText(text, label) {
   }
   refs.copyStatus.textContent = copied ? `${label} copied.` : `Could not copy ${label.toLowerCase()}.`;
 }
+
+function selectGrounderMapCase(grounderId) {
+  const strongestCase = issues
+    .map((issue) => ({
+      issue,
+      value: sliderValue(state.issueStates[issue.id].grounders, grounderId),
+      mapped: issueIsMapped(issue.id)
+    }))
+    .filter((entry) => entry.mapped && entry.value > 0)
+    .sort((a, b) => b.value - a.value || a.issue.label.localeCompare(b.issue.label))[0];
+
+  if (!strongestCase) return;
+  state.selectedIssueId = strongestCase.issue.id;
+  saveState();
+  render();
+  document.querySelector("#judgment-step")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function handleGrounderMapClick(event) {
+  const target = event.target.closest("[data-grounder-map]");
+  if (!target) return;
+  selectGrounderMapCase(target.dataset.grounderMap);
+}
+
+refs.grounderConcentrationPlot?.addEventListener("click", handleGrounderMapClick);
+refs.grounderConcentrationLegend?.addEventListener("click", handleGrounderMapClick);
 
 refs.caseNotes.addEventListener("input", () => {
   currentData().notes = refs.caseNotes.value;

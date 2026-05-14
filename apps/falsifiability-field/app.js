@@ -826,6 +826,7 @@ const aiPromptMode = document.querySelector("#ai-prompt-mode");
 const buildAllResultButton = document.querySelector("#build-all-result");
 const allPromisesResult = document.querySelector("#all-promises-result");
 const allStanceTable = document.querySelector("#all-stance-table");
+const promiseMap = document.querySelector("#promise-map");
 const shareStateOutput = document.querySelector("#share-state-output");
 const copyShareLinkButton = document.querySelector("#copy-share-link");
 const exportJsonButton = document.querySelector("#export-json");
@@ -981,6 +982,18 @@ function diagnosisFor(score) {
     detail: "Public checks can bite.",
   };
 }
+
+const promiseMapLabels = {
+  "answered-prayer": "Prayer",
+  "divine-healing": "Healing",
+  "future-knowledge": "Future",
+  "wisdom-insight": "Wisdom",
+  "prosocial-behavior": "Behavior",
+  "divine-protection": "Protection",
+  "reduced-morbidity": "Morbidity",
+  "unexpected-longevity": "Longevity",
+  "provision": "Help",
+};
 
 function personalLifeAssessment(score, current, excuseCount) {
   if (score >= 72 && current.failure >= 70 && excuseCount === 0) {
@@ -1522,6 +1535,121 @@ function warningForClaim(claim) {
   };
 }
 
+function renderPromiseMap() {
+  if (!promiseMap) {
+    return;
+  }
+
+  const laneWidth = 100 / claims.length;
+  const plottedClaims = claims.map((claim, index) => {
+    const current = state[claim.id];
+    const study = getStudy(claim);
+    const score = scoreClaim(claim);
+    const diagnosis = diagnosisFor(score);
+    const excusePenalty = excusePenaltyFor(claim.id);
+    const excuseCount = current.excuses.size;
+    const x = index * laneWidth + laneWidth / 2;
+    const size = Math.round(16 + (study.rigor / 100) * 24);
+    const opacity = clamp(1 - excusePenalty / 88, 0.42, 1);
+    const ringWidth = clamp(2 + excusePenalty / 9 + (score < 50 ? 1.2 : 0), 2, 10);
+    const ringColor = excuseCount > 0 ? "#8c3f2d" : score >= 50 ? "#2d6a4f" : "#8b610f";
+
+    return {
+      claim,
+      current,
+      study,
+      score,
+      diagnosis,
+      excuseCount,
+      excusePenalty,
+      x,
+      size,
+      opacity,
+      ringWidth,
+      ringColor,
+    };
+  });
+  const thresholdCount = plottedClaims.filter((item) => item.score >= 50).length;
+  const protectedCount = plottedClaims.length - thresholdCount;
+  const excuseCount = plottedClaims.reduce((total, item) => total + item.excuseCount, 0);
+
+  promiseMap.setAttribute(
+    "aria-label",
+    `Promise field map. ${thresholdCount} promises are at or beyond the falsifiability threshold, ${protectedCount} are protected, and ${excuseCount} escape hatches are active across the suite.`,
+  );
+
+  promiseMap.innerHTML = `
+    <div class="promise-map-axis map-x-axis">Promise lanes</div>
+    <div class="promise-map-axis map-y-axis">Field score</div>
+    <div class="promise-map-plot">
+      ${claims
+        .map(
+          (claim, index) => `
+            <span
+              class="promise-map-lane${index % 2 ? " is-alt" : ""}"
+              style="left:${index * laneWidth}%; width:${laneWidth}%"
+              aria-hidden="true"
+            ></span>
+          `,
+        )
+        .join("")}
+      ${[0, 25, 50, 75, 100]
+        .map((value) => `<span class="promise-map-y-tick" style="bottom:${value}%">${value}</span>`)
+        .join("")}
+      <span class="promise-map-threshold" style="bottom:50%" aria-hidden="true">
+        <span>Falsifiability threshold</span>
+      </span>
+      ${plottedClaims
+        .map((item) => {
+          const tooltipId = `promise-map-tip-${item.claim.id}`;
+          const label = `${item.claim.title}: score ${item.score}/100, ${item.diagnosis.label}. Study: ${item.study.tier} at ${item.study.rigor}/100 rigor. Willingness: ${item.current.willingness}%. Clean failure: ${item.current.failure}%. Escape hatches: ${item.excuseCount}.`;
+          return `
+            <button
+              type="button"
+              class="promise-map-point${item.claim.id === selectedClaimId ? " active" : ""}${item.score > 70 ? " tooltip-below" : ""}"
+              data-claim-id="${escapeHtml(item.claim.id)}"
+              data-score="${item.score}"
+              style="--x:${item.x}; --score:${item.score}; --size:${item.size}px; --alpha:${item.opacity.toFixed(2)}; --claim-color:${item.claim.color}; --ring-width:${item.ringWidth.toFixed(1)}px; --ring-color:${item.ringColor};"
+              title="${escapeHtml(label)}"
+              aria-label="${escapeHtml(`${label} Activate to edit this promise.`)}"
+              aria-describedby="${tooltipId}"
+            >
+              <span class="promise-map-icon">${icons[item.claim.icon]}</span>
+              <span class="promise-map-tooltip" id="${tooltipId}" role="tooltip">
+                <strong>${escapeHtml(item.claim.title)}</strong>
+                <span>${item.score}/100 · ${escapeHtml(item.diagnosis.label)}</span>
+                <span>${escapeHtml(item.study.tier)} · ${item.study.rigor}/100 rigor</span>
+                <span>${item.excuseCount ? `${item.excuseCount} escape ${item.excuseCount === 1 ? "hatch" : "hatches"} · ${item.excusePenalty} drag` : "No escape-hatch drag"}</span>
+              </span>
+            </button>
+          `;
+        })
+        .join("")}
+      ${plottedClaims
+        .map(
+          (item) => `
+            <span class="promise-map-x-label" style="left:${item.x}%">
+              ${escapeHtml(promiseMapLabels[item.claim.id] || item.claim.title)}
+            </span>
+          `,
+        )
+        .join("")}
+    </div>
+  `;
+
+  promiseMap.querySelectorAll(".promise-map-point").forEach((point) => {
+    point.addEventListener("click", () => {
+      const claimId = point.dataset.claimId;
+      selectClaim(claimId);
+      window.requestAnimationFrame(() => {
+        const motion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+        document.querySelector("#claims")?.scrollIntoView({ behavior: motion, block: "start" });
+        document.querySelector(`.claim-choice[data-claim-id="${claimId}"]`)?.focus({ preventScroll: true });
+      });
+    });
+  });
+}
+
 function renderAllStanceTable() {
   allStanceTable.innerHTML = "";
 
@@ -1759,6 +1887,7 @@ function updateMetrics() {
       ? buildAllPromisesResult()
       : "Build a comprehensive result to review every promise at once.";
   }
+  renderPromiseMap();
   renderAllStanceTable();
   renderReport();
   if (shareStateOutput) {

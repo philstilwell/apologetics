@@ -871,6 +871,41 @@
               <div class="all-promises-result" id="all-promises-result" aria-live="polite">
                 Build a comprehensive result to review every promise at once.
               </div>
+              <section class="promise-map-panel" aria-labelledby="promise-map-title">
+                <div class="summary-head compact-head">
+                  <div>
+                    <p class="app-step">Promise field map</p>
+                    <div class="section-title-inline compact-title-inline">
+                      <h4 id="promise-map-title">All promises on one field</h4>
+                      <span class="ff-tip" tabindex="0">?
+                        <span class="ff-tooltip" role="tooltip">
+                          Each point is one earthly promise. Height is the current field score from
+                          scoreClaim, point size follows the selected study's rigor, and a darker
+                          ring means more escape-hatch pressure is still protecting the claim.
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p class="promise-map-copy" id="promise-map-copy">
+                  Compare every promise at once: higher points are being exposed to stronger checks,
+                  larger points use stronger studies, and ring drag shows how much the claim is still protected.
+                </p>
+                <div class="promise-map-wrap">
+                  <div
+                    class="promise-map"
+                    id="promise-map"
+                    role="img"
+                    aria-describedby="promise-map-copy"
+                    aria-label="Suite-wide promise field map with promise lanes on the horizontal axis and field score from zero to one hundred on the vertical axis."
+                  ></div>
+                </div>
+                <div class="promise-map-legend" aria-label="Promise field map legend">
+                  <span><i class="legend-point-size" aria-hidden="true"></i> Larger point = stronger study</span>
+                  <span><i class="legend-point-ring" aria-hidden="true"></i> Darker ring = more excuse drag</span>
+                  <span><i class="legend-threshold-mark" aria-hidden="true"></i> 50 = falsifiability threshold</span>
+                </div>
+              </section>
               <div class="stance-table-wrap">
                 <table class="stance-table">
                   <thead>
