@@ -10464,6 +10464,66 @@ body.app-moral-particulars .moral-static-status {
   text-transform: uppercase;
 }
 
+.particular-coverage-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.particular-coverage-help {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: help;
+}
+
+.particular-coverage-help .label-help-dot {
+  margin-left: 0;
+  border-color: rgba(54, 95, 145, 0.55);
+  color: var(--moral-blue);
+}
+
+.particular-coverage-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -8px;
+  z-index: 70;
+  width: min(430px, calc(100vw - 48px));
+  padding: 11px 12px;
+  border: 1px solid rgba(54, 95, 145, 0.35);
+  border-radius: 8px;
+  background: #fffafa;
+  box-shadow: 0 16px 34px rgba(43, 21, 20, 0.18);
+  color: var(--moral-ink);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0;
+  line-height: 1.4;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  text-transform: none;
+  transform: translateY(-4px);
+  transition: opacity 150ms ease, transform 150ms ease, visibility 150ms ease;
+  visibility: hidden;
+}
+
+.particular-coverage-help:hover .particular-coverage-tooltip,
+.particular-coverage-help:focus-visible .particular-coverage-tooltip,
+.particular-coverage-help:focus .particular-coverage-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
 .particular-coverage-chip {
   appearance: none;
   display: inline-flex;
@@ -10893,7 +10953,8 @@ body.app-moral-particulars .ai-output-card {
     align-self: flex-start;
   }
 
-  .particular-balance-tooltip {
+  .particular-balance-tooltip,
+  .particular-coverage-tooltip {
     position: fixed;
     top: 84px;
     right: 16px;

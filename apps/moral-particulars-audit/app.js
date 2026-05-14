@@ -1499,9 +1499,23 @@ function concentrationInsight(rows, mappedCount) {
   return `${top.grounder.label} currently carries the largest cross-case load: ${top.total} total weight across ${top.activeCount}/${mappedCount} mapped cases.`;
 }
 
+function coverageLabelMarkup() {
+  return `
+    <span class="particular-coverage-label">
+      Coverage
+      <button class="particular-coverage-help" type="button" aria-label="Explain coverage" aria-describedby="grounder-coverage-help">
+        <span class="label-help-dot" aria-hidden="true">?</span>
+        <span class="particular-coverage-tooltip" id="grounder-coverage-help" role="tooltip">
+          Coverage counts spread, not strength. It shows how many fully mapped cases give a grounder any nonzero weight. A fully mapped case has a stance, at least one grounder weight, and at least one disagreement rating. For example, Scripture 2/3 means Scripture appears in two of the three mapped cases. The graph height and AVG label show weight; coverage shows whether that grounder is broad or case-specific.
+        </span>
+      </button>
+    </span>
+  `;
+}
+
 function coverageSummaryMarkup(rows, mappedCount) {
   if (!mappedCount) {
-    return '<span class="particular-coverage-empty">Coverage counts appear after cases are fully mapped.</span>';
+    return `${coverageLabelMarkup()}<span class="particular-coverage-empty">Counts appear after cases are fully mapped.</span>`;
   }
 
   const covered = rows
@@ -1509,11 +1523,11 @@ function coverageSummaryMarkup(rows, mappedCount) {
     .sort((a, b) => b.activeCount - a.activeCount || b.average - a.average || a.grounder.label.localeCompare(b.grounder.label));
 
   if (!covered.length) {
-    return `<span class="particular-coverage-empty">No grounder has coverage across the ${mappedCount} mapped case${mappedCount === 1 ? "" : "s"} yet.</span>`;
+    return `${coverageLabelMarkup()}<span class="particular-coverage-empty">No grounder has coverage across the ${mappedCount} mapped case${mappedCount === 1 ? "" : "s"} yet.</span>`;
   }
 
   return `
-    <span class="particular-coverage-label">Coverage</span>
+    ${coverageLabelMarkup()}
     ${covered
       .map((row) => {
         const className = row.concentrated ? "is-concentrated" : row.distributed ? "is-distributed" : "";
