@@ -8390,6 +8390,18 @@ body.app-morality .moral-steps {
   font-size: clamp(1.4rem, 3vw, 2rem);
 }
 
+body.app-morality :is(
+  #claim-title,
+  #elements-title,
+  #boundary-title,
+  #challenge-title,
+  #dialogue-title,
+  #qa-title,
+  #report-title
+) {
+  font-size: clamp(1.55rem, 3vw, 2.4rem);
+}
+
 .output-card-head p:not(.app-step) {
   margin: 7px 0 0;
   color: var(--moral-muted);
