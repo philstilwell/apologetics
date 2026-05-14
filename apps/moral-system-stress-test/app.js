@@ -1144,6 +1144,39 @@ function renderBoundaryTooltip(test, tooltipId) {
   `;
 }
 
+function renderTopPressureTooltip(challenge, tooltipId) {
+  const attemptedIds = getAttemptedElements().map((element) => element.id);
+  const componentHits = challenge.elements
+    .filter((id) => attemptedIds.includes(id))
+    .map((id) => getElementById(id)?.title || id);
+  const routeHits = challenge.routes
+    .filter((id) => getSelectedRoutes().includes(id))
+    .map((id) => routeLabel(id));
+  const componentText = componentHits.length ? componentHits.join(", ") : "No active component match";
+  const routeText = routeHits.length ? routeHits.join(", ") : "No active route match";
+  return `
+    <span class="section-tooltip top-pressure-tooltip" id="${tooltipId}" role="tooltip">
+      <strong>${escapeHtml(challenge.title)}</strong>
+      <span class="tooltip-intro">${escapeHtml(challenge.summary)}</span>
+      <span class="tooltip-check-list">
+        <span class="tooltip-check-item">
+          <strong>Component pressure</strong>
+          <span>${escapeHtml(componentText)}</span>
+        </span>
+        <span class="tooltip-check-item">
+          <strong>Route pressure</strong>
+          <span>${escapeHtml(routeText)}</span>
+        </span>
+        <span class="tooltip-check-item">
+          <strong>Counterfactual focus</strong>
+          <span>${escapeHtml(challenge.counterfactual)}</span>
+        </span>
+      </span>
+      <span class="tooltip-coda">This item rises when the selected components and source routes overlap with this challenge; the badge shows the repository pressure level.</span>
+    </span>
+  `;
+}
+
 function renderElements() {
   refs.claimInput.value = state.claim;
   const routeOptions = routes
@@ -1567,16 +1600,25 @@ function renderStaticStatus({ boundaryRisk, completeness, matched, routeItems })
       <p class="app-step">Top pressure</p>
       ${topPressures
         .map(
-          (challenge) => `
-            <a href="#${challengeAnchor(challenge.id)}" aria-label="View explanation for ${escapeHtml(challenge.title)}">
-              <strong>${escapeHtml(challenge.title)}</strong>
-              <span>${escapeHtml(challenge.pressure)}</span>
-            </a>
-          `
+          (challenge) => {
+            const tooltipId = `top-pressure-help-${challenge.id}`;
+            return `
+              <article class="top-pressure-item">
+                <a href="#${challengeAnchor(challenge.id)}" aria-label="View explanation for ${escapeHtml(challenge.title)}">
+                  <strong>${escapeHtml(challenge.title)}</strong>
+                </a>
+                <span class="pressure-badge">${escapeHtml(challenge.pressure)}</span>
+                <button class="section-help top-pressure-help" type="button" aria-label="Explain why ${escapeHtml(challenge.title)} is contributing pressure" aria-describedby="${tooltipId}">
+                  <span class="label-help-dot" aria-hidden="true">?</span>
+                  ${renderTopPressureTooltip(challenge, tooltipId)}
+                </button>
+              </article>
+            `;
+          }
         )
         .join("")}
     `
-    : `<p class="app-step">Top pressure</p><article><strong>No challenge match yet</strong><span>none</span></article>`;
+    : `<p class="app-step">Top pressure</p><article class="top-pressure-item"><strong>No challenge match yet</strong><span class="pressure-badge">none</span></article>`;
 }
 
 function inferThresholdRoute() {

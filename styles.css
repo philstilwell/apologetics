@@ -7371,12 +7371,11 @@ body.app-morality .moral-steps {
   margin-bottom: 0;
 }
 
-.top-pressure-list article,
-.top-pressure-list a {
-  display: flex;
+.top-pressure-list .top-pressure-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
   min-height: 29px;
   padding: 6px 7px;
   border: 1px solid rgba(184, 144, 101, 0.68);
@@ -7385,14 +7384,14 @@ body.app-morality .moral-steps {
 }
 
 .top-pressure-list a {
+  min-width: 0;
   color: inherit;
   text-decoration: none;
 }
 
 .top-pressure-list a:hover,
 .top-pressure-list a:focus-visible {
-  border-color: var(--moral-blue);
-  background: var(--moral-blue-soft);
+  color: var(--moral-blue);
   outline: none;
 }
 
@@ -7402,7 +7401,7 @@ body.app-morality .moral-steps {
   line-height: 1.15;
 }
 
-.top-pressure-list span {
+.top-pressure-list .pressure-badge {
   flex: 0 0 auto;
   padding: 4px 7px;
   border-radius: 999px;
@@ -7413,6 +7412,14 @@ body.app-morality .moral-steps {
   letter-spacing: 0.05em;
   line-height: 1;
   text-transform: uppercase;
+}
+
+.top-pressure-help {
+  flex: 0 0 auto;
+}
+
+.top-pressure-tooltip {
+  width: min(360px, calc(100vw - 48px));
 }
 
 .moral-section-head {
