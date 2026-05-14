@@ -989,9 +989,9 @@ const promiseMapLabels = {
   "future-knowledge": "Future",
   "wisdom-insight": "Wisdom",
   "prosocial-behavior": "Behavior",
-  "divine-protection": "Protection",
-  "reduced-morbidity": "Morbidity",
-  "unexpected-longevity": "Longevity",
+  "divine-protection": "Protect",
+  "reduced-morbidity": "Health",
+  "unexpected-longevity": "Long life",
   "provision": "Help",
 };
 
@@ -1381,8 +1381,10 @@ function renderPresets() {
     button.setAttribute("aria-pressed", String(preset.claimId === selectedClaimId));
     button.style.setProperty("--claim-color", targetClaim.color);
     button.innerHTML = `
-      <strong>${escapeHtml(preset.title)}</strong>
-      <span>${escapeHtml(preset.description)}</span>
+      <span class="preset-button-copy">
+        <strong>${escapeHtml(preset.title)}</strong>
+        <span>${escapeHtml(preset.description)}</span>
+      </span>
     `;
     button.addEventListener("click", () => selectClaim(preset.claimId));
     presetGrid.append(button);
@@ -1579,8 +1581,8 @@ function renderPromiseMap() {
   );
 
   promiseMap.innerHTML = `
+    <div class="promise-map-axis map-y-axis">Score 0-100</div>
     <div class="promise-map-axis map-x-axis">Promise lanes</div>
-    <div class="promise-map-axis map-y-axis">Field score</div>
     <div class="promise-map-plot">
       ${claims
         .map(

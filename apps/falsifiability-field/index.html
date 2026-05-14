@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Test prayer, healing, protection, wisdom, prophecy, and other Christian promise claims to see whether they stay open to ordinary verification.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260505-xhairs-url">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-promise-map-polish-6">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -879,17 +879,17 @@
                       <h4 id="promise-map-title">All promises on one field</h4>
                       <span class="ff-tip" tabindex="0">?
                         <span class="ff-tooltip" role="tooltip">
-                          Each point is one earthly promise. Height is the current field score from
-                          scoreClaim, point size follows the selected study's rigor, and a darker
-                          ring means more escape-hatch pressure is still protecting the claim.
+                          Each point is one earthly promise. Height is the current field score:
+                          a 0-100 summary of study strength, willingness to run the test,
+                          willingness to count a clean failure, and any escape hatches still selected.
                         </span>
                       </span>
                     </div>
                   </div>
                 </div>
                 <p class="promise-map-copy" id="promise-map-copy">
-                  Compare every promise at once: higher points are being exposed to stronger checks,
-                  larger points use stronger studies, and ring drag shows how much the claim is still protected.
+                  Compare every promise at once: higher points are more exposed to checks, larger points
+                  use stronger studies, and darker rings show escape hatches that still protect the claim.
                 </p>
                 <div class="promise-map-wrap">
                   <div
@@ -901,9 +901,27 @@
                   ></div>
                 </div>
                 <div class="promise-map-legend" aria-label="Promise field map legend">
-                  <span><i class="legend-point-size" aria-hidden="true"></i> Larger point = stronger study</span>
-                  <span><i class="legend-point-ring" aria-hidden="true"></i> Darker ring = more excuse drag</span>
-                  <span><i class="legend-threshold-mark" aria-hidden="true"></i> 50 = falsifiability threshold</span>
+                  <span class="promise-map-legend-item" tabindex="0">
+                    <i class="legend-point-size" aria-hidden="true"></i> Point size = study strength
+                    <span class="promise-map-legend-tip" role="tooltip">
+                      Larger points mean the selected study uses stronger controls, clearer outcomes,
+                      larger samples, blinding, preregistration, or replication.
+                    </span>
+                  </span>
+                  <span class="promise-map-legend-item" tabindex="0">
+                    <i class="legend-point-ring" aria-hidden="true"></i> Dark ring = protected by excuses
+                    <span class="promise-map-legend-tip" role="tooltip">
+                      A darker ring means selected escape hatches are pulling the promise left by making
+                      poor results harder to count as real misses.
+                    </span>
+                  </span>
+                  <span class="promise-map-legend-item" tabindex="0">
+                    <i class="legend-threshold-mark" aria-hidden="true"></i> 50 = falsifiability threshold
+                    <span class="promise-map-legend-tip" role="tooltip">
+                      The 50 line is a practical benchmark, not a natural boundary. It marks the point
+                      where a fair negative result begins to matter.
+                    </span>
+                  </span>
                 </div>
               </section>
               <div class="stance-table-wrap">
@@ -1418,6 +1436,6 @@
       </section>
     </main>
 
-    <script src="./app.js"></script>
+    <script src="./app.js?v=20260514-promise-map-polish-3"></script>
   </body>
 </html>
