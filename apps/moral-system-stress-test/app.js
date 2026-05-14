@@ -1610,8 +1610,8 @@ function renderStaticStatus({ boundaryRisk, completeness, matched, routeItems })
                 <span class="pressure-badge">${escapeHtml(challenge.pressure)}</span>
                 <button class="section-help top-pressure-help" type="button" aria-label="Explain why ${escapeHtml(challenge.title)} is contributing pressure" aria-describedby="${tooltipId}">
                   <span class="label-help-dot" aria-hidden="true">?</span>
-                  ${renderTopPressureTooltip(challenge, tooltipId)}
                 </button>
+                ${renderTopPressureTooltip(challenge, tooltipId)}
               </article>
             `;
           }
