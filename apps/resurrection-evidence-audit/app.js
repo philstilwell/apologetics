@@ -1243,43 +1243,43 @@ function renderCredenceMix(assessment) {
 function renderEvidenceContributionMap(assessment) {
   const laneCount = Math.max(1, assessment.items.length);
   const laneWidth = 100 / laneCount;
-  const maxShare = Math.max(...assessment.items.map((item) => item.share), 0.01);
-  const axisMax = Math.max(0.25, Math.ceil(maxShare * 4) / 4);
-  const yTicks = [0, axisMax / 2, axisMax];
+  const yTicks = [0, 0.25, 0.5, 0.75, 1];
 
   els.evidenceContributionChart.innerHTML = `
-    <div class="evidence-contribution-axis contribution-x-axis">Evidence item lanes</div>
-    <div class="evidence-contribution-axis contribution-y-axis">Share of positive movement</div>
+    <div class="evidence-contribution-axis contribution-y-axis">Positive movement share</div>
     ${assessment.items
       .map((item, index) => {
         const left = index * laneWidth;
         return `
-          <span class="contribution-lane" style="left:${left}%; width:${laneWidth}%"></span>
-          <span class="contribution-x-tick" style="left:${left + laneWidth / 2}%">${index + 1}</span>
+          <span
+            class="contribution-lane ${index % 2 ? "is-alt" : ""}"
+            style="left:${left}%; width:${laneWidth}%"
+            aria-hidden="true"
+          ></span>
         `;
       })
       .join("")}
     ${yTicks
-      .map((value) => `<span class="contribution-y-tick" style="bottom:${(value / axisMax) * 100}%">${formatPercent(value)}</span>`)
+      .map((value) => `<span class="contribution-y-tick" style="bottom:${value * 100}%">${formatPercent(value)}</span>`)
       .join("")}
     ${assessment.items
       .map((item, index) => {
-        const left = index * laneWidth + laneWidth * 0.24;
-        const width = Math.max(6, laneWidth * 0.52);
-        const height = Math.max(2, (item.share / axisMax) * 100);
+        const width = Math.min(8.5, laneWidth * 0.62);
+        const left = index * laneWidth + laneWidth / 2 - width / 2;
+        const bottom = clamp(item.share * 100, 0, 100);
+        const height = 7 + (item.weight / 100) * 10;
         const opacity = 0.32 + (item.weight / 100) * 0.68;
         const tone = getContributionTone(item);
         const label = `${item.title}: ${formatPercentWithRatio(item.share)} of positive movement, ${formatLift(item.adjustedBf)} evidence lift after ${formatPercentWithRatio(item.weight / 100)} independence weight. Type: ${item.type}.`;
         return `
           <button
             type="button"
-            class="contribution-bar ${tone}"
-            style="left:${left}%; width:${width}%; height:${height}%; opacity:${opacity}"
+            class="contribution-mark ${tone}"
+            data-evidence-map="${escapeHtml(item.id)}"
+            style="left:${left}%; bottom:${bottom}%; width:${width}%; height:${height}px; opacity:${opacity}"
             title="${escapeHtml(label)}"
             aria-label="${escapeHtml(label)}"
-          >
-            <span>${index + 1}</span>
-          </button>
+          ></button>
         `;
       })
       .join("")}
@@ -1294,12 +1294,17 @@ function renderEvidenceContributionMap(assessment) {
 
   els.evidenceContributionLegend.innerHTML = assessment.items
     .map((item, index) => `
-      <article class="contribution-legend-item ${getContributionTone(item)}">
+      <button
+        type="button"
+        class="contribution-legend-item ${getContributionTone(item)}"
+        data-evidence-map="${escapeHtml(item.id)}"
+        title="${escapeHtml(`${item.title}: ${formatPercentWithRatio(item.share)} of positive movement, ${formatLift(item.adjustedBf)} evidence lift, ${formatPercentWithRatio(item.weight / 100)} independent.`)}"
+        aria-label="${escapeHtml(`${index + 1}. ${item.title}: ${formatPercent(item.share)} of positive movement, ${formatLift(item.adjustedBf)} evidence lift.`)}"
+      >
         <strong>${index + 1}</strong>
+        <small>${formatPercent(item.share)}</small>
         <span>${escapeHtml(item.title)}</span>
-        <em>${formatPercent(item.share)}</em>
-        <small>${escapeHtml(item.type)} · ${formatLift(item.adjustedBf)} · ${formatPercent(item.weight / 100)} independent</small>
-      </article>
+      </button>
     `)
     .join("");
 }
