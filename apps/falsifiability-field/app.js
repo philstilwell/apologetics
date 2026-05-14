@@ -821,6 +821,7 @@ const copyStatus = document.querySelector("#copy-status");
 const copyPromptDefaultLabel = copyPromptButton?.textContent.trim() || "Copy prompt";
 const useSelectedPromptButton = document.querySelector("#use-selected-prompt");
 const aiPromptMode = document.querySelector("#ai-prompt-mode");
+const aiPromptModeText = document.querySelector("#ai-prompt-mode-text");
 const buildAllResultButton = document.querySelector("#build-all-result");
 const allPromisesResult = document.querySelector("#all-promises-result");
 const allStanceTable = document.querySelector("#all-stance-table");
@@ -1231,7 +1232,7 @@ function buildSelectedAiPrompt() {
 
   return `Please provide a comprehensive analysis of this falsifiability audit for an earthly God-claim. Do not assume the claim is true or false. Analyze whether the current posture actually exposes the claim to ordinary public verification, what would count as confirmation or disconfirmation, and where the claim is still being insulated from evidence.
 
-Selected claim:
+Active promise:
 ${claim.title}
 
 Claim wording:
@@ -1278,7 +1279,7 @@ All current claim snapshots:
 ${allClaimSummary}
 
 Please give a comprehensive review that includes:
-1. Whether the selected claim is currently falsifiable, partly falsifiable, or functionally protected from falsification.
+1. Whether the active promise is currently falsifiable, partly falsifiable, or functionally protected from falsification.
 2. Whether the selected study is a fair and feasible test of the claim, and what confounders or design weaknesses should be controlled.
 3. What exact outcomes would count for the claim, against the claim, or as neutral, and whether the stated mind-change result is clear enough.
 4. How the selected escape hatches affect falsifiability.
@@ -1844,15 +1845,18 @@ function updateMetrics() {
   if (aiPromptOutput) {
     aiPromptOutput.value = buildAiPrompt();
   }
+  const selectedPromptMode = promptMode === "selected";
   if (aiPromptMode) {
-    aiPromptMode.textContent =
-      promptMode === "all" ? "Prompt scope: All promises" : "Prompt scope: Active promise";
+    aiPromptMode.classList.toggle("active-halo-label", selectedPromptMode);
+  }
+  if (aiPromptModeText) {
+    aiPromptModeText.textContent =
+      selectedPromptMode ? "Prompt scope: Active promise" : "Prompt scope: All promises";
   }
   if (useSelectedPromptButton) {
-    const selectedMode = promptMode === "selected";
-    useSelectedPromptButton.textContent = selectedMode ? "Active promise in use" : "Use active promise";
-    useSelectedPromptButton.disabled = selectedMode;
-    useSelectedPromptButton.setAttribute("aria-pressed", selectedMode ? "true" : "false");
+    useSelectedPromptButton.textContent = selectedPromptMode ? "Active promise in use" : "Use active promise";
+    useSelectedPromptButton.disabled = selectedPromptMode;
+    useSelectedPromptButton.setAttribute("aria-pressed", selectedPromptMode ? "true" : "false");
   }
   if (allPromisesResult) {
     allPromisesResult.textContent = allResultBuilt

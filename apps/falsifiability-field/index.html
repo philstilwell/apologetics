@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Test prayer, healing, protection, wisdom, prophecy, and other Christian promise claims to see whether they stay open to ordinary verification.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260514-active-halo">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-active-halo-all">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -347,9 +347,10 @@
       </nav>
 
       <section class="promise-dashboard" aria-label="Current verification status">
-        <article class="promise-metric">
-          <span class="promise-metric-label">
-            Selected claim
+        <article class="promise-metric active-promise-metric">
+          <span class="promise-metric-label active-halo-label">
+            <i class="active-halo-mark" aria-hidden="true"></i>
+            Active promise
             <span class="ff-tip" tabindex="0">?
               <span class="ff-tooltip" role="tooltip">
                 This is the promise currently being edited. Other promises keep their own
@@ -405,7 +406,10 @@
       <section class="active-promise-card active-promise-sticky" aria-labelledby="active-promise-title" aria-live="polite">
         <div class="active-promise-main">
           <div>
-            <p class="app-step">Active promise</p>
+            <p class="app-step active-halo-label">
+              <i class="active-halo-mark" aria-hidden="true"></i>
+              Active promise
+            </p>
             <h2 id="active-promise-title">Answered prayer</h2>
             <p id="active-promise-detail">
               Prayer changes outcomes beyond ordinary timing, recovery, or coincidence.
@@ -620,7 +624,10 @@
                     </div>
                   </div>
                   <div class="dataset-active-promise" aria-live="polite">
-                    <span>Active promise</span>
+                    <span class="active-halo-label">
+                      <i class="active-halo-mark" aria-hidden="true"></i>
+                      Active promise
+                    </span>
                     <strong id="dataset-active-promise">Answered prayer</strong>
                   </div>
                 </div>
@@ -647,7 +654,10 @@
                     </div>
                   </div>
                   <div class="dataset-active-promise" aria-live="polite">
-                    <span>Active promise</span>
+                    <span class="active-halo-label">
+                      <i class="active-halo-mark" aria-hidden="true"></i>
+                      Active promise
+                    </span>
                     <strong id="confounder-active-promise">Answered prayer</strong>
                   </div>
                 </div>
@@ -879,7 +889,7 @@
 
             <div class="audit-sentence" id="audit-sentence"></div>
 
-            <div class="claim-mini-ledger" aria-label="Selected claim ledger">
+            <div class="claim-mini-ledger" aria-label="Active promise ledger">
               <div>
                 <span>Study</span>
                 <strong id="ledger-study">Anecdote</strong>
@@ -1321,7 +1331,10 @@
                   </div>
                 </div>
                 <div class="prompt-actions">
-                  <span id="ai-prompt-mode" aria-live="polite">Prompt scope: Active promise</span>
+                  <span class="prompt-scope-chip active-halo-label" id="ai-prompt-mode" aria-live="polite">
+                    <i class="active-halo-mark" aria-hidden="true"></i>
+                    <span id="ai-prompt-mode-text">Prompt scope: Active promise</span>
+                  </span>
                   <button class="button secondary copy-prompt-button" type="button" id="use-selected-prompt">
                     Active promise in use
                   </button>
@@ -1404,6 +1417,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260514-active-halo"></script>
+    <script src="./app.js?v=20260514-active-halo-all"></script>
   </body>
 </html>
