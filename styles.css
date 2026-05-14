@@ -8143,6 +8143,13 @@ body.app-morality .moral-steps {
   background: rgba(255, 255, 255, 0.68);
 }
 
+.top-grounder-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 10px;
+}
+
 .top-pressure-list a {
   min-width: 0;
   color: inherit;
@@ -10353,11 +10360,11 @@ body.app-moral-particulars .moral-static-status {
 .particular-concentration-legend-item {
   appearance: none;
   display: grid;
-  grid-template-rows: 24px 22px 18px 82px;
-  gap: 4px;
+  grid-template-rows: 24px 18px 82px;
+  gap: 6px;
   justify-items: center;
   min-width: 0;
-  min-height: 160px;
+  min-height: 132px;
   padding: 7px 3px 8px;
   border: 0;
   border-left: 1px solid rgba(178, 76, 74, 0.18);
@@ -10415,37 +10422,12 @@ body.app-moral-particulars .moral-static-status {
   justify-self: center;
   min-width: 76px;
   color: var(--moral-ink);
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   font-weight: 900;
   line-height: 1.1;
   text-align: center;
   transform: rotate(-90deg);
   white-space: nowrap;
-}
-
-.particular-concentration-legend-item em {
-  display: inline-grid;
-  place-items: center;
-  min-width: 34px;
-  height: 22px;
-  padding: 0 7px;
-  border-radius: 999px;
-  background: var(--moral-blue-soft);
-  color: var(--moral-blue);
-  font-size: 0.68rem;
-  font-style: normal;
-  font-weight: 950;
-  line-height: 1;
-}
-
-.particular-concentration-legend-item.is-distributed em {
-  background: var(--moral-green);
-  color: #fff;
-}
-
-.particular-concentration-legend-item.is-concentrated em {
-  background: var(--moral-red);
-  color: #fff;
 }
 
 .particular-concentration-legend-item small {
@@ -10455,6 +10437,75 @@ body.app-moral-particulars .moral-static-status {
   letter-spacing: 0.04em;
   line-height: 1.1;
   text-transform: uppercase;
+}
+
+.particular-concentration-coverage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 820px;
+  margin: 0 14px 10px 76px;
+  padding: 8px;
+  border: 1px solid rgba(223, 170, 168, 0.62);
+  border-left: 4px solid var(--moral-blue);
+  border-radius: var(--radius);
+  background: rgba(255, 250, 250, 0.72);
+}
+
+.particular-coverage-label,
+.particular-coverage-note,
+.particular-coverage-empty {
+  color: var(--moral-muted);
+  font-size: 0.66rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.particular-coverage-chip {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 5px 8px;
+  border: 1px solid rgba(54, 95, 145, 0.3);
+  border-radius: 999px;
+  background: var(--moral-blue-soft);
+  color: var(--moral-blue);
+  font: inherit;
+  cursor: pointer;
+}
+
+.particular-coverage-chip.is-distributed {
+  border-color: rgba(61, 114, 84, 0.42);
+  background: var(--moral-green-soft);
+  color: var(--moral-green);
+}
+
+.particular-coverage-chip.is-concentrated {
+  border-color: rgba(178, 76, 74, 0.42);
+  background: var(--moral-red-soft);
+  color: var(--moral-red);
+}
+
+.particular-coverage-chip:focus-visible {
+  outline: 2px solid rgba(178, 76, 74, 0.32);
+  outline-offset: 2px;
+}
+
+.particular-coverage-chip strong,
+.particular-coverage-chip span {
+  font-size: 0.68rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.particular-coverage-note {
+  font-weight: 850;
+  opacity: 0.78;
 }
 
 body.app-moral-particulars .challenge-card {

@@ -670,6 +670,7 @@ const refs = {
   disagreementLens: document.querySelector("#disagreementLens"),
   disagreementLensNote: document.querySelector("#disagreementLensNote"),
   finalReport: document.querySelector("#finalReport"),
+  grounderConcentrationCoverage: document.querySelector("#grounderConcentrationCoverage"),
   grounderConcentrationInsight: document.querySelector("#grounderConcentrationInsight"),
   grounderConcentrationLegend: document.querySelector("#grounderConcentrationLegend"),
   grounderConcentrationPlot: document.querySelector("#grounderConcentrationPlot"),
@@ -1175,8 +1176,10 @@ function renderLedger() {
     <p class="app-step">Most used grounders</p>
     ${
       totals.length
-        ? totals.map((grounder) => `<article><strong>${escapeHtml(grounder.label)}</strong><span>${grounder.value}</span></article>`).join("")
-        : "<article><strong>No grounders weighted yet</strong><span>0</span></article>"
+        ? totals
+            .map((grounder) => `<article class="top-grounder-item"><strong>${escapeHtml(grounder.label)}</strong><span>${grounder.value}</span></article>`)
+            .join("")
+        : '<article class="top-grounder-item"><strong>No grounders weighted yet</strong><span>0</span></article>'
     }
   `;
 }
@@ -1496,8 +1499,52 @@ function concentrationInsight(rows, mappedCount) {
   return `${top.grounder.label} currently carries the largest cross-case load: ${top.total} total weight across ${top.activeCount}/${mappedCount} mapped cases.`;
 }
 
+function coverageSummaryMarkup(rows, mappedCount) {
+  if (!mappedCount) {
+    return '<span class="particular-coverage-empty">Coverage counts appear after cases are fully mapped.</span>';
+  }
+
+  const covered = rows
+    .filter((row) => row.activeCount > 0)
+    .sort((a, b) => b.activeCount - a.activeCount || b.average - a.average || a.grounder.label.localeCompare(b.grounder.label));
+
+  if (!covered.length) {
+    return `<span class="particular-coverage-empty">No grounder has coverage across the ${mappedCount} mapped case${mappedCount === 1 ? "" : "s"} yet.</span>`;
+  }
+
+  return `
+    <span class="particular-coverage-label">Coverage</span>
+    ${covered
+      .map((row) => {
+        const className = row.concentrated ? "is-concentrated" : row.distributed ? "is-distributed" : "";
+        const title = `${row.grounder.label}: used in ${row.activeCount}/${mappedCount} mapped cases. ${formatConcentrationCaseList(row.caseWeights)}`;
+        return `
+          <button
+            class="particular-coverage-chip ${className}"
+            type="button"
+            data-grounder-map="${escapeHtml(row.grounder.id)}"
+            title="${escapeHtml(title)}"
+            aria-label="${escapeHtml(title)}"
+          >
+            <strong>${escapeHtml(row.grounder.short)}</strong>
+            <span>${row.activeCount}/${mappedCount}</span>
+          </button>
+        `;
+      })
+      .join("")}
+    <span class="particular-coverage-note">Unused lanes are 0/${mappedCount}.</span>
+  `;
+}
+
 function renderGrounderConcentrationMap() {
-  if (!refs.grounderConcentrationPlot || !refs.grounderConcentrationLegend || !refs.grounderConcentrationInsight) return;
+  if (
+    !refs.grounderConcentrationPlot ||
+    !refs.grounderConcentrationLegend ||
+    !refs.grounderConcentrationCoverage ||
+    !refs.grounderConcentrationInsight
+  ) {
+    return;
+  }
 
   const rows = buildGrounderConcentrationRows();
   const mappedCount = mappedIssueEntries().length;
@@ -1572,13 +1619,13 @@ function renderGrounderConcentrationMap() {
           aria-label="${escapeHtml(`${row.index + 1}. ${row.grounder.label}: ${row.activeCount}/${mappedCount || 0} mapped cases, ${row.average.toFixed(1)} average weight. ${title}`)}"
         >
           <strong>${row.index + 1}</strong>
-          <em>${row.activeCount}/${mappedCount || 0}</em>
           <small>${row.average.toFixed(1)} AVG</small>
           <span>${escapeHtml(row.grounder.short)}</span>
         </button>
       `;
     })
     .join("");
+  refs.grounderConcentrationCoverage.innerHTML = coverageSummaryMarkup(rows, mappedCount);
 }
 
 function renderPatterns() {
@@ -1957,6 +2004,7 @@ function handleGrounderMapClick(event) {
 
 refs.grounderConcentrationPlot?.addEventListener("click", handleGrounderMapClick);
 refs.grounderConcentrationLegend?.addEventListener("click", handleGrounderMapClick);
+refs.grounderConcentrationCoverage?.addEventListener("click", handleGrounderMapClick);
 
 refs.caseNotes.addEventListener("input", () => {
   currentData().notes = refs.caseNotes.value;
