@@ -4074,7 +4074,7 @@ body:has(.guided-resurrection) a:focus-visible {
 
 .evidence-contribution-panel {
   display: grid;
-  grid-template-columns: minmax(0, 0.78fr) minmax(360px, 1.22fr);
+  grid-template-columns: minmax(0, 0.72fr) minmax(360px, 1.28fr);
   gap: 18px;
   align-items: stretch;
   margin-top: 12px;
