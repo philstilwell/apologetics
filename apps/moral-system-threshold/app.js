@@ -747,6 +747,7 @@ function renderThresholdReadinessMap(readiness) {
 function jumpToChecklistElement(elementId) {
   const target = els.checklistGrid.querySelector(`[data-element-id="${elementId}"]`);
   if (!target) return;
+  target.setAttribute("tabindex", "-1");
   target.scrollIntoView({
     behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
     block: "start"

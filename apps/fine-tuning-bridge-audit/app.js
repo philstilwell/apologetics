@@ -32,6 +32,14 @@ const routes = [
   }
 ];
 
+const diagnosisLadder = [
+  { id: "below-design", label: "Below design", shortLabel: "Below" },
+  { id: "design-only", label: "Design only", shortLabel: "Design" },
+  { id: "life-purpose", label: "Life purpose", shortLabel: "Life" },
+  { id: "human-purpose", label: "Human purpose", shortLabel: "Human" },
+  { id: "christian-purpose", label: "Christian purpose", shortLabel: "Christian" }
+];
+
 const bridgeDefinitions = [
   {
     id: "narrow-range",
@@ -525,6 +533,7 @@ const els = {
   diagnosisCeiling: document.getElementById("diagnosisCeiling"),
   diagnosisTentative: document.getElementById("diagnosisTentative"),
   diagnosisTargetPressure: document.getElementById("diagnosisTargetPressure"),
+  ceilingPressureMap: document.getElementById("ceilingPressureMap"),
   collapseList: document.getElementById("collapseList"),
   gradientTransferCopy: document.getElementById("gradientTransferCopy"),
   gradientFocusClaims: document.getElementById("gradientFocusClaims"),
@@ -732,6 +741,15 @@ function tentativeCeilingId() {
 function ceilingLabel(ceilingId) {
   if (ceilingId === "below-design") return "Below design";
   return routeById(ceilingId).label;
+}
+
+function ladderIndex(id) {
+  const index = diagnosisLadder.findIndex((step) => step.id === id);
+  return index >= 0 ? index : 0;
+}
+
+function ladderPercent(id) {
+  return `${(ladderIndex(id) / (diagnosisLadder.length - 1)) * 100}%`;
 }
 
 function priorPressure() {
@@ -959,6 +977,94 @@ function buildCollapseItems(diagnosis) {
       `
     )
     .join("");
+}
+
+function pressureTone(score) {
+  if (score === null) return "unset";
+  if (score >= 75) return "high";
+  if (score >= 45) return "moderate";
+  return "low";
+}
+
+function renderPressureMeter({ label, display, score, detail }) {
+  const width = score === null ? 0 : score;
+  return `
+    <article class="fine-pressure-meter is-${pressureTone(score)}">
+      <div class="fine-pressure-head">
+        <span>${escapeHtml(label)}</span>
+        <strong>${escapeHtml(display)}</strong>
+      </div>
+      <div class="fine-pressure-track" aria-hidden="true">
+        <b style="width:${width}%"></b>
+      </div>
+      <small>${escapeHtml(detail)}</small>
+    </article>
+  `;
+}
+
+function renderCeilingPressureMap(diagnosis, prior, mismatch, target) {
+  const rows = [
+    { label: "Selected route", value: routeById(state.route).label, markerClass: "selected", routeId: state.route },
+    { label: "Tentative ceiling", value: ceilingLabel(diagnosis.tentativeCeiling), markerClass: "tentative", routeId: diagnosis.tentativeCeiling },
+    { label: "Strict ceiling", value: ceilingLabel(diagnosis.strictCeiling), markerClass: "strict", routeId: diagnosis.strictCeiling }
+  ];
+  const worldDisplay = mismatch === null
+    ? "Not set"
+    : `${worldMismatchLabel(mismatch)} (${mismatch}/100)`;
+  const ariaLabel = [
+    `Selected route ${routeById(state.route).label}.`,
+    `Tentative ceiling ${ceilingLabel(diagnosis.tentativeCeiling)}.`,
+    `Strict ceiling ${ceilingLabel(diagnosis.strictCeiling)}.`,
+    `Prior pressure ${prior} out of 100.`,
+    `World-shape tension ${worldDisplay}.`,
+    `Human-target pressure ${target} out of 100.`
+  ].join(" ");
+
+  return `
+    <div class="fine-map-visual" role="img" aria-label="${escapeHtml(ariaLabel)}">
+      <div class="fine-map-rows">
+        ${rows.map((row) => `
+          <div class="fine-map-row">
+            <div class="fine-map-row-head">
+              <span class="fine-map-row-label">${escapeHtml(row.label)}</span>
+              <strong class="fine-map-row-value">${escapeHtml(row.value)}</strong>
+            </div>
+            <div class="fine-map-track" aria-hidden="true">
+              ${diagnosisLadder.map((step) => `
+                <span class="fine-map-stop" style="left:${ladderPercent(step.id)}"></span>
+              `).join("")}
+              <span class="fine-map-marker fine-map-marker--${escapeHtml(row.markerClass)}" style="left:${ladderPercent(row.routeId)}"></span>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+      <div class="fine-map-axis" aria-hidden="true">
+        ${diagnosisLadder.map((step) => `
+          <span class="fine-map-axis-tick" style="left:${ladderPercent(step.id)}">${escapeHtml(step.shortLabel)}</span>
+        `).join("")}
+      </div>
+      <div class="fine-pressure-grid">
+        ${renderPressureMeter({
+          label: "Prior pressure",
+          display: `${prior}/100`,
+          score: prior,
+          detail: "Background commitment pressure"
+        })}
+        ${renderPressureMeter({
+          label: "World-shape tension",
+          display: worldDisplay,
+          score: mismatch,
+          detail: "Actual universe versus route-relevant expected world"
+        })}
+        ${renderPressureMeter({
+          label: "Human-target pressure",
+          display: `${target}/100`,
+          score: target,
+          detail: "Pressure toward a human-centered reading"
+        })}
+      </div>
+    </div>
+  `;
 }
 
 function formatBridgeLine(bridgeId) {
@@ -1406,10 +1512,12 @@ function updateGradientLinks() {
 function updateDiagnosis() {
   const diagnosis = classifyAudit();
   const mismatch = worldMismatchScore();
+  const prior = priorPressure();
+  const target = targetPressure();
 
   els.targetRouteValue.textContent = routeById(state.route).label;
   els.honestCeilingValue.textContent = ceilingLabel(diagnosis.strictCeiling);
-  els.priorPressureValue.textContent = String(priorPressure());
+  els.priorPressureValue.textContent = String(prior);
   els.substantiatedValue.textContent = `${countStrictBridges()} / ${bridgeDefinitions.length}`;
   els.worldTensionValue.textContent = worldMismatchLabel(mismatch);
 
@@ -1418,7 +1526,8 @@ function updateDiagnosis() {
   els.diagnosisTarget.textContent = routeById(state.route).label;
   els.diagnosisCeiling.textContent = ceilingLabel(diagnosis.strictCeiling);
   els.diagnosisTentative.textContent = ceilingLabel(diagnosis.tentativeCeiling);
-  els.diagnosisTargetPressure.textContent = `${targetPressure()} / 100 (${severityLabel(targetPressure())})`;
+  els.diagnosisTargetPressure.textContent = `${target} / 100 (${severityLabel(target)})`;
+  els.ceilingPressureMap.innerHTML = renderCeilingPressureMap(diagnosis, prior, mismatch, target);
   els.collapseList.innerHTML = buildCollapseItems(diagnosis);
 
   const actual = state.world.actualUniverse ? scenarioDetails[state.world.actualUniverse] : "not set";
