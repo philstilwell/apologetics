@@ -4091,6 +4091,64 @@ body:has(.guided-resurrection) a:focus-visible {
   line-height: 1.5;
 }
 
+.evidence-contribution-assessment {
+  margin-top: 18px;
+}
+
+.contribution-assessment-card {
+  padding: 14px;
+  border: 1px solid rgba(31, 90, 58, 0.2);
+  border-radius: 8px;
+  background: rgba(234, 244, 237, 0.76);
+}
+
+.contribution-assessment-card .mini-kicker {
+  margin: 0 0 6px;
+  color: var(--plain-copper);
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contribution-assessment-card p {
+  margin: 0;
+  color: var(--plain-ink);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.contribution-assessment-card ul {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contribution-assessment-card li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(31, 90, 58, 0.16);
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.contribution-assessment-card li strong {
+  color: var(--plain-ink);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.contribution-assessment-card .contribution-assessment-note {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
 .evidence-contribution-chart-wrap {
   max-width: 100%;
   min-width: 0;

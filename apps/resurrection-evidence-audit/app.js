@@ -722,6 +722,7 @@ const els = {
   credenceClaimLabel: document.querySelector("#credence-claim-label"),
   credenceMaterialLabel: document.querySelector("#credence-material-label"),
   credenceUnknownLabel: document.querySelector("#credence-unknown-label"),
+  evidenceContributionAssessment: document.querySelector("#evidence-contribution-assessment"),
   evidenceContributionChart: document.querySelector("#evidence-contribution-chart"),
   evidenceContributionLegend: document.querySelector("#evidence-contribution-legend"),
   floatingCredenceDonut: document.querySelector("#floating-credence-donut"),
@@ -1244,6 +1245,7 @@ function renderEvidenceContributionMap(assessment) {
   const laneCount = Math.max(1, assessment.items.length);
   const laneWidth = 100 / laneCount;
   const yTicks = [0, 0.25, 0.5, 0.75, 1];
+  renderEvidenceContributionAssessment(assessment);
 
   els.evidenceContributionChart.innerHTML = `
     <div class="evidence-contribution-axis contribution-y-axis">Positive movement share</div>
@@ -1307,6 +1309,50 @@ function renderEvidenceContributionMap(assessment) {
       </button>
     `)
     .join("");
+}
+
+function renderEvidenceContributionAssessment(assessment) {
+  const positiveItems = [...assessment.items]
+    .filter((item) => item.share > 0)
+    .sort((a, b) => b.share - a.share);
+  const topDriver = positiveItems[0];
+  const topShare = topDriver?.share || 0;
+  const weightedIndependence = positiveItems.reduce((sum, item) => sum + item.share * (item.weight / 100), 0);
+  const concentration =
+    topShare >= 0.5
+      ? "The result is concentrated."
+      : topShare >= 0.3
+        ? "The result has a clear lead driver."
+        : "The result is spread across several items.";
+  const note =
+    topShare >= 0.5
+      ? "If that leading item is weaker than entered, the final confidence can move sharply."
+      : topShare >= 0.3
+        ? "This is not a one-item case, but the leading item still deserves careful scrutiny."
+        : "No single item is doing most of the work, so the result depends more on the combined pattern.";
+  const topRows = positiveItems.slice(0, 3).map((item) => `
+    <li>
+      <span>${escapeHtml(getContributionLaneLabel(item.title))}</span>
+      <strong>${formatPercent(item.share)}</strong>
+    </li>
+  `);
+
+  els.evidenceContributionAssessment.innerHTML = `
+    <div class="contribution-assessment-card">
+      <p class="mini-kicker">Current reading</p>
+      <p>
+        <strong>${escapeHtml(concentration)}</strong>
+        ${topDriver ? `${escapeHtml(getContributionLaneLabel(topDriver.title))} carries ${formatPercentWithRatio(topShare)} of the positive movement.` : "No evidence item is currently moving the result upward."}
+        ${escapeHtml(note)}
+      </p>
+      <ul>
+        ${topRows.join("")}
+      </ul>
+      <p class="contribution-assessment-note">
+        Average independence across the positive movers is ${formatPercentWithRatio(weightedIndependence)}. Lower independence means the item may be repeating the same source, memory stream, community, or assumption rather than adding fully separate support.
+      </p>
+    </div>
+  `;
 }
 
 function getContributionLaneLabel(title) {
