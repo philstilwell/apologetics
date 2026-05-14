@@ -722,6 +722,8 @@ const els = {
   credenceClaimLabel: document.querySelector("#credence-claim-label"),
   credenceMaterialLabel: document.querySelector("#credence-material-label"),
   credenceUnknownLabel: document.querySelector("#credence-unknown-label"),
+  evidenceContributionChart: document.querySelector("#evidence-contribution-chart"),
+  evidenceContributionLegend: document.querySelector("#evidence-contribution-legend"),
   floatingCredenceDonut: document.querySelector("#floating-credence-donut"),
   floatingCredenceClaim: document.querySelector("#floating-credence-claim"),
   floatingCredenceMaterial: document.querySelector("#floating-credence-material"),
@@ -1181,6 +1183,7 @@ function renderResultStrip(assessment) {
   els.floatingAuditScore.textContent = String(assessment.auditPressure);
   renderPressureRing(els.floatingScoreRing, assessment, scoreColor, { includeUnknown: false });
   renderCredenceMix(assessment);
+  renderEvidenceContributionMap(assessment);
 
   els.mathStarting.textContent = formatPercentWithRatio(assessment.prior);
   els.mathUpdated.textContent = formatPercentWithRatio(assessment.posterior);
@@ -1235,6 +1238,76 @@ function renderCredenceMix(assessment) {
   els.floatingCredenceClaim.textContent = formatPercent(assessment.credenceMix.claim);
   els.floatingCredenceMaterial.textContent = formatPercent(assessment.credenceMix.material);
   els.floatingCredenceUnknown.textContent = unknownLabel;
+}
+
+function renderEvidenceContributionMap(assessment) {
+  const laneCount = Math.max(1, assessment.items.length);
+  const laneWidth = 100 / laneCount;
+  const maxShare = Math.max(...assessment.items.map((item) => item.share), 0.01);
+  const axisMax = Math.max(0.25, Math.ceil(maxShare * 4) / 4);
+  const yTicks = [0, axisMax / 2, axisMax];
+
+  els.evidenceContributionChart.innerHTML = `
+    <div class="evidence-contribution-axis contribution-x-axis">Evidence item lanes</div>
+    <div class="evidence-contribution-axis contribution-y-axis">Share of positive movement</div>
+    ${assessment.items
+      .map((item, index) => {
+        const left = index * laneWidth;
+        return `
+          <span class="contribution-lane" style="left:${left}%; width:${laneWidth}%"></span>
+          <span class="contribution-x-tick" style="left:${left + laneWidth / 2}%">${index + 1}</span>
+        `;
+      })
+      .join("")}
+    ${yTicks
+      .map((value) => `<span class="contribution-y-tick" style="bottom:${(value / axisMax) * 100}%">${formatPercent(value)}</span>`)
+      .join("")}
+    ${assessment.items
+      .map((item, index) => {
+        const left = index * laneWidth + laneWidth * 0.24;
+        const width = Math.max(6, laneWidth * 0.52);
+        const height = Math.max(2, (item.share / axisMax) * 100);
+        const opacity = 0.32 + (item.weight / 100) * 0.68;
+        const tone = getContributionTone(item);
+        const label = `${item.title}: ${formatPercentWithRatio(item.share)} of positive movement, ${formatLift(item.adjustedBf)} evidence lift after ${formatPercentWithRatio(item.weight / 100)} independence weight. Type: ${item.type}.`;
+        return `
+          <button
+            type="button"
+            class="contribution-bar ${tone}"
+            style="left:${left}%; width:${width}%; height:${height}%; opacity:${opacity}"
+            title="${escapeHtml(label)}"
+            aria-label="${escapeHtml(label)}"
+          >
+            <span>${index + 1}</span>
+          </button>
+        `;
+      })
+      .join("")}
+  `;
+
+  els.evidenceContributionChart.setAttribute(
+    "aria-label",
+    `Evidence contribution map. ${assessment.items
+      .map((item, index) => `${index + 1}. ${item.title}: ${formatPercent(item.share)} of positive movement`)
+      .join(". ")}`,
+  );
+
+  els.evidenceContributionLegend.innerHTML = assessment.items
+    .map((item, index) => `
+      <article class="contribution-legend-item ${getContributionTone(item)}">
+        <strong>${index + 1}</strong>
+        <span>${escapeHtml(item.title)}</span>
+        <em>${formatPercent(item.share)}</em>
+        <small>${escapeHtml(item.type)} · ${formatLift(item.adjustedBf)} · ${formatPercent(item.weight / 100)} independent</small>
+      </article>
+    `)
+    .join("");
+}
+
+function getContributionTone(item) {
+  if (item.adjustedBf <= 1.05 || item.share < 0.03) return "weak";
+  if (item.adjustedBf < 1.5 || item.share < 0.12) return "neutral";
+  return "positive";
 }
 
 function renderWarnings(assessment) {

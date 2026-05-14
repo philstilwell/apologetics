@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Audit resurrection, miracle, and answered-prayer arguments with priors, evidence comparisons, source dependence checks, and alternative explanations.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260514-small-screen-notice">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-evidence-contribution-map">
     <script defer src="../../scripts/small-screen-notice.js?v=20260514-small-screen-notice"></script>
     <script type="application/ld+json">
       {
@@ -826,6 +826,27 @@
           </div>
         </section>
 
+        <section class="evidence-contribution-panel" aria-labelledby="evidence-contribution-title">
+          <div class="evidence-contribution-copy">
+            <p class="card-kicker">Evidence contribution map</p>
+            <h3 id="evidence-contribution-title">What is doing the work?</h3>
+            <p>
+              This chart shows how much each evidence item contributes to the positive movement
+              after independence is applied. Taller bars are carrying more of the result; lighter
+              bars are less independent.
+            </p>
+          </div>
+          <div class="evidence-contribution-chart-wrap">
+            <div
+              class="evidence-contribution-chart"
+              id="evidence-contribution-chart"
+              role="img"
+              aria-label="Evidence contribution map"
+            ></div>
+            <div class="evidence-contribution-legend" id="evidence-contribution-legend"></div>
+          </div>
+        </section>
+
         <details class="math-details">
           <summary>Show math details</summary>
           <div class="math-grid">
@@ -876,25 +897,32 @@
           </div>
         </div>
 
-        <div class="resurrection-qa-list">
-          <details class="resurrection-qa-item" open>
-            <summary>Why do I have to put a number on the starting point?</summary>
-            <div>
-              <p>
-                Because comparison requires a starting point. If someone says, "I will not assign
-                any probability to a resurrection, miracle, answered prayer, or demon-caused crash,"
-                the claim becomes impossible to compare with ordinary explanations. The number does
-                not have to be perfect. It is a visible estimate that lets other people inspect the
-                reasoning.
-              </p>
-              <p>
-                Refusing to name a starting point often hides a very generous one. A person may say
-                that the event is "possible with God" and then treat the evidence as if the event
-                was already fairly likely. This audit asks for the hidden assumption to be stated
-                plainly before the evidence is counted.
-              </p>
-            </div>
-          </details>
+        <details class="resurrection-qa-parent">
+          <summary>
+            <span class="resurrection-qa-parent-copy">
+              <span>Open the full Q&A set</span>
+              <small>Questions about starting probability, alternatives, unknowns, testimony, and audit pressure.</small>
+            </span>
+          </summary>
+          <div class="resurrection-qa-list">
+            <details class="resurrection-qa-item">
+              <summary>Why do I have to put a number on the starting point?</summary>
+              <div>
+                <p>
+                  Because comparison requires a starting point. If someone says, "I will not assign
+                  any probability to a resurrection, miracle, answered prayer, or demon-caused crash,"
+                  the claim becomes impossible to compare with ordinary explanations. The number does
+                  not have to be perfect. It is a visible estimate that lets other people inspect the
+                  reasoning.
+                </p>
+                <p>
+                  Refusing to name a starting point often hides a very generous one. A person may say
+                  that the event is "possible with God" and then treat the evidence as if the event
+                  was already fairly likely. This audit asks for the hidden assumption to be stated
+                  plainly before the evidence is counted.
+                </p>
+              </div>
+            </details>
 
           <details class="resurrection-qa-item">
             <summary>Does assigning a low starting point mean the claim is being dismissed in advance?</summary>
@@ -1092,7 +1120,8 @@
               </p>
             </div>
           </details>
-        </div>
+          </div>
+        </details>
       </section>
 
       <section class="audit-step full-step" id="report-step" aria-labelledby="report-title">
@@ -1157,6 +1186,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260505-instant-anchor-offsets"></script>
+    <script src="./app.js?v=20260514-evidence-contribution-map"></script>
   </body>
 </html>
