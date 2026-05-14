@@ -4765,6 +4765,7 @@ body.app-falsifiability {
   --ff-ink: #121817;
   --ff-panel: #fffdf5;
   --ff-paper: #f5f5ee;
+  --active-halo-center: var(--rust);
   background:
     linear-gradient(180deg, #eaf3f1 0, #fbf4dc 360px, #f8f8f1 100%);
   overflow-x: hidden;
@@ -4979,7 +4980,7 @@ body.app-falsifiability #summary {
   height: 15px;
   border: 3px solid #ffe840;
   border-radius: 50%;
-  background: #fbfff9;
+  background: var(--active-halo-center, var(--rust));
   box-shadow:
     0 0 0 5px rgba(255, 232, 64, 0.34),
     0 0 12px rgba(255, 232, 64, 0.58);
@@ -6255,7 +6256,7 @@ body.app-falsifiability #summary {
   height: 14px;
   border: 3px solid #ffe840;
   border-radius: 50%;
-  background: #fbfff9;
+  background: var(--active-halo-center, var(--rust));
   box-shadow:
     0 0 0 5px rgba(255, 232, 64, 0.28),
     0 0 10px rgba(255, 232, 64, 0.44);
@@ -6743,7 +6744,7 @@ body.app-falsifiability #summary {
   height: 18px;
   border: 3px solid #ffe840;
   border-radius: 50%;
-  background: #fbfff9;
+  background: var(--active-halo-center, var(--rust));
   box-shadow: 0 0 0 5px rgba(255, 232, 64, 0.35);
 }
 
