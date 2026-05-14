@@ -498,8 +498,8 @@ const challenges = [
     elements: ["moral-meaning", "truth-ground", "authority-check", "moral-access", "binding-force", "case-guidance", "consistent-scope", "correction"],
     routes: ["none"],
     tags: ["architecture", "sufficiency"],
-    summary: "A list of moral claims is not yet a moral system unless it supplies meaning, truth ground, authority, access, force, guidance, scope, and correction.",
-    counterfactual: "A rulebook can command, a preference can motivate, and a policy can help. None alone establishes an objective moral system.",
+    summary: "A list of moral claims is not a full moral system unless it explains what moral words mean, what makes the claims true, who has authority, how people can know the standard, why it binds, how it guides choices, who it applies to, and how mistakes are corrected.",
+    counterfactual: "A rulebook can give commands, feelings can motivate people, and policies can be useful. None of those by itself creates an objective moral system.",
     questions: [
       "Which mandatory components are substantiated, and together are they sufficient?",
       "What would still be missing after every mandatory component is granted?",
@@ -1162,27 +1162,27 @@ function renderTopPressureTooltip(challenge, tooltipId) {
   const routeHits = challenge.routes
     .filter((id) => getSelectedRoutes().includes(id))
     .map((id) => routeLabel(id));
-  const componentText = componentHits.length ? componentHits.join(", ") : "No active component match";
-  const routeText = routeHits.length ? routeHits.join(", ") : "No active route match";
+  const componentText = componentHits.length ? componentHits.join(", ") : "No selected required part is tied to this challenge";
+  const routeText = routeHits.length ? routeHits.join(", ") : "No selected source route is tied to this challenge";
   return `
     <span class="section-tooltip top-pressure-tooltip" id="${tooltipId}" role="tooltip">
       <strong>${escapeHtml(challenge.title)}</strong>
       <span class="tooltip-intro">${escapeHtml(challenge.summary)}</span>
       <span class="tooltip-check-list">
         <span class="tooltip-check-item">
-          <strong>Component pressure</strong>
+          <strong>Required parts involved</strong>
           <span>${escapeHtml(componentText)}</span>
         </span>
         <span class="tooltip-check-item">
-          <strong>Route pressure</strong>
+          <strong>Source routes involved</strong>
           <span>${escapeHtml(routeText)}</span>
         </span>
         <span class="tooltip-check-item">
-          <strong>Counterfactual focus</strong>
+          <strong>Case to test</strong>
           <span>${escapeHtml(challenge.counterfactual)}</span>
         </span>
       </span>
-      <span class="tooltip-coda">This item rises when the selected components and source routes overlap with this challenge; the badge shows the repository pressure level.</span>
+      <span class="tooltip-coda">This challenge appears when your selected required parts or source routes connect to it. The badge shows how serious the issue is.</span>
     </span>
   `;
 }
