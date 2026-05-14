@@ -2142,7 +2142,7 @@ input[type="range"] {
 
 .scoreboard {
   display: grid;
-  grid-template-columns: minmax(140px, 190px) minmax(0, 1fr);
+  grid-template-columns: minmax(122px, 168px) minmax(0, 1fr);
   gap: 18px;
   align-items: center;
 }
@@ -2153,7 +2153,7 @@ input[type="range"] {
   --unknown-slice: 0%;
   --score-color: var(--green);
   display: grid;
-  width: 168px;
+  width: 146px;
   aspect-ratio: 1;
   place-items: center;
   border-radius: 50%;
@@ -2168,7 +2168,7 @@ input[type="range"] {
 
 .score-ring-inner {
   display: grid;
-  width: 122px;
+  width: 106px;
   aspect-ratio: 1;
   place-items: center;
   border-radius: 50%;
@@ -2178,7 +2178,7 @@ input[type="range"] {
 
 .score-ring strong {
   display: block;
-  font-size: 2.2rem;
+  font-size: 1.95rem;
   line-height: 1;
 }
 
@@ -4342,7 +4342,7 @@ body:has(.guided-resurrection) a:focus-visible {
   }
 
   .score-ring {
-    width: 150px;
+    width: 132px;
   }
 
   .differentiator-type-grid,
