@@ -1303,10 +1303,24 @@ function renderEvidenceContributionMap(assessment) {
       >
         <strong>${index + 1}</strong>
         <small>${formatPercent(item.share)}</small>
-        <span>${escapeHtml(item.title)}</span>
+        <span>${escapeHtml(getContributionLaneLabel(item.title))}</span>
       </button>
     `)
     .join("");
+}
+
+function getContributionLaneLabel(title) {
+  const labels = {
+    "Post-mortem appearance reports": "Appearance reports",
+    "Conversions and costly commitment": "Costly commitment",
+    "Early creed and movement growth": "Creed and growth",
+    "Driver says the wheel was pulled": "Driver report",
+    "Crash-site physical evidence": "Crash evidence",
+    "Pattern of similar events": "Similar cases",
+    "Medical or mechanical review": "Expert review",
+    "Ignored ordinary causes": "Ordinary causes",
+  };
+  return labels[title] || title;
 }
 
 function getContributionTone(item) {
