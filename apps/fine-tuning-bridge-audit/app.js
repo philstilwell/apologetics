@@ -749,7 +749,9 @@ function ladderIndex(id) {
 }
 
 function ladderPercent(id) {
-  return `${(ladderIndex(id) / (diagnosisLadder.length - 1)) * 100}%`;
+  const gutter = 6;
+  const span = 100 - gutter * 2;
+  return `${gutter + (ladderIndex(id) / (diagnosisLadder.length - 1)) * span}%`;
 }
 
 function priorPressure() {

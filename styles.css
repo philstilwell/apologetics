@@ -13861,6 +13861,228 @@ body.app-fine-tuning .site-header {
   line-height: 1.45;
 }
 
+.fine-map-card {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(21, 32, 23, 0.12);
+  border-radius: calc(var(--radius) + 2px);
+  background: rgba(255, 253, 245, 0.84);
+}
+
+.fine-map-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.fine-map-copy h4,
+.fine-map-copy p {
+  margin: 0;
+}
+
+.fine-map-copy h4 {
+  color: var(--teal-dark);
+  font-size: 1.02rem;
+}
+
+.fine-map-copy p:not(.app-step) {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.fine-ceiling-map,
+.fine-map-visual,
+.fine-map-rows {
+  display: grid;
+  gap: 14px;
+}
+
+.fine-map-row {
+  display: grid;
+  gap: 8px;
+}
+
+.fine-map-row-head,
+.fine-pressure-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fine-map-row-label,
+.fine-pressure-head span {
+  color: var(--teal-dark);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.fine-map-row-value,
+.fine-pressure-head strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.fine-map-track {
+  position: relative;
+  min-height: 22px;
+}
+
+.fine-map-track::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background:
+    linear-gradient(90deg, rgba(79, 107, 68, 0.26) 0, rgba(79, 107, 68, 0.16) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(21, 32, 23, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.fine-map-stop,
+.fine-map-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.fine-map-stop {
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(21, 32, 23, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 253, 245, 0.98);
+}
+
+.fine-map-marker {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff9eb;
+  background: var(--teal-dark);
+  box-shadow:
+    0 0 0 2px rgba(21, 32, 23, 0.16),
+    0 8px 18px rgba(21, 32, 23, 0.14);
+}
+
+.fine-map-marker--selected {
+  border-radius: 999px;
+  background: var(--teal-dark);
+}
+
+.fine-map-marker--tentative {
+  border-radius: 999px;
+  background: #f6efda;
+  border-color: var(--teal-dark);
+  box-shadow:
+    0 0 0 2px rgba(21, 32, 23, 0.14),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.92);
+}
+
+.fine-map-marker--strict {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  background: #a18134;
+}
+
+.fine-map-axis {
+  position: relative;
+  min-height: 26px;
+  margin-top: -2px;
+}
+
+.fine-map-axis-tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: 68px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.fine-map-axis-tick::before {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 8px;
+  margin: 0 auto 4px;
+  background: rgba(21, 32, 23, 0.2);
+}
+
+.fine-pressure-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fine-pressure-meter {
+  --pressure-color: var(--green);
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+  border: 1px solid rgba(21, 32, 23, 0.12);
+  border-radius: var(--radius);
+  background: rgba(221, 231, 215, 0.24);
+}
+
+.fine-pressure-meter.is-moderate {
+  --pressure-color: #a18134;
+}
+
+.fine-pressure-meter.is-high {
+  --pressure-color: #8a5134;
+}
+
+.fine-pressure-meter.is-unset {
+  --pressure-color: rgba(79, 107, 68, 0.26);
+}
+
+.fine-pressure-track {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(21, 32, 23, 0.1);
+}
+
+.fine-pressure-meter.is-unset .fine-pressure-track {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(21, 32, 23, 0.08) 0 8px,
+      rgba(255, 255, 255, 0.76) 8px 16px
+    );
+}
+
+.fine-pressure-track b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--pressure-color);
+}
+
+.fine-pressure-meter small {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
 .fine-focus-chiplist {
   display: flex;
   flex-wrap: wrap;
@@ -14006,6 +14228,10 @@ body.app-fine-tuning .site-header {
   .fine-goal-group-items {
     grid-template-columns: 1fr;
   }
+
+  .fine-pressure-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 720px) {
@@ -14024,6 +14250,15 @@ body.app-fine-tuning .site-header {
   .fine-inline-field-head {
     align-items: start;
     flex-direction: column;
+  }
+
+  .fine-map-axis {
+    min-height: 34px;
+  }
+
+  .fine-map-axis-tick {
+    width: 56px;
+    font-size: 0.66rem;
   }
 }
 
