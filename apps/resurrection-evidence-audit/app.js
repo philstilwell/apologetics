@@ -1,6 +1,8 @@
 const MIN_UNKNOWN_DISPLAY_CREDENCE = 0.000001; // 0.0001%
 const MIN_CLAIM_DISPLAY_CREDENCE = 0.0035; // Cosmetic hairline only.
 const MIN_MATERIAL_DISPLAY_CREDENCE = 0.0035; // Cosmetic hairline only.
+const DEFAULT_ALTERNATIVE_WEIGHT = 0.5;
+const ALTERNATIVE_FIT_DAMPING = 0.35;
 
 const claimPresets = [
   {
@@ -678,7 +680,7 @@ const defaultPresetText = {
 const state = {
   presetId: claimPresets[0].id,
   evidence: [],
-  featureWeights: new Map(resurrectionAlternativeFeatures.map((feature) => [feature.id, 1])),
+  featureWeights: new Map(resurrectionAlternativeFeatures.map((feature) => [feature.id, DEFAULT_ALTERNATIVE_WEIGHT])),
   baselineRefusalOpened: false,
   activePosture: null,
 };
@@ -888,7 +890,9 @@ function loadPreset(presetId) {
   const preset = getPresetById(presetId);
   state.presetId = preset.id;
   state.evidence = preset.evidence.map((item) => ({ ...item }));
-  state.featureWeights = new Map(getAlternativesForPreset(preset).map((feature) => [feature.id, 1]));
+  state.featureWeights = new Map(
+    getAlternativesForPreset(preset).map((feature) => [feature.id, feature.defaultWeight ?? DEFAULT_ALTERNATIVE_WEIGHT]),
+  );
 
   els.preset.value = preset.id;
   setClaimText(preset.claim);
@@ -1103,7 +1107,7 @@ function renderFeatures() {
 
   els.featureGrid.innerHTML = alternativeFeatures
     .map((feature) => {
-      const current = String(state.featureWeights.get(feature.id) ?? 1);
+      const current = String(state.featureWeights.get(feature.id) ?? feature.defaultWeight ?? DEFAULT_ALTERNATIVE_WEIGHT);
       const detail = feature.detail || feature.note;
       const options = [
         ["0", "Set aside"],
@@ -1204,13 +1208,13 @@ function renderResultStrip(assessment) {
   els.startingConfidence.textContent = formatPercentWithRatio(assessment.prior);
   els.evidenceAdded.textContent = formatLift(assessment.totalBf);
   els.updatedConfidence.textContent = formatPercentWithRatio(assessment.posterior);
-  els.updatedConfidenceNote.textContent = "The result after the current evidence assumptions";
+  els.updatedConfidenceNote.textContent = "The known-space result after current assumptions";
   els.neededForHigh.textContent = shortfallText;
   els.neededForHighNote.textContent = assessment.shortfall90 > 1
-    ? "more evidence lift needed to reach 90% (about 9 in 10)"
-    : "the current assumptions already reach 90% (about 9 in 10)";
+    ? "more net lift needed for 90% known-space confidence"
+    : "the current assumptions already reach 90% known-space confidence";
   els.topDriver.textContent = assessment.topDriver
-    ? `Most of the movement: ${assessment.topDriver.title}`
+    ? `Top positive item: ${assessment.topDriver.title}`
     : "No main evidence driver yet";
   els.alternativeStrength.textContent = formatLift(assessment.alternativeBf);
   els.auditScore.textContent = String(assessment.auditPressure);
@@ -1409,8 +1413,12 @@ function renderEvidenceContributionAssessment(assessment) {
   const positiveLog = positiveItems.reduce((sum, item) => sum + Math.max(0, item.adjustedLogBf), 0);
   const positiveOnlyLift = Math.exp(positiveLog);
   const counterDrag = Math.exp(-negativeLog);
+  const itemNetLift = positiveOnlyLift * counterDrag;
+  const alternativeEffect = 1 / Math.max(assessment.alternativeBf, 0.000000000001);
   const positiveOnlyOdds = assessment.priorOdds * positiveOnlyLift;
   const positiveOnlyPosterior = positiveOnlyOdds / (1 + positiveOnlyOdds);
+  const itemNetOdds = assessment.priorOdds * itemNetLift;
+  const itemNetPosterior = itemNetOdds / (1 + itemNetOdds);
   const topDriver = positiveItems[0];
   const topCounter = counterItems[0];
   const topShare = topDriver?.share || 0;
@@ -1456,7 +1464,7 @@ function renderEvidenceContributionAssessment(assessment) {
       </p>
       ${
         topCounter
-          ? `<div class="contribution-assessment-warning"><p><strong>Negative evidence is reducing the aggregate lift.</strong> The positive evidence alone would add ${formatLift(positiveOnlyLift)}, but the counter-evidence applies a combined ${formatLift(counterDrag)} drag, leaving ${formatLift(assessment.totalBf)} overall evidence lift. In credence terms, that changes the positive-only result from ${formatPercentWithRatio(positiveOnlyPosterior)} to ${formatPercentWithRatio(assessment.posterior)}.</p><ul>${counterRows.join("")}</ul></div>`
+          ? `<div class="contribution-assessment-warning"><p><strong>Negative evidence is reducing the aggregate lift.</strong> The positive evidence alone would add ${formatLift(positiveOnlyLift)}, but the counter-evidence applies a combined ${formatLift(counterDrag)} drag, leaving ${formatLift(itemNetLift)} item-level evidence lift. Alternative-fit settings then apply ${formatLift(alternativeEffect)} to the odds, for ${formatLift(assessment.totalBf)} net lift. In credence terms, that moves the positive-only result from ${formatPercentWithRatio(positiveOnlyPosterior)} to ${formatPercentWithRatio(itemNetPosterior)} before alternatives, then to ${formatPercentWithRatio(assessment.posterior)} after alternatives.</p><ul>${counterRows.join("")}</ul></div>`
           : ""
       }
     </div>
@@ -1514,8 +1522,10 @@ function assess() {
     0.000000000001,
     0.999999,
   );
-  const prior = clamp(unreservedPrior * (1 - priorParts.unknownReserve), 0.000000000001, 0.999999);
-  const unknownReserveDiscount = Math.max(0, unreservedPrior - prior);
+  const knownSpace = 1 - priorParts.unknownReserve;
+  const prior = unreservedPrior;
+  const wholeClaimPrior = clamp(unreservedPrior * knownSpace, 0.000000000001, 0.999999);
+  const unknownReserveDiscount = Math.max(0, unreservedPrior - wholeClaimPrior);
   const priorOdds = prior / (1 - prior);
 
   const rawItems = state.evidence.map((item) => {
@@ -1540,7 +1550,11 @@ function assess() {
     };
   });
 
-  const totalLogBf = rawItems.reduce((sum, item) => sum + item.adjustedLogBf, 0);
+  const evidenceOnlyLogBf = rawItems.reduce((sum, item) => sum + item.adjustedLogBf, 0);
+  const evidenceOnlyBf = Math.exp(evidenceOnlyLogBf);
+  const alternativeBf = calculateAlternativeBf();
+  const alternativeLogBf = Math.log(Math.max(alternativeBf, 0.000000000001));
+  const totalLogBf = evidenceOnlyLogBf - alternativeLogBf;
   const totalBf = Math.exp(totalLogBf);
   const posteriorOdds = priorOdds * totalBf;
   const posterior = posteriorOdds / (1 + posteriorOdds);
@@ -1557,7 +1571,6 @@ function assess() {
     99: requiredBfForTarget(priorOdds, 0.99),
   };
   const shortfall90 = required[90] / Math.max(totalBf, 0.000000000001);
-  const alternativeBf = calculateAlternativeBf();
   const flags = buildFlags({
     preset,
     meta,
@@ -1582,6 +1595,7 @@ function assess() {
     unknownNotes: els.unknownNotes.value.trim(),
     baselineRefusalOpened: state.baselineRefusalOpened,
     unreservedPrior,
+    wholeClaimPrior,
     unknownReserveDiscount,
     prior,
     priorParts,
@@ -1589,6 +1603,9 @@ function assess() {
     items,
     totalLogBf,
     totalBf,
+    evidenceOnlyLogBf,
+    evidenceOnlyBf,
+    alternativeLogBf,
     posterior,
     credenceMix,
     posteriorOdds,
@@ -1802,7 +1819,7 @@ function calculateAuditPressure(flags, shortfall90, topDriver, priorParts) {
 function calculateAlternativeBf() {
   return getCurrentAlternatives().reduce((product, feature) => {
     const weight = state.featureWeights.get(feature.id) ?? 1;
-    return product * Math.pow(feature.ratio, weight);
+    return product * Math.pow(feature.ratio, weight * ALTERNATIVE_FIT_DAMPING);
   }, 1);
 }
 
@@ -1880,12 +1897,14 @@ function buildReport(assessment) {
     `Claim: ${assessment.claim || "Not supplied"}`,
     "",
     "## Accessible Result",
-    `Baseline confidence: ${formatPercentWithRatio(assessment.prior)}`,
-    `Evidence added: ${formatLift(assessment.totalBf)}`,
-    `Revised confidence: ${formatPercentWithRatio(assessment.posterior)}`,
-    `More evidence needed for 90% (about 9 in 10) confidence: ${assessment.shortfall90 > 1 ? formatLift(assessment.shortfall90) : "none under current inputs"}`,
+    `Baseline confidence inside known cause space: ${formatPercentWithRatio(assessment.prior)}`,
+    `Whole-cause baseline after unknown reserve: ${formatPercentWithRatio(assessment.wholeClaimPrior)}`,
+    `Item-level evidence lift before alternative-fit settings: ${formatLift(assessment.evidenceOnlyBf)}`,
+    `${assessment.meta.alternativeReportLabel}: ${formatLift(assessment.alternativeBf)} (${assessment.alternativeBf >= 1 ? "drag against the claim" : "support for the claim"})`,
+    `Net evidence lift after alternative-fit settings: ${formatLift(assessment.totalBf)}`,
+    `Revised confidence inside known cause space: ${formatPercentWithRatio(assessment.posterior)}`,
+    `More net lift needed for 90% known-space confidence: ${assessment.shortfall90 > 1 ? formatLift(assessment.shortfall90) : "none under current inputs"}`,
     `Biggest mover: ${assessment.topDriver ? assessment.topDriver.title : "None"} (${formatPercentWithRatio(assessment.topDriver?.share || 0)} of positive movement)`,
-    `${assessment.meta.alternativeReportLabel}: ${formatLift(assessment.alternativeBf)}`,
     `Audit pressure: ${assessment.auditPressure}/100 (${summarizePressure(assessment.auditPressure)})`,
     `Cause credence mix: selected immaterial claim ${formatPercentWithRatio(assessment.credenceMix.claim)}, known material alternatives ${formatPercentWithRatio(assessment.credenceMix.material)}, unknown reserve ${formatPercentWithRatio(assessment.credenceMix.unknown)}`,
     "",
@@ -1895,8 +1914,8 @@ function buildReport(assessment) {
     `${assessment.meta.actTypeRateLabel}: ${formatPercentWithRatio(assessment.priorParts.actType)}`,
     `Baseline before unknown reserve: ${formatPercentWithRatio(assessment.unreservedPrior)}`,
     `Room left for unconceived explanations: ${formatPercentWithRatio(assessment.priorParts.unknownReserve)}`,
-    `Baseline confidence removed by this reserve: ${formatPercentWithRatio(assessment.unknownReserveDiscount)}`,
-    `Baseline after unconceived-explanation reserve: ${formatPercentWithRatio(assessment.prior)}`,
+    `Whole-cause baseline reserved away from the selected claim: ${formatPercentWithRatio(assessment.unknownReserveDiscount)}`,
+    `Whole-cause baseline after unconceived-explanation reserve: ${formatPercentWithRatio(assessment.wholeClaimPrior)}`,
     "",
     "## Starting Probability Visibility",
     "A claim cannot be fairly compared with rival explanations unless its starting probability is stated before the evidence is added.",
@@ -1927,14 +1946,17 @@ function buildReport(assessment) {
     ...assessment.repairs.map((repair) => `- ${repair.title}: ${repair.body}`),
     "",
     "## Math Details",
-    `Formal prior / baseline confidence: ${formatPercentWithRatio(assessment.prior)}`,
-    `Formal posterior / revised confidence: ${formatPercentWithRatio(assessment.posterior)}`,
-    `Bayes factor / evidence lift: ${formatFactor(assessment.totalBf)}`,
-    `Log evidence lift: ${assessment.totalLogBf.toFixed(2)}`,
+    `Formal prior / baseline confidence inside known cause space: ${formatPercentWithRatio(assessment.prior)}`,
+    `Formal posterior / revised confidence inside known cause space: ${formatPercentWithRatio(assessment.posterior)}`,
+    `Item-level Bayes factor before alternative-fit settings: ${formatFactor(assessment.evidenceOnlyBf)}`,
+    `Alternative-fit factor: ${formatFactor(assessment.alternativeBf)}`,
+    `Net Bayes factor / evidence lift: ${formatFactor(assessment.totalBf)}`,
+    `Log item-level evidence lift: ${assessment.evidenceOnlyLogBf.toFixed(2)}`,
+    `Log net evidence lift: ${assessment.totalLogBf.toFixed(2)}`,
     `Posterior odds: ${formatOdds(assessment.posteriorOdds)}`,
-    `Lift needed for 50%: ${formatLift(assessment.required[50])}`,
-    `Lift needed for 90%: ${formatLift(assessment.required[90])}`,
-    `Lift needed for 99%: ${formatLift(assessment.required[99])}`,
+    `Net lift needed for 50% known-space confidence: ${formatLift(assessment.required[50])}`,
+    `Net lift needed for 90% known-space confidence: ${formatLift(assessment.required[90])}`,
+    `Net lift needed for 99% known-space confidence: ${formatLift(assessment.required[99])}`,
   ];
 
   return lines.join("\n");
@@ -1946,8 +1968,8 @@ function buildAiPrompt(assessment) {
     "",
     "Use accessible terms first:",
     "- Baseline confidence = prior.",
-    "- Revised confidence = posterior.",
-    "- Evidence lift = Bayes factor.",
+    "- Revised confidence = posterior inside the known cause space.",
+    "- Net evidence lift = item-level Bayes factors after counter-evidence and alternative-fit settings.",
     "- 'How expected is this if true?' = P(E|H).",
     "- 'How expected is this if false?' = P(E|not-H).",
     "- Independent evidence = dependence correction.",

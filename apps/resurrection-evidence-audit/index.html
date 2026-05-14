@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Audit resurrection, miracle, and answered-prayer arguments with priors, evidence comparisons, source dependence checks, and alternative explanations.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260514-crash-map-labels">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-calculation-audit">
     <script defer src="../../scripts/small-screen-notice.js?v=20260514-small-screen-notice"></script>
     <script type="application/ld+json">
       {
@@ -350,19 +350,20 @@
           </span>
           <span class="metric-tooltip" id="baseline-confidence-help" role="tooltip">
             The claim's estimated starting plausibility before this case evidence is added. It
-            combines general openness, claim specificity, event rarity, and room for unknown causes.
+            combines general openness, claim specificity, and event rarity. The unknown reserve is
+            displayed separately in the cause-credence mix.
           </span>
           <strong id="starting-confidence">0%</strong>
           <small>Before this case evidence is added</small>
         </article>
         <article class="metric-card" aria-describedby="evidence-added-help">
           <span class="metric-label" tabindex="0" aria-describedby="evidence-added-help">
-            <span class="metric-label-text">Evidence added</span>
+            <span class="metric-label-text">Net evidence lift</span>
             <span class="label-help-dot" aria-hidden="true">?</span>
           </span>
           <span class="metric-tooltip" id="evidence-added-help" role="tooltip">
-            How strongly the entered evidence moves the case from its starting point. A large value
-            means the settings make the evidence fit the claim much better than the alternatives.
+            How strongly the entered evidence moves the case from its starting point after
+            counter-evidence and the alternative-fit settings are counted.
           </span>
           <strong id="evidence-added">1x</strong>
           <small id="top-driver">No evidence driver yet</small>
@@ -373,8 +374,8 @@
             <span class="label-help-dot" aria-hidden="true">?</span>
           </span>
           <span class="metric-tooltip" id="revised-confidence-help" role="tooltip">
-            The current result after the evidence is combined with the baseline. If this number
-            changes sharply when one slider moves, the conclusion is fragile.
+            The current result inside the known cause space after the unknown reserve is set aside.
+            If this number changes sharply when one slider moves, the conclusion is fragile.
           </span>
           <strong id="updated-confidence">0%</strong>
           <small id="updated-confidence-note">The result after the current evidence settings</small>
@@ -385,8 +386,9 @@
             <span class="label-help-dot" aria-hidden="true">?</span>
           </span>
           <span class="metric-tooltip" id="needed-for-high-help" role="tooltip">
-            How much more evidence lift would be needed to reach high confidence, usually about
-            90%. If it says enough, the current assumptions already reach that threshold.
+            How much more net lift would be needed to reach high confidence inside the known
+            cause space, usually about 90%. If it says enough, the current assumptions already
+            reach that threshold before the unknown reserve is displayed separately.
           </span>
           <strong id="needed-for-high">1x</strong>
           <small id="needed-for-high-note">Evidence burden</small>
@@ -935,9 +937,9 @@
               <small>Formerly: posterior</small>
             </article>
             <article>
-              <span>Evidence lift</span>
+              <span>Net evidence lift</span>
               <strong id="math-bf">1x</strong>
-              <small>Formerly: Bayes factor</small>
+              <small>Net Bayes factor</small>
             </article>
             <article>
               <span>Odds</span>
@@ -945,12 +947,12 @@
               <small id="math-log-bf">log lift 0</small>
             </article>
             <article>
-              <span>Needed for 50% (1 in 2)</span>
+              <span>Needed for 50% known-space</span>
               <strong id="math-required-50">1x</strong>
               <small>Break-even confidence</small>
             </article>
             <article>
-              <span>Needed for 90% (9 in 10)</span>
+              <span>Needed for 90% known-space</span>
               <strong id="math-required-90">1x</strong>
               <small>High confidence</small>
             </article>
@@ -1260,6 +1262,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260514-crash-map-labels"></script>
+    <script src="./app.js?v=20260514-calculation-audit"></script>
   </body>
 </html>
