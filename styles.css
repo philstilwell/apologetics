@@ -11228,6 +11228,16 @@ body.app-fine-tuning .site-header {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+.fine-dashboard .metric-card {
+  min-width: 0;
+}
+
+.fine-dashboard strong {
+  font-size: clamp(1.85rem, 4vw, 3rem);
+  line-height: 0.94;
+  overflow-wrap: anywhere;
+}
+
 .fine-score-panel {
   margin-bottom: 28px;
   min-height: auto;
@@ -11677,6 +11687,16 @@ body.app-fine-tuning .site-header {
 
 .fine-tool .qa-accordion details + details {
   border-top: 1px solid rgba(21, 32, 23, 0.12);
+}
+
+.fine-tool .qa-body {
+  display: grid;
+  gap: 6px;
+}
+
+.fine-tool .qa-body p {
+  margin: 0;
+  line-height: 1.42;
 }
 
 .fine-preset-grid {
