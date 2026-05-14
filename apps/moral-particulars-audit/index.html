@@ -580,17 +580,22 @@
       </section>
 
       <section class="moral-challenge-panel particulars-qa-panel" id="qa-step" aria-labelledby="qa-title">
-        <div class="moral-section-head">
-          <div>
-            <p class="app-step">Tool-specific questions</p>
-            <h2 id="qa-title">Moral Particulars Audit Q&A</h2>
-            <p>
-              Open these when a term, slider, warning, or hard case in this specific moral-particulars
-              map needs more context before you continue.
-            </p>
+        <details class="particular-qa-group">
+          <summary class="particular-qa-group-summary">
+            <span class="particular-qa-group-copy">
+              <span class="app-step">Tool-specific questions</span>
+              <span id="qa-title">Moral Particulars Audit Q&A</span>
+              <span>
+                Open these when a term, slider, warning, or hard case in this specific moral-particulars
+                map needs more context before you continue.
+              </span>
+            </span>
+            <span class="particular-qa-group-toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="particular-qa-group-body">
+            <div class="particular-qa-accordion" id="qaAccordion"></div>
           </div>
-        </div>
-        <div class="particular-qa-accordion" id="qaAccordion"></div>
+        </details>
       </section>
 
       <section class="moral-report-grid" id="report-step" aria-labelledby="report-title">
