@@ -1418,6 +1418,36 @@ button.ghost {
   padding: 0 12px 12px;
 }
 
+.differentiator-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.differentiator-type-grid article {
+  padding: 10px;
+  border: 1px solid #a47426;
+  border-radius: var(--radius);
+  background: #fff7cf;
+}
+
+.differentiator-type-grid strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.88rem;
+  line-height: 1.18;
+}
+
+.differentiator-type-grid p {
+  margin: 6px 0 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.38;
+}
+
 .example-grid article {
   border: 1px solid #8d5a12;
   border-radius: var(--radius);
@@ -4315,6 +4345,7 @@ body:has(.guided-resurrection) a:focus-visible {
     width: 150px;
   }
 
+  .differentiator-type-grid,
   .example-grid,
   .theory-grid,
   .feature-grid {
