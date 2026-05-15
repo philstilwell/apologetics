@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Test prayer, healing, protection, wisdom, prophecy, and other Christian promise claims to see whether they stay open to ordinary verification.">
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../../styles.css?v=20260514-small-screen-notice">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-score-audit">
     <script defer src="../../scripts/small-screen-notice.js?v=20260514-small-screen-notice"></script>
     <script type="application/ld+json">
       {
@@ -913,6 +913,45 @@
               </div>
             </div>
 
+            <details class="score-method-details">
+              <summary>How this score is calculated</summary>
+              <div class="score-method-body">
+                <p>
+                  This is an ordinal teaching score, not a probability. It combines study rigor,
+                  willingness to run the test, willingness to let a clean miss count, and escape-hatch
+                  drag. The cutoffs are practical benchmarks, so the direction of movement matters
+                  more than any single exact point.
+                </p>
+                <div class="score-method-grid" aria-label="Current score calculation">
+                  <div>
+                    <span>Study rigor</span>
+                    <strong id="score-method-study">8/100</strong>
+                  </div>
+                  <div>
+                    <span>Run multiplier</span>
+                    <strong id="score-method-run">0.47</strong>
+                  </div>
+                  <div>
+                    <span>Miss multiplier</span>
+                    <strong id="score-method-miss">0.40</strong>
+                  </div>
+                  <div>
+                    <span>Excuse drag</span>
+                    <strong id="score-method-drag">0</strong>
+                  </div>
+                  <div>
+                    <span>Raw score</span>
+                    <strong id="score-method-raw">9.4</strong>
+                  </div>
+                </div>
+                <p class="score-method-formula">
+                  Formula: clamp and round <code>8 + study x run x miss x 0.92 - drag</code>.
+                  Thresholds: below 35 protected; 35-49 near benchmark; 50-71 testable;
+                  72+ exposed to clean disconfirmation.
+                </p>
+              </div>
+            </details>
+
             <section class="all-stance-panel" aria-labelledby="all-stance-title">
               <div class="summary-head compact-head">
                 <div>
@@ -1426,6 +1465,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260514-suite-result-clarity"></script>
+    <script src="./app.js?v=20260514-score-audit"></script>
   </body>
 </html>

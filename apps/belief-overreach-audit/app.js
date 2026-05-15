@@ -1770,11 +1770,11 @@ function createInvestmentEvent(scenarioState) {
     const previous = getCurrentValue(scenarioState, agent.id);
     const perceivedFundamentals = computeInvestmentPerceivedFundamentals(agent, fundamentals, hype);
     const decisionScore = perceivedFundamentals;
-    const perceivedExpectedRate = computeInvestmentExpectedReturnRate(perceivedFundamentals, hype);
+    const perceivedExpectedRate = computeInvestmentPerceivedExpectedReturnRate(agent, fundamentals, hype);
     const stakeFraction = computeInvestmentStakeFraction(agent, fundamentals, hype, perceivedExpectedRate);
     const expectedInvestChange = previous * (stakeFraction * perceivedExpectedRate + (1 - stakeFraction) * INVEST_RESERVE_YIELD);
     const passiveChange = previous * INVEST_PASSIVE_YIELD;
-    const invest = previous > 0 && expectedInvestChange > passiveChange;
+    const invest = previous > 0 && expectedInvestChange > passiveChange * (1 - agent.bias * 0.24);
     let change;
     let tag;
     let text;
@@ -1860,11 +1860,11 @@ function createRomanceEvent(scenarioState) {
     const forcedCatfishCommit = forceCatfish && remote && agent.id === catfishTargetId;
     const waitValue = computeRomanceWaitValue(remote, character);
     const successValue = computeRomanceSuccessValue(agent, character, verification);
-    const failureValue = computeRomanceFailureValue(agent, remote, character, verification, spark, false);
     const perceivedSuccessProbability = computeRomanceSuccessProbability(remote, perceivedSupport);
-    const expectedCommitValue =
-      perceivedSuccessProbability * successValue + (1 - perceivedSuccessProbability) * failureValue;
-    const commit = forcedCatfishCommit ? true : forceCatfish && remote ? false : expectedCommitValue > waitValue;
+    const perceivedCommitValue =
+      perceivedSuccessProbability * computeRomancePerceivedSuccessValue(agent, character, verification) +
+      (1 - perceivedSuccessProbability) * computeRomancePerceivedFailureValue(agent, remote, character, verification, spark);
+    const commit = forcedCatfishCommit ? true : forceCatfish && remote ? false : perceivedCommitValue > waitValue;
     let change;
     let tag;
     let text;
@@ -1982,9 +1982,10 @@ function createReligionEvent(scenarioState) {
     const groundedValue = computeReligionGroundedValue(agent, evidence, pull, demand);
     const overcommitValue = computeReligionOvercommitValue(agent, evidence, demand);
     const perceivedGroundedProbability = computeReligionGroundedProbability(perceivedEvidence);
-    const expectedCommitValue =
-      perceivedGroundedProbability * groundedValue + (1 - perceivedGroundedProbability) * overcommitValue;
-    const commit = previous > 0 && expectedCommitValue > waitValue;
+    const perceivedCommitValue =
+      perceivedGroundedProbability * computeReligionPerceivedGroundedValue(agent, evidence, pull, demand) +
+      (1 - perceivedGroundedProbability) * computeReligionPerceivedOvercommitValue(agent, evidence, demand);
+    const commit = previous > 0 && perceivedCommitValue > waitValue;
     let change;
     let tag;
     let text;
@@ -2209,11 +2210,17 @@ function computeInvestmentPerceivedFundamentals(agent, fundamentals, hype) {
   return clampNumber(fundamentals * (1 - agent.bias) + hype * agent.bias, 0, 100, fundamentals);
 }
 
+function computeInvestmentPerceivedExpectedReturnRate(agent, fundamentals, hype) {
+  const perceivedFundamentals = computeInvestmentPerceivedFundamentals(agent, fundamentals, hype);
+  const discountedHypePenalty = clampNumber(hype - agent.bias * 0.55 * Math.max(0, hype - fundamentals), 0, 100, hype);
+  return computeInvestmentExpectedReturnRate(perceivedFundamentals, discountedHypePenalty);
+}
+
 function computeInvestmentStakeFraction(agent, fundamentals, hype, perceivedExpectedRate) {
   const edgeOverPassive = Math.max(0, perceivedExpectedRate - INVEST_PASSIVE_YIELD);
-  const hypePremium = Math.max(0, hype - fundamentals) / 100;
+  const beliefOverhang = Math.max(0, computeInvestmentPerceivedFundamentals(agent, fundamentals, hype) - fundamentals) / 100;
   return clampNumber(
-    0.08 + (edgeOverPassive / 0.07) * 0.16 + hypePremium * agent.bias * 0.10 + agent.bias * 0.02,
+    0.08 + (edgeOverPassive / 0.07) * 0.14 + beliefOverhang * 0.16 + agent.bias * 0.02,
     0.08,
     INVEST_MAX_POSITION,
     0.12
@@ -2228,6 +2235,10 @@ function computeRomanceSuccessProbability(remote, supportScore) {
 
 function computeRomancePerceivedSupport(agent, supportScore, spark) {
   return clampNumber(supportScore * (1 - agent.bias) + spark * agent.bias, 0, 100, supportScore);
+}
+
+function computeRomancePerceivedSuccessValue(agent, character, verification) {
+  return computeRomanceSuccessValue(agent, character, verification) * (1 + agent.bias * 0.12);
 }
 
 function computeRomanceWaitValue(remote, character) {
@@ -2245,6 +2256,10 @@ function computeRomanceSuccessValue(agent, character, verification) {
 function computeRomanceFailureValue(agent, remote, character, verification, spark, forcedCatfishCommit) {
   const catfishPenalty = remote ? 36 + (100 - verification) * 0.42 + (forcedCatfishCommit ? 18 : 0) : 0;
   return -(30 + (100 - character) * 0.66 + spark * 0.18 + computeRomanceCommitmentCost(agent) + catfishPenalty);
+}
+
+function computeRomancePerceivedFailureValue(agent, remote, character, verification, spark) {
+  return computeRomanceFailureValue(agent, remote, character, verification, spark, false) * (1 - agent.bias * 0.58);
 }
 
 function computeReligionGroundedProbability(evidence) {
@@ -2266,6 +2281,15 @@ function computeReligionGroundedValue(agent, evidence, pull, demand) {
 
 function computeReligionOvercommitValue(agent, evidence, demand) {
   return -(12 + (100 - evidence) * 0.34 + demand * 0.35 + agent.bias * 18);
+}
+
+function computeReligionPerceivedGroundedValue(agent, evidence, pull, demand) {
+  const uplift = 1 + agent.bias * 0.16 + Math.max(0, pull - evidence) / 220;
+  return computeReligionGroundedValue(agent, evidence, pull, demand) * uplift;
+}
+
+function computeReligionPerceivedOvercommitValue(agent, evidence, demand) {
+  return computeReligionOvercommitValue(agent, evidence, demand) * (1 - agent.bias * 0.72);
 }
 
 function niceStep(rawStep) {
