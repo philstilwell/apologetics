@@ -469,8 +469,27 @@ function replaceGeneratedBlock(content, key, replacement) {
 }
 
 function renderCardLink(action) {
-  const secondaryClass = action.secondary ? " secondary-link" : "";
-  return `<a class="card-link${secondaryClass}" href="${action.href}">${action.label}</a>`;
+  const classes = ["card-link"];
+
+  if (action.secondary) {
+    classes.push("secondary-link");
+  }
+
+  if (action.compact) {
+    classes.push("compact-link");
+  }
+
+  return `<a class="${classes.join(" ")}" href="${action.href}">${action.label}</a>`;
+}
+
+function renderCardActionRow(actions, className) {
+  if (!actions.length) {
+    return "";
+  }
+
+  return `                <div class="${className}">\n${actions
+    .map((action) => `                  ${renderCardLink(action)}`)
+    .join("\n")}\n                </div>`;
 }
 
 function renderHubCard(tool) {
@@ -478,12 +497,12 @@ function renderHubCard(tool) {
   const tags = hub.tags
     .map((tag) => `                  <span>${tag}</span>`)
     .join("\n");
-  const actions =
-    hub.actions.length === 1
-      ? `              ${renderCardLink(hub.actions[0])}`
-      : `              <div class="card-actions">\n${hub.actions
-          .map((action) => `                ${renderCardLink(action)}`)
-          .join("\n")}\n              </div>`;
+  const mainActions = hub.actions.filter((action) => action.row !== "docs");
+  const docActions = hub.actions.filter((action) => action.row === "docs");
+  const actionRows = [renderCardActionRow(mainActions, "card-actions-main"), renderCardActionRow(docActions, "card-actions-docs")]
+    .filter(Boolean)
+    .join("\n");
+  const actions = `              <div class="card-actions">\n${actionRows}\n              </div>`;
   const note = hub.note
     ? `\n                <p class="card-note">\n                  ${hub.note}\n                </p>`
     : "";

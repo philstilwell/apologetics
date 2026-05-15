@@ -1,4 +1,4 @@
-export const LASTMOD = "2026-05-14";
+export const LASTMOD = "2026-05-15";
 export const SITE_URL = "https://xhairs.com/";
 export const SITE_NAME = "Crosshairs Audit Lab";
 export const PERSON_ID = `${SITE_URL}#phil-stilwell`;
@@ -7,6 +7,19 @@ export const GITHUB_URL = "https://github.com/philstilwell/apologetics";
 export const CLOUDFLARE_ANALYTICS_SNIPPET =
   `<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' ` +
   `data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->`;
+
+function docAction(href, label) {
+  return {
+    href,
+    label: `${label} PDF`,
+    secondary: true,
+    compact: true,
+    row: "docs",
+  };
+}
+
+const manualPdf = (href) => docAction(href, "Manual");
+const curriculumPdf = (href) => docAction(href, "Curriculum");
 
 export const HOME_PAGE = {
   file: "index.html",
@@ -53,16 +66,8 @@ export const TOOLS = [
         "Uses a fair-die calibration drill, a bridge metaphor, and a ruin simulator to show what happens when confidence outruns the support a claim is perceived to have.",
       actions: [
         { href: "./apps/belief-overreach-audit/", label: "Run overreach audit" },
-        {
-          href: "./assets/manuals/belief-overreach-audit-manual-v2.pdf",
-          label: "Manual",
-          secondary: true,
-        },
-        {
-          href: "./assets/manuals/belief-overreach-audit-curriculum.pdf",
-          label: "Curriculum",
-          secondary: true,
-        },
+        manualPdf("./assets/manuals/belief-overreach-audit-manual-v2.pdf"),
+        curriculumPdf("./assets/manuals/belief-overreach-audit-curriculum.pdf"),
       ],
     },
     primaryPage: {
@@ -138,16 +143,8 @@ export const TOOLS = [
         "Preliminary: use this before Deism-Theism Gradient whenever fine-tuning is part of the route into design or theism.",
       actions: [
         { href: "./apps/fine-tuning-bridge-audit/", label: "Run bridge audit" },
-        {
-          href: "./assets/manuals/fine-tuning-bridge-audit-manual.pdf",
-          label: "Manual",
-          secondary: true,
-        },
-        {
-          href: "./assets/curricula/fine-tuning-bridge-audit-curriculum.pdf",
-          label: "Curriculum",
-          secondary: true,
-        },
+        manualPdf("./assets/manuals/fine-tuning-bridge-audit-manual.pdf"),
+        curriculumPdf("./assets/curricula/fine-tuning-bridge-audit-curriculum.pdf"),
         {
           href: "./apps/theism-gradient-audit/app.html",
           label: "Next: Theism Gradient",
@@ -226,16 +223,8 @@ export const TOOLS = [
         "Maps claims about prayer, healing, protection, future knowledge, wisdom, behavior, morbidity, and longevity onto a live field to show whether they are open to robust testing or insulated by excuses.",
       actions: [
         { href: "./apps/falsifiability-field/", label: "Open field" },
-        {
-          href: "./output/pdf/earthly-promise-test-field-manual.pdf",
-          label: "Manual",
-          secondary: true,
-        },
-        {
-          href: "./output/pdf/earthly-promise-test-field-curriculum.pdf",
-          label: "Curriculum",
-          secondary: true,
-        },
+        manualPdf("./output/pdf/earthly-promise-test-field-manual.pdf"),
+        curriculumPdf("./output/pdf/earthly-promise-test-field-curriculum.pdf"),
       ],
     },
     primaryPage: {
@@ -315,16 +304,8 @@ export const TOOLS = [
           label: "Theory notes",
           secondary: true,
         },
-        {
-          href: "./assets/manuals/inductive-symmetry-audit-manual.pdf",
-          label: "Manual",
-          secondary: true,
-        },
-        {
-          href: "./assets/manuals/inductive-symmetry-audit-curriculum.pdf",
-          label: "Curriculum",
-          secondary: true,
-        },
+        manualPdf("./assets/manuals/inductive-symmetry-audit-manual.pdf"),
+        curriculumPdf("./assets/manuals/inductive-symmetry-audit-curriculum.pdf"),
       ],
     },
     primaryPage: {
@@ -448,16 +429,8 @@ export const TOOLS = [
         "Tests resurrection and miracle claims with accessible baseline confidence, evidence comparisons, independence checks, alternative explanations, and a live audit-pressure score.",
       actions: [
         { href: "./apps/resurrection-evidence-audit/", label: "Run audit" },
-        {
-          href: "./assets/manuals/resurrection-evidence-audit-manual.pdf",
-          label: "Manual",
-          secondary: true,
-        },
-        {
-          href: "./assets/manuals/resurrection-evidence-audit-curriculum.pdf",
-          label: "Curriculum",
-          secondary: true,
-        },
+        manualPdf("./assets/manuals/resurrection-evidence-audit-manual.pdf"),
+        curriculumPdf("./assets/manuals/resurrection-evidence-audit-curriculum.pdf"),
       ],
     },
     primaryPage: {
@@ -532,16 +505,8 @@ export const TOOLS = [
       note: "Preliminary: use this before the advanced Moral System Stress Test.",
       actions: [
         { href: "./apps/moral-system-threshold/", label: "Run threshold check" },
-        {
-          href: "./assets/manuals/moral-system-threshold-manual-v2.pdf",
-          label: "Manual",
-          secondary: true,
-        },
-        {
-          href: "./assets/curricula/moral-system-threshold-curriculum-v2.pdf",
-          label: "Curriculum",
-          secondary: true,
-        },
+        manualPdf("./assets/manuals/moral-system-threshold-manual-v2.pdf"),
+        curriculumPdf("./assets/curricula/moral-system-threshold-curriculum-v2.pdf"),
         {
           href: "./apps/moral-system-stress-test/",
           label: "Next: stress test",
@@ -615,7 +580,7 @@ export const TOOLS = [
     hub: {
       cardClass: "hub-card-morality",
       kicker: "Advanced follow-up",
-      tags: ["Advanced", "System-level", "Manual", "Curriculum"],
+      tags: ["Advanced", "System-level"],
       summary:
         "Takes the threshold result into a fuller system-level pressure test, asking whether Christian morality survives counterfactuals, authority checks, disagreement strain, and collapse risks.",
       note: "Continues where Moral System Threshold leaves off.",
@@ -626,16 +591,8 @@ export const TOOLS = [
           label: "Start with threshold",
           secondary: true,
         },
-        {
-          href: "./output/pdf/moral-system-stress-test-manual.pdf",
-          label: "Manual",
-          secondary: true,
-        },
-        {
-          href: "./output/pdf/moral-system-stress-test-curriculum.pdf",
-          label: "Curriculum",
-          secondary: true,
-        },
+        manualPdf("./output/pdf/moral-system-stress-test-manual.pdf"),
+        curriculumPdf("./output/pdf/moral-system-stress-test-curriculum.pdf"),
       ],
     },
     primaryPage: {
@@ -709,16 +666,8 @@ export const TOOLS = [
         "Pushes the larger moral system into concrete Christian moral judgments, then compares those grounders with how disagreement is explained across severe, ordinary, sexual, civic, and generosity cases.",
       actions: [
         { href: "./apps/moral-particulars-audit/", label: "Run particulars audit" },
-        {
-          href: "./assets/manuals/moral-particulars-audit-manual-v2.pdf",
-          label: "Manual",
-          secondary: true,
-        },
-        {
-          href: "./assets/curricula/moral-particulars-audit-curriculum.pdf",
-          label: "Curriculum",
-          secondary: true,
-        },
+        manualPdf("./assets/manuals/moral-particulars-audit-manual-v2.pdf"),
+        curriculumPdf("./assets/curricula/moral-particulars-audit-curriculum.pdf"),
       ],
     },
     primaryPage: {
@@ -800,16 +749,8 @@ export const TOOLS = [
           label: "Start with fine-tuning",
           secondary: true,
         },
-        {
-          href: "./apps/theism-gradient-audit/docs/deism-theism-gradient-audit-manual.pdf",
-          label: "Manual",
-          secondary: true,
-        },
-        {
-          href: "./apps/theism-gradient-audit/docs/deism-theism-gradient-audit-curriculum.pdf",
-          label: "Curriculum",
-          secondary: true,
-        },
+        manualPdf("./apps/theism-gradient-audit/docs/deism-theism-gradient-audit-manual.pdf"),
+        curriculumPdf("./apps/theism-gradient-audit/docs/deism-theism-gradient-audit-curriculum.pdf"),
       ],
     },
     primaryPage: {
