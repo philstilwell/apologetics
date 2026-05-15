@@ -221,6 +221,11 @@ export const TOOLS = [
           label: "Manual",
           secondary: true,
         },
+        {
+          href: "./output/pdf/earthly-promise-test-field-curriculum.pdf",
+          label: "Curriculum",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
