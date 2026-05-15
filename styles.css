@@ -14523,6 +14523,21 @@ body.app-fine-tuning .site-header {
   margin-top: 2px;
 }
 
+.fine-diagnosis-panel .fine-flag-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fine-diagnosis-panel .fine-flag-head strong {
+  margin: 0;
+}
+
+.fine-flag-tooltip {
+  width: min(420px, calc(100vw - 48px)) !important;
+}
+
 .fine-pressure-note {
   margin: 0;
   padding: 10px 12px;

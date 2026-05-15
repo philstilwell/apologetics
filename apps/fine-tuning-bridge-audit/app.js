@@ -841,6 +841,57 @@ function severityLabel(score) {
   return "Low";
 }
 
+function buildTooltipChecklist(items = []) {
+  if (!items.length) return "";
+  return `
+    <span class="tooltip-check-list">
+      ${items
+        .map(
+          (item) => `
+            <span class="tooltip-check-item">
+              <strong>${escapeHtml(item.label)}</strong>
+              <span>${escapeHtml(item.copy)}</span>
+            </span>
+          `
+        )
+        .join("")}
+    </span>
+  `;
+}
+
+function bridgeFlagHelp(bridgeId, mode) {
+  const bridge = bridgeById(bridgeId);
+  if (!bridge) return null;
+
+  const codaByMode = {
+    missing: "This flag will drop only when you move beyond naming the bridge and actually support it.",
+    asserted: "This flag will drop when the bridge is no longer just named, but backed by the actual evidence or reasoning doing the work.",
+    unsupported: "This flag will drop when the support note names what evidence, argument, or control is really carrying the bridge."
+  };
+
+  return {
+    title: bridge.title,
+    intro: bridge.question,
+    checklist: [
+      { label: "Why it matters", copy: bridge.explanation[1] || bridge.explanation[0] || "" },
+      { label: "What stronger support looks like", copy: bridge.explanation[2] || bridge.explanation[1] || "" }
+    ],
+    coda: codaByMode[mode] || "This flag will drop when the bridge is better supported."
+  };
+}
+
+function renderFlagTooltipContent(help, id) {
+  if (!help) return "";
+  return `
+    <span class="metric-tooltip fine-flag-tooltip" id="${escapeHtml(id)}" role="tooltip">
+      <strong>${escapeHtml(help.title)}</strong>
+      ${help.intro ? `<span class="tooltip-intro">${escapeHtml(help.intro)}</span>` : ""}
+      ${buildTooltipChecklist(help.checklist)}
+      ${help.coda ? `<span class="tooltip-coda">${escapeHtml(help.coda)}</span>` : ""}
+    </span>
+  `;
+}
+
 function buildFlags() {
   const flags = [];
   const currentRoute = routeById(state.route);
@@ -856,7 +907,26 @@ function buildFlags() {
     flags.push({
       severity: 95,
       title: "Selected route outruns the current strict ceiling.",
-      body: `The audit is aiming at ${currentRoute.label}, but the strongest fully supported ceiling is ${ceilingLabel(strictCeiling)}.`
+      body: `The audit is aiming at ${currentRoute.label}, but the strongest fully supported ceiling is ${ceilingLabel(strictCeiling)}.`,
+      help: {
+        title: "Selected route outruns the strict ceiling",
+        intro: "The route you chose is thicker than what the current substantiated bridge work has earned.",
+        checklist: [
+          {
+            label: "Why it appeared",
+            copy: `Your selected route is ${currentRoute.label}, but the strict ceiling is only ${ceilingLabel(strictCeiling)}.`
+          },
+          {
+            label: "What it means",
+            copy: "The current gap is about bridge support, not simply about whether you like or dislike the conclusion."
+          },
+          {
+            label: "What would lower it",
+            copy: "Either strengthen the missing bridges up to the selected route, or narrow the route to the highest fully earned level."
+          }
+        ],
+        coda: "Treat the strict ceiling as the real limit until the bridge work changes."
+      }
     });
   }
 
@@ -864,7 +934,26 @@ function buildFlags() {
     flags.push({
       severity: 92,
       title: "The design step itself is not yet earned.",
-      body: "At least one of the core entry bridges remains missing or only asserted: narrow range, probability measure, observer selection, impersonal alternatives, or the design step itself."
+      body: "At least one of the core entry bridges remains missing or only asserted: narrow range, probability measure, observer selection, impersonal alternatives, or the design step itself.",
+      help: {
+        title: "The design step is not yet earned",
+        intro: "The case has not yet cleared the entry bridges needed to move from fine-tuning to purposive calibration itself.",
+        checklist: [
+          {
+            label: "Why it appeared",
+            copy: "At least one of the core entry bridges is still missing, only asserted, or lacks a real support note."
+          },
+          {
+            label: "What it blocks",
+            copy: "If the entry step to design is still weak, later claims about life-purpose, humans, or Christianity should not borrow more support than this stage has earned."
+          },
+          {
+            label: "What to fix first",
+            copy: "Strengthen narrow range, probability measure, observer selection, impersonal alternatives, and the design step before pushing to thicker conclusions."
+          }
+        ],
+        coda: "Until these entry bridges are stronger, keep the conclusion thinner than design-heavy routes suggest."
+      }
     });
   }
 
@@ -875,19 +964,22 @@ function buildFlags() {
       flags.push({
         severity: 88,
         title: `${bridge.title} is still missing.`,
-        body: bridge.question
+        body: bridge.question,
+        help: bridgeFlagHelp(bridgeId, "missing")
       });
     } else if (current.status === "asserted") {
       flags.push({
         severity: 66,
         title: `${bridge.title} is only asserted.`,
-        body: `You have named the bridge, but the tool still needs the actual support for it: ${bridge.question}`
+        body: `You have named the bridge, but the tool still needs the actual support for it: ${bridge.question}`,
+        help: bridgeFlagHelp(bridgeId, "asserted")
       });
     } else if (bridgeWarningVisible(bridgeId)) {
       flags.push({
         severity: 62,
         title: `${bridge.title} is marked substantiated without a support note.`,
-        body: "If a bridge is really doing work, name what evidence, control, or argument is carrying it."
+        body: "If a bridge is really doing work, name what evidence, control, or argument is carrying it.",
+        help: bridgeFlagHelp(bridgeId, "unsupported")
       });
     }
   });
@@ -896,7 +988,26 @@ function buildFlags() {
     flags.push({
       severity: prior,
       title: "Prior-commitment pressure is high.",
-      body: "Identity pull, delegated trust, or weak mind-change willingness may already be inflating the conclusion."
+      body: "Identity pull, delegated trust, or weak mind-change willingness may already be inflating the conclusion.",
+      help: {
+        title: "Prior-commitment pressure is high",
+        intro: "Some confidence may be arriving before the bridge work is finished.",
+        checklist: [
+          {
+            label: "Why it appeared",
+            copy: "Identity pull, delegated trust, asymmetry, or low mind-change willingness are scoring high enough to matter."
+          },
+          {
+            label: "What it means",
+            copy: "This does not prove the conclusion false. It means some of the confidence may be coming from social, emotional, or inherited pressures rather than from the bridge argument alone."
+          },
+          {
+            label: "What would lower it",
+            copy: "Name what would actually change your mind and keep the conclusion narrow enough that it does not outrun the bridge work."
+          }
+        ],
+        coda: "Prior pressure is background pressure, not the same thing as human-target pressure."
+      }
     });
   }
 
@@ -904,7 +1015,26 @@ function buildFlags() {
     flags.push({
       severity: 78 + Math.round(mismatch / 5),
       title: "The actual world shape does not look like the selected route would naturally predict.",
-      body: `You mapped the actual universe to ${scenarioDetails[state.world.actualUniverse]}, but the route's relevant model maps to ${scenarioDetails[state.world[relevantWorldModelKey()]]}.`
+      body: `You mapped the actual universe to ${scenarioDetails[state.world.actualUniverse]}, but the route's relevant model maps to ${scenarioDetails[state.world[relevantWorldModelKey()]]}.`,
+      help: {
+        title: "World-shape mismatch",
+        intro: "The observed universe does not look enough like the universe your selected route would naturally predict.",
+        checklist: [
+          {
+            label: "Why it appeared",
+            copy: `You chose ${scenarioDetails[state.world.actualUniverse]} for the actual universe, but ${scenarioDetails[state.world[relevantWorldModelKey()]]} for the route-relevant model.`
+          },
+          {
+            label: "What it means",
+            copy: "The route is under pressure because its own expected world shape does not line up well with the world shape you think we actually observe."
+          },
+          {
+            label: "What would lower it",
+            copy: "Either choose a thinner route whose expected world better fits the actual universe, or give a stronger reason why the selected thicker route should still expect this shape."
+          }
+        ],
+        coda: "A mismatch does not kill design by itself, but it does push against thicker life- or human-centered readings."
+      }
     });
   }
 
@@ -912,7 +1042,26 @@ function buildFlags() {
     flags.push({
       severity: 58,
       title: "Observer-selection pressure remains live.",
-      body: "If observers can only observe observer-permitting regions, that explanatory work must be handled before design takes the whole burden."
+      body: "If observers can only observe observer-permitting regions, that explanatory work must be handled before design takes the whole burden.",
+      help: {
+        title: "Observer-selection pressure remains live",
+        intro: "Any fine-tuning argument has to account for the fact that observers can only find themselves where observers are possible.",
+        checklist: [
+          {
+            label: "Why it appeared",
+            copy: "The observer-selection bridge is not yet fully substantiated with a real support note."
+          },
+          {
+            label: "What it means",
+            copy: "Part of the apparent surprise may come from forgetting the built-in selection effect in our situation."
+          },
+          {
+            label: "What would lower it",
+            copy: "Show what remains surprising even after selection effects are taken seriously, and why that remainder favors design more than impersonal alternatives do."
+          }
+        ],
+        coda: "Until that work is done, design should not be treated as carrying the whole explanatory burden."
+      }
     });
   }
 
@@ -920,7 +1069,26 @@ function buildFlags() {
     flags.push({
       severity: target,
       title: "Human-target pressure is outrunning the visible bridge support.",
-      body: "The goal sliders favor humans or persons strongly, but the human-target bridge remains weak or missing."
+      body: "The goal sliders favor humans or persons strongly, but the human-target bridge remains weak or missing.",
+      help: {
+        title: "Human-target pressure is outrunning support",
+        intro: "The argument is leaning toward humans or persons faster than the visible bridge work justifies.",
+        checklist: [
+          {
+            label: "Why it appeared",
+            copy: "The target sliders are leaning toward humans or persons, but the human-target bridge is still weak, asserted, or missing."
+          },
+          {
+            label: "What it means",
+            copy: "The case may be quietly borrowing a human-centered conclusion from a thinner design or life-permitting argument."
+          },
+          {
+            label: "What would lower it",
+            copy: "Either strengthen the human-target bridge directly or lower the target claim back toward life-purpose or thin design."
+          }
+        ],
+        coda: "This is pressure inside the argument itself, not merely outside prior commitment pressure."
+      }
     });
   }
 
@@ -931,7 +1099,26 @@ function buildFlags() {
     flags.push({
       severity: 57,
       title: "The economy premise is doing work that may not uniquely support the selected conclusion.",
-      body: "A designer's economy could fit sparse designer models as easily as life-abundant or human-centered ones. Economy alone is not a bridge to humans or Christianity."
+      body: "A designer's economy could fit sparse designer models as easily as life-abundant or human-centered ones. Economy alone is not a bridge to humans or Christianity.",
+      help: {
+        title: "The economy premise is doing hidden work",
+        intro: "Divine economy may explain why the universe is sparse, but by itself it does not tell you which thicker target the designer had in view.",
+        checklist: [
+          {
+            label: "Why it appeared",
+            copy: "Your economy slider is high enough that a 'just enough life' reading is doing noticeable work in the interpretation."
+          },
+          {
+            label: "What it means",
+            copy: "Economy can support a sparse-designer reading just as easily as a life-abundant or human-centered reading."
+          },
+          {
+            label: "What would lower it",
+            copy: "Add a separate reason why the sparse universe still points specifically to life-purpose, human-purpose, or Christianity rather than only to minimal design."
+          }
+        ],
+        coda: "Economy can be part of a case, but it is not by itself a bridge to thicker goals."
+      }
     });
   }
 
@@ -1003,14 +1190,27 @@ function buildCollapseItems(diagnosis) {
 
   return diagnosis.flags
     .slice(0, 8)
-    .map(
-      (flag) => `
+    .map((flag, index) => {
+      const tooltipId = `diagnosis-flag-help-${index}`;
+      return `
         <li>
-          <strong>${escapeHtml(flag.title)}</strong>
+          <div class="fine-flag-head">
+            <strong>${escapeHtml(flag.title)}</strong>
+            ${
+              flag.help
+                ? `
+                  <button class="fine-help" type="button" aria-label="Explain ${escapeHtml(flag.title)}" aria-describedby="${tooltipId}">
+                    <span class="label-help-dot" aria-hidden="true">?</span>
+                    ${renderFlagTooltipContent(flag.help, tooltipId)}
+                  </button>
+                `
+                : ""
+            }
+          </div>
           <p>${escapeHtml(flag.body)}</p>
         </li>
       `
-    )
+    })
     .join("");
 }
 
