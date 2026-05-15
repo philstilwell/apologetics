@@ -1458,7 +1458,7 @@ def build_story(doc_width: float):
             [
                 ("12 sessions", PALETTE["gold"], PALETTE["gold_soft"]),
                 ("90 minutes each", PALETTE["blue"], PALETTE["blue_soft"]),
-                ("Small-group, discussion heavy", PALETTE["green"], PALETTE["green_soft"]),
+                ("Discussion-heavy", PALETTE["green"], PALETTE["green_soft"]),
                 ("Threshold -> Stress Test -> Particulars", PALETTE["red"], PALETTE["red_soft"]),
             ],
             doc_width,
