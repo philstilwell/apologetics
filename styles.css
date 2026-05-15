@@ -14233,8 +14233,8 @@ body.app-fine-tuning .site-header {
 }
 
 .fine-help .metric-tooltip {
-  left: 0;
-  right: auto;
+  right: 0;
+  left: auto;
   bottom: calc(100% + 10px);
   top: auto;
   width: min(360px, calc(100vw - 48px));
