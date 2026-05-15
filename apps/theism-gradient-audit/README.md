@@ -37,11 +37,13 @@ Then open [http://localhost:4173](http://localhost:4173) for the hub, or [http:/
 - `app.html`: the Theism Gradient assessment
 - `favicon.svg`: olive-green `T` favicon
 - `docs/deism-theism-gradient-audit-manual.pdf`: printable manual for sincere seekers and basic functions
+- `docs/deism-theism-gradient-audit-curriculum.pdf`: 12-session curriculum for small groups of young, honest seekers
 - `public/claims.json`: the 50-claim bank and metadata
 - `src/scoring.ts`: TypeScript scoring model from the project seed
 - `src/scoring.js`: browser module used by the static app
 - `scripts/verify-calculations.mjs`: calculation and claim-bank verification
 - `scripts/build-manual-pdf.py`: ReportLab generator for the PDF manual
+- `scripts/build-curriculum-pdf.py`: ReportLab generator for the PDF curriculum
 - `src/app.js`: dashboard state, rendering, persistence, and interactions
 - `src/styles.css`: dashboard styling
 - `docs/deism_theism_gradient_app_brief.md`: current app brief

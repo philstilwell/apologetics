@@ -770,6 +770,11 @@ export const TOOLS = [
           label: "Manual",
           secondary: true,
         },
+        {
+          href: "./apps/theism-gradient-audit/docs/deism-theism-gradient-audit-curriculum.pdf",
+          label: "Curriculum",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
