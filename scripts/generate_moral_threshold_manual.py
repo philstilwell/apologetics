@@ -23,7 +23,7 @@ from reportlab.platypus.flowables import Flowable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "assets" / "manuals" / "moral-system-threshold-manual.pdf"
+OUTPUT = ROOT / "assets" / "manuals" / "moral-system-threshold-manual-v2.pdf"
 
 
 PALETTE = {
@@ -751,6 +751,36 @@ def build_story(doc_width: float):
             ]
         )
     )
+    story.append(Spacer(1, 12))
+    sequence_cards = [
+        info_card(
+            s,
+            "Stay here first when ...",
+            "The claim still leans on undefined moral language, a borrowed authority, an unexplained duty, or a correction method that only appears after a problem has already surfaced.",
+            PALETTE["gold"],
+            PALETTE["gold_soft"],
+            doc_width / 2 - 8,
+        ),
+        info_card(
+            s,
+            "Move on when ...",
+            "Each component has at least a serious first-pass answer, the support notes are no longer empty slogans, and the diagnosis shows which pressure points the advanced audit should test next.",
+            PALETTE["blue"],
+            PALETTE["blue_soft"],
+            doc_width / 2 - 8,
+        ),
+    ]
+    story.append(two_column_cards(sequence_cards, doc_width))
+    story.append(
+        info_card(
+            s,
+            "What the later tools add",
+            "<b>Stress Test:</b> pushes the same structure through disagreement, authority strain, and counterfactual pressure.<br/><br/><b>Moral Particulars:</b> asks whether that same structure can survive real cases without special pleading or improvised exceptions.",
+            PALETTE["green"],
+            PALETTE["green_soft"],
+            doc_width,
+        )
+    )
     story.append(PageBreak())
 
     story.extend(section_heading(s, "Why it matters", "Why sincere seekers benefit from this tool", "The most common moral mistake in apologetics is to move too quickly from a favored conclusion to the language of moral certainty without first showing the structure that would make that certainty intelligible."))
@@ -866,6 +896,36 @@ def build_story(doc_width: float):
             ]
         )
     )
+    story.append(Spacer(1, 12))
+    handoff_cards = [
+        info_card(
+            s,
+            "Reverse handoff for revision",
+            "If the Stress Test exposes a hidden assumption, the current claim can be sent back into Threshold so the weak component is repaired rather than quietly ignored. That keeps revision visible and disciplined.",
+            PALETTE["blue"],
+            PALETTE["blue_soft"],
+            doc_width / 2 - 8,
+        ),
+        info_card(
+            s,
+            "Forward handoff into particulars",
+            "When the structure survives threshold and pressure, the same setup can move into Moral Particulars so concrete cases inherit the same architecture instead of a new ad hoc explanation.",
+            PALETTE["green"],
+            PALETTE["green_soft"],
+            doc_width / 2 - 8,
+        ),
+    ]
+    story.append(two_column_cards(handoff_cards, doc_width))
+    story.append(
+        info_card(
+            s,
+            "What handoff does not replace",
+            "The transfer saves setup, not reasoning. Each next page still requires fresh argument, fresh case analysis, and a willingness to revise the earlier story if the later pressure exposes a gap.",
+            PALETTE["red"],
+            PALETTE["red_soft"],
+            doc_width,
+        )
+    )
     story.append(PageBreak())
 
     story.extend(section_heading(s, "Eight components", "The eight threshold components at a glance", "Each component answers a necessary question. If the component is weak, the tool names what the view currently collapses into."))
@@ -923,6 +983,43 @@ def build_story(doc_width: float):
             doc_width,
         )
     )
+    story.append(Spacer(1, 12))
+    story.extend(section_heading(s, "Questions and cautions", "Three common misunderstandings"))
+    faq_cards = [
+        info_card(
+            s,
+            "Does a missing component prove the whole view false?",
+            "No. The threshold tool is about structural coherence, not final truth. A weak result means more architecture is still needed before the claim should be treated as a full moral system.",
+            PALETTE["gold"],
+            PALETTE["gold_soft"],
+            doc_width / 2 - 8,
+        ),
+        info_card(
+            s,
+            "Can a sincere Christian still fall below threshold?",
+            "Yes. Sincerity explains posture, not architecture. A person may deeply trust scripture, conscience, or spiritual guidance while still lacking a public account of meaning, access, scope, or correction.",
+            PALETTE["blue"],
+            PALETTE["blue_soft"],
+            doc_width / 2 - 8,
+        ),
+        info_card(
+            s,
+            "What counts as real substantiation?",
+            "Enough explanation and support that the component can bear disagreement without quietly borrowing another unargued premise. In this tool, an empty grounding note is a warning that the answer is still asserted rather than carried.",
+            PALETTE["green"],
+            PALETTE["green_soft"],
+            doc_width / 2 - 8,
+        ),
+        info_card(
+            s,
+            "Why keep the collapse labels?",
+            "Because they show that a gap is never neutral. When a component is weak or absent, the alleged system starts functioning like something else: preference, inherited authority, abstraction, or ad hoc revision.",
+            PALETTE["red"],
+            PALETTE["red_soft"],
+            doc_width / 2 - 8,
+        ),
+    ]
+    story.append(two_column_cards(faq_cards, doc_width))
     return story
 
 

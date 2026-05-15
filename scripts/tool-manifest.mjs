@@ -508,7 +508,7 @@ export const TOOLS = [
       actions: [
         { href: "./apps/moral-system-threshold/", label: "Run threshold check" },
         {
-          href: "./assets/manuals/moral-system-threshold-manual.pdf",
+          href: "./assets/manuals/moral-system-threshold-manual-v2.pdf",
           label: "Manual",
           secondary: true,
         },
