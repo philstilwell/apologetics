@@ -14227,9 +14227,25 @@ body.app-fine-tuning .site-header {
 }
 
 .fine-help .label-help-dot {
-  position: static;
-  transform: translate(0.5px, -0.5px);
+  position: relative;
+  display: grid;
+  place-items: center;
   margin-left: 0;
+  color: transparent;
+  transform: none;
+}
+
+.fine-help .label-help-dot::before {
+  content: "?";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--plain-green);
+  font-size: 0.72rem;
+  font-weight: 950;
+  line-height: 1;
+  transform: translate(0.4px, -0.6px);
 }
 
 .fine-help .metric-tooltip {
