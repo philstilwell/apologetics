@@ -7,15 +7,14 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
+from reportlab.lib.utils import simpleSplit
 from reportlab.platypus import (
-    BaseDocTemplate,
-    Frame,
     KeepTogether,
     ListFlowable,
     ListItem,
     PageBreak,
-    PageTemplate,
     Paragraph,
+    SimpleDocTemplate,
     Spacer,
     Table,
     TableStyle,
@@ -156,46 +155,65 @@ DIAGNOSIS_LADDER = [
     ),
 ]
 
+READINESS_SAMPLE = [
+    ("Meaning", "asserted"),
+    ("Truth", "substantiated"),
+    ("Authority", "missing"),
+    ("Access", "asserted"),
+    ("Binding", "substantiated"),
+    ("Cases", "substantiated"),
+    ("Scope", "asserted"),
+    ("Repair", "missing"),
+]
+
+STATUS_SWATCHES = {
+    "missing": (colors.HexColor("#f7ddd9"), colors.HexColor("#c85649")),
+    "asserted": (colors.HexColor("#fff0be"), colors.HexColor("#bf8a16")),
+    "substantiated": (colors.HexColor("#def0e5"), colors.HexColor("#3d7d58")),
+}
+
 
 class WorkflowStrip(Flowable):
     def __init__(self, width: float):
         super().__init__()
         self.width = width
-        self.height = 108
+        self.height = 126
 
     def draw(self) -> None:
         canvas = self.canv
         gap = 14
         card_width = (self.width - (2 * gap)) / 3
         entries = [
-            ("1", "Threshold", "Clarify whether there is enough architecture to count as a system at all.", PALETTE["gold"], PALETTE["gold_soft"]),
-            ("2", "Stress Test", "Pressure the same structure with authority, disagreement, and counterfactual strain.", PALETTE["blue"], PALETTE["blue_soft"]),
-            ("3", "Particulars", "Cash the architecture out in concrete moral cases and comparisons.", PALETTE["red"], PALETTE["red_soft"]),
+            ("1", "Threshold", "Clarify whether there is enough moral architecture to count as a system.", PALETTE["gold"], PALETTE["gold_soft"]),
+            ("2", "Stress Test", "Pressure the same structure with disagreement, authority, and counterfactual strain.", PALETTE["blue"], PALETTE["blue_soft"]),
+            ("3", "Particulars", "Carry the architecture into concrete moral cases and comparisons.", PALETTE["red"], PALETTE["red_soft"]),
         ]
 
         for index, (step, title, copy, accent, fill) in enumerate(entries):
             x = index * (card_width + gap)
             y = 8
+            card_height = 104
             canvas.setFillColor(fill)
             canvas.setStrokeColor(accent)
             canvas.setLineWidth(1.2)
-            canvas.roundRect(x, y, card_width, 90, 12, stroke=1, fill=1)
+            canvas.roundRect(x, y, card_width, card_height, 12, stroke=1, fill=1)
             canvas.setFillColor(accent)
-            canvas.circle(x + 18, y + 72, 10, stroke=0, fill=1)
+            canvas.circle(x + 18, y + 80, 10, stroke=0, fill=1)
             canvas.setFillColor(colors.white)
             canvas.setFont("Helvetica-Bold", 9)
-            canvas.drawCentredString(x + 18, y + 68.5, step)
+            canvas.drawCentredString(x + 18, y + 76.5, step)
             canvas.setFillColor(PALETTE["ink"])
             canvas.setFont("Helvetica-Bold", 12)
-            canvas.drawString(x + 34, y + 68, title)
-            canvas.setFont("Helvetica", 8.7)
-            text = canvas.beginText(x + 14, y + 50)
-            text.setLeading(10.5)
-            for line in wrap_text(copy, 28):
+            canvas.drawString(x + 34, y + 76, title)
+            canvas.setFont("Helvetica", 8.35)
+            text = canvas.beginText(x + 14, y + 58)
+            text.setLeading(10.1)
+            lines = simpleSplit(copy, "Helvetica", 8.35, card_width - 28)
+            for line in lines[:4]:
                 text.textLine(line)
             canvas.drawText(text)
             if index < 2:
-                line_y = y + 45
+                line_y = y + 52
                 start_x = x + card_width + 4
                 end_x = x + card_width + gap - 4
                 canvas.setStrokeColor(PALETTE["line"])
@@ -217,6 +235,82 @@ def wrap_text(text: str, words_per_line: int) -> list[str]:
     if current:
         lines.append(" ".join(current))
     return lines
+
+
+class ReadinessMapFigure(Flowable):
+    def __init__(self, width: float):
+        super().__init__()
+        self.width = width
+        self.height = 208
+
+    def draw(self) -> None:
+        canvas = self.canv
+        left_gutter = 84
+        lane_width = 30
+        lane_gap = 14
+        outer_height = 112
+        outer_y = 52
+        inner_gap = 7
+        segment_height = (outer_height - (inner_gap * 4)) / 3
+        top_y = outer_y + outer_height - inner_gap - segment_height
+        middle_y = outer_y + inner_gap * 2 + segment_height
+        bottom_y = outer_y + inner_gap
+        rows = [
+            ("Substantiated", top_y + segment_height / 2),
+            ("Asserted", middle_y + segment_height / 2),
+            ("Missing", bottom_y + segment_height / 2),
+        ]
+
+        canvas.setFillColor(colors.HexColor("#fbf7ef"))
+        canvas.setStrokeColor(colors.HexColor("#dfcfb4"))
+        canvas.setLineWidth(1)
+        canvas.roundRect(0, 0, self.width, self.height - 6, 14, stroke=1, fill=1)
+
+        canvas.setFillColor(PALETTE["ink"])
+        canvas.setFont("Helvetica-Bold", 12)
+        canvas.drawString(18, self.height - 28, "Sample threshold readiness map")
+        canvas.setFillColor(PALETTE["muted"])
+        canvas.setFont("Helvetica", 9)
+        canvas.drawString(18, self.height - 42, "Each lane is one threshold component. The highlighted segment shows its current effective status.")
+
+        canvas.setFillColor(PALETTE["muted"])
+        canvas.setFont("Helvetica-Bold", 7.4)
+        for label, y in rows:
+            canvas.drawRightString(left_gutter - 10, y - 2, label)
+
+        for index, (label, status) in enumerate(READINESS_SAMPLE):
+            x = left_gutter + index * (lane_width + lane_gap)
+            canvas.setStrokeColor(colors.HexColor("#d7c8b1"))
+            canvas.setFillColor(colors.white)
+            canvas.setLineWidth(1)
+            canvas.roundRect(x, outer_y, lane_width, outer_height, 12, stroke=1, fill=1)
+
+            for segment_status, segment_y in (
+                ("substantiated", top_y),
+                ("asserted", middle_y),
+                ("missing", bottom_y),
+            ):
+                fill, border = STATUS_SWATCHES[segment_status]
+                canvas.setFillColor(fill if segment_status == status else colors.HexColor("#f2ece2"))
+                canvas.setStrokeColor(border if segment_status == status else colors.HexColor("#ece2d2"))
+                canvas.roundRect(
+                    x + inner_gap,
+                    segment_y,
+                    lane_width - (inner_gap * 2),
+                    segment_height,
+                    8,
+                    stroke=1,
+                    fill=1,
+                )
+
+            lines = simpleSplit(label, "Helvetica-Bold", 6.7, lane_width + 12)
+            canvas.setFillColor(PALETTE["ink"])
+            canvas.setFont("Helvetica-Bold", 6.7)
+            if len(lines) == 1:
+                canvas.drawCentredString(x + lane_width / 2, 26, lines[0])
+            else:
+                canvas.drawCentredString(x + lane_width / 2, 30, lines[0])
+                canvas.drawCentredString(x + lane_width / 2, 20, lines[1])
 
 
 def styles():
@@ -560,6 +654,38 @@ def diagnosis_table(style_map, width: float):
     return table
 
 
+def transfer_table(style_map, width: float):
+    table = Table(
+        [
+            [
+                Paragraph("<b>Threshold state</b>", style_map["table_head"]),
+                Paragraph("<b>What carries forward</b>", style_map["table_head"]),
+            ],
+            [Paragraph("Missing", style_map["table_cell"]), Paragraph("Not preloaded into the Stress Test", style_map["table_cell"])],
+            [Paragraph("Asserted", style_map["table_cell"]), Paragraph("Preloaded as strength 1", style_map["table_cell"])],
+            [Paragraph("Substantiated", style_map["table_cell"]), Paragraph("Preloaded as strength 3", style_map["table_cell"])],
+            [Paragraph("Grounding note", style_map["table_cell"]), Paragraph("Carried forward as an optional note", style_map["table_cell"])],
+            [Paragraph("Claim and route", style_map["table_cell"]), Paragraph("Passed forward so the user does not rebuild the same starting setup", style_map["table_cell"])],
+        ],
+        colWidths=[width * 0.34, width * 0.66],
+    )
+    table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), PALETTE["gold_soft"]),
+                ("GRID", (0, 0), (-1, -1), 0.9, colors.HexColor("#d6c09a")),
+                ("LEFTPADDING", (0, 0), (-1, -1), 8),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+                ("TOPPADDING", (0, 0), (-1, -1), 7),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("BACKGROUND", (0, 1), (-1, -1), colors.white),
+            ]
+        )
+    )
+    return table
+
+
 def build_story(doc_width: float):
     s = styles()
     story = []
@@ -615,10 +741,16 @@ def build_story(doc_width: float):
     cover_cards.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0)]))
     story.append(cover_cards)
     story.append(Spacer(1, 16))
-    story.extend(section_heading(s, "Sequence", "How it fits the morality pipeline"))
-    story.append(Paragraph("The threshold page is intentionally preliminary. It should make the later tools sharper by making the hidden assumptions visible first.", s["body"]))
-    story.append(Spacer(1, 10))
-    story.append(WorkflowStrip(doc_width))
+    story.append(
+        KeepTogether(
+            section_heading(s, "Sequence", "How it fits the morality pipeline")
+            + [
+                Paragraph("The threshold page is intentionally preliminary. It should make the later tools sharper by making the hidden assumptions visible first.", s["body"]),
+                Spacer(1, 10),
+                WorkflowStrip(doc_width),
+            ]
+        )
+    )
     story.append(PageBreak())
 
     story.extend(section_heading(s, "Why it matters", "Why sincere seekers benefit from this tool", "The most common moral mistake in apologetics is to move too quickly from a favored conclusion to the language of moral certainty without first showing the structure that would make that certainty intelligible."))
@@ -650,15 +782,15 @@ def build_story(doc_width: float):
     story.append(Spacer(1, 8))
     story.append(route_group_table(s, doc_width))
     story.append(Spacer(1, 14))
-    story.extend(section_heading(s, "Posture", "How to use it charitably"))
+    posture_entries = [
+        "Ask, \"What is doing the work here?\" more often than, \"How can I defeat this view?\"",
+        "Treat missing structure as an invitation to clarify, not as an automatic confession of bad faith.",
+        "Use one component at a time. The tool is strongest when it narrows the question instead of widening the conflict.",
+    ]
     story.append(
-        bullet_list(
-            s,
-            [
-                "Ask, \"What is doing the work here?\" more often than, \"How can I defeat this view?\"",
-                "Treat missing structure as an invitation to clarify, not as an automatic confession of bad faith.",
-                "Use one component at a time. The tool is strongest when it narrows the question instead of widening the conflict.",
-            ],
+        KeepTogether(
+            section_heading(s, "Posture", "How to use it charitably")
+            + [bullet_list(s, posture_entries)]
         )
     )
 
@@ -695,66 +827,92 @@ def build_story(doc_width: float):
         )
     )
     story.append(Spacer(1, 12))
+    story.append(PageBreak())
+
     story.extend(section_heading(s, "Readiness map", "What the compact graph is for"))
     story.append(Paragraph("The readiness map is intentionally lightweight. It is not a prestige chart. It gives a quick visual of which of the eight components are still missing, merely asserted, or actually substantiated so the user can spot the bottleneck at a glance.", s["body"]))
+    story.append(Spacer(1, 10))
+    story.append(ReadinessMapFigure(doc_width))
+    story.append(Spacer(1, 12))
+    page4_cards = [
+        info_card(
+            s,
+            "How to interpret the map and collapse risks",
+            "Each vertical lane stands for one threshold component. The highlighted segment shows its effective status, not just the button that was clicked. Collapse labels are translation labels, not insults: they name what the view is functioning like while that component remains weak.",
+            PALETTE["gold"],
+            PALETTE["gold_soft"],
+            doc_width / 2 - 8,
+        ),
+        info_card(
+            s,
+            "How to repair and iterate",
+            "Return to the relevant component and answer its question with actual support rather than a conclusion. The threshold result can be carried into the Stress Test, brought back again for revision, and then pushed forward into Moral Particulars.",
+            PALETTE["green"],
+            PALETTE["green_soft"],
+            doc_width / 2 - 8,
+        ),
+    ]
+    story.append(two_column_cards(page4_cards, doc_width))
+    story.append(
+        KeepTogether(
+            section_heading(s, "Handoff", "What the page preloads into the next audit")
+            + [
+                transfer_table(s, doc_width),
+                Spacer(1, 8),
+                Paragraph(
+                    "A good preliminary tool should not make the user rebuild the same argument three times. Carrying the claim, route, notes, and effective strengths forward makes the later audits feel like one continuous inquiry rather than three disconnected pages.",
+                    s["small"],
+                ),
+            ]
+        )
+    )
     story.append(PageBreak())
 
     story.extend(section_heading(s, "Eight components", "The eight threshold components at a glance", "Each component answers a necessary question. If the component is weak, the tool names what the view currently collapses into."))
     component_cards_a = [component_card(s, component, doc_width / 2 - 8) for component in COMPONENTS[:4]]
     story.append(two_column_cards(component_cards_a, doc_width))
+    story.append(
+        info_card(
+            s,
+            "What these first four components govern",
+            "These first four components determine whether the moral vocabulary is stable, whether the claims can be true, why the route is authoritative, and how accountable people could know the standard instead of merely inheriting the conclusion.",
+            PALETTE["gold"],
+            PALETTE["gold_soft"],
+            doc_width,
+        )
+    )
     story.append(PageBreak())
 
     story.extend(section_heading(s, "Eight components", "The second half of the threshold architecture", "These later components matter because a moral system has to guide cases, define scope, and repair mistakes rather than merely declare ideals."))
     component_cards_b = [component_card(s, component, doc_width / 2 - 8) for component in COMPONENTS[4:]]
     story.append(two_column_cards(component_cards_b, doc_width))
-
-    story.extend(section_heading(s, "Diagnosis logic", "How the page classifies the current result", "The tool uses the effective component statuses and route family to determine the diagnosis. The ladder below states the logic as directly as possible."))
-    story.append(diagnosis_table(s, doc_width))
-    story.append(Spacer(1, 14))
-    story.extend(section_heading(s, "Readiness", "What the readiness states mean"))
     story.append(
-        chip_row(
+        info_card(
             s,
-            [
-                ("Not yet: below threshold", PALETTE["red"], PALETTE["red_soft"]),
-                ("Almost: near threshold", PALETTE["gold"], PALETTE["gold_soft"]),
-                ("Yes: threshold met", PALETTE["green"], PALETTE["green_soft"]),
-            ],
+            "Worked example: a scripture-centered claim",
+            "<b>Thin version:</b> \"Christian morality is coherent because scripture says so.\" That usually remains a rule source with hidden assumptions until Authority Check, Moral Access, and Case Guidance start doing real work.<br/><br/><b>Stronger version:</b> define what the key moral terms mean, explain why scripture counts as morally trustworthy, name how disagreement is resolved, and show how hard cases are decided before the preferred answer is simply assumed.",
+            PALETTE["green"],
+            PALETTE["green_soft"],
             doc_width,
         )
     )
-    story.append(Spacer(1, 12))
-    story.extend(section_heading(s, "Handoff", "Exactly what carries into the Stress Test"))
-    handoff_table = Table(
-        [
+    story.append(PageBreak())
+    story.extend(section_heading(s, "Diagnosis logic", "How the page classifies the current result", "The tool uses the effective component statuses and route family to determine the diagnosis. The ladder below states the logic as directly as possible."))
+    story.append(diagnosis_table(s, doc_width))
+    story.append(Spacer(1, 14))
+    story.extend(section_heading(s, "Next move", "What each band should lead you to do"))
+    story.append(
+        bullet_list(
+            s,
             [
-                Paragraph("<b>Threshold state</b>", s["table_head"]),
-                Paragraph("<b>Stress Test preload</b>", s["table_head"]),
+                "<b>Below threshold:</b> do not lean harder on confidence. Fill the weak component that is carrying hidden weight, then reassess before moving into the advanced audit.",
+                "<b>Near threshold:</b> continue to the Stress Test, but expect scope, correction, or asserted-only components to become the pressure points very quickly.",
+                "<b>Threshold met:</b> the question is no longer whether you have a moral system at all, but whether that system survives authority checks, disagreement strain, and hard particulars.",
+                "<b>Iteration is normal:</b> let the later tools send the claim back here when a hidden assumption is exposed. Revision is a feature of the sequence, not a sign that the threshold page failed.",
             ],
-            [Paragraph("Missing", s["table_cell"]), Paragraph("Not preloaded", s["table_cell"])],
-            [Paragraph("Asserted", s["table_cell"]), Paragraph("Strength 1", s["table_cell"])],
-            [Paragraph("Substantiated", s["table_cell"]), Paragraph("Strength 3", s["table_cell"])],
-            [Paragraph("Grounding note", s["table_cell"]), Paragraph("Optional note carried forward", s["table_cell"])],
-            [Paragraph("Claim and route", s["table_cell"]), Paragraph("Passed forward so the user does not rebuild the setup", s["table_cell"])],
-        ],
-        colWidths=[doc_width * 0.34, doc_width * 0.66],
-    )
-    handoff_table.setStyle(
-        TableStyle(
-            [
-                ("BACKGROUND", (0, 0), (-1, 0), PALETTE["gold_soft"]),
-                ("GRID", (0, 0), (-1, -1), 0.9, colors.HexColor("#d6c09a")),
-                ("LEFTPADDING", (0, 0), (-1, -1), 8),
-                ("RIGHTPADDING", (0, 0), (-1, -1), 8),
-                ("TOPPADDING", (0, 0), (-1, -1), 7),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                ("BACKGROUND", (0, 1), (-1, -1), colors.white),
-            ]
         )
     )
-    story.append(handoff_table)
-    story.append(Spacer(1, 14))
+    story.append(Spacer(1, 10))
     story.append(
         info_card(
             s,
@@ -771,21 +929,20 @@ def build_story(doc_width: float):
 def build_pdf(output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     margin = 0.78 * inch
-    frame = Frame(margin, 0.78 * inch, letter[0] - (margin * 2), letter[1] - (1.24 * inch + 0.78 * inch), id="body")
-    doc = BaseDocTemplate(
+    doc = SimpleDocTemplate(
         str(output),
         pagesize=letter,
         leftMargin=margin,
         rightMargin=margin,
         topMargin=1.24 * inch,
         bottomMargin=0.78 * inch,
+        pageCompression=0,
         title="Moral System Threshold Manual",
         author="Phil Stilwell",
         subject="Manual for the Moral System Threshold tool",
     )
-    doc.addPageTemplates([PageTemplate(id="manual", frames=[frame], onPage=page_background)])
-    story = build_story(frame._width)
-    doc.build(story)
+    story = build_story(doc.width)
+    doc.build(story, onFirstPage=page_background, onLaterPages=page_background)
 
 
 if __name__ == "__main__":

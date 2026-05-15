@@ -53,6 +53,11 @@ export const TOOLS = [
         "Uses a fair-die calibration drill, a bridge metaphor, and a ruin simulator to show what happens when confidence outruns the support a claim is perceived to have.",
       actions: [
         { href: "./apps/belief-overreach-audit/", label: "Run overreach audit" },
+        {
+          href: "./assets/manuals/belief-overreach-audit-manual-v2.pdf",
+          label: "Manual",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
@@ -128,6 +133,11 @@ export const TOOLS = [
         "Preliminary: use this before Deism-Theism Gradient whenever fine-tuning is part of the route into design or theism.",
       actions: [
         { href: "./apps/fine-tuning-bridge-audit/", label: "Run bridge audit" },
+        {
+          href: "./assets/manuals/fine-tuning-bridge-audit-manual.pdf",
+          label: "Manual",
+          secondary: true,
+        },
         {
           href: "./apps/theism-gradient-audit/app.html",
           label: "Next: Theism Gradient",
@@ -206,6 +216,11 @@ export const TOOLS = [
         "Maps claims about prayer, healing, protection, future knowledge, wisdom, behavior, morbidity, and longevity onto a live field to show whether they are open to robust testing or insulated by excuses.",
       actions: [
         { href: "./apps/falsifiability-field/", label: "Open field" },
+        {
+          href: "./output/pdf/earthly-promise-test-field-manual.pdf",
+          label: "Manual",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
@@ -286,7 +301,7 @@ export const TOOLS = [
           secondary: true,
         },
         {
-          href: "./output/pdf/inductive-symmetry-audit-manual.pdf",
+          href: "./assets/manuals/inductive-symmetry-audit-manual.pdf",
           label: "Manual",
           secondary: true,
         },
@@ -493,6 +508,11 @@ export const TOOLS = [
       actions: [
         { href: "./apps/moral-system-threshold/", label: "Run threshold check" },
         {
+          href: "./assets/manuals/moral-system-threshold-manual.pdf",
+          label: "Manual",
+          secondary: true,
+        },
+        {
           href: "./apps/moral-system-stress-test/",
           label: "Next: stress test",
           secondary: true,
@@ -565,7 +585,7 @@ export const TOOLS = [
     hub: {
       cardClass: "hub-card-morality",
       kicker: "Advanced follow-up",
-      tags: ["Advanced", "System-level"],
+      tags: ["Advanced", "System-level", "Manual"],
       summary:
         "Takes the threshold result into a fuller system-level pressure test, asking whether Christian morality survives counterfactuals, authority checks, disagreement strain, and collapse risks.",
       note: "Continues where Moral System Threshold leaves off.",
@@ -574,6 +594,11 @@ export const TOOLS = [
         {
           href: "./apps/moral-system-threshold/",
           label: "Start with threshold",
+          secondary: true,
+        },
+        {
+          href: "./output/pdf/moral-system-stress-test-manual.pdf",
+          label: "Manual",
           secondary: true,
         },
       ],
@@ -650,7 +675,7 @@ export const TOOLS = [
       actions: [
         { href: "./apps/moral-particulars-audit/", label: "Run particulars audit" },
         {
-          href: "./assets/manuals/moral-particulars-audit-manual.pdf",
+          href: "./assets/manuals/moral-particulars-audit-manual-v2.pdf",
           label: "Manual",
           secondary: true,
         },

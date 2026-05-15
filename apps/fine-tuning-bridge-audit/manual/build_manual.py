@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 from reportlab.lib import colors
@@ -9,9 +10,6 @@ from reportlab.platypus import (
     BaseDocTemplate,
     Frame,
     Image,
-    KeepTogether,
-    ListFlowable,
-    ListItem,
     PageBreak,
     PageTemplate,
     Paragraph,
@@ -26,6 +24,9 @@ APP_DIR = ROOT / "apps" / "fine-tuning-bridge-audit"
 OUTPUT_DIR = ROOT / "output" / "pdf"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_PDF = OUTPUT_DIR / "fine-tuning-bridge-audit-manual.pdf"
+PUBLISHED_DIR = ROOT / "assets" / "manuals"
+PUBLISHED_DIR.mkdir(parents=True, exist_ok=True)
+PUBLISHED_PDF = PUBLISHED_DIR / "fine-tuning-bridge-audit-manual.pdf"
 BEACH_IMAGE = APP_DIR / "fine-tuning-beach.png"
 
 
@@ -126,6 +127,19 @@ styles.add(
 )
 styles.add(
     ParagraphStyle(
+        name="ManualBullet",
+        parent=styles["BodyText"],
+        fontName="Helvetica",
+        fontSize=9.9,
+        leading=13.2,
+        textColor=MUTED,
+        leftIndent=14,
+        firstLineIndent=-10,
+        spaceAfter=4,
+    )
+)
+styles.add(
+    ParagraphStyle(
         name="SmallNote",
         parent=styles["BodyText"],
         fontName="Helvetica",
@@ -167,21 +181,8 @@ def make_doc(path: Path):
     return doc
 
 
-def bullet_list(items, level=0):
-    return ListFlowable(
-        [
-            ListItem(Paragraph(item, styles["ManualBodyTight"]), leftIndent=0)
-            for item in items
-        ],
-        bulletType="bullet",
-        start="circle" if level else "bullet",
-        leftIndent=14 + level * 10,
-        bulletFontName="Helvetica-Bold",
-        bulletFontSize=8,
-        bulletOffsetY=2,
-        spaceBefore=1,
-        spaceAfter=6,
-    )
+def hyphen_list(items):
+    return [Paragraph(f"- {item}", styles["ManualBullet"]) for item in items]
 
 
 def callout(title, body, tint=TEAL_SOFT):
@@ -351,8 +352,8 @@ def build_story():
     ]
     story.append(two_col_rows(bridge_rows))
     story.append(Spacer(1, 0.08 * inch))
-    story.append(
-        bullet_list(
+    story.extend(
+        hyphen_list(
             [
                 "Missing means the bridge has not really been supplied yet.",
                 "Asserted means the bridge has been named, but the support still has not been shown clearly.",
@@ -362,20 +363,85 @@ def build_story():
     )
 
     story.extend(section("4. The nine-step walkthrough", "Use"))
-    step_text = [
-        ("Step 1 - Claim", "Choose the exact conclusion you want fine-tuning to support. This stops the rest of the tool from drifting."),
-        ("Step 2 - Prior", "Check identity pull, delegated trust, symmetry willingness, and mind-change willingness. These do not settle the argument, but they reveal background pressure."),
-        ("Step 3 - Bridges", "Mark the eight bridges as missing, asserted, or substantiated. If you mark a bridge substantiated, say what evidence or reasoning is actually carrying it."),
-        ("Step 4 - World", "Use the beach analogy to compare the actual universe with the universe each route would naturally predict."),
-        ("Step 5 - Goals", "Keep target ambiguity visible by testing whether order, black holes, sparse life, abundant life, opaque ends, or humans look most plausible as the target."),
-        ("Step 6 - Diagnosis", "Read the honest ceiling, the tentative ceiling, the pressure map, and the yellow pressure list."),
-        ("Step 7 - Next", "Hand the result into Theism Gradient so the larger audit starts with the fine-tuning pressure already named."),
-        ("Step 8 - Q&A", "Use the built-in questions when you need clarification without turning the tool into a verdict machine."),
-        ("Step 9 - Report", "Export a compact summary, a Markdown version, or a structured AI prompt for further discussion."),
+    story.append(
+        Paragraph(
+            "Use the steps in order. Each one checks a different way an argument can overreach. The fastest way to get value from the tool is to answer plainly, keep the bridge notes concrete, and let the diagnosis stop where the support stops.",
+            styles["ManualBody"],
+        )
+    )
+    walkthrough_rows = [
+        [
+            Paragraph("<b>Step</b>", styles["ManualBodyTight"]),
+            Paragraph("<b>What to do</b>", styles["ManualBodyTight"]),
+            Paragraph("<b>What to watch for</b>", styles["ManualBodyTight"]),
+        ],
+        [
+            Paragraph("1. Claim", styles["ManualBodyTight"]),
+            Paragraph("Choose the exact conclusion you want fine-tuning to support.", styles["ManualBodyTight"]),
+            Paragraph("Do not let a design-only hunch quietly inherit life-purpose or human-purpose language.", styles["ManualBodyTight"]),
+        ],
+        [
+            Paragraph("2. Prior", styles["ManualBodyTight"]),
+            Paragraph("Check identity pull, delegated trust, symmetry willingness, and mind-change willingness.", styles["ManualBodyTight"]),
+            Paragraph("These do not settle the case. They show background pressure that may already be carrying confidence.", styles["ManualBodyTight"]),
+        ],
+        [
+            Paragraph("3. Bridges", styles["ManualBodyTight"]),
+            Paragraph("Mark each bridge missing, asserted, or substantiated. Add a real note if you mark it substantiated.", styles["ManualBodyTight"]),
+            Paragraph("A status label is not enough. Name the evidence, control, or argument that is doing the work.", styles["ManualBodyTight"]),
+        ],
+        [
+            Paragraph("4. World", styles["ManualBodyTight"]),
+            Paragraph("Use the beach analogy to compare the actual universe with the universe that route would naturally predict.", styles["ManualBodyTight"]),
+            Paragraph("A life-permitting pocket is not the same as a life-abundant or human-centered world-shape.", styles["ManualBodyTight"]),
+        ],
+        [
+            Paragraph("5. Goals", styles["ManualBodyTight"]),
+            Paragraph("Keep target ambiguity visible by checking rival targets such as order, stars, sparse life, abundant life, opaque ends, or humans.", styles["ManualBodyTight"]),
+            Paragraph("Even if design is live, the target may still be unclear or nonhuman.", styles["ManualBodyTight"]),
+        ],
+        [
+            Paragraph("6. Diagnosis", styles["ManualBodyTight"]),
+            Paragraph("Read the strict ceiling, tentative ceiling, pressure map, and pressure list together.", styles["ManualBodyTight"]),
+            Paragraph("A lower ceiling is still a useful result if it is a more honest read of the case.", styles["ManualBodyTight"]),
+        ],
+        [
+            Paragraph("7. Next", styles["ManualBodyTight"]),
+            Paragraph("Pass the result into Theism Gradient so later claims begin with the fine-tuning pressure already named.", styles["ManualBodyTight"]),
+            Paragraph("Do not let downstream theistic claims borrow support that the bridge audit did not earn.", styles["ManualBodyTight"]),
+        ],
+        [
+            Paragraph("8. Q&A", styles["ManualBodyTight"]),
+            Paragraph("Use the built-in questions when you need plain-language clarification.", styles["ManualBodyTight"]),
+            Paragraph("The help text should sharpen the diagnosis, not turn the tool into a verdict machine.", styles["ManualBodyTight"]),
+        ],
+        [
+            Paragraph("9. Report", styles["ManualBodyTight"]),
+            Paragraph("Export a short summary, Markdown version, or AI prompt when you want a portable record of the current read.", styles["ManualBodyTight"]),
+            Paragraph("A good report preserves the limits of the argument instead of inflating the conclusion on the way out.", styles["ManualBodyTight"]),
+        ],
     ]
-    for title, copy in step_text:
-        story.append(Paragraph(title, styles["SubTitle"]))
-        story.append(Paragraph(copy, styles["ManualBody"]))
+    walkthrough_table = Table(
+        walkthrough_rows,
+        colWidths=[0.95 * inch, 2.45 * inch, 3.58 * inch],
+        hAlign="LEFT",
+    )
+    walkthrough_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), TEAL_SOFT),
+                ("TEXTCOLOR", (0, 0), (-1, 0), INK),
+                ("BOX", (0, 0), (-1, -1), 0.8, LINE),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, LINE),
+                ("LEFTPADDING", (0, 0), (-1, -1), 8),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+                ("TOPPADDING", (0, 0), (-1, -1), 7),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ]
+        )
+    )
+    story.append(walkthrough_table)
 
     story.extend(section("5. Why the beach analogy matters"))
     story.append(
@@ -429,8 +495,8 @@ def build_story():
     )
 
     story.extend(section("7. What an honest result can sound like"))
-    story.append(
-        bullet_list(
+    story.extend(
+        hyphen_list(
             [
                 "Fine-tuning may support a thin design hunch, but it does not yet support life-purpose.",
                 "Life-purpose is still tentatively live, but the actual world-shape remains too sparse for a stronger reading.",
@@ -447,8 +513,8 @@ def build_story():
     )
 
     story.extend(section("8. Common mistakes and misuses"))
-    story.append(
-        bullet_list(
+    story.extend(
+        hyphen_list(
             [
                 "Treating the tool as a verdict machine instead of as a bridge audit.",
                 "Borrowing human-purpose from life-purpose or borrowing Christian-purpose from generic design.",
@@ -480,8 +546,8 @@ def build_story():
             styles["ManualBody"],
         )
     )
-    story.append(
-        bullet_list(
+    story.extend(
+        hyphen_list(
             [
                 "If the strict ceiling stays below design, keep the fine-tuning section thin.",
                 "If thin design is earned but life-purpose is not, say that plainly.",
@@ -500,14 +566,6 @@ def build_story():
         [Paragraph("<b>Its next destination</b>", styles["ManualBodyTight"]), Paragraph("Theism Gradient, with the bridge pressure already named.", styles["ManualBodyTight"])],
     ]
     story.append(two_col_rows([[Paragraph("<b>Quick reference</b>", styles["ManualBodyTight"]), Paragraph("<b>Use</b>", styles["ManualBodyTight"])]] + quick_rows))
-    story.append(Spacer(1, 0.1 * inch))
-    story.append(
-        callout(
-            "Final encouragement",
-            "If this tool lowers the ceiling of a claim you hoped was stronger, that is not wasted work. It means the seeker in you is becoming more careful than the advocate in you, and that is exactly the kind of honesty this manual is meant to support.",
-            tint=TEAL_SOFT,
-        )
-    )
     return story
 
 
@@ -515,7 +573,9 @@ def main():
     doc = make_doc(OUTPUT_PDF)
     story = build_story()
     doc.build(story)
+    shutil.copyfile(OUTPUT_PDF, PUBLISHED_PDF)
     print(OUTPUT_PDF)
+    print(PUBLISHED_PDF)
 
 
 if __name__ == "__main__":
