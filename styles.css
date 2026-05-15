@@ -14228,7 +14228,7 @@ body.app-fine-tuning .site-header {
 
 .fine-help .label-help-dot {
   position: static;
-  transform: none;
+  transform: translate(0.5px, -0.5px);
   margin-left: 0;
 }
 
