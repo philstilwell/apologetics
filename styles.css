@@ -9882,7 +9882,26 @@ body.app-morality :is(
 
 .threshold-claim-panel {
   display: grid;
-  gap: 12px;
+  gap: 18px;
+}
+
+.threshold-claim-panel .field-group {
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.threshold-claim-panel label {
+  font-size: 0.96rem;
+  font-weight: 900;
+}
+
+.threshold-claim-panel #routeSelect {
+  min-height: 56px;
+  padding: 10px 14px;
+  border-color: rgba(184, 144, 101, 0.72);
+  font-size: 1.18rem;
+  font-weight: 850;
+  line-height: 1.2;
 }
 
 .threshold-tool .audit-step.full-step > .annotation.plain-help {
@@ -9894,16 +9913,25 @@ body.app-morality :is(
 }
 
 .threshold-route-note {
-  margin: -2px 0 0;
-  padding: 10px 11px;
+  margin: 2px 0 2px;
+  padding: 13px 14px;
   border: 1px solid rgba(139, 97, 15, 0.32);
   border-left: 4px solid var(--moral-gold);
   border-radius: var(--radius);
   background: rgba(255, 242, 199, 0.58);
   color: var(--muted);
-  font-size: 0.84rem;
-  font-weight: 760;
-  line-height: 1.4;
+  font-size: 0.9rem;
+  font-weight: 780;
+  line-height: 1.5;
+}
+
+.threshold-claim-panel #claimInput {
+  min-height: 232px;
+  padding-top: 14px;
+}
+
+.threshold-claim-panel .moral-actions {
+  margin-top: 2px;
 }
 
 .threshold-preset-grid {
