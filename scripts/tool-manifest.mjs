@@ -433,6 +433,11 @@ export const TOOLS = [
           label: "Manual",
           secondary: true,
         },
+        {
+          href: "./assets/manuals/resurrection-evidence-audit-curriculum.pdf",
+          label: "Curriculum",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
