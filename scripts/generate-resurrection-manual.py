@@ -334,13 +334,92 @@ def cover_page(styles):
     ]
 
 
+def toc_page(styles):
+    rows = [
+        ("1", "Quick Start", "Run one honest pass without getting lost in the machinery."),
+        ("2", "Value of the Tool", "Why sincere seekers need visible assumptions, not hidden confidence."),
+        ("3", "Who Benefits Most", "Christians, doubters, former believers, teachers, and groups."),
+        ("4", "Starting Probability", "Why refusing to estimate a prior hides the comparison."),
+        ("5", "Teaching Parallel", "Use the demon-caused crash scenario before the resurrection preset."),
+        ("6-8", "Core Functions", "Walkthrough, terms, and how to read the visuals."),
+        ("9-12", "Responsible Interpretation", "Common mistakes, setting profiles, results, and AI prompt use."),
+        ("13-17", "Group Use and Reference", "Discussion guide, facilitator notes, responsible-use checklist, glossary, final word."),
+    ]
+    table = Table(
+        [[p(a, styles["CellTitle"]), p(b, styles["CellTitle"]), p(c, styles["Cell"])] for a, b, c in rows],
+        colWidths=[0.62 * inch, 1.85 * inch, 4.1 * inch],
+    )
+    table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), colors.white),
+                ("BOX", (0, 0), (-1, -1), 0.6, SILVER),
+                ("INNERGRID", (0, 0), (-1, -1), 0.35, SILVER),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 7),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+                ("TOPPADDING", (0, 0), (-1, -1), 7),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+            ]
+        )
+    )
+    return [
+        p("How to Use This Manual", styles["H1"]),
+        p(
+            "This manual is meant to sit beside the app. Read the quick start first, run the teaching parallel, then return to the reference sections when a slider, chart, or warning needs interpretation.",
+            styles["Body"],
+        ),
+        table,
+        Spacer(1, 10),
+        callout(
+            "Quality standard for the tool",
+            "A good audit should leave the user able to name the claim, state the starting probability, identify the strongest evidence, identify the strongest alternatives, preserve reasonable room for unknowns, and explain why the result moved.",
+            styles,
+            fill=PALE_GREEN,
+            border=LEAF,
+        ),
+        p(
+            "The manual uses plain language on purpose. The app includes Bayesian machinery, but the user should not need a philosophy or statistics background to understand the burden of the claim.",
+            styles["Body"],
+        ),
+        PageBreak(),
+    ]
+
+
 def build_story(styles):
     story = []
     story.extend(cover_page(styles))
+    story.extend(toc_page(styles))
 
     story.extend(
         section(
-            "1. What This Tool Is For",
+            "1. Quick Start: One Honest Session",
+            [
+                "For a first use, do not try to perfect every number. The goal is to see the structure of the reasoning and notice which assumptions control the result.",
+                two_column_table(
+                    [
+                        ("First 5 minutes", "Load the teaching parallel and ask what would really justify the claim that a demon turned the wheel."),
+                        ("Next 10 minutes", "Move through the selected claim, starting point, evidence, alternatives, and unknown reserve without trying to win the case."),
+                        ("Next 10 minutes", "Switch to the resurrection preset and repeat the same discipline. Keep the comparison method consistent."),
+                        ("Final 5 minutes", "Read the audit pressure, credence donut, contribution map, warnings, and report. Name the one assumption that matters most."),
+                    ],
+                    styles,
+                ),
+                callout(
+                    "Do not skip this",
+                    "If the user will not name a starting probability, the audit cannot compare the claim responsibly. The number can be rough, but it cannot be hidden.",
+                    styles,
+                    fill=CREAM,
+                    border=BROWN,
+                ),
+            ],
+            styles,
+        )
+    )
+
+    story.extend(
+        section(
+            "2. The Value of the Tool",
             [
                 "The Resurrection Evidence Audit is a self-audit for miracle and resurrection claims. It helps users ask whether their confidence is being carried by evidence, by background assumptions, by personal commitment, by social trust, or by alternatives that have not yet been faced.",
                 "The tool is especially useful when someone says a conclusion is obvious, but the actual pieces have not been placed side by side. It makes the user name the claim, assign a starting point, add evidence, compare alternatives, reserve room for unknown explanations, and then read the result with appropriate humility.",
@@ -357,9 +436,10 @@ def build_story(styles):
         )
     )
 
+    story.append(PageBreak())
     story.extend(
         section(
-            "2. Who Benefits Most",
+            "3. Who Benefits Most",
             [
                 two_column_table(
                     [
@@ -390,7 +470,7 @@ def build_story(styles):
 
     story.extend(
         section(
-            "3. Why Stating a Starting Probability Matters",
+            "4. Why Stating a Starting Probability Matters",
             [
                 "Many apologetic conversations stall because someone refuses to assign any starting probability to a dead person rising. But comparison requires a number, even if it is only a rough estimate. Without a starting point, the user cannot tell how much evidence is needed.",
                 "Refusing to estimate the starting probability does not avoid probability. It hides it. If a user treats the resurrection as easy to believe before the evidence is examined, that is already a starting probability. If a user treats it as nearly impossible no matter what, that is also a starting probability.",
@@ -407,9 +487,10 @@ def build_story(styles):
         )
     )
 
+    story.append(PageBreak())
     story.extend(
         section(
-            "4. Begin With the Teaching Parallel",
+            "5. Begin With the Teaching Parallel",
             [
                 "The recommended first exercise is the car-crash teaching parallel: a car crashed because a demon physically turned the steering wheel. This example lowers religious defensiveness while preserving the same structure as the resurrection case.",
                 "Users compare the demon claim with ordinary alternatives such as mechanical failure, swerving to avoid an animal, falling asleep, distraction, road conditions, and unknown causes. The lesson is not that the cases are identical. The lesson is that evidence must be compared against competing explanations.",
@@ -431,7 +512,7 @@ def build_story(styles):
 
     story.extend(
         section(
-            "5. Basic Walkthrough",
+            "6. Basic Walkthrough",
             [
                 numbered_list(
                     [
@@ -453,7 +534,7 @@ def build_story(styles):
 
     story.extend(
         section(
-            "6. Key Terms in Plain English",
+            "7. Key Terms in Plain English",
             [
                 two_column_table(
                     [
@@ -476,7 +557,7 @@ def build_story(styles):
     story.append(PageBreak())
     story.extend(
         section(
-            "7. Reading the Visuals",
+            "8. Reading the Visuals",
             [
                 two_column_table(
                     [
@@ -512,7 +593,7 @@ def build_story(styles):
     )
     story.extend(
         section(
-            "8. Common Mistakes the Tool Reveals",
+            "9. Common Mistakes the Tool Reveals",
             [
                 bullet_list(
                     [
@@ -534,7 +615,7 @@ def build_story(styles):
     story.append(PageBreak())
     story.extend(
         section(
-            "9. The Three Settings Buttons",
+            "10. The Three Settings Buttons",
             [
                 two_column_table(
                     [
@@ -561,7 +642,7 @@ def build_story(styles):
 
     story.extend(
         section(
-            "10. Interpreting the Result",
+            "11. Interpreting the Result",
             [
                 "A result is not an oracle. It is a diagnostic snapshot of the current assumptions. The app is telling the user what follows if the visible settings are accepted.",
                 two_column_table(
@@ -582,7 +663,7 @@ def build_story(styles):
 
     story.extend(
         section(
-            "11. Using the AI Prompt",
+            "12. Using the AI Prompt",
             [
                 "The AI prompt is designed to challenge the user's possible irrational stances, hidden assumptions, and calculation mistakes. It should be used as a pressure-testing partner, not as an authority.",
                 callout(
@@ -601,7 +682,7 @@ def build_story(styles):
 
     story.extend(
         section(
-            "12. Discussion Guide",
+            "13. Discussion Guide",
             [
                 "For groups, the strongest sessions begin with the teaching parallel and then move to the resurrection preset. The facilitator should ask participants to explain why they moved a slider, not merely where they moved it.",
                 numbered_list(
@@ -624,7 +705,7 @@ def build_story(styles):
 
     story.extend(
         section(
-            "13. Facilitator Notes",
+            "14. Facilitator Notes",
             [
                 bullet_list(
                     [
@@ -644,7 +725,37 @@ def build_story(styles):
 
     story.extend(
         section(
-            "14. Glossary",
+            "15. Responsible Use Checklist",
+            [
+                "Before treating an audit result as meaningful, the user should be able to answer each of these questions in ordinary language.",
+                two_column_table(
+                    [
+                        ("Claim clarity", "Can I state the exact claim without sliding between a modest claim and a stronger miracle claim?"),
+                        ("Starting point", "Have I named a baseline probability instead of hiding it behind phrases like 'possible' or 'God can do anything'?"),
+                        ("Evidence quality", "Have I separated what the evidence actually shows from what I want it to mean?"),
+                        ("Independence", "Have I reduced the weight of evidence items that may share sources, communities, memories, or later retellings?"),
+                        ("Alternatives", "Have I allowed ordinary explanations to compete before assigning the remaining probability to the miracle claim?"),
+                        ("Unknown reserve", "Have I preserved reasonable room for explanations I have not yet conceived, especially with ancient and incomplete records?"),
+                        ("Negative evidence", "Have I included the evidence that pulls against the claim, not only the evidence that supports it?"),
+                        ("Reportability", "Could another careful person inspect my settings and understand why I chose them?"),
+                    ],
+                    styles,
+                ),
+                callout(
+                    "Best sign of honest use",
+                    "The user can say not only what conclusion the tool produced, but which assumption would most change that conclusion if adjusted.",
+                    styles,
+                    fill=PALE_GREEN,
+                    border=LEAF,
+                ),
+            ],
+            styles,
+        )
+    )
+
+    story.extend(
+        section(
+            "16. Glossary",
             [
                 two_column_table(
                     [
@@ -664,9 +775,10 @@ def build_story(styles):
         )
     )
 
+    story.append(PageBreak())
     story.extend(
         section(
-            "15. Final Word",
+            "17. Final Word",
             [
                 p(
                     "Honest inquiry does not require hostility toward belief. It requires refusing to let confidence outrun the evidence.",
