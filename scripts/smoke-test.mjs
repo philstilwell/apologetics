@@ -209,6 +209,100 @@ async function verifyMoralParticularsCalculations(baseUrl, browser) {
   }
 }
 
+async function verifyMoralStressCalculations(baseUrl, browser) {
+  const page = await browser.newPage();
+
+  try {
+    await page.goto(`${baseUrl}/apps/moral-system-stress-test/`, { waitUntil: "load" });
+    await page.evaluate(() => {
+      localStorage.removeItem("moral-system-stress-test-v3");
+      state = defaultState();
+      renderAll();
+    });
+
+    const empty = await page.evaluate(() => ({
+      completeness: calculateCompleteness(),
+      displayedCompleteness: document.querySelector("#completenessScore").textContent,
+      boundaryRisk: calculateBoundaryRisk(),
+      displayedBoundaryRisk: document.querySelector("#statusBoundaryRisk").textContent,
+      matchedCount: getMatchedChallenges().length,
+      topPressures: getMatchedChallenges().slice(0, 3).map((item) => item.id),
+      handoffRisk: buildParticularsState().pipelineContext.boundaryRisk,
+    }));
+    assert.deepEqual(
+      empty,
+      {
+        completeness: 0,
+        displayedCompleteness: "0%",
+        boundaryRisk: 5,
+        displayedBoundaryRisk: "5",
+        matchedCount: 4,
+        topPressures: ["prior-assessment", "meaning-gap", "scripture-ambiguity"],
+        handoffRisk: 5,
+      },
+      "Moral System Stress Test empty-state numbers should be stable and consistent across display and handoff."
+    );
+
+    const partial = await page.evaluate(() => {
+      state = defaultState();
+      const element = getElementById("moral-meaning");
+      state.routes[element.id] = "natural-law";
+      state.strength[element.id] = 3;
+      state.checks[element.id] = Object.fromEntries(element.checks.map((check) => [check.id, true]));
+      renderAll();
+      return {
+        componentScore: Math.round(elementScore(element.id) * 100),
+        completeness: calculateCompleteness(),
+        ready: elementIsReady(element.id),
+        sufficiencyMatched: getMatchedChallenges().some((item) => item.id === "sufficiency-collapse"),
+      };
+    });
+    assert.deepEqual(
+      partial,
+      {
+        componentScore: 100,
+        completeness: 13,
+        ready: true,
+        sufficiencyMatched: true,
+      },
+      "A single completed component should score fully while the overall system remains incomplete."
+    );
+
+    const complete = await page.evaluate(() => {
+      state = defaultState();
+      const routeCycle = ["divine-command", "human-flourishing", "natural-law", "scripture"];
+      getCoreElements().forEach((element, index) => {
+        state.routes[element.id] = routeCycle[index % routeCycle.length];
+        state.strength[element.id] = 3;
+        state.checks[element.id] = Object.fromEntries(element.checks.map((check) => [check.id, true]));
+      });
+      renderAll();
+      return {
+        completeness: calculateCompleteness(),
+        readyCount: getCoreElements().filter((element) => elementIsReady(element.id)).length,
+        sufficiencyMatched: getMatchedChallenges().some((item) => item.id === "sufficiency-collapse"),
+        boundaryRisk: calculateBoundaryRisk(),
+        handoffRisk: buildParticularsState().pipelineContext.boundaryRisk,
+        displayedCompleteness: document.querySelector("#statusCompleteness").textContent,
+      };
+    });
+    assert.deepEqual(
+      complete,
+      {
+        completeness: 100,
+        readyCount: 8,
+        sufficiencyMatched: false,
+        boundaryRisk: 0,
+        handoffRisk: 0,
+        displayedCompleteness: "100%",
+      },
+      "A fully covered moral system should reach 100%, clear sufficiency pressure, and export the same boundary risk shown in the ledger."
+    );
+  } finally {
+    await page.close();
+  }
+}
+
 async function listen(server) {
   await new Promise((resolve, reject) => {
     server.once("error", reject);
@@ -306,6 +400,8 @@ async function run() {
 
     await verifyMoralParticularsCalculations(baseUrl, browser);
     console.log("PASS Moral Particulars calculation checks");
+    await verifyMoralStressCalculations(baseUrl, browser);
+    console.log("PASS Moral System Stress calculation checks");
   } finally {
     await browser.close();
     await new Promise((resolve, reject) => {
