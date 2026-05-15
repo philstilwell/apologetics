@@ -5,9 +5,9 @@ const state = {
 };
 
 const treatmentScores = {
-  accept: 8,
-  weaken: 4.6,
-  reject: 1.5,
+  accept: 10,
+  weaken: 5,
+  reject: 0,
 };
 
 const treatmentLabels = {
@@ -621,11 +621,10 @@ function assessParallel(parallel, preferredForce, stanceNumber) {
 function assessParallelWithResponse(parallel, preferredForce, response, stanceNumber) {
   const treatmentScore = treatmentScores[response.treatment];
   const differentiator = getDifferentiatorType(response.differentiatorType);
-  const gap = Math.max(0, preferredForce - treatmentScore) / 10;
-  const textBonus = response.differentiator.trim().length > 24 ? 0.04 : 0;
-  const allowance = Math.min(0.78, differentiator.allowance + textBonus);
-  const residual = Math.max(0, gap - allowance * 0.62);
-  const risk = clamp(Math.round(residual * parallel.similarity * 145), 0, 100);
+  const permissionGap = Math.max(0, preferredForce - treatmentScore) / 10;
+  const allowance = clamp(differentiator.allowance, 0, 1);
+  const residual = permissionGap * (1 - allowance);
+  const risk = clamp(Math.round(residual * parallel.similarity * 100), 0, 100);
 
   return {
     ...parallel,
@@ -634,6 +633,7 @@ function assessParallelWithResponse(parallel, preferredForce, response, stanceNu
     treatmentScore,
     differentiator,
     allowance,
+    permissionGap,
     residual,
     risk,
   };
@@ -794,14 +794,14 @@ function buildScoreDrivers(assessment) {
       title: "Largest residual tension",
       body: `${topItems
         .map((item) => `${formatClaim(item.title, item.stanceNumber)} (${item.risk})`)
-        .join(" and ")} drive the score because they are treated much weaker than the anchor while remaining similar.`,
+        .join(" and ")} drive the score because high similarity is paired with a large permission gap after differentiator allowance.`,
     });
   }
 
   if (weakDifferentiators.length > 0) {
     drivers.push({
       title: "Differentiator quality",
-      body: `${weakDifferentiators.length} discounted parallel${weakDifferentiators.length === 1 ? " uses" : "s use"} no, weak, circular, modalized, or specificity-inflating differentiators.`,
+      body: `${weakDifferentiators.length} discounted parallel${weakDifferentiators.length === 1 ? " uses" : "s use"} no, weak, circular, modalized, or specificity-inflating differentiators, so little of the permission gap is removed.`,
     });
   }
 
@@ -891,7 +891,7 @@ function buildImagePromptRequest(assessment) {
     `◉ [1] ${stripClaimPrefix(els.rule.value.trim() || assessment.pattern.rule)} - anchor force ${assessment.preferredForce}/10`,
     ...assessment.items.map(
       (item) =>
-        `${formatClaim(item.title, item.stanceNumber)} - ${treatmentLabels[item.response.treatment]}, residual tension ${item.risk}/100, similarity ${Math.round(item.similarity * 100)}%`,
+        `${formatClaim(item.title, item.stanceNumber)} - ${treatmentLabels[item.response.treatment]}, residual tension ${item.risk}/100, similarity ${Math.round(item.similarity * 100)}%, permission gap ${Math.round(item.permissionGap * 100)}%, differentiator allowance ${Math.round(item.allowance * 100)}%`,
     ),
   ].join("; ");
 
@@ -937,7 +937,10 @@ function buildMarkdownReport(assessment) {
       `### ${formatClaim(item.title, item.stanceNumber)}`,
       `Treatment: ${treatmentLabels[item.response.treatment]}`,
       `Similarity: ${Math.round(item.similarity * 100)}%`,
+      `Treatment permission: ${item.treatmentScore}/10`,
+      `Permission gap: ${Math.round(item.permissionGap * 100)}%`,
       `Differentiator: ${item.differentiator.label}`,
+      `Differentiator allowance: ${Math.round(item.allowance * 100)}%`,
       `Residual risk: ${item.risk}/100`,
       `Note: ${item.differentiator.warning}`,
     );
@@ -1008,10 +1011,13 @@ function buildAiExplorationPrompt(assessment) {
       `Parallel claim: ${formatClaim(item.title, item.stanceNumber)}`,
       `Treatment: ${treatmentLabels[item.response.treatment]}`,
       `Similarity to anchor: ${Math.round(item.similarity * 100)}%`,
+      `Treatment permission: ${item.treatmentScore}/10`,
+      `Permission gap before differentiator allowance: ${Math.round(item.permissionGap * 100)}%`,
       `Variable at issue: ${item.variable}`,
       `Observation: ${item.observation}`,
       `Implication: ${item.implication}`,
       `Differentiator type: ${item.differentiator.label}`,
+      `Differentiator allowance: ${Math.round(item.allowance * 100)}%`,
       `Differentiator warning: ${item.differentiator.warning}`,
       `User differentiator: ${item.response.differentiator.trim() || "None supplied"}`,
       `Residual tension: ${item.risk}/100`,

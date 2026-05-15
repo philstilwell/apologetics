@@ -350,7 +350,7 @@ function getRouteById(routeId) {
 function countStatuses() {
   return elements.reduce(
     (totals, element) => {
-      const status = state.elements[element.id].status;
+      const status = getEffectiveStatus(element.id);
       totals[status] += 1;
       return totals;
     },
@@ -359,25 +359,41 @@ function countStatuses() {
 }
 
 function hasStatusAtLeast(elementId, target) {
-  return statusRank[state.elements[elementId].status] >= statusRank[target];
+  return statusRank[getEffectiveStatus(elementId)] >= statusRank[target];
 }
 
 function noteIsPresent(elementId) {
   return Boolean(state.elements[elementId].note.trim());
 }
 
-function needsSubstantiationWarning(elementId) {
+function selectedSubstantiationNeedsGrounding(elementId) {
   return state.elements[elementId].status === "substantiated" && !noteIsPresent(elementId);
+}
+
+function getEffectiveStatus(elementId) {
+  if (selectedSubstantiationNeedsGrounding(elementId)) return "asserted";
+  return state.elements[elementId].status;
+}
+
+function needsSubstantiationWarning(elementId) {
+  return selectedSubstantiationNeedsGrounding(elementId);
 }
 
 function hasConfirmedSubstantiation(elementId) {
   return state.elements[elementId].status === "substantiated" && noteIsPresent(elementId);
 }
 
-function getReadiness(counts) {
-  if (counts.substantiated === elements.length) return "Yes";
-  if (counts.missing === 0 && counts.substantiated >= 5) return "Almost";
+function getReadiness(diagnosis) {
+  if (diagnosis.status === "Threshold met") return "Yes";
+  if (diagnosis.status === "Near threshold") return "Almost";
   return "Not yet";
+}
+
+function formatEffectiveStatusLabel(elementId) {
+  if (selectedSubstantiationNeedsGrounding(elementId)) {
+    return "Asserted (selected substantiated without grounding note)";
+  }
+  return formatStatusLabel(getEffectiveStatus(elementId));
 }
 
 function classifyThreshold(counts) {
@@ -538,7 +554,7 @@ function renderChecklist() {
             <textarea id="note-${element.id}" data-note-id="${element.id}" rows="3" placeholder="Name the support, not just the conclusion." aria-invalid="${warningVisible ? "true" : "false"}">${escapeHtml(current.note)}</textarea>
           </div>
           <p class="threshold-card-warning" data-threshold-warning="${element.id}" aria-live="polite" ${warningVisible ? "" : "hidden"}>
-            Add actual grounding in the support box before marking this component substantiated.
+            Add actual grounding in the support box. Until then, this component still counts as asserted.
           </p>
         </article>
       `;
@@ -579,19 +595,23 @@ function formatStatusLabel(statusId) {
 
 function buildCollapseItems() {
   return elements
-    .filter((element) => state.elements[element.id].status !== "substantiated")
+    .filter((element) => getEffectiveStatus(element.id) !== "substantiated")
     .map((element) => {
       const current = state.elements[element.id];
       const note = current.note.trim();
-      const statusLabel = current.status === "asserted" ? "Asserted only" : "Missing";
+      const statusLabel = getEffectiveStatus(element.id) === "asserted" ? "Asserted only" : "Missing";
+      const groundingNote =
+        selectedSubstantiationNeedsGrounding(element.id)
+          ? " Selected substantiated, but it still counts as asserted until grounding is supplied."
+          : "";
       const tooltipId = `threshold-collapse-tooltip-${element.id}`;
       return `
         <li class="threshold-collapse-item" tabindex="0" aria-describedby="${tooltipId}">
           <strong>${escapeHtml(element.title)}: ${escapeHtml(element.collapse)}</strong>
-          <p>${escapeHtml(element.collapseCopy)} <em>${escapeHtml(statusLabel)}.</em>${note ? ` Current note: ${escapeHtml(note)}` : ""}</p>
+          <p>${escapeHtml(element.collapseCopy)} <em>${escapeHtml(statusLabel)}.</em>${groundingNote}${note ? ` Current note: ${escapeHtml(note)}` : ""}</p>
           <span class="section-tooltip threshold-collapse-tooltip" id="${tooltipId}" role="tooltip">
             <strong>${escapeHtml(element.title)}: ${escapeHtml(element.collapse)}</strong>
-            <span class="tooltip-intro">${escapeHtml(element.collapseCopy)} Right now this component is ${escapeHtml(statusLabel.toLowerCase())}.</span>
+            <span class="tooltip-intro">${escapeHtml(element.collapseCopy)} Right now this component is ${escapeHtml(statusLabel.toLowerCase())}.${groundingNote}</span>
             <span class="tooltip-check-list">
               <span class="tooltip-check-item">
                 <strong>Why this collapse appears</strong>
@@ -623,7 +643,7 @@ function buildSummary(counts, diagnosis) {
     "",
     `Threshold status: ${diagnosis.status}`,
     `Current shape: ${diagnosis.profile}`,
-    `Ready for advanced stress test: ${getReadiness(counts)}`,
+    `Ready for advanced stress test: ${getReadiness(diagnosis)}`,
     "",
     `Missing: ${counts.missing}`,
     `Asserted: ${counts.asserted}`,
@@ -636,8 +656,13 @@ function buildSummary(counts, diagnosis) {
 
   elements.forEach((element) => {
     const current = state.elements[element.id];
-    lines.push(`- ${element.title}: ${current.status}`);
-    if (current.status !== "substantiated") {
+    const effectiveStatus = getEffectiveStatus(element.id);
+    const effectiveLabel = formatStatusLabel(effectiveStatus).toLowerCase();
+    const statusSuffix = selectedSubstantiationNeedsGrounding(element.id)
+      ? " (selected substantiated without grounding note, so counted as asserted)"
+      : "";
+    lines.push(`- ${element.title}: ${effectiveLabel}${statusSuffix}`);
+    if (effectiveStatus !== "substantiated") {
       lines.push(`  Collapse risk: ${element.collapse}`);
     }
     if (current.note.trim()) {
@@ -658,10 +683,14 @@ function buildAiPrompt(counts, diagnosis) {
   const elementLines = elements
     .map((element) => {
       const current = state.elements[element.id];
+      const effectiveStatus = getEffectiveStatus(element.id);
       return [
-        `- ${element.title}: ${current.status}`,
+        `- ${element.title}: ${effectiveStatus}`,
+        selectedSubstantiationNeedsGrounding(element.id)
+          ? "  Status note: selected substantiated without a grounding note, so it still counts as asserted"
+          : "",
         current.note.trim() ? `  Support note: ${current.note.trim()}` : "  Support note: none supplied",
-        current.status === "substantiated" ? "" : `  Collapse label: ${element.collapse}`
+        effectiveStatus === "substantiated" ? "" : `  Collapse label: ${element.collapse}`
       ]
         .filter(Boolean)
         .join("\n");
@@ -710,9 +739,10 @@ function buildStressTestState() {
 
   elements.forEach((element) => {
     const current = state.elements[element.id];
-    if (current.status === "missing") return;
+    const effectiveStatus = getEffectiveStatus(element.id);
+    if (effectiveStatus === "missing") return;
     stressState.routes[element.id] = primaryRoute;
-    stressState.strength[element.id] = current.status === "substantiated" ? 3 : 1;
+    stressState.strength[element.id] = effectiveStatus === "substantiated" ? 3 : 1;
     if (current.note.trim()) {
       stressState.notes[element.id] = current.note.trim();
     }
@@ -771,8 +801,8 @@ function renderThresholdReadinessMap(readiness) {
 
   els.thresholdReadinessPlot.innerHTML = elements
     .map((element) => {
-      const currentStatus = state.elements[element.id].status;
-      const statusLabel = formatStatusLabel(currentStatus);
+      const currentStatus = getEffectiveStatus(element.id);
+      const statusLabel = formatEffectiveStatusLabel(element.id);
       const noteText = state.elements[element.id].note.trim()
         ? ` Support note: ${state.elements[element.id].note.trim()}`
         : "";
@@ -810,7 +840,7 @@ function jumpToChecklistElement(elementId) {
 function updateOutputs() {
   const counts = countStatuses();
   const diagnosis = classifyThreshold(counts);
-  const readiness = getReadiness(counts);
+  const readiness = getReadiness(diagnosis);
 
   syncChecklistVisualState();
   els.statusLabel.textContent = diagnosis.status;

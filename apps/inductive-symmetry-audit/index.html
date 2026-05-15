@@ -606,6 +606,13 @@
                 induction is being allowed to count more than similar rejected inductions.
               </p>
               <p>
+                Each parallel tension is calculated as <strong>permission gap × similarity ×
+                undefended remainder</strong>. The permission gap compares the anchor force
+                with the parallel treatment: Accept gives 10/10 permission, Weaken gives 5/10,
+                and Reject gives 0/10. The selected differentiator then reduces that gap by
+                its allowance.
+              </p>
+              <p>
                 Low scores usually mean the anchor and parallels are being treated with
                 comparable permission. Moderate scores suggest the argument may be repairable
                 by clarifying scope or improving a few differentiators. High and severe scores
@@ -1116,9 +1123,10 @@
               <summary>Why do some parallels increase the score more than others?</summary>
               <p>
                 The score rises most when a parallel is highly similar to the anchor, receives
-                much weaker treatment, and lacks a strong differentiator. A rejected parallel
+                much weaker treatment, and lacks a strong differentiator. The tool calculates
+                this as permission gap × similarity × undefended remainder. A rejected parallel
                 with high similarity creates more tension than a weakened parallel with low
-                similarity.
+                similarity because more of the evidential gap remains unsupported.
               </p>
               <p>
                 This is why the mini-bars and "Why did my score change?" section matter.
@@ -1324,6 +1332,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260514-anchor-title"></script>
+    <script src="app.js?v=20260514-score-calibration"></script>
   </body>
 </html>

@@ -742,6 +742,32 @@ const replicationOptions = {
   independent: { label: "Independent replication", points: 14 },
 };
 
+const scoringModel = Object.freeze({
+  baseline: 8,
+  capFactor: 0.92,
+  minScore: 3,
+  maxScore: 96,
+  willingnessFloor: 0.18,
+  willingnessWeight: 0.82,
+  failureFloor: 0.2,
+  failureWeight: 0.8,
+  thresholds: Object.freeze({
+    protected: 35,
+    testable: 50,
+    exposed: 72,
+  }),
+});
+
+const customRigorModel = Object.freeze({
+  baseline: 14,
+  outcome: 12,
+  comparison: 14,
+  missRule: 12,
+  preregistration: 10,
+  min: 18,
+  max: 96,
+});
+
 function defaultCustomStudy(claim) {
   return {
     outcome: "",
@@ -843,6 +869,11 @@ const activeStudyRigor = document.querySelector("#active-study-rigor");
 const activeRunSetting = document.querySelector("#active-run-setting");
 const activeFailureSetting = document.querySelector("#active-failure-setting");
 const activeExcuseDrag = document.querySelector("#active-excuse-drag");
+const scoreMethodStudy = document.querySelector("#score-method-study");
+const scoreMethodRun = document.querySelector("#score-method-run");
+const scoreMethodMiss = document.querySelector("#score-method-miss");
+const scoreMethodDrag = document.querySelector("#score-method-drag");
+const scoreMethodRaw = document.querySelector("#score-method-raw");
 const personalLifeTitle = document.querySelector("#personal-life-title");
 const personalLifeBody = document.querySelector("#personal-life-body");
 const ledgerExcuses = document.querySelector("#ledger-excuses");
@@ -878,15 +909,15 @@ function customStudyRigor(claim) {
   const hasComparison = custom.comparison.trim().length > 0;
   const hasMissRule = custom.missRule.trim().length > 0;
   const score =
-    14 +
-    (hasOutcome ? 12 : 0) +
-    (hasComparison ? 14 : 0) +
-    (hasMissRule ? 12 : 0) +
+    customRigorModel.baseline +
+    (hasOutcome ? customRigorModel.outcome : 0) +
+    (hasComparison ? customRigorModel.comparison : 0) +
+    (hasMissRule ? customRigorModel.missRule : 0) +
     (sampleSizeOptions[custom.sampleSize]?.points || 0) +
     (blindingOptions[custom.blinding]?.points || 0) +
-    (custom.preregistered ? 10 : 0) +
+    (custom.preregistered ? customRigorModel.preregistration : 0) +
     (replicationOptions[custom.replication]?.points || 0);
-  return Math.round(clamp(score, 18, 96));
+  return Math.round(clamp(score, customRigorModel.min, customRigorModel.max));
 }
 
 function customStudyEffort(custom) {
@@ -934,22 +965,61 @@ function excusePenaltyFor(claimId) {
   }, 0);
 }
 
-function scoreClaim(claim) {
+function scoringMultiplier(percent, floor, weight) {
+  return floor + (clamp(percent, 0, 100) / 100) * weight;
+}
+
+function calculateFieldScore({ rigor, willingness, failure, excusePenalty = 0 }) {
+  const studyRigor = clamp(rigor, 0, 100);
+  const willingnessMultiplier = scoringMultiplier(
+    willingness,
+    scoringModel.willingnessFloor,
+    scoringModel.willingnessWeight,
+  );
+  const failureMultiplier = scoringMultiplier(
+    failure,
+    scoringModel.failureFloor,
+    scoringModel.failureWeight,
+  );
+  const grossExposure =
+    studyRigor *
+    willingnessMultiplier *
+    failureMultiplier *
+    scoringModel.capFactor;
+  const rawScore = scoringModel.baseline + grossExposure - excusePenalty;
+  const score = Math.round(clamp(rawScore, scoringModel.minScore, scoringModel.maxScore));
+
+  return {
+    excusePenalty,
+    failureMultiplier,
+    grossExposure,
+    rawScore,
+    score,
+    studyRigor,
+    willingnessMultiplier,
+  };
+}
+
+function scoreClaimBreakdown(claim) {
   const current = state[claim.id];
   const study = getStudy(claim);
-  const willingnessFactor = current.willingness / 100;
-  const failureFactor = current.failure / 100;
-  const exposure =
-    study.rigor *
-    (0.18 + willingnessFactor * 0.82) *
-    (0.2 + failureFactor * 0.8) *
-    0.92;
-  const score = 8 + exposure - excusePenaltyFor(claim.id);
-  return Math.round(clamp(score, 3, 96));
+  return {
+    study,
+    ...calculateFieldScore({
+      rigor: study.rigor,
+      willingness: current.willingness,
+      failure: current.failure,
+      excusePenalty: excusePenaltyFor(claim.id),
+    }),
+  };
+}
+
+function scoreClaim(claim) {
+  return scoreClaimBreakdown(claim).score;
 }
 
 function diagnosisFor(score) {
-  if (score < 35) {
+  if (score < scoringModel.thresholds.protected) {
     return {
       title: "Protected from ordinary checks",
       body: "This claim is mostly being held away from tests that could make confidence go down.",
@@ -957,7 +1027,7 @@ function diagnosisFor(score) {
       detail: "Protected from ordinary checks.",
     };
   }
-  if (score < 50) {
+  if (score < scoringModel.thresholds.testable) {
     return {
       title: "Near the practical benchmark",
       body:
@@ -966,7 +1036,7 @@ function diagnosisFor(score) {
       detail: "Some risk, not yet a clean test.",
     };
   }
-  if (score < 72) {
+  if (score < scoringModel.thresholds.exposed) {
     return {
       title: "Meaningfully testable",
       body: "The claim is being allowed to face a clear enough check that failure would matter.",
@@ -995,7 +1065,7 @@ const promiseMapLabels = {
 };
 
 function personalLifeAssessment(score, current, excuseCount) {
-  if (score >= 72 && current.failure >= 70 && excuseCount === 0) {
+  if (score >= scoringModel.thresholds.exposed && current.failure >= 70 && excuseCount === 0) {
     return {
       title: "Personal and active in earthly life: exposed to public checks",
       body:
@@ -1003,7 +1073,7 @@ function personalLifeAssessment(score, current, excuseCount) {
     };
   }
 
-  if (score >= 50 && current.failure >= 50) {
+  if (score >= scoringModel.thresholds.testable && current.failure >= 50) {
     return {
       title: "Personal and active in earthly life: partly exposed",
       body:
@@ -1035,6 +1105,48 @@ function selectedExcuseSummary(claimId) {
     .join("; ");
 }
 
+function scoringMethodSummary() {
+  return `Scoring method: score = round(clamp(${scoringModel.baseline} + study rigor x run multiplier x miss multiplier x ${scoringModel.capFactor} - excuse drag, ${scoringModel.minScore}, ${scoringModel.maxScore})). Run multiplier = ${scoringModel.willingnessFloor} + willingness x ${scoringModel.willingnessWeight}. Miss multiplier = ${scoringModel.failureFloor} + clean-failure willingness x ${scoringModel.failureWeight}. Thresholds: under ${scoringModel.thresholds.protected} protected; ${scoringModel.thresholds.protected}-${scoringModel.thresholds.testable - 1} near benchmark; ${scoringModel.thresholds.testable}-${scoringModel.thresholds.exposed - 1} meaningfully testable; ${scoringModel.thresholds.exposed}+ exposed to clean disconfirmation. The score is an ordinal teaching estimate, not a probability or statistical effect size.`;
+}
+
+function formatMultiplier(value) {
+  return value.toFixed(2);
+}
+
+function runCalculationSelfCheck() {
+  const cases = [
+    {
+      name: "default anecdote calibration",
+      input: { rigor: 8, willingness: 35, failure: 25, excusePenalty: 0 },
+      expected: 9,
+    },
+    {
+      name: "strong open-study calibration",
+      input: { rigor: 94, willingness: 100, failure: 100, excusePenalty: 0 },
+      expected: 94,
+    },
+    {
+      name: "strong study without miss-counting remains protected",
+      input: { rigor: 94, willingness: 100, failure: 0, excusePenalty: 0 },
+      expected: 25,
+    },
+    {
+      name: "heavy excuses clamp at floor",
+      input: { rigor: 94, willingness: 100, failure: 100, excusePenalty: 200 },
+      expected: scoringModel.minScore,
+    },
+  ];
+
+  cases.forEach((testCase) => {
+    const actual = calculateFieldScore(testCase.input).score;
+    if (actual !== testCase.expected) {
+      throw new Error(
+        `Score calibration failed for ${testCase.name}: expected ${testCase.expected}, got ${actual}.`,
+      );
+    }
+  });
+}
+
 function outcomeRulesSummary(claimId) {
   const rules = state[claimId].outcomeRules;
   return `Counts for: ${rules.forClaim || "Not specified"}; counts against: ${rules.againstClaim || "Not specified"}; neutral: ${rules.neutral || "Not specified"}.`;
@@ -1051,10 +1163,11 @@ function confounderSummary(claimId) {
 function claimSnapshotLine(claim) {
   const itemState = state[claim.id];
   const itemStudy = getStudy(claim);
-  const itemScore = scoreClaim(claim);
+  const itemBreakdown = scoreClaimBreakdown(claim);
+  const itemScore = itemBreakdown.score;
   const itemDiagnosis = diagnosisFor(itemScore);
   const itemExcuses = selectedExcuseSummary(claim.id);
-  return `- ${claim.title}: score ${itemScore}/100 (${itemDiagnosis.title}); study "${itemStudy.title}" (${itemStudy.tier}, rigor ${itemStudy.rigor}/100); willingness to run ${itemState.willingness}%; clean failure counts ${itemState.failure}%; what would change the user's mind: ${itemState.mindChange || "Not specified"}; escape hatches: ${itemExcuses}; outcome rules: ${outcomeRulesSummary(claim.id)}; dataset leads: ${datasetSummary(claim.id)}; confounders to control: ${confounderSummary(claim.id)}.`;
+  return `- ${claim.title}: score ${itemScore}/100 (${itemDiagnosis.title}); study "${itemStudy.title}" (${itemStudy.tier}, rigor ${itemStudy.rigor}/100); run multiplier ${formatMultiplier(itemBreakdown.willingnessMultiplier)}; miss multiplier ${formatMultiplier(itemBreakdown.failureMultiplier)}; excuse drag ${itemBreakdown.excusePenalty}; willingness to run ${itemState.willingness}%; clean failure counts ${itemState.failure}%; what would change the user's mind: ${itemState.mindChange || "Not specified"}; escape hatches: ${itemExcuses}; outcome rules: ${outcomeRulesSummary(claim.id)}; dataset leads: ${datasetSummary(claim.id)}; confounders to control: ${confounderSummary(claim.id)}.`;
 }
 
 function allPromiseSnapshots() {
@@ -1160,7 +1273,8 @@ function buildReportText() {
   const claim = getClaim();
   const current = state[claim.id];
   const study = getStudy(claim);
-  const score = scoreClaim(claim);
+  const scoreBreakdown = scoreClaimBreakdown(claim);
+  const score = scoreBreakdown.score;
   const diagnosis = diagnosisFor(score);
   const personalAssessment = personalLifeAssessment(score, current, current.excuses.size);
   const activeExcuses = selectedExcuseDetails(claim.id);
@@ -1182,6 +1296,10 @@ ${current.text}
 
 Current result:
 ${score}/100 - ${diagnosis.title}. ${diagnosis.body}
+
+Score calculation:
+${scoringMethodSummary()}
+Current calculation: ${scoringModel.baseline} + ${study.rigor} x ${formatMultiplier(scoreBreakdown.willingnessMultiplier)} x ${formatMultiplier(scoreBreakdown.failureMultiplier)} x ${scoringModel.capFactor} - ${scoreBreakdown.excusePenalty} = ${scoreBreakdown.rawScore.toFixed(1)} before rounding and bounds.
 
 Personal-and-active-God question:
 ${personalAssessment.title}. ${personalAssessment.body}

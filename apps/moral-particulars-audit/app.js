@@ -1,4 +1,9 @@
 const STORAGE_KEY = "moral-particulars-audit-v1";
+const STRONG_WEIGHT_THRESHOLD = 7;
+const CONCENTRATION_ACTIVE_SHARE_THRESHOLD = 1 / 3;
+const CONCENTRATION_TOP_SHARE_THRESHOLD = 2 / 3;
+const DISTRIBUTED_COVERAGE_THRESHOLD = 2 / 3;
+const DOMINANT_DEPENDENCY_AVERAGE_THRESHOLD = 7;
 let importedFromStress = false;
 
 const issues = [
@@ -759,11 +764,9 @@ function normalizeState(source) {
       return [
         issue.id,
         {
-          ...defaultIssueState(),
-          ...saved,
           stance,
-          grounders: { ...(saved.grounders || {}) },
-          disagreement: { ...(saved.disagreement || {}) },
+          grounders: normalizeWeightGroup(grounders, saved.grounders),
+          disagreement: normalizeWeightGroup(disagreementSources, saved.disagreement),
           notes: typeof saved.notes === "string" ? saved.notes : ""
         }
       ];
@@ -855,25 +858,48 @@ function stanceById(id) {
   return stances.find((stance) => stance.id === id);
 }
 
-function sliderValue(group, id) {
-  return Math.max(0, Math.min(10, Number(group?.[id]) || 0));
+function clampWeight(value) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(0, Math.min(10, parsed));
 }
 
-function hasAnyWeight(group) {
-  return Object.values(group || {}).some((value) => Number(value) > 0);
+function normalizeWeightGroup(defs, group) {
+  if (!group || typeof group !== "object") return {};
+  return Object.fromEntries(
+    defs
+      .map((def) => [def.id, clampWeight(group[def.id])])
+      .filter(([, value]) => value > 0)
+  );
+}
+
+function sliderValue(group, id) {
+  return clampWeight(group?.[id]);
+}
+
+function hasAnyDefinedWeight(defs, group) {
+  return defs.some((def) => sliderValue(group, def.id) > 0);
+}
+
+function hasAnyGrounderWeight(issueState) {
+  return hasAnyDefinedWeight(grounders, issueState?.grounders);
+}
+
+function hasAnyDisagreementWeight(issueState) {
+  return hasAnyDefinedWeight(disagreementSources, issueState?.disagreement);
 }
 
 function issueIsMapped(issueId) {
   const item = state.issueStates[issueId];
-  return Boolean(stanceById(item?.stance) && hasAnyWeight(item.grounders) && hasAnyWeight(item.disagreement));
+  return Boolean(stanceById(item?.stance) && hasAnyGrounderWeight(item) && hasAnyDisagreementWeight(item));
 }
 
 function issueHasAnyInput(issueId) {
   const item = state.issueStates[issueId];
   return Boolean(
     stanceById(item?.stance) ||
-      hasAnyWeight(item?.grounders) ||
-      hasAnyWeight(item?.disagreement) ||
+      hasAnyGrounderWeight(item) ||
+      hasAnyDisagreementWeight(item) ||
       (item?.notes || "").trim()
   );
 }
@@ -908,6 +934,14 @@ function labelForValue(value) {
   if (value >= 4) return "Moderate";
   if (value >= 1) return "Light";
   return "None";
+}
+
+function formatDecimal(value, digits = 1) {
+  return Number(value).toFixed(digits);
+}
+
+function formatPercent(value) {
+  return `${Math.round(value * 100)}%`;
 }
 
 function disagreementProfile(issueState) {
@@ -1433,18 +1467,26 @@ function buildGrounderConcentrationRows() {
     const activeCount = caseWeights.length;
     const average = mappedCount ? total / mappedCount : 0;
     const topShare = total && caseWeights[0] ? caseWeights[0].value / total : 0;
-    const concentrationCutoff = Math.max(1, Math.floor(mappedCount / 3));
+    const activeShare = mappedCount ? activeCount / mappedCount : 0;
+    const squaredWeightTotal = caseWeights.reduce((sum, entry) => sum + entry.value ** 2, 0);
+    const effectiveCaseCount = squaredWeightTotal ? total ** 2 / squaredWeightTotal : 0;
+    const effectiveShare = mappedCount ? effectiveCaseCount / mappedCount : 0;
     const concentrated =
       mappedCount >= 2 &&
-      total >= 7 &&
-      (activeCount <= concentrationCutoff || topShare >= 0.65);
-    const distributed = mappedCount >= 3 && activeCount >= Math.ceil(mappedCount * 0.6);
+      total >= STRONG_WEIGHT_THRESHOLD &&
+      (activeShare <= CONCENTRATION_ACTIVE_SHARE_THRESHOLD ||
+        effectiveShare <= CONCENTRATION_ACTIVE_SHARE_THRESHOLD ||
+        topShare >= CONCENTRATION_TOP_SHARE_THRESHOLD);
+    const distributed = mappedCount >= 3 && activeShare >= DISTRIBUTED_COVERAGE_THRESHOLD && !concentrated;
     return {
       index,
       grounder,
       total,
       activeCount,
       average,
+      activeShare,
+      effectiveCaseCount,
+      effectiveShare,
       topShare,
       concentrated,
       distributed,
@@ -1480,7 +1522,7 @@ function concentrationInsight(rows, mappedCount) {
     .filter((row) => row.concentrated)
     .sort((a, b) => b.total - a.total || b.topShare - a.topShare)[0];
   if (concentrated) {
-    return `${concentrated.grounder.label} has ${concentrated.total} total weight but appears in ${concentrated.activeCount}/${mappedCount} mapped cases, so a headline dependency may be a case-specific spike.`;
+    return `${concentrated.grounder.label} has ${concentrated.total} total weight across ${concentrated.activeCount}/${mappedCount} mapped cases, with an effective spread of ${formatDecimal(concentrated.effectiveCaseCount)} case-equivalents and a top-case share of ${formatPercent(concentrated.topShare)}. That points to a case-specific spike rather than a broad dependency.`;
   }
 
   const top = weightedRows[0];
@@ -1493,10 +1535,10 @@ function concentrationInsight(rows, mappedCount) {
   }
 
   if (broadest && broadest.grounder.id !== top.grounder.id) {
-    return `${top.grounder.label} has the highest total (${top.total}), while ${broadest.grounder.label} is broader across cases (${broadest.activeCount}/${mappedCount}).`;
+    return `${top.grounder.label} has the highest total (${top.total}), while ${broadest.grounder.label} is broader across cases (${broadest.activeCount}/${mappedCount}, ${formatPercent(broadest.activeShare)} coverage).`;
   }
 
-  return `${top.grounder.label} currently carries the largest cross-case load: ${top.total} total weight across ${top.activeCount}/${mappedCount} mapped cases.`;
+  return `${top.grounder.label} currently carries the largest cross-case load: ${top.total} total weight across ${top.activeCount}/${mappedCount} mapped cases (${formatPercent(top.activeShare)} coverage).`;
 }
 
 function coverageLabelMarkup() {
@@ -1531,7 +1573,7 @@ function coverageSummaryMarkup(rows, mappedCount) {
     ${covered
       .map((row) => {
         const className = row.concentrated ? "is-concentrated" : row.distributed ? "is-distributed" : "";
-        const title = `${row.grounder.label}: used in ${row.activeCount}/${mappedCount} mapped cases. ${formatConcentrationCaseList(row.caseWeights)}`;
+        const title = `${row.grounder.label}: used in ${row.activeCount}/${mappedCount} mapped cases (${formatPercent(row.activeShare)} coverage). ${formatConcentrationCaseList(row.caseWeights)}`;
         return `
           <button
             class="particular-coverage-chip ${className}"
@@ -1591,7 +1633,7 @@ function renderGrounderConcentrationMap() {
       const opacity = Math.max(0.46, Math.min(1, 0.5 + row.average / 12));
       const className = row.concentrated ? "is-concentrated" : row.distributed ? "is-distributed" : "";
       const caseList = formatConcentrationCaseList(row.caseWeights);
-      const title = `${row.grounder.label}: ${row.total} total, ${row.average.toFixed(1)}/10 average, ${row.activeCount}/${mappedCount} mapped cases. ${caseList}`;
+      const title = `${row.grounder.label}: ${row.total} total, ${formatDecimal(row.average)}/10 average, ${row.activeCount}/${mappedCount} mapped cases, effective spread ${formatDecimal(row.effectiveCaseCount)} case-equivalents. ${caseList}`;
       return `
         <button
           class="particular-concentration-mark ${className}"
@@ -1630,10 +1672,10 @@ function renderGrounderConcentrationMap() {
           data-grounder-map="${escapeHtml(row.grounder.id)}"
           ${disabled}
           title="${escapeHtml(title)}"
-          aria-label="${escapeHtml(`${row.index + 1}. ${row.grounder.label}: ${row.activeCount}/${mappedCount || 0} mapped cases, ${row.average.toFixed(1)} average weight. ${title}`)}"
+          aria-label="${escapeHtml(`${row.index + 1}. ${row.grounder.label}: ${row.activeCount}/${mappedCount || 0} mapped cases, ${formatDecimal(row.average)} average weight. ${title}`)}"
         >
           <strong>${row.index + 1}</strong>
-          <small>${row.average.toFixed(1)} AVG</small>
+          <small>${formatDecimal(row.average)} AVG</small>
           <span>${escapeHtml(row.grounder.short)}</span>
         </button>
       `;
@@ -1694,15 +1736,12 @@ function buildPatterns() {
   const mapped = issues.filter((issue) => issueIsMapped(issue.id));
   const patterns = [];
   const totals = Object.fromEntries(grounders.map((grounder) => [grounder.id, 0]));
-  const disagreementTotals = Object.fromEntries(disagreementSources.map((source) => [source.id, 0]));
+  const grounderInputIssues = issues.filter((issue) => hasAnyGrounderWeight(state.issueStates[issue.id]));
 
-  issues.forEach((issue) => {
+  grounderInputIssues.forEach((issue) => {
     const item = state.issueStates[issue.id];
     grounders.forEach((grounder) => {
       totals[grounder.id] += sliderValue(item.grounders, grounder.id);
-    });
-    disagreementSources.forEach((source) => {
-      disagreementTotals[source.id] += sliderValue(item.disagreement, source.id);
     });
   });
 
@@ -1719,21 +1758,21 @@ function buildPatterns() {
     });
   }
 
-  const socialHeavy = issues.filter((issue) => sliderValue(state.issueStates[issue.id].grounders, "social-norms") >= 7);
+  const socialHeavy = mapped.filter((issue) => sliderValue(state.issueStates[issue.id].grounders, "social-norms") >= STRONG_WEIGHT_THRESHOLD);
   if (socialHeavy.length) {
     patterns.push({
       type: "Grounding",
       pressure: "high",
       title: "Social norms are doing visible work",
       summary: `${socialHeavy.map((issue) => issue.label).join(", ")} give social norms strong weight.`,
-      basis: "At least one mapped case gives Social norms a weight of 7/10 or higher.",
+      basis: `At least one fully mapped case gives Social norms a weight of ${STRONG_WEIGHT_THRESHOLD}/10 or higher.`,
       check: "Norm sensitivity test",
       question: "If the surrounding Christian culture changed, would the moral judgment survive by the same stated grounders?",
       nextStep: "Compare those cases with ones where Scripture, reason, conscience, or harm is supposed to carry the judgment without social reinforcement."
     });
   }
 
-  const soulDominant = issues.filter((issue) => {
+  const soulDominant = mapped.filter((issue) => {
     const profile = disagreementProfile(state.issueStates[issue.id]);
     return profile.soul >= 10 && profile.soul > profile.method + profile.social + profile.affective;
   });
@@ -1781,14 +1820,15 @@ function buildPatterns() {
 
   const dominantGrounder = grounders
     .map((grounder) => ({ ...grounder, value: totals[grounder.id] }))
-    .sort((a, b) => b.value - a.value)[0];
+    .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label))[0];
   if (dominantGrounder?.value > 0) {
+    const averageAcrossInput = dominantGrounder.value / grounderInputIssues.length;
     patterns.push({
       type: "Dependency",
-      pressure: dominantGrounder.value >= mapped.length * 7 ? "medium" : "low",
+      pressure: averageAcrossInput >= DOMINANT_DEPENDENCY_AVERAGE_THRESHOLD ? "medium" : "low",
       title: `${dominantGrounder.label} is the dominant dependency`,
-      summary: `${dominantGrounder.label} has ${dominantGrounder.value} total weight across the ledger.`,
-      basis: `${dominantGrounder.label} has the largest combined slider total across all cases, mapped or partially mapped.`,
+      summary: `${dominantGrounder.label} has ${dominantGrounder.value} total weight across ${grounderInputIssues.length} case${grounderInputIssues.length === 1 ? "" : "s"} with grounder input (${formatDecimal(averageAcrossInput)}/10 average).`,
+      basis: `${dominantGrounder.label} has the largest combined slider total across the ${grounderInputIssues.length} case${grounderInputIssues.length === 1 ? "" : "s"} where at least one known grounder slider is above zero.`,
       check: "Dependency concentration test",
       question: "If this grounder were disputed, how many judgments would still be justified by independent routes?",
       nextStep: "Pick one case carried by this grounder and see whether another grounder can independently reach the same judgment."
@@ -1797,7 +1837,7 @@ function buildPatterns() {
 
   const unmappedWithStance = issues.filter((issue) => {
     const item = state.issueStates[issue.id];
-    return item.stance && (!hasAnyWeight(item.grounders) || !hasAnyWeight(item.disagreement));
+    return stanceById(item.stance) && (!hasAnyGrounderWeight(item) || !hasAnyDisagreementWeight(item));
   });
   if (unmappedWithStance.length) {
     patterns.push({
@@ -1832,7 +1872,7 @@ function formatIssueSummary(issue) {
   const stance = stanceById(item.stance)?.label || "Unset";
   const status = issueIsMapped(issue.id)
     ? "Mapped"
-    : item.stance || hasAnyWeight(item.grounders) || hasAnyWeight(item.disagreement) || item.notes.trim()
+    : stanceById(item.stance) || hasAnyGrounderWeight(item) || hasAnyDisagreementWeight(item) || item.notes.trim()
       ? "Partial"
       : "No input";
   const grounderLines = grounders

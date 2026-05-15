@@ -51,6 +51,13 @@ const strengthLevels = [
   { value: 4, label: "Strong" }
 ];
 
+const SUPPORTED_STRENGTH_VALUE = 3;
+const BOUNDARY_RISK_POINTS = {
+  pass: 0,
+  warn: 1,
+  fail: 2
+};
+
 const claimPositions = [
   {
     id: "divine-command",
@@ -791,6 +798,11 @@ function pressureRank(pressure) {
   return { high: 3, medium: 2, low: 1 }[pressure] || 0;
 }
 
+function average(values) {
+  if (!values.length) return 0;
+  return values.reduce((total, value) => total + value, 0) / values.length;
+}
+
 function getSelectedElements() {
   return elements;
 }
@@ -837,27 +849,34 @@ function routeIsChosen(elementId) {
   return Boolean(state.routes[elementId] && state.routes[elementId] !== "none");
 }
 
+function routeCompletion(elementId) {
+  return routeIsChosen(elementId) ? 1 : 0;
+}
+
+function strengthCompletion(elementId) {
+  return Math.min(strengthValue(elementId) / SUPPORTED_STRENGTH_VALUE, 1);
+}
+
 function elementScore(elementId) {
   const element = getElementById(elementId);
-  let score = 0;
-  if (routeIsChosen(elementId)) score += 0.3;
-  score += Math.min(strengthValue(elementId) / 3, 1) * 0.3;
-  score += checkCompletion(element) * 0.4;
-  return Math.min(1, score);
+  return average([
+    routeCompletion(elementId),
+    strengthCompletion(elementId),
+    checkCompletion(element)
+  ]);
 }
 
 function elementIsReady(elementId) {
   const element = getElementById(elementId);
   return Boolean(
     routeIsChosen(elementId) &&
-      strengthValue(elementId) >= 3 &&
+      strengthValue(elementId) >= SUPPORTED_STRENGTH_VALUE &&
       checkCompletion(element) === 1
   );
 }
 
 function averageScores(ids) {
-  if (!ids.length) return 0;
-  return ids.reduce((total, id) => total + elementScore(id), 0) / ids.length;
+  return average(ids.map((id) => elementScore(id)));
 }
 
 function calculateCompleteness() {
@@ -865,28 +884,61 @@ function calculateCompleteness() {
   return Math.round(averageScores(coreIds) * 100);
 }
 
+function elementGap(elementId) {
+  return Math.max(0, 1 - elementScore(elementId));
+}
+
+function challengeRouteIds(challenge) {
+  return challenge.routes.filter((routeId) => routeId !== "none");
+}
+
+function scoreChallenge(challenge) {
+  const attemptedIds = new Set(getAttemptedElements().map((element) => element.id));
+  const selectedRoutes = new Set(getSelectedRoutes());
+  const activeElementIds = challenge.elements.filter(
+    (id) => attemptedIds.has(id) && !elementIsReady(id)
+  );
+  const routeIds = challengeRouteIds(challenge);
+  const activeRouteIds = routeIds.filter((id) => selectedRoutes.has(id));
+  const componentScore = average(activeElementIds.map((id) => elementGap(id)));
+  const routeScore = routeIds.length ? activeRouteIds.length / routeIds.length : 0;
+  const genericScore =
+    challenge.routes.includes("none") && attemptedIds.size
+      ? Math.max(0, 1 - averageScores(getCoreElements().map((element) => element.id)))
+      : 0;
+  const activeScores = [componentScore, routeScore, genericScore].filter((score) => score > 0);
+  const matchScore = Math.round(average(activeScores) * 100);
+
+  return {
+    ...challenge,
+    matchScore,
+    componentScore,
+    routeScore,
+    genericScore,
+    activeElementIds,
+    activeRouteIds
+  };
+}
+
+function compareChallenges(a, b) {
+  return (
+    b.matchScore - a.matchScore ||
+    pressureRank(b.pressure) - pressureRank(a.pressure) ||
+    a.title.localeCompare(b.title)
+  );
+}
+
 function getMatchedChallenges() {
   const attempted = getAttemptedElements();
-  const selectedIds = attempted.map((element) => element.id);
-  const selectedRoutes = getSelectedRoutes();
-  const scored = challenges.map((challenge) => {
-    const elementHits = challenge.elements.filter((id) => selectedIds.includes(id)).length;
-    const routeHits = challenge.routes.filter((id) => selectedRoutes.includes(id)).length;
-    const genericHit = challenge.routes.includes("none") && selectedIds.length > 0;
-    return {
-      ...challenge,
-      matchScore: elementHits + routeHits * 2 + (genericHit ? 1 : 0)
-    };
-  });
+  const scored = challenges.map(scoreChallenge);
 
   const fallback = scored.filter((challenge) =>
     ["sufficiency-collapse", "meaning-gap", "prior-assessment", "scripture-ambiguity"].includes(challenge.id)
   );
 
-  return scored
-    .filter((challenge) => challenge.matchScore > 0)
-    .sort((a, b) => b.matchScore - a.matchScore || pressureRank(b.pressure) - pressureRank(a.pressure))
-    .concat(attempted.length ? [] : fallback);
+  if (!attempted.length) return fallback;
+
+  return scored.filter((challenge) => challenge.matchScore > 0).sort(compareChallenges);
 }
 
 function getChallengesForFilter() {
@@ -911,9 +963,9 @@ function getBoundaryTests() {
     ["human-flourishing"].includes(routeId)
   );
 
-  const ontologyReady = elementIsReady("truth-ground") && elementScore("moral-meaning") >= 0.75;
+  const ontologyReady = elementIsReady("truth-ground") && elementIsReady("moral-meaning");
   const forceReady = elementIsReady("binding-force");
-  const authorityReady = elementIsReady("authority-check") && elementScore("moral-access") >= 0.75;
+  const authorityReady = elementIsReady("authority-check") && elementIsReady("moral-access");
   const clarityReady = elementIsReady("case-guidance");
 
   return [
@@ -1030,13 +1082,20 @@ function getBoundaryTests() {
   ];
 }
 
+function calculateBoundaryRisk(boundaryTests = getBoundaryTests()) {
+  return boundaryTests.reduce(
+    (total, test) => total + (BOUNDARY_RISK_POINTS[test.status] ?? 0),
+    0
+  );
+}
+
 function getMissingCore() {
   return elements
     .filter((element) => element.tier === "core")
     .filter((element) => !elementIsReady(element.id))
     .map((element) => {
       if (!routeIsChosen(element.id)) return { ...element, reason: "No substantiation route chosen." };
-      if (strengthValue(element.id) < 3) return { ...element, reason: "Support strength is below supported." };
+      if (strengthValue(element.id) < SUPPORTED_STRENGTH_VALUE) return { ...element, reason: "Support strength is below supported." };
       return { ...element, reason: "Checklist is incomplete." };
     });
 }
@@ -1060,7 +1119,7 @@ function getComponentStatus(element) {
       detail: "No substantiation route"
     };
   }
-  if (strengthValue(element.id) < 3) {
+  if (strengthValue(element.id) < SUPPORTED_STRENGTH_VALUE) {
     return {
       state: "thin",
       label: "Thin",
@@ -1155,14 +1214,13 @@ function renderMissingTooltip(element, tooltipId) {
 }
 
 function renderTopPressureTooltip(challenge, tooltipId) {
-  const attemptedIds = getAttemptedElements().map((element) => element.id);
-  const componentHits = challenge.elements
-    .filter((id) => attemptedIds.includes(id))
+  const componentHitIds = challenge.activeElementIds || [];
+  const routeHitIds = challenge.activeRouteIds || [];
+  const componentHits = componentHitIds
     .map((id) => getElementById(id)?.title || id);
-  const routeHits = challenge.routes
-    .filter((id) => getSelectedRoutes().includes(id))
+  const routeHits = routeHitIds
     .map((id) => routeLabel(id));
-  const componentText = componentHits.length ? componentHits.join(", ") : "No selected required part is tied to this challenge";
+  const componentText = componentHits.length ? componentHits.join(", ") : "No incomplete required part is tied to this challenge";
   const routeText = routeHits.length ? routeHits.join(", ") : "No selected source route is tied to this challenge";
   return `
     <span class="section-tooltip top-pressure-tooltip" id="${tooltipId}" role="tooltip">
@@ -1488,9 +1546,7 @@ function renderSummary() {
   const readyCount = required.filter((element) => elementIsReady(element.id)).length;
   const completeness = calculateCompleteness();
   const boundaryTests = getBoundaryTests();
-  const failures = boundaryTests.filter((test) => test.status === "fail").length;
-  const warnings = boundaryTests.filter((test) => test.status === "warn").length;
-  const boundaryRisk = failures * 2 + warnings;
+  const boundaryRisk = calculateBoundaryRisk(boundaryTests);
   const matched = getMatchedChallenges();
   refs.selectedCount.textContent = String(readyCount);
   refs.selectedCountNote.textContent = `${readyCount} of ${required.length} mandatory components ready`;
@@ -1669,7 +1725,7 @@ function buildThresholdState() {
     let status = "missing";
 
     if (routeChosen || strength > 0 || hasChecks || note) {
-      status = strength >= 3 ? "substantiated" : "asserted";
+      status = strength >= SUPPORTED_STRENGTH_VALUE ? "substantiated" : "asserted";
     }
 
     thresholdState.elements[element.id] = {
@@ -1700,7 +1756,7 @@ function buildParticularsState() {
       readyComponentTitles: readyComponents.map((element) => element.title),
       noteCount,
       completeness: calculateCompleteness(),
-      boundaryRisk: getBoundaryTests().filter((test) => test.status === "fail").length,
+      boundaryRisk: calculateBoundaryRisk(),
       matchedChallengeCount: getMatchedChallenges().length
     }
   };

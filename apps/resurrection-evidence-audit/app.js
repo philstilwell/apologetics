@@ -353,6 +353,7 @@ const posturePresets = {
       pAltFactor: 0.18,
       weightFloor: 88,
     },
+    alternativeWeight: 0,
   },
   seeker: {
     priorBlend: 0.5,
@@ -361,6 +362,7 @@ const posturePresets = {
       pAltFactor: 0.55,
       weightFloor: 70,
     },
+    alternativeWeight: DEFAULT_ALTERNATIVE_WEIGHT,
   },
   corrected: {
     evidence: {
@@ -368,6 +370,7 @@ const posturePresets = {
       pAltFactor: 1,
       weightFloor: null,
     },
+    alternativeWeight: 1,
   },
 };
 
@@ -925,8 +928,15 @@ function applyPosture(kind) {
     ...applyEvidencePosture(item, posture),
     weight: posture.evidence.weightFloor ? Math.max(item.weight, posture.evidence.weightFloor) : item.weight,
   }));
+  state.featureWeights = new Map(
+    getAlternativesForPreset(preset).map((feature) => [
+      feature.id,
+      posture.alternativeWeight ?? feature.defaultWeight ?? DEFAULT_ALTERNATIVE_WEIGHT,
+    ]),
+  );
 
   renderLedger();
+  renderFeatures();
   renderPostureState();
   render();
 }
@@ -1586,7 +1596,7 @@ function assess() {
     baselineRefusalOpened: state.baselineRefusalOpened,
   });
   const repairs = buildRepairs(flags, meta);
-  const auditPressure = calculateAuditPressure(flags, shortfall90, topDriver, priorParts);
+  const auditPressure = calculateAuditPressure(flags, shortfall90, topDriver, priorParts, alternativeBf);
 
   return {
     preset,
@@ -1720,7 +1730,7 @@ function buildFlags(context) {
     });
   }
 
-  if (context.alternativeBf > 100) {
+  if (context.alternativeBf > 3) {
     flags.push({
       title: meta.alternativeStrongTitle,
       body: `${meta.alternativeStrongBody} This means the competing explanations are not just abstract possibilities. Given the settings selected below, they still have real explanatory strength and should stay in the comparison until specific evidence rules them out.`,
@@ -1808,17 +1818,18 @@ function buildRepairs(flags, meta) {
   return repairs;
 }
 
-function calculateAuditPressure(flags, shortfall90, topDriver, priorParts) {
+function calculateAuditPressure(flags, shortfall90, topDriver, priorParts, alternativeBf) {
   const flagScore = flags.reduce((sum, flag) => sum + flag.weight, 0);
   const shortfallScore = clamp(Math.log10(Math.max(shortfall90, 1)) * 9, 0, 26);
   const driverScore = topDriver ? clamp((topDriver.share - 0.35) * 48, 0, 18) : 0;
   const reserveScore = priorParts.unknownReserve < 0.05 ? 12 : priorParts.unknownReserve < 0.1 ? 6 : 0;
-  return Math.round(clamp(flagScore + shortfallScore + driverScore + reserveScore, 0, 100));
+  const alternativeScore = clamp(Math.log2(Math.max(alternativeBf, 1)) * 4, 0, 14);
+  return Math.round(clamp(flagScore + shortfallScore + driverScore + reserveScore + alternativeScore, 0, 100));
 }
 
 function calculateAlternativeBf() {
   return getCurrentAlternatives().reduce((product, feature) => {
-    const weight = state.featureWeights.get(feature.id) ?? 1;
+    const weight = state.featureWeights.get(feature.id) ?? feature.defaultWeight ?? DEFAULT_ALTERNATIVE_WEIGHT;
     return product * Math.pow(feature.ratio, weight * ALTERNATIVE_FIT_DAMPING);
   }, 1);
 }
