@@ -538,7 +538,7 @@ export const TOOLS = [
           secondary: true,
         },
         {
-          href: "./assets/curricula/moral-system-threshold-curriculum.pdf",
+          href: "./assets/curricula/moral-system-threshold-curriculum-v2.pdf",
           label: "Curriculum",
           secondary: true,
         },

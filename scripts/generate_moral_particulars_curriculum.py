@@ -861,6 +861,22 @@ ASSESSMENT_ROWS = [
 ]
 
 
+SESSION_MAP = [
+    ("1", "Particulars versus abstractions", "Initial moral inventory"),
+    ("2", "Stance, scope, and qualifiers", "Two precise stance statements"),
+    ("3", "Authority grounders", "Authority-grounder paragraph"),
+    ("4", "Conscience, Spirit, reason, and love", "Conscience/reason tension note"),
+    ("5", "Slider weighting and starter profiles", "Three privately mapped cases"),
+    ("6", "Disagreement diagnosis", "Disagreement charity memo"),
+    ("7", "Hard-case safety", "Safety memo"),
+    ("8", "Cross-case consistency", "Pattern-drift memo"),
+    ("9", "Grounder concentration map", "Graph interpretation paragraph"),
+    ("10", "Report and critique", "Critique and revision log"),
+    ("11", "Final dossier workshop", "Draft final dossier"),
+    ("12", "Presentation and sending", "Final presentation and 30-day practice"),
+]
+
+
 def add_session(story, index, session):
     section(story, f"Session {index}. {session['title']}", session["aim"])
     story.append(
@@ -930,7 +946,7 @@ def build_story():
         data_table(
             [
                 ["Part", "What it gives the teacher"],
-                ["Pages 3-7", "Philosophy, safety, outcomes, pacing, and teacher posture."],
+                ["Opening orientation", "Philosophy, case set, learning outcomes, pacing, and teacher posture."],
                 ["Sessions 1-12", "Full lesson plans with objectives, timing, questions, and homework."],
                 ["Tool literacy", "Grounders, disagreement diagnoses, graph reading, and report interpretation."],
                 ["Assessment", "Assignments, rubrics, final dossier, and presentation guidance."],
@@ -1068,13 +1084,35 @@ def build_story():
 
     section(
         story,
-        "The Moral Particulars Case Set",
+        "Session Map at a Glance",
+        "This one-page map helps the teacher keep the whole arc visible while improvising creatively inside each session.",
+    )
+    story.append(
+        data_table(
+            [["Session", "Tool focus", "Evidence of learning"]] + SESSION_MAP,
+            [0.7 * inch, 2.75 * inch, 2.75 * inch],
+            "TableBodyTight",
+        )
+    )
+    story.append(
+        callout(
+            "Spiral logic",
+            "The course returns to the same core moves with increasing pressure: state the particular, map the grounders, explain disagreement, compare cases, revise responsibly.",
+            BLUE,
+            BLUE_SOFT,
+        )
+    )
+    story.append(PageBreak())
+
+    section(
+        story,
+        "The Moral Particulars Case Set: 1a-6",
         "The cases are intentionally uneven. Some are ordinary, some severe, some sexual, some civic, some generosity-centered, and some volatile. That mix is the point: students learn whether their moral method stays principled across different kinds of pressure.",
     )
     story.append(
         data_table(
-            [["Case", "Moral particular", "Pedagogical pressure"]] + CASES,
-            [0.55 * inch, 3.35 * inch, 2.3 * inch],
+            [["Case", "Moral particular", "Pedagogical pressure"]] + CASES[:7],
+            [0.55 * inch, 3.3 * inch, 2.35 * inch],
             "TableBodyTight",
         )
     )
@@ -1084,6 +1122,28 @@ def build_story():
             "Several propositions involve violence, sexuality, bodily alteration, or severe exclusion. The teacher should frame these as objects of moral analysis, never as prompts for fantasy, mockery, or advocacy.",
             ACCENT,
             SOFT,
+        )
+    )
+    story.append(PageBreak())
+
+    section(
+        story,
+        "The Moral Particulars Case Set: 7-12",
+        "These later cases continue the pressure test across state violence, deception, eternal stakes, war, divorce, and urgent need.",
+    )
+    story.append(
+        data_table(
+            [["Case", "Moral particular", "Pedagogical pressure"]] + CASES[7:],
+            [0.55 * inch, 3.3 * inch, 2.35 * inch],
+            "TableBodyTight",
+        )
+    )
+    story.append(
+        callout(
+            "Teacher move",
+            "Ask students to mark which details are actually present in the sentence and which details their imagination supplied. That distinction prevents accidental case substitution.",
+            GOLD,
+            GOLD_SOFT,
         )
     )
     story.append(PageBreak())
@@ -1157,10 +1217,71 @@ def build_story():
     )
     story.append(PageBreak())
 
+    section(
+        story,
+        "Facilitator Readiness and Safeguarding",
+        "A rigorous curriculum for young seekers needs adult steadiness. The teacher should be prepared to handle moral intensity, theological disagreement, and vulnerable personal history without turning the room into therapy or combat.",
+    )
+    story.append(
+        two_col(
+            [
+                card(
+                    "Learner readiness",
+                    "Students should be able to hear difficult propositions, disagree without ridicule, write privately when needed, and distinguish analysis from endorsement.",
+                    BLUE,
+                    BLUE_SOFT,
+                ),
+                card(
+                    "Facilitator readiness",
+                    "The teacher should be comfortable pausing the room, naming harm, refusing soul-diagnosis, and protecting students who need a private rather than public response.",
+                    ACCENT,
+                    SOFT,
+                ),
+            ]
+        )
+    )
+    h2(story, "Before the First Meeting")
+    story.append(
+        data_table(
+            [
+                ["Preparation", "Why it matters"],
+                ["Disclose the nature of the case set.", "Students should know that some cases involve violence, sexuality, bodily alteration, and severe exclusion."],
+                ["Secure appropriate permission if minors are involved.", "Parents, guardians, or institutions may need to know the course includes sensitive moral material."],
+                ["Prepare a private-writing option.", "A student can remain engaged without performing every answer in front of peers."],
+                ["Set a referral boundary.", "The course is not counseling; distress, trauma, or crisis should be handled through appropriate care channels."],
+                ["Define data privacy.", "Students should know whether exported maps, reports, or written dossiers will be shared, stored, or graded."],
+            ],
+            [2.0 * inch, 4.2 * inch],
+            "TableBodyTight",
+        )
+    )
+    h2(story, "When to Slow the Room")
+    story.append(
+        bullet_list(
+            [
+                "Students begin joking about violence, sexuality, humiliation, or damnation.",
+                "A participant tries to assign spiritual rebellion or an unredeemed soul to a classmate.",
+                "The group starts defending conclusions before it has mapped the grounders.",
+                "Someone becomes visibly distressed or unusually silent after a case is read.",
+                "The teacher cannot tell whether students are analyzing the proposition or enjoying its severity.",
+            ],
+            "BodySmall",
+        )
+    )
+    story.append(
+        callout(
+            "Safeguarding principle",
+            "The course may apply real intellectual pressure, but it should never reward cruelty, voyeurism, coercion, or public exposure.",
+            GREEN,
+            GREEN_SOFT,
+        )
+    )
+    story.append(PageBreak())
+
     for index, session in enumerate(SESSIONS, 1):
         add_session(story, index, session)
 
-    section(story, "Tool Literacy: The Map as a Moral Ledger", "Students need enough technical literacy to understand what the tool is showing without turning numbers into false certainty.")
+    section(story, "Appendix A. Tool Literacy", "Students need enough technical literacy to understand the moral ledger without turning numbers into false certainty.")
     story.append(
         data_table(
             [
@@ -1200,7 +1321,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Grounder Field Guide", "These definitions should be taught as inspectable lanes, not as boxes students must fill to sound complete.")
+    section(story, "Appendix B. Grounder Field Guide", "These definitions should be taught as inspectable lanes, not as boxes students must fill to sound complete.")
     story.append(data_table([["Grounder", "What to ask"]] + GROUNDERS, [1.45 * inch, 4.75 * inch], "TableBodyTight"))
     story.append(
         callout(
@@ -1212,7 +1333,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Disagreement Diagnosis Field Guide", "The course should make students slower and fairer when explaining why someone disagrees.")
+    section(story, "Appendix C. Disagreement Diagnosis Field Guide", "The course should make students slower and fairer when explaining why someone disagrees.")
     story.append(data_table([["Diagnosis", "Responsible use"]] + DIAGNOSES, [1.65 * inch, 4.55 * inch], "TableBodyTight"))
     story.append(
         callout(
@@ -1224,7 +1345,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Activity Bank", "Use these activities whenever a session needs more movement, creativity, or pressure testing.")
+    section(story, "Appendix D. Activity Bank", "Use these activities whenever a session needs more movement, creativity, or pressure testing.")
     story.append(
         data_table(
             [
@@ -1244,7 +1365,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Assignments in Full", "These assignments produce the evidence for the final dossier.")
+    section(story, "Appendix E. Assignments in Full", "These assignments produce the evidence for the final dossier.")
     assignments = [
         ("Initial moral inventory", "List every case as support, oppose, unsure, or qualifier-required. Add one sentence on emotional intensity and one sentence on needed information."),
         ("Grounder autopsy", "Choose one strong judgment. Identify the top three grounders, explain why each has its weight, and name one grounder that sounds relevant but is not actually doing much work."),
@@ -1264,7 +1385,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Assessment Rubric", "Use this rubric for written work, presentations, and teacher conferences.")
+    section(story, "Appendix F. Assessment Rubric", "Use this rubric for written work, presentations, and teacher conferences.")
     story.append(data_table(ASSESSMENT_ROWS, [1.15 * inch, 1.85 * inch, 1.65 * inch, 1.55 * inch], "TableBodyTight"))
     h2(story, "Suggested Weights")
     story.append(
@@ -1290,7 +1411,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Final Dossier Template", "The final dossier is the durable product of the course.")
+    section(story, "Appendix G. Final Dossier Template", "The final dossier is the durable product of the course.")
     story.append(
         data_table(
             [
@@ -1322,7 +1443,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Facilitation Scripts", "Use these scripts to keep the room disciplined without killing its energy.")
+    section(story, "Appendix H. Facilitation Scripts", "Use these scripts to keep the room disciplined without killing its energy.")
     story.append(
         two_col(
             [
@@ -1367,7 +1488,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Troubleshooting", "Dynamic groups need contingencies. Use this page when the room gets stuck.")
+    section(story, "Appendix I. Troubleshooting", "Dynamic groups need contingencies. Use this page when the room gets stuck.")
     story.append(
         data_table(
             [
@@ -1386,7 +1507,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Adaptations", "The same core can serve different contexts if the teacher preserves stance, grounders, disagreement, patterns, and revision.")
+    section(story, "Appendix J. Adaptations", "The same core can serve different contexts if the teacher preserves stance, grounders, disagreement, patterns, and revision.")
     story.append(
         data_table(
             [
@@ -1412,7 +1533,7 @@ def build_story():
     )
     story.append(PageBreak())
 
-    section(story, "Printable One-Page Templates", "These compact prompts can be copied into handouts or slides.")
+    section(story, "Appendix K. Printable One-Page Templates", "These compact prompts can be copied into handouts or slides.")
     story.append(
         data_table(
             [

@@ -10,9 +10,6 @@ from reportlab.lib.units import inch
 from reportlab.platypus import (
     BaseDocTemplate,
     Frame,
-    KeepTogether,
-    ListFlowable,
-    ListItem,
     PageBreak,
     PageTemplate,
     Paragraph,
@@ -77,6 +74,90 @@ BOUNDARY_TESTS = [
     ("Obedience", "Is this more than submission to an authority already assumed to be moral?"),
     ("Practical", "Is this more than usefulness, social benefit, safety, or flourishing strategy?"),
     ("Guidance", "Can this decide hard cases and rank duties before the desired conclusion is chosen?"),
+]
+
+
+SESSION_ARC_ROWS = [
+    ["Time", "Teacher move", "Student work"],
+    ["0-10", "Open with a concrete moral claim or dilemma.", "Name first reactions without defending them."],
+    ["10-25", "Teach one structural idea and model one question.", "Capture the component, route, or boundary being introduced."],
+    ["25-55", "Run the lab activity in pairs or teams.", "Produce a visible artifact, not just discussion."],
+    ["55-75", "Connect the artifact to the live tool.", "Mark routes, support strength, checks, or pressure points."],
+    ["75-90", "Debrief with repair language.", "Name what would make the account stronger."],
+    ["90-100", "Assign the carry-forward task.", "Save one claim, question, or repair note for next time."],
+]
+
+
+PRE_POST_ROWS = [
+    ["Checkpoint", "Prompt", "What the teacher is looking for"],
+    ["Before Session 1", "Write one moral claim you believe and explain why it is objectively true.", "Baseline use of meaning, truth, authority, access, force, guidance, scope, and correction."],
+    ["After Session 4", "Which component is easiest for you to assume instead of explain?", "Early awareness of circularity and authority shortcuts."],
+    ["After Session 8", "Choose a hard case and show how your rule treats like cases alike.", "Stable guidance and consistent scope."],
+    ["After Session 11", "Name the strongest pressure question against your current account.", "Willingness to pressure-test without defensiveness."],
+    ["After Session 12", "Rewrite the original claim with the missing structure supplied or honestly identified.", "Growth in precision, humility, repair, and confidence calibration."],
+]
+
+
+MATERIAL_ROWS = [
+    ["Always available", "Purpose"],
+    ["Claim cards", "Keep discussion concrete and prevent abstract drift."],
+    ["Component cards", "Let students physically locate which part of the system is being supplied."],
+    ["Route cards", "Separate the source being appealed to from the component it must carry."],
+    ["Boundary cards", "Test whether the account collapses into emotion, obedience, advice, or vague guidance."],
+    ["Audit sheets", "Make every session produce evidence of learning."],
+    ["Timer and visible board", "Keep the dynamic teacher playful without letting the room become chaotic."],
+]
+
+
+TOOL_MECHANICS_ROWS = [
+    ["Tool area", "What students do", "Teacher question"],
+    ["State the claim", "Choose or write the moral-system claim being tested.", "Is the claim narrow enough to evaluate without shifting?"],
+    ["Required components", "Work through all eight components as mandatory parts of a coherent objective moral system.", "Which component is this answer meant to substantiate?"],
+    ["Primary route", "Choose the main source route carrying each component.", "Is the route a source of truth, access, authority, force, or only motivation?"],
+    ["Support strength", "Mark how strong the support is from 0 to 4.", "What evidence would raise or lower the number?"],
+    ["Substantiation checks", "Complete the component-specific checkboxes.", "Does the answer treat like cases alike, bind the right agents, and avoid special pleading?"],
+    ["Source map", "Read the lane and height of each component's support.", "Is one route doing too much work, or is the hybrid account principled?"],
+    ["Coherence ledger", "Watch which required components are ready, thin, or missing.", "What is the next repair move?"],
+    ["Boundary tests", "Ask whether the account is distinct from feeling, obedience, advice, and vague guidance.", "Where does the account risk collapse?"],
+    ["Top pressure", "Use the highest-pressure prompts as fair challenge questions.", "Can the student answer the exact pressure, not a different one?"],
+]
+
+
+GLOSSARY_ROWS = [
+    ["Term", "Plain meaning for students"],
+    ["Moral claim", "A statement that says something is right, wrong, good, evil, required, or forbidden."],
+    ["Moral system", "The larger structure that explains what moral words mean, what makes claims true, who is bound, and how hard cases are decided."],
+    ["Objective", "Not made true merely by personal feeling, group approval, usefulness, or power."],
+    ["Component", "One required job a moral system must perform."],
+    ["Route", "The source or pathway the student says carries a component."],
+    ["Support strength", "A 0 to 4 estimate of how much substantiation the selected route supplies for that component."],
+    ["Substantiation check", "A concrete checkpoint showing that the answer is not just asserted."],
+    ["Boundary test", "A question that checks whether the account has collapsed into a nearby substitute."],
+    ["Pressure question", "A targeted challenge raised by the current choices in the tool."],
+    ["Repair move", "A specific addition, distinction, or correction that would make the account stronger."],
+]
+
+
+LIVE_TOOL_CHECKLIST_ROWS = [
+    ["Step", "Student action", "Evidence of honest work"],
+    ["1", "State one stable claim.", "The claim does not change when pressure begins."],
+    ["2", "Complete every required component.", "No component is skipped because it feels obvious."],
+    ["3", "Choose a primary route for each component.", "The route is named for the job it performs."],
+    ["4", "Set support strength conservatively.", "The number reflects evidence, not confidence or loyalty."],
+    ["5", "Complete substantiation checks one by one.", "Unchecked boxes remain visible as unfinished work."],
+    ["6", "Read the source map.", "Students can explain concentration, gaps, and hybrid dependencies."],
+    ["7", "Answer boundary and pressure questions.", "Students answer the actual question and name repairs when needed."],
+    ["8", "Export or hand off the state.", "The next tool or discussion begins from the same claim, not a memory of it."],
+]
+
+
+PEER_FEEDBACK_ROWS = [
+    ["Feedback area", "Question to ask the presenting team", "Helpful sentence stem"],
+    ["Claim clarity", "What exactly are you claiming is objectively true?", "I hear the claim as... Is that stable?"],
+    ["Component coverage", "Which required component is least developed?", "The component that still seems thin is..."],
+    ["Route fit", "Does the chosen route actually carry the component?", "This route seems to supply..., but it may not yet supply..."],
+    ["Boundary pressure", "Where might the account collapse into a substitute?", "The strongest boundary worry I see is..."],
+    ["Repair", "What one change would make the system stronger?", "A repair move worth trying is..."],
 ]
 
 
@@ -588,15 +669,28 @@ def chip_row(style_map, chips: list[tuple[str, colors.Color, colors.Color]], tot
 
 
 def bullet_list(style_map, entries: list[str], style_name: str = "body"):
-    return ListFlowable(
-        [ListItem(Paragraph(entry, style_map[style_name]), leftIndent=10) for entry in entries],
-        bulletType="bullet",
-        bulletFontName="Helvetica-Bold",
-        bulletColor=PALETTE["gold"],
-        leftIndent=4,
-        spaceBefore=0,
-        spaceAfter=0,
+    marker_style = ParagraphStyle(
+        "AsciiBulletMarker",
+        parent=style_map["body_bold"],
+        fontSize=8.8,
+        leading=11,
+        textColor=PALETTE["gold"],
+        alignment=TA_CENTER,
     )
+    rows = [[Paragraph("-", marker_style), Paragraph(entry, style_map[style_name])] for entry in entries]
+    table = Table(rows, colWidths=[12, 490], hAlign="LEFT")
+    table.setStyle(
+        TableStyle(
+            [
+                ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                ("TOPPADDING", (0, 0), (-1, -1), 1),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ]
+        )
+    )
+    return table
 
 
 def rows_table(style_map, rows: list[list[str]], widths: list[float], header: bool = True):
@@ -709,8 +803,8 @@ def build_story(doc_width: float):
         rows_table(
             s,
             [
-                ["1. Teacher guide", "2. Twelve sessions", "3. Student handouts"],
-                ["4. Activities", "5. Rubrics", "6. Capstone lab"],
+                ["1. Teacher guide", "2. Tool mechanics", "3. Twelve sessions"],
+                ["4. Student handouts", "5. Rubrics", "6. Capstone lab"],
             ],
             [doc_width / 3] * 3,
             header=False,
@@ -767,6 +861,31 @@ def build_story(doc_width: float):
     )
     story.append(PageBreak())
 
+    story.extend(
+        section(
+            s,
+            "Teaching rhythm",
+            "A repeatable session arc",
+            "The teacher can be inventive, but the learning rhythm should stay predictable. Each meeting should move from concrete claim, to concept, to lab, to tool use, to repair.",
+        )
+    )
+    story.append(rows_table(s, SESSION_ARC_ROWS, [doc_width * 0.14, doc_width * 0.42, doc_width * 0.44]))
+    story.append(Spacer(1, 12))
+    story.extend(section(s, "Materials", "Keep the room hands-on"))
+    story.append(rows_table(s, MATERIAL_ROWS, [doc_width * 0.30, doc_width * 0.70]))
+    story.append(Spacer(1, 12))
+    story.append(
+        card(
+            s,
+            "Dynamic does not mean improvised standards",
+            "A creative teacher may use movement, courtroom scenes, gallery walks, and dramatic role play. The standard remains constant: name the claim, locate the component, test the route, mark support honestly, and ask the next fair question.",
+            PALETTE["green"],
+            PALETTE["green_soft"],
+            doc_width,
+        )
+    )
+    story.append(PageBreak())
+
     story.extend(section(s, "Learning design", "Durable understandings and outcomes"))
     story.append(
         rows_table(
@@ -804,6 +923,27 @@ def build_story(doc_width: float):
             "Do not grade students on whether they agree with the teacher, become skeptical, remain Christian, or reach a preferred conclusion. Grade the quality of the thinking: stable claims, clear components, honest support levels, fair questions, and principled repair moves.",
             PALETTE["red"],
             PALETTE["red_soft"],
+            doc_width,
+        )
+    )
+    story.append(PageBreak())
+
+    story.extend(
+        section(
+            s,
+            "Learning checks",
+            "Pre-assessment, checkpoints, and post-assessment",
+            "Students should see their own growth. These prompts make the course measurable without turning it into a test of belief.",
+        )
+    )
+    story.append(rows_table(s, PRE_POST_ROWS, [doc_width * 0.20, doc_width * 0.41, doc_width * 0.39]))
+    story.append(Spacer(1, 12))
+    story.append(
+        two_column_cards(
+            [
+                card(s, "Use before instruction", "Collect the first prompt before teaching the component language. The goal is to preserve a clean baseline.", PALETTE["blue"], PALETTE["blue_soft"], doc_width / 2 - 8),
+                card(s, "Use after capstone", "Return the first prompt beside the final version. Ask students to mark where their thinking became clearer, thinner, or more repairable.", PALETTE["gold"], PALETTE["gold_soft"], doc_width / 2 - 8),
+            ],
             doc_width,
         )
     )
@@ -860,9 +1000,75 @@ def build_story(doc_width: float):
     )
     story.append(PageBreak())
 
+    story.extend(
+        section(
+            s,
+            "Tool mechanics",
+            "Live tool mechanics",
+            "The tool should not feel like a separate gadget after the lesson. It is the shared workspace where the group makes claims visible, scores support conservatively, and sees which parts of the system still need substantiation.",
+        )
+    )
+    story.append(rows_table(s, TOOL_MECHANICS_ROWS, [doc_width * 0.24, doc_width * 0.39, doc_width * 0.37]))
+    story.append(Spacer(1, 12))
+    story.append(
+        card(
+            s,
+            "How to read numbers",
+            "Support strength is a disciplined estimate from 0 to 4: 0 means no usable support has been supplied; 1 means asserted; 2 means plausible but thin; 3 means supported; 4 means strong. It is not a truth meter, a piety meter, or a vote.",
+            PALETTE["blue"],
+            PALETTE["blue_soft"],
+            doc_width,
+        )
+    )
+    story.append(PageBreak())
+
+    story.extend(
+        section(
+            s,
+            "Vocabulary",
+            "Plain-language glossary",
+            "Use these meanings consistently so students can spend their energy on reasoning rather than guessing what the labels mean.",
+        )
+    )
+    story.append(rows_table(s, GLOSSARY_ROWS, [doc_width * 0.25, doc_width * 0.75]))
+    story.append(Spacer(1, 12))
+    story.append(
+        card(
+            s,
+            "Teacher language habit",
+            "When a word becomes foggy, ask students to translate it into the glossary language and then test whether the translation still says what they intended.",
+            PALETTE["green"],
+            PALETTE["green_soft"],
+            doc_width,
+        )
+    )
+    story.append(PageBreak())
+
     for session in SESSIONS:
         story.extend(session_page(s, doc_width, session))
         story.append(PageBreak())
+
+    story.extend(section(s, "Student handout", "Live tool walk-through"))
+    story.append(
+        Paragraph(
+            "Use this checklist when students move from discussion into the Moral System Stress Test. The goal is to slow the process enough that every choice means something.",
+            s["body"],
+        )
+    )
+    story.append(Spacer(1, 8))
+    story.append(rows_table(s, LIVE_TOOL_CHECKLIST_ROWS, [doc_width * 0.10, doc_width * 0.45, doc_width * 0.45]))
+    story.append(Spacer(1, 12))
+    story.append(
+        card(
+            s,
+            "Student discipline",
+            "Never let a filled screen substitute for a substantiated system. A box is complete only when the student can explain why that choice belongs there.",
+            PALETTE["gold"],
+            PALETTE["gold_soft"],
+            doc_width,
+        )
+    )
+    story.append(PageBreak())
 
     story.extend(section(s, "Student handout", "Full moral-system audit sheet"))
     story.append(Paragraph("Use this page repeatedly. It is the bridge between the curriculum and the tool.", s["body"]))
@@ -1002,6 +1208,27 @@ def build_story(doc_width: float):
             "A student can receive high marks while defending a Christian account, doubting one, or remaining undecided. The rubric rewards intellectual honesty and structural clarity.",
             PALETTE["green"],
             PALETTE["green_soft"],
+            doc_width,
+        )
+    )
+    story.append(PageBreak())
+
+    story.extend(
+        section(
+            s,
+            "Peer feedback",
+            "Questions that help without taking over",
+            "Peer feedback should make the presenting team more precise. Students are not trying to win the capstone for someone else; they are helping the team see what still needs support.",
+        )
+    )
+    story.append(rows_table(s, PEER_FEEDBACK_ROWS, [doc_width * 0.22, doc_width * 0.38, doc_width * 0.40]))
+    story.append(Spacer(1, 12))
+    story.append(
+        two_column_cards(
+            [
+                card(s, "Before speaking", "Ask: am I clarifying, testing, or repairing? If the answer is none of these, wait.", PALETTE["blue"], PALETTE["blue_soft"], doc_width / 2 - 8),
+                card(s, "After receiving feedback", "The presenting team must name one repair they accept, one question they need more time for, and one answer they still stand behind.", PALETTE["green"], PALETTE["green_soft"], doc_width / 2 - 8),
+            ],
             doc_width,
         )
     )

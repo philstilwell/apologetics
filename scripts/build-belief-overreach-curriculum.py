@@ -79,6 +79,16 @@ SESSIONS = [
             "Why might a person be completely sincere and still be over-believing?",
             "Why is the course focused on methods rather than motives alone?",
         ],
+        "listen_for": [
+            "Students begin distinguishing sincerity from warrant without treating sincerity as fake.",
+            "Participants can say in their own words why the course is about methods rather than tribes.",
+            "The room starts using support and pull as different categories rather than as synonyms.",
+        ],
+        "adaptation": [
+            "If the room is guarded, keep the first cases ordinary and low-stakes for longer.",
+            "If discussion becomes abstract too quickly, return to the wall-line exercise and ask for concrete examples.",
+            "If religion dominates too early, postpone it and restate that the course will earn that transition later.",
+        ],
         "homework": "Write one page on three beliefs you hold strongly. For each, separate what actually supports it from what merely pulls you toward it.",
         "teacher_note": "Your first job is to lower defensiveness. Keep reminding the group that the course does not punish uncertainty. It asks whether a method of believing deserves trust.",
         "hazard": "The main risk is premature argument about religion. Keep the first session anchored in ordinary claims so the method comes first.",
@@ -116,6 +126,16 @@ SESSIONS = [
             "Can a bad method occasionally produce a good result?",
             "Why is waiting for better evidence different from refusing to act altogether?",
             "Where do people most often confuse courage with overconfidence?",
+        ],
+        "listen_for": [
+            "Students can say uncertainty is normal without collapsing into passivity.",
+            "Participants stop treating a lucky outcome as automatic proof of a good method.",
+            "The phrase act under uncertainty starts sounding different from pretend to know.",
+        ],
+        "adaptation": [
+            "If percentages intimidate the group, drop the numbers and talk in rough confidence bands instead.",
+            "If the room treats caution as weakness, use one example where restraint clearly preserves options.",
+            "If time is tight, cut the small-group cases and keep the luck discussion plus exit writing.",
         ],
         "homework": "Find one real-world example where people praised confidence more than evidence. Bring a short description to the next meeting.",
         "teacher_note": "Young seekers often fear that this framework requires paralysis. Keep saying that rational restraint is not passivity; it is disciplined proportion.",
@@ -155,6 +175,16 @@ SESSIONS = [
             "How does the graph keep one dramatic try from controlling the whole story?",
             "Why is gambling the easiest domain in which to spot overreach?",
         ],
+        "listen_for": [
+            "Students can explain why the same event stream matters for comparing methods fairly.",
+            "The group notices that faith changes the decision rule, not the underlying odds.",
+            "Participants begin using short-term win and long-run method as separate ideas.",
+        ],
+        "adaptation": [
+            "If the room gets lost in rules, simplify the house rule to bank a good hand, do not chase because you feel lucky.",
+            "If a Zeke win confuses the group, run a second reset immediately and compare the graphs.",
+            "If students want more agency, pause before each try and make them predict each agent's move first.",
+        ],
         "homework": "Write a paragraph that begins, a short win does not justify the method because...",
         "teacher_note": "This is the moment to make the course feel concrete. The cleaner the explanation here, the easier the later transfer to religion becomes.",
         "hazard": "Avoid turning the session into casino trivia. Keep all attention on method, not gaming lore.",
@@ -192,6 +222,16 @@ SESSIONS = [
             "Why do grown-up settings make overreach sound respectable?",
             "What is the difference between conviction and disciplined due diligence?",
             "Why should truth not need us to add excitement where support is weak?",
+        ],
+        "listen_for": [
+            "Students can separate business substance from business atmosphere.",
+            "The group sees why hype can feel intelligent while still being evidentially thin.",
+            "Participants can explain why brief market gains do not retroactively create prior support.",
+        ],
+        "adaptation": [
+            "If students are financially inexperienced, translate the lesson into trend-chasing, virality, or status buying.",
+            "If the room becomes cynical about all confidence, bring back the difference between confidence with support and confidence without it.",
+            "If discussion drifts, return to the tool graph and ask which line is consistently easiest to trust and why.",
         ],
         "homework": "Find one public claim in finance, culture, or politics that is being sold with narrative force. Split the signals into support and pull.",
         "teacher_note": "Students often admire confidence in this domain. Let them feel why confidence can be socially rewarded and still be epistemically weak.",
@@ -231,6 +271,16 @@ SESSIONS = [
             "Why do people romanticize riskier methods in this domain?",
             "How can waiting be an act of respect rather than coldness?",
         ],
+        "listen_for": [
+            "Students begin distinguishing emotional intensity from evidence of trustworthiness.",
+            "Participants can say why vetting is not the enemy of love.",
+            "The room starts describing overcommitment as costly even when it feels romantic.",
+        ],
+        "adaptation": [
+            "If the room gets shy, keep everything on fictional or tool-based cases instead of personal disclosure.",
+            "If students drift toward cynicism, ask what wise patience preserves rather than what romance forbids.",
+            "If a catfish example feels too dramatic, use a softer case about exclusivity outrunning character evidence.",
+        ],
         "homework": "Create a two-column list: signs of real trustworthiness versus signs that merely feel intense.",
         "teacher_note": "This session needs a gentler pace. Young seekers may suddenly realize the framework speaks directly to wounds, fantasies, or fears they carry.",
         "hazard": "Never reward cynicism. The rational line is not anti-love; it is anti-overreach.",
@@ -268,6 +318,16 @@ SESSIONS = [
             "Why does religion often feel harder to examine with ordinary standards?",
             "What makes belonging powerful without making it evidence by itself?",
             "If a claim is true, why should it need us to add belief beyond support?",
+        ],
+        "listen_for": [
+            "Students can explain evidence, pull, and demand without using them interchangeably.",
+            "The group begins seeing that noble language can still hide costly overreach.",
+            "Participants notice that the religion case is structurally continuous with the earlier fields rather than isolated from them.",
+        ],
+        "adaptation": [
+            "If the room becomes defensive, slow the pace and return to symmetry instead of pressing harder.",
+            "If the term faith becomes contested, restate the course definition and acknowledge that some communities use the word more narrowly.",
+            "If religion feels too abstract, ask what the claim is demanding in hours, identity, money, or obedience right now.",
         ],
         "homework": "Write two short paragraphs: what draws people toward a claim, and what actually supports that claim.",
         "teacher_note": "The room may become tense here. Slow down. Reward candor and careful wording more than speed or rhetorical force.",
@@ -307,6 +367,16 @@ SESSIONS = [
             "How can a community reward confidence more than honesty?",
             "What makes hope powerful, and why is that different from making it proof?",
         ],
+        "listen_for": [
+            "Students can name psychological and social pressures without treating them as proof.",
+            "Participants speak more compassionately about why people over-believe.",
+            "The room can now criticize a method without pretending the emotional pull was never real.",
+        ],
+        "adaptation": [
+            "If the room sounds cold, explicitly affirm that hope, beauty, and belonging matter humanly even when they do not count as evidence.",
+            "If students reduce everything to psychology, bring them back to the epistemic question of what warrants belief.",
+            "If energy dips, use a quick sort activity with the pressure cards to re-embody the concept.",
+        ],
         "homework": "Private journal only: where would lowering confidence feel costly in your own social world?",
         "teacher_note": "This session humanizes the problem. If it is taught well, students stop assuming that irrationality always looks foolish from the inside.",
         "hazard": "Do not imply that emotions are enemies. The point is that emotions are real data about us, not automatic proof about the claim.",
@@ -344,6 +414,16 @@ SESSIONS = [
             "Which objection remains most tempting and why?",
             "What counts as a genuine reply rather than a rhetorical dodge?",
             "How do we know when we are giving religion a special exemption?",
+        ],
+        "listen_for": [
+            "Students summarize objections more fairly than they would have at the start of the course.",
+            "The room distinguishes a live objection from a slogan or a dodge.",
+            "Participants start noticing where they instinctively want a special exemption for favored beliefs.",
+        ],
+        "adaptation": [
+            "If the objections get weak, pause and ask the class to strengthen them before answering.",
+            "If students get competitive, switch from debate language to clarification language.",
+            "If one objection dominates, use it as the class focal point and trim the station rotation.",
         ],
         "homework": "Write a one-page answer to the strongest objection you still feel, and include where that objection still has force.",
         "teacher_note": "A course becomes credible when it can survive its best criticism. Slow the group down until they can state objections in language their critics would actually recognize.",
@@ -383,6 +463,16 @@ SESSIONS = [
             "What social or emotional costs make recalibration hard?",
             "Why is uncertainty often healthier than inflated certainty?",
         ],
+        "listen_for": [
+            "Students begin talking about recalibration as integrity rather than as betrayal.",
+            "The room can describe social costs without turning those costs into evidence.",
+            "Participants can imagine lowering confidence without losing the will to keep seeking truth.",
+        ],
+        "adaptation": [
+            "If the room is anxious, offer one low-stakes practice claim before asking for a personal one.",
+            "If people want to disclose more than is healthy, thank them and redirect toward process rather than biography.",
+            "If students freeze, let them work with a fictional belief holder first and then transfer privately.",
+        ],
         "homework": "Draft a personal method statement: when I care deeply, how will I stop pull from pretending to be evidence?",
         "teacher_note": "This session should feel humane. Students need to experience the framework as liberatingly honest, not emotionally punitive.",
         "hazard": "Never pressure disclosure. Forced transparency would violate the course's own respect for epistemic honesty.",
@@ -420,6 +510,16 @@ SESSIONS = [
             "What should you now distrust in yourself more than before?",
             "What should you now trust in honest inquiry more than before?",
             "What question do you want to keep examining after the course ends?",
+        ],
+        "listen_for": [
+            "Students can state the course thesis in their own words without simply echoing slogans.",
+            "Participants reflect on method quality more than on scoring a final ideological win.",
+            "The group can describe one concrete practice they want to carry into real decisions.",
+        ],
+        "adaptation": [
+            "If the capstones run long, use paired summaries and reserve whole-group time for patterns rather than full reports.",
+            "If the ending feels too triumphant, return to open questions and the continuing cost of self-honesty.",
+            "If the final run confuses people, narrate it slowly and compare it explicitly to the way the class would have read it on session three.",
         ],
         "homework": "No formal homework. Encourage participants to keep the personal method statement and revisit it after meaningful life decisions.",
         "teacher_note": "End quietly and strongly. The deepest success of the course is not instant agreement. It is a durable respect for evidence-capped belief.",
@@ -1020,6 +1120,17 @@ def session_story(session, styles):
         style=TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP")]),
     )
 
+    follow_through_row = Table(
+        [
+            [
+                info_card("What to listen for", "<br/>".join(f"- {item}" for item in session["listen_for"]), styles, "teal", 2.95 * inch),
+                info_card("Flexible move", "<br/>".join(f"- {item}" for item in session["adaptation"]), styles, "plum", 2.95 * inch),
+            ]
+        ],
+        colWidths=[3.07 * inch, 3.07 * inch],
+        style=TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP")]),
+    )
+
     return [
         Paragraph(accent_title, styles["EyebrowCurriculum"]),
         Paragraph(session["title"], styles["SessionTitleCurriculum"]),
@@ -1030,6 +1141,8 @@ def session_story(session, styles):
         support_row,
         Spacer(1, 0.12 * inch),
         lower_row,
+        Spacer(1, 0.12 * inch),
+        follow_through_row,
         Spacer(1, 0.12 * inch),
         callout(f"Teacher note: {session['teacher_note']}", styles, accent),
         Spacer(1, 0.1 * inch),
@@ -1117,9 +1230,117 @@ def assessment_story(styles):
     return story
 
 
+def survey_story(styles):
+    story = [
+        Paragraph("14  SURVEYS AND HANDOUTS", styles["EyebrowCurriculum"]),
+        Paragraph("Simple tools for measuring growth and supporting the room", styles["SectionTitleCurriculum"]),
+        Paragraph(
+            "The curriculum becomes easier to teach well when participants can see where they began and what changed. These survey prompts and handout suggestions keep the course practical without turning it into bureaucracy.",
+            styles["BodyCurriculum"],
+        ),
+        Table(
+            [
+                [
+                    info_card(
+                        "Pre-course survey",
+                        "Ask students to rate statements like: I can tell the difference between hope and evidence; waiting for better evidence feels weak; faith is often a virtue; a lucky outcome can prove a good method; religion should be judged by the same epistemic standards as other claims.",
+                        styles,
+                        "green",
+                        3.0 * inch,
+                    ),
+                    info_card(
+                        "Post-course survey",
+                        "Repeat the same statements, then add open questions: What changed in your thinking? Which scenario still feels hardest? What belief-forming habit do you most want to keep?",
+                        styles,
+                        "blue",
+                        3.0 * inch,
+                    ),
+                ]
+            ],
+            colWidths=[3.08 * inch, 3.08 * inch],
+        ),
+        Spacer(1, 0.16 * inch),
+        Paragraph("Suggested printable handouts", styles["SubheadCurriculum"]),
+        bullet_list(
+            [
+                "Course vocabulary sheet: faith, perceived support, pull, demand, core rationality, life-budget, truth-tracking.",
+                "Support versus pull worksheet: one page with claims, columns, and reflection prompts.",
+                "Objection cards: compact prompts for session eight, one objection per card.",
+                "Personal method statement sheet: a final template for writing a truth-seeking practice rule.",
+                "Capstone rubric: one page with definitions, symmetry, interpretation, honesty, and clarity.",
+            ],
+            styles,
+        ),
+        Spacer(1, 0.1 * inch),
+        callout(
+            "If the group is younger or more cautious, keep the surveys short and let all identity-sensitive answers remain private. The point is growth in method, not forced disclosure.",
+            styles,
+            "blue",
+        ),
+    ]
+    return story
+
+
+def implementation_story(styles):
+    story = [
+        Paragraph("15  IMPLEMENTATION NOTES", styles["EyebrowCurriculum"]),
+        Paragraph("How to scale, compress, or soften the curriculum without hollowing it out", styles["SectionTitleCurriculum"]),
+        Paragraph(
+            "Not every teacher will have the same room, timeline, or student readiness. The course can be adjusted, but the backbone should remain intact: concrete calibration first, transfer across domains second, religion third, objections fourth, personal application last.",
+            styles["BodyCurriculum"],
+        ),
+        Table(
+            [
+                [
+                    info_card(
+                        "If you only have 6 sessions",
+                        "Combine sessions 1 and 2, combine 3 and 4, combine 5 and 7, keep session 6 intact, keep session 8 intact, and end with a merged version of sessions 9 and 10.",
+                        styles,
+                        "amber",
+                        1.95 * inch,
+                    ),
+                    info_card(
+                        "If the room is religiously mixed",
+                        "Emphasize symmetry, keep the definitions visible, and use ordinary-life domains often enough that no one feels singled out before the method is understood.",
+                        styles,
+                        "green",
+                        1.95 * inch,
+                    ),
+                    info_card(
+                        "If the room is emotionally volatile",
+                        "Reduce public sharing, increase journaling, use pairs over plenary debate, and keep the teacher language slow, concrete, and non-accusatory.",
+                        styles,
+                        "red",
+                        1.95 * inch,
+                    ),
+                ]
+            ],
+            colWidths=[2.06 * inch, 2.06 * inch, 2.06 * inch],
+        ),
+        Spacer(1, 0.16 * inch),
+        Paragraph("Non-negotiables even in a compressed version", styles["SubheadCurriculum"]),
+        bullet_list(
+            [
+                "Do not skip the calibration work at the front of the course.",
+                "Do not move religion before the group has seen the same structure in easier cases.",
+                "Do not let objections disappear; a framework that cannot survive criticism will not feel trustworthy.",
+                "Do not force personal application before the room feels safe enough to think honestly.",
+            ],
+            styles,
+        ),
+        Spacer(1, 0.1 * inch),
+        callout(
+            "A shorter version should feel lean, not rushed. If you cut sessions, preserve the order of the reasoning spine rather than trying to sample everything lightly.",
+            styles,
+            "amber",
+        ),
+    ]
+    return story
+
+
 def appendix_story(styles):
     story = [
-        Paragraph("14  APPENDICES", styles["EyebrowCurriculum"]),
+        Paragraph("16  APPENDICES", styles["EyebrowCurriculum"]),
         Paragraph("Facilitation safeguards, glossary, and question bank", styles["SectionTitleCurriculum"]),
         Paragraph("Emotional and social safeguards", styles["SubheadCurriculum"]),
         bullet_list(
@@ -1193,6 +1414,10 @@ def build_story(styles):
         story.extend(session_story(session, styles))
     story.append(PageBreak())
     story.extend(assessment_story(styles))
+    story.append(PageBreak())
+    story.extend(survey_story(styles))
+    story.append(PageBreak())
+    story.extend(implementation_story(styles))
     story.append(PageBreak())
     story.extend(appendix_story(styles))
     return story

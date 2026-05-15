@@ -375,6 +375,56 @@ def cards(items):
     return t
 
 
+def compact_cards(items):
+    cells = []
+    for title, body, tint in items:
+        cells.append([PE(title, "CardTitle"), PE(body, "Tiny")])
+    t = Table([cells], colWidths=[1.58 * inch] * len(items), hAlign="LEFT")
+    commands = [
+        ("BOX", (0, 0), (-1, -1), 0.45, LINE),
+        ("INNERGRID", (0, 0), (-1, -1), 0.45, LINE),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("LEFTPADDING", (0, 0), (-1, -1), 6),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+        ("TOPPADDING", (0, 0), (-1, -1), 6),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+    ]
+    for i, item in enumerate(items):
+        commands.append(("BACKGROUND", (i, 0), (i, 0), item[2]))
+    t.setStyle(TableStyle(commands))
+    return t
+
+
+def para_lines(items, style="TableBodyLarge"):
+    return P("<br/>".join(f"- {escape(item)}" for item in items), style)
+
+
+def worksheet_table(headers, row_count, col_widths, row_height):
+    rows = [[PE(header, "TableHead") for header in headers]]
+    rows.extend([[PE("", "TableBodyLarge") for _ in headers] for _ in range(row_count)])
+    t = Table(
+        rows,
+        colWidths=col_widths,
+        rowHeights=[0.32 * inch] + [row_height] * row_count,
+        hAlign="LEFT",
+    )
+    t.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), BLUE),
+                ("BOX", (0, 0), (-1, -1), 0.55, LINE),
+                ("INNERGRID", (0, 0), (-1, -1), 0.35, LINE),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 7),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+                ("TOPPADDING", (0, 0), (-1, -1), 6),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+            ]
+        )
+    )
+    return t
+
+
 def bullet_list(items, style="BodySmall"):
     return ListFlowable(
         [ListItem(P(f"{escape(item)}", style), leftIndent=0) for item in items],
@@ -606,12 +656,115 @@ SESSIONS = [
 ]
 
 
+SESSION_ENRICHMENTS = {
+    1: {
+        "materials": "Claim cards, three sorting signs, sticky notes, one sample testimony, one sample public claim.",
+        "questions": [
+            "What can a story mean even if it is not public evidence?",
+            "When does a claim ask outsiders to believe more than the story itself shows?",
+            "What label would be most honest if the claim is meaningful but not checkable?",
+        ],
+        "watch": "Students may treat testability as a ranking of human worth. Keep repeating: people are not on trial; public evidential uses of claims are.",
+    },
+    2: {
+        "materials": "Claim Surgery worksheet, marker board, five vague promises, timer for gallery rotations.",
+        "questions": [
+            "What outcome would be different if this promise is true?",
+            "Who is included, who is excluded, and why?",
+            "Did our rewrite preserve the original claim's force or quietly weaken it?",
+        ],
+        "watch": "Students may make the promise so narrow that no result matters. Ask whether the revised claim still supports the rhetoric that brought it into the room.",
+    },
+    3: {
+        "materials": "Evidence cards, bad-study cards, study-upgrade ladder, sample anecdote with missing denominator.",
+        "questions": [
+            "What does this evidence show at most?",
+            "Where are the misses?",
+            "What would be the first affordable improvement to this study?",
+        ],
+        "watch": "Students may hear criticism of evidence as criticism of sincerity. Use the phrase: sincere stories can be good leads and weak proof.",
+    },
+    4: {
+        "materials": "Clean Miss worksheet, pre-commitment examples, three disappointing-result scenarios.",
+        "questions": [
+            "Could another person tell whether this result happened?",
+            "Would this rule still apply if the result disappointed my side?",
+            "What result is neutral because the test would be too messy to read?",
+        ],
+        "watch": "Students may write commitments that sound noble but cannot bite. Require observable terms and a concrete confidence change.",
+    },
+    5: {
+        "materials": "Confounder cards, matched-comparison cards, public-health example, community-comparison example.",
+        "questions": [
+            "What ordinary factor could create the same pattern?",
+            "What baseline risk differs before the promise is considered?",
+            "What comparison group would both sides call fair before the data arrive?",
+        ],
+        "watch": "Students may use confounders as automatic debunkers. Confounders are not conclusions; they are controls the study must respect.",
+    },
+    6: {
+        "materials": "Escape-hatch taxonomy, court-role cards, disappointing-result scripts, rewrite prompts.",
+        "questions": [
+            "Does this explanation leave any possible miss?",
+            "Is this a devotional interpretation or a public evidence claim?",
+            "How could we rewrite the claim so the explanation becomes honest rather than protective?",
+        ],
+        "watch": "Students may accuse each other of bad faith. Keep the focus on the function of the explanation, not the character of the defender.",
+    },
+    7: {
+        "materials": "Study Design worksheet, protocol checklist, red-team forms, sample datasets list.",
+        "questions": [
+            "What is the smallest fair pilot that could disappoint this claim?",
+            "Which design weakness would a critic reasonably press first?",
+            "What would replication add that the first study cannot provide?",
+        ],
+        "watch": "Students may demand impossible perfection or settle for useless simplicity. Keep them between those errors: feasible but still risky.",
+    },
+    8: {
+        "materials": "Student devices, projected tool, completed protocols, Tool Report Reflection worksheet.",
+        "questions": [
+            "Which setting moved the promise most and why?",
+            "Does the score reflect study quality, willingness, clean-miss posture, or excuse drag?",
+            "What does the tool not tell us?",
+        ],
+        "watch": "Students may treat the score as a truth probability. Correct this immediately: it measures exposure to public accountability.",
+    },
+    9: {
+        "materials": "All-promises report, promise field map, colored dots or printed maps, stance labels.",
+        "questions": [
+            "Which promises are allowed to face evidence and which stay protected?",
+            "Is openness consistent or selective?",
+            "Does this stance fit a claim that a personal God is active in earthly life?",
+        ],
+        "watch": "Students may overgeneralize from one protected promise to all theology. Keep the scope narrow: earthly promise claims used as evidence.",
+    },
+    10: {
+        "materials": "Capstone checklist, peer-question cards, timer, final reflection prompt.",
+        "questions": [
+            "What is this specific promise allowed to risk?",
+            "What is the strongest fair criticism of the audit?",
+            "What label is most honest after the test design is visible?",
+        ],
+        "watch": "Students may perform certainty for the group. Reward revision, calibrated language, and brave downgrading.",
+    },
+}
+
+
 def session_page(story, session):
+    enrichment = SESSION_ENRICHMENTS[session["number"]]
     new_page(story, f"Session {session['number']}: {session['title']}")
     story.append(callout("Driving question", session["question"], RUST, CREAM))
     story.append(Spacer(1, 6))
-    story.append(subheading("Learning outcomes"))
-    story.append(bullet_list(session["outcomes"]))
+    story.append(
+        compact_cards(
+            [
+                ("Outcomes", " / ".join(session["outcomes"]), BLUE_SOFT),
+                ("Materials", enrichment["materials"], GREEN_SOFT),
+                ("Watch for", enrichment["watch"], GOLD_SOFT),
+                ("Artifact", session["artifact"], SOFT),
+            ]
+        )
+    )
     story.append(subheading("90-minute teaching arc"))
     story.append(
         table(
@@ -621,16 +774,17 @@ def session_page(story, session):
         )
     )
     story.append(Spacer(1, 6))
+    story.append(callout("Teacher move", session["teacher"], BLUE_MID, SOFT))
+    story.append(Spacer(1, 6))
     story.append(
         table(
             [
-                ["Teacher move", session["teacher"]],
-                ["Student artifact", session["artifact"]],
+                ["Discussion prompts", para_lines(enrichment["questions"], "TableBodyLarge")],
                 ["Homework", session["homework"]],
             ],
-            [1.25 * inch, 5.25 * inch],
+            [1.35 * inch, 5.15 * inch],
             header=False,
-            tint=SOFT,
+            tint=CREAM,
             large=True,
         )
     )
@@ -754,6 +908,72 @@ def build_story():
     )
     story.append(callout("Teacher warning", "Do not let the course become a debate about every theological doctrine. The curriculum is about earthly promises that are offered as public evidence.", RUST, CREAM))
 
+    new_page(story, "Course Covenant and Room Norms")
+    story.append(PE("This course asks students to examine cherished claims without humiliating the people who cherish them. Begin by making the social contract explicit."))
+    story.append(
+        table(
+            [
+                ["Norm", "Teacher language"],
+                ["No ridicule", "We can inspect a claim sharply without making a person feel like the target."],
+                ["No forced disclosure", "Students may analyze public or hypothetical claims instead of personal family or church stories."],
+                ["No moving goalposts", "Once a clean-miss rule is written, it should not be quietly rewritten after a disappointing result."],
+                ["No cheap victory", "A skeptic must improve weak studies, not merely sneer at them. A defender must name misses, not merely remember hits."],
+                ["Distinguish labels", "Private meaning, devotional interpretation, public evidence, and strong public evidence are different labels."],
+                ["Revision is honorable", "Changing a claim label from proof to personal interpretation can be intellectual progress."],
+            ],
+            [1.4 * inch, 5.1 * inch],
+            large=True,
+        )
+    )
+    story.append(Spacer(1, 8))
+    story.append(cards([
+        ("Warmth", "Protect students from contempt, shame, and identity threat.", BLUE_SOFT),
+        ("Precision", "Require clear claims, fair comparisons, and visible rules.", GREEN_SOFT),
+        ("Courage", "Let strong claims face outcomes that could disappoint them.", GOLD_SOFT),
+    ]))
+    story.append(Spacer(1, 8))
+    story.append(callout("Opening script", "This course will not ask you to mock faith or fake neutrality. It will ask you to stop using a claim as public evidence if no public result is allowed to count against it.", RUST, CREAM))
+
+    new_page(story, "Vocabulary and Misconception Map")
+    story.append(PE("Students need shared language before the debates become emotionally loaded. Return to these terms whenever the group gets blurry."))
+    story.append(
+        table(
+            [
+                ["Term", "Plain meaning", "Common misconception to correct"],
+                ["Earthly promise", "A claim that God does something observable in ordinary life.", "Not every theological claim belongs on the field."],
+                ["Public evidence", "A reason offered to people outside the experience as support for the claim.", "A story can matter without being strong public evidence."],
+                ["Falsifiability", "A fair result could count against the claim as stated.", "Falsifiable does not mean false, crude, or hostile."],
+                ["Clean miss", "A negative result under rules agreed before the outcome.", "A miss is not the same as a messy or broken study."],
+                ["Confounder", "An ordinary factor that could produce the same pattern.", "Naming a confounder is not automatically debunking the claim."],
+                ["Escape hatch", "A response that prevents a poor result from counting.", "An escape hatch may be sincere and still reduce public evidential force."],
+                ["Study rigor", "How well a test counts misses, controls bias, uses comparison, and resists hindsight repair.", "Rigor is not elitism; it is protection against fooling ourselves."],
+            ],
+            [1.0 * inch, 2.65 * inch, 2.85 * inch],
+        )
+    )
+    story.append(Spacer(1, 8))
+    story.append(callout("Vocabulary checkpoint", "Before students argue about whether a promise is true, ask them which label they are using: personal meaning, devotional interpretation, public evidence, or strong public evidence.", BLUE_MID, BLUE_SOFT))
+
+    new_page(story, "Pacing, Adaptation, and Evidence Ethics")
+    story.append(PE("The curriculum is designed for ten 90-minute sessions, but real groups vary. Use these adaptations without losing the course's spine."))
+    story.append(
+        table(
+            [
+                ["Need", "Adaptation"],
+                ["75-minute sessions", "Shorten the warm-up and exit ticket; keep the claim, study, commitment, excuse, and result moves intact."],
+                ["100-minute sessions", "Add a red-team round, student-designed examples, or a second promise comparison."],
+                ["Younger students", "Use more card sorts, role-play, and concrete examples. Reduce formula language but keep clean-miss rules."],
+                ["Advanced students", "Add preregistration templates, basic causal diagrams, base-rate work, and prediction-market comparisons."],
+                ["Mixed belief group", "Let students choose public examples. Do not require personal testimony as raw material."],
+                ["Sensitive claims", "Use anonymized or fictionalized examples for illness, death, abuse, and family conflict."],
+            ],
+            [1.45 * inch, 5.05 * inch],
+            large=True,
+        )
+    )
+    story.append(Spacer(1, 8))
+    story.append(callout("Ethical floor", "Students are learning how to test claims, not how to interrogate vulnerable people. Do not turn grief, illness, or family conflict into classroom spectacle.", RUST, CREAM))
+
     new_page(story, "Course Architecture")
     story.append(PE("Every session repeats the same five-part arc. Repetition is intentional: students should internalize the moves until they become habits of fair inquiry."))
     story.append(CurriculumMap())
@@ -822,6 +1042,26 @@ def build_story():
             [1.05 * inch, 1.75 * inch, 2.0 * inch, 1.7 * inch],
         )
     )
+
+    new_page(story, "Pre-Course and Post-Course Diagnostics")
+    story.append(PE("Use the same short diagnostic at the beginning and end. The goal is to see whether students became clearer, fairer, and more willing to let claims risk disappointment."))
+    story.append(
+        table(
+            [
+                ["Prompt", "What to look for"],
+                ["Define public evidence in your own words.", "Student separates personal meaning from reasons offered to outsiders."],
+                ["Rewrite: \"God protects believers\" as a testable claim.", "Student names outcome, population, timeframe, and comparison."],
+                ["What would count as a clean miss for a prayer claim?", "Student gives a fair negative result rather than a vague mood."],
+                ["Name two confounders in a healing claim.", "Student names ordinary causes and does not treat them as automatic disproof."],
+                ["Why are anecdotes weaker than matched studies?", "Student mentions misses, denominators, controls, and comparison groups."],
+                ["When does an explanation become an escape hatch?", "Student focuses on whether poor results can still count."],
+            ],
+            [2.35 * inch, 4.15 * inch],
+            large=True,
+        )
+    )
+    story.append(Spacer(1, 8))
+    story.append(callout("Growth indicator", "The best sign of learning is not that students become more skeptical. It is that they become more precise about which claims are meaningful, which are public evidence, and which are protected from public checks.", BLUE_MID, BLUE_SOFT))
 
     new_page(story, "Assessment System")
     story.append(PE("Assess the quality of inquiry, not whether students end as believers, skeptics, or undecided. The course should reward intellectual courage and clarity."))
@@ -908,34 +1148,19 @@ def build_story():
 
     new_page(story, "Student Worksheet: Confounders and Escape Hatches")
     story.append(PE("This page keeps ordinary causes and protective explanations visible."))
-    story.append(
-        table(
-            [
-                ["Ordinary confounder", "Why it could mimic the effect", "How to control it"],
-                ["", "", ""],
-                ["", "", ""],
-                ["", "", ""],
-                ["", "", ""],
-                ["", "", ""],
-            ],
-            [1.8 * inch, 2.35 * inch, 2.35 * inch],
-            large=True,
-        )
-    )
+    story.append(worksheet_table(
+        ["Ordinary confounder", "Why it could mimic the effect", "How to control it"],
+        5,
+        [1.8 * inch, 2.35 * inch, 2.35 * inch],
+        0.44 * inch,
+    ))
     story.append(Spacer(1, 10))
-    story.append(
-        table(
-            [
-                ["Escape hatch I might use", "Would any result still count against the claim?", "More honest rewrite"],
-                ["", "", ""],
-                ["", "", ""],
-                ["", "", ""],
-                ["", "", ""],
-            ],
-            [1.85 * inch, 2.25 * inch, 2.4 * inch],
-            large=True,
-        )
-    )
+    story.append(worksheet_table(
+        ["Escape hatch I might use", "Would any result still count against the claim?", "More honest rewrite"],
+        4,
+        [1.85 * inch, 2.25 * inch, 2.4 * inch],
+        0.44 * inch,
+    ))
 
     new_page(story, "Student Worksheet: Tool Report Reflection")
     story.append(PE("Use after entering your claim into the Earthly Promise Test Field."))

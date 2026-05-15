@@ -20,7 +20,7 @@ from reportlab.platypus.flowables import Flowable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "assets" / "curricula" / "moral-system-threshold-curriculum.pdf"
+OUTPUT = ROOT / "assets" / "curricula" / "moral-system-threshold-curriculum-v2.pdf"
 
 
 PALETTE = {
@@ -157,6 +157,61 @@ QUESTION_BANK = [
     "Who is bound by this standard, and why are like cases treated alike?",
     "How would this system admit that it got something wrong and then repair it?",
 ]
+
+
+OVERVIEW_NOTES = [
+    "Teach the tool as a discipline of moral clarity, not as a shortcut to winning arguments.",
+    "Keep the same live claim visible across multiple weeks so students feel the difference between naming a route, repairing a component, and surviving later pressure.",
+    "Return often to the distinction between a sincere source of conviction and a publicly coherent moral system.",
+    "Use the tool live whenever possible so learners see architecture, not just hear vocabulary.",
+]
+
+
+DELIVERY_VARIANTS = [
+    (
+        "Twelve-week standard path",
+        "Best for churches, campus groups, and study cohorts that want paced reflection, repeated practice, and enough time for students to revise claims between meetings.",
+        PALETTE["gold"],
+        PALETTE["gold_soft"],
+    ),
+    (
+        "Six-week intensive path",
+        "Combine Sessions 1-2, 3-4, 5-6, 7-8, 9-10, and 11-12. Keep the same capstone expectations, but require more between-session writing and quicker claim revision.",
+        PALETTE["blue"],
+        PALETTE["blue_soft"],
+    ),
+    (
+        "Retreat or weekend path",
+        "Use the route, component, and diagnosis material in larger blocks, then make the capstone a live clinic on the final afternoon. This works best for mature groups that can handle sustained concentration.",
+        PALETTE["red"],
+        PALETTE["red_soft"],
+    ),
+]
+
+
+RESOURCE_KIT = [
+    "Printed route cards and threshold component cards",
+    "Large readiness-map poster or wall-lane kit",
+    "Claim clinic worksheets and capstone feedback forms",
+    "Markers, sticky notes, floor tape, and a visible writing surface",
+    "A short pre-course teacher note that explains why revision is a course virtue",
+]
+
+
+SESSION_PAYOFFS = {
+    1: "Students should leave able to explain why this curriculum tests coherence before it tests final truth.",
+    2: "Students should now be able to say when a view is still functioning as a source, intuition set, or rulebook rather than a full moral architecture.",
+    3: "Students should be able to identify the load-bearing route of a claim and name the pressure that route must especially answer.",
+    4: "Students should now rate components more honestly and explain why empty support cannot count as full substantiation.",
+    5: "Students should be able to distinguish moral language from moral content and say what would make a claim true rather than merely admired.",
+    6: "Students should now ask how a moral standard is publicly known and why its authority counts as morally trustworthy before obedience begins.",
+    7: "Students should be able to explain why a system binds and how it decides hard cases before the preferred answer is assumed.",
+    8: "Students should now see how scope and correction keep a system from favoritism, convenience, and after-the-fact rescue.",
+    9: "Students should be able to read diagnosis labels as translation tools and immediately pair them with the next repair question.",
+    10: "Students should now use the readiness map as a bottleneck display that directs revision rather than as a prestige score.",
+    11: "Students should be able to explain what clearing threshold still leaves to be tested in Stress Test and Particulars.",
+    12: "Students should leave with one publicly revised claim and a stronger instinct to welcome pressure before borrowing moral certainty.",
+}
 
 
 SESSIONS = [
@@ -1329,6 +1384,17 @@ def build_session_page(style_map, story: list, session: dict, doc_width: float):
         ),
     ]
     story.append(two_column(bottom_cards, doc_width))
+    story.append(
+        card_block(
+            style_map,
+            "Threshold payoff for this week",
+            [Paragraph(SESSION_PAYOFFS[session["number"]], style_map["body"])],
+            session["accent"],
+            session["fill"],
+            doc_width,
+            compact=True,
+        )
+    )
     story.append(PageBreak())
 
 
@@ -1400,18 +1466,41 @@ def build_story(doc_width: float):
             compact=True,
         )
     )
+    story.append(PageBreak())
 
     story.extend(
         section_heading(
             s,
             "Overview",
-            "Curriculum at a glance",
-            "The sequence moves from distinctions, to architecture, to diagnosis, to transfer. The teacher should keep that arc visible every week.",
+            "How the curriculum is meant to move",
+            "The sequence moves from distinctions, to architecture, to diagnosis, to transfer. The teacher should keep that arc visible every week rather than letting the group treat each session as a disconnected topic.",
         )
     )
     story.append(PhaseStrip(doc_width))
     story.append(Spacer(1, 12))
+    overview_cards = [
+        card_block(
+            s,
+            "How to use the sequence",
+            paragraph_bullets(s, OVERVIEW_NOTES, small=True),
+            PALETTE["blue"],
+            PALETTE["blue_soft"],
+            doc_width,
+            compact=True,
+        )
+    ]
+    story.extend(overview_cards)
+    story.append(PageBreak())
+    story.extend(
+        section_heading(
+            s,
+            "Sequence map",
+            "Twelve sessions in one view",
+            "Use this table for early planning, mid-course recalibration, and final capstone review.",
+        )
+    )
     story.append(overview_table(s, doc_width))
+    story.append(PageBreak())
 
     story.extend(
         section_heading(
@@ -1490,7 +1579,7 @@ def build_story(doc_width: float):
         section_heading(
             s,
             "Assessment",
-            "How growth should be measured",
+            "Assessment, delivery, and materials",
             "The best evidence of growth is not louder certainty. It is cleaner distinctions, better grounding notes, calmer revision, and stronger transfer judgment.",
         )
     )
@@ -1524,6 +1613,30 @@ def build_story(doc_width: float):
         ),
     ]
     story.append(two_column(assessment_cards, doc_width))
+    variant_cards = [
+        card_block(
+            s,
+            title,
+            [Paragraph(copy, s["card_copy"])],
+            accent,
+            fill,
+            (doc_width - 10) / 2,
+            compact=True,
+        )
+        for title, copy, accent, fill in DELIVERY_VARIANTS
+    ]
+    story.append(two_column(variant_cards, doc_width))
+    story.append(
+        card_block(
+            s,
+            "Material kit to prepare before launch",
+            paragraph_bullets(s, RESOURCE_KIT, small=True),
+            PALETTE["gold"],
+            PALETTE["gold_soft"],
+            doc_width,
+            compact=True,
+        )
+    )
     story.append(PageBreak())
 
     for session in SESSIONS:
