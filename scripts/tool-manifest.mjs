@@ -518,6 +518,11 @@ export const TOOLS = [
           secondary: true,
         },
         {
+          href: "./assets/curricula/moral-system-threshold-curriculum.pdf",
+          label: "Curriculum",
+          secondary: true,
+        },
+        {
           href: "./apps/moral-system-stress-test/",
           label: "Next: stress test",
           secondary: true,
