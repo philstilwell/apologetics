@@ -40,6 +40,39 @@ const diagnosisLadder = [
   { id: "christian-purpose", label: "Christian purpose", shortLabel: "Christian" }
 ];
 
+const diagnosisMapHelp = {
+  "selected-route": {
+    title: "Selected route",
+    intro: "This marker shows the conclusion you are currently asking fine-tuning to support.",
+    coda: "If this sits far to the right of the strict ceiling, the route is outrunning the support already visible in the audit."
+  },
+  "tentative-ceiling": {
+    title: "Tentative ceiling",
+    intro: "This marker shows the highest route still live if the asserted bridges later turn out to be strong.",
+    coda: "It is a maybe ceiling, not an earned one."
+  },
+  "strict-ceiling": {
+    title: "Strict ceiling",
+    intro: "This marker shows the highest route already earned by fully substantiated bridges with real support notes.",
+    coda: "This is the real limit of the argument right now."
+  },
+  "prior-pressure": {
+    title: "Prior pressure",
+    intro: "This is background commitment pressure from identity pull, delegated trust, asymmetry, and low willingness to change your mind.",
+    coda: "A high score does not prove the claim false. It warns that some confidence may be arriving before the bridge work is finished."
+  },
+  "world-shape-tension": {
+    title: "World-shape tension",
+    intro: "This compares the actual universe you selected with the route-relevant expected universe.",
+    coda: "A higher score means the observed world looks less like what that route would naturally predict."
+  },
+  "human-target-pressure": {
+    title: "Human-target pressure",
+    intro: "This measures whether the case is leaning toward humans or persons more strongly than the visible bridge work supports.",
+    coda: "It rises on thicker routes and rises further when the human-target bridge is still weak."
+  }
+};
+
 const bridgeDefinitions = [
   {
     id: "narrow-range",
@@ -988,13 +1021,35 @@ function pressureTone(score) {
   return "low";
 }
 
-function renderPressureMeter({ label, display, score, detail }) {
+function renderFineHelpButton({ id, label, title, intro, coda }) {
+  return `
+    <button class="fine-help" type="button" aria-label="${escapeHtml(label)}" aria-describedby="${escapeHtml(id)}">
+      <span class="label-help-dot" aria-hidden="true">?</span>
+      <span class="metric-tooltip" id="${escapeHtml(id)}" role="tooltip">
+        <strong>${escapeHtml(title)}</strong>
+        <span class="tooltip-intro">${escapeHtml(intro)}</span>
+        <span class="tooltip-coda">${escapeHtml(coda)}</span>
+      </span>
+    </button>
+  `;
+}
+
+function renderPressureMeter({ id, label, display, score, detail, help }) {
   const width = score === null ? 0 : score;
   return `
     <article class="fine-pressure-meter is-${pressureTone(score)}">
       <div class="fine-pressure-head">
-        <span>${escapeHtml(label)}</span>
-        <strong>${escapeHtml(display)}</strong>
+        <div class="fine-label-cluster">
+          <span class="fine-pressure-label">${escapeHtml(label)}</span>
+          ${renderFineHelpButton({
+            id: `${id}-help`,
+            label: `Explain ${label}`,
+            title: help.title,
+            intro: help.intro,
+            coda: help.coda
+          })}
+        </div>
+        <strong class="fine-pressure-value">${escapeHtml(display)}</strong>
       </div>
       <div class="fine-pressure-track" aria-hidden="true">
         <b style="width:${width}%"></b>
@@ -1006,9 +1061,27 @@ function renderPressureMeter({ label, display, score, detail }) {
 
 function renderCeilingPressureMap(diagnosis, prior, mismatch, target) {
   const rows = [
-    { label: "Selected route", value: routeById(state.route).label, markerClass: "selected", routeId: state.route },
-    { label: "Tentative ceiling", value: ceilingLabel(diagnosis.tentativeCeiling), markerClass: "tentative", routeId: diagnosis.tentativeCeiling },
-    { label: "Strict ceiling", value: ceilingLabel(diagnosis.strictCeiling), markerClass: "strict", routeId: diagnosis.strictCeiling }
+    {
+      id: "selected-route",
+      label: "Selected route",
+      value: routeById(state.route).label,
+      markerClass: "selected",
+      routeId: state.route
+    },
+    {
+      id: "tentative-ceiling",
+      label: "Tentative ceiling",
+      value: ceilingLabel(diagnosis.tentativeCeiling),
+      markerClass: "tentative",
+      routeId: diagnosis.tentativeCeiling
+    },
+    {
+      id: "strict-ceiling",
+      label: "Strict ceiling",
+      value: ceilingLabel(diagnosis.strictCeiling),
+      markerClass: "strict",
+      routeId: diagnosis.strictCeiling
+    }
   ];
   const worldDisplay = mismatch === null
     ? "Not set"
@@ -1028,7 +1101,16 @@ function renderCeilingPressureMap(diagnosis, prior, mismatch, target) {
         ${rows.map((row) => `
           <div class="fine-map-row">
             <div class="fine-map-row-head">
-              <span class="fine-map-row-label">${escapeHtml(row.label)}</span>
+              <div class="fine-label-cluster">
+                <span class="fine-map-row-label">${escapeHtml(row.label)}</span>
+                ${renderFineHelpButton({
+                  id: `${row.id}-help`,
+                  label: `Explain ${row.label}`,
+                  title: diagnosisMapHelp[row.id].title,
+                  intro: diagnosisMapHelp[row.id].intro,
+                  coda: diagnosisMapHelp[row.id].coda
+                })}
+              </div>
               <strong class="fine-map-row-value">${escapeHtml(row.value)}</strong>
             </div>
             <div class="fine-map-track" aria-hidden="true">
@@ -1047,22 +1129,28 @@ function renderCeilingPressureMap(diagnosis, prior, mismatch, target) {
       </div>
       <div class="fine-pressure-grid">
         ${renderPressureMeter({
+          id: "prior-pressure",
           label: "Prior pressure",
           display: `${prior}/100`,
           score: prior,
-          detail: "Background commitment pressure"
+          detail: "Background commitment pressure",
+          help: diagnosisMapHelp["prior-pressure"]
         })}
         ${renderPressureMeter({
+          id: "world-shape-tension",
           label: "World-shape tension",
           display: worldDisplay,
           score: mismatch,
-          detail: "Actual universe versus route-relevant expected world"
+          detail: "Actual universe versus route-relevant expected world",
+          help: diagnosisMapHelp["world-shape-tension"]
         })}
         ${renderPressureMeter({
+          id: "human-target-pressure",
           label: "Human-target pressure",
           display: `${target}/100`,
           score: target,
-          detail: "Pressure toward a human-centered reading"
+          detail: "Pressure toward a human-centered reading",
+          help: diagnosisMapHelp["human-target-pressure"]
         })}
       </div>
     </div>

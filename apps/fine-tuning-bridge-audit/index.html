@@ -644,22 +644,62 @@
             <p id="statusCopy"></p>
             <div class="fine-mini-ledger">
               <div>
-                <span>Claim You Asked For</span>
+                <div class="fine-help-head">
+                  <span>Claim You Asked For</span>
+                  <button class="fine-help" type="button" aria-label="Explain claim you asked for" aria-describedby="diagnosis-target-help">
+                    <span class="label-help-dot" aria-hidden="true">?</span>
+                    <span class="metric-tooltip" id="diagnosis-target-help" role="tooltip">
+                      <strong>Claim you asked for</strong>
+                      <span class="tooltip-intro">This is the conclusion you chose at the start of the audit.</span>
+                      <span class="tooltip-coda">It shows what you want fine-tuning to carry, not what the current bridge work has already earned.</span>
+                    </span>
+                  </button>
+                </div>
                 <strong id="diagnosisTarget">Design only</strong>
                 <small>This is the route you wanted fine-tuning to carry.</small>
               </div>
               <div>
-                <span>Highest Fully Earned Claim</span>
+                <div class="fine-help-head">
+                  <span>Highest Fully Earned Claim</span>
+                  <button class="fine-help" type="button" aria-label="Explain highest fully earned claim" aria-describedby="diagnosis-ceiling-help">
+                    <span class="label-help-dot" aria-hidden="true">?</span>
+                    <span class="metric-tooltip" id="diagnosis-ceiling-help" role="tooltip">
+                      <strong>Highest fully earned claim</strong>
+                      <span class="tooltip-intro">This is the strict ceiling of the argument right now.</span>
+                      <span class="tooltip-coda">To reach this level, every required bridge up to this point must be substantiated and must include a real support note.</span>
+                    </span>
+                  </button>
+                </div>
                 <strong id="diagnosisCeiling">Below design</strong>
                 <small>This is the furthest the fully substantiated bridges currently take you.</small>
               </div>
               <div>
-                <span>Highest Still Tentatively Live</span>
+                <div class="fine-help-head">
+                  <span>Highest Still Tentatively Live</span>
+                  <button class="fine-help" type="button" aria-label="Explain highest still tentatively live" aria-describedby="diagnosis-tentative-help">
+                    <span class="label-help-dot" aria-hidden="true">?</span>
+                    <span class="metric-tooltip" id="diagnosis-tentative-help" role="tooltip">
+                      <strong>Highest still tentatively live</strong>
+                      <span class="tooltip-intro">This is the highest route that could still survive if the asserted bridges later turn out to be good.</span>
+                      <span class="tooltip-coda">It is only a maybe ceiling. It is not yet an earned conclusion.</span>
+                    </span>
+                  </button>
+                </div>
                 <strong id="diagnosisTentative">Below design</strong>
                 <small>This is how far the case could go if the asserted bridges later hold up.</small>
               </div>
               <div>
-                <span>Pressure Toward A Human-Centered Reading</span>
+                <div class="fine-help-head">
+                  <span>Pressure Toward A Human-Centered Reading</span>
+                  <button class="fine-help" type="button" aria-label="Explain pressure toward a human-centered reading" aria-describedby="diagnosis-target-pressure-help">
+                    <span class="label-help-dot" aria-hidden="true">?</span>
+                    <span class="metric-tooltip" id="diagnosis-target-pressure-help" role="tooltip">
+                      <strong>Pressure toward a human-centered reading</strong>
+                      <span class="tooltip-intro">This asks whether the argument is leaning toward humans or persons more strongly than the visible bridge work supports.</span>
+                      <span class="tooltip-coda">It is different from prior pressure. This one is about human-target overreach inside the fine-tuning argument itself.</span>
+                    </span>
+                  </button>
+                </div>
                 <strong id="diagnosisTargetPressure">0</strong>
                 <small>This is different from prior pressure. It tracks human-centered overreach.</small>
               </div>
@@ -667,7 +707,17 @@
             <div class="fine-map-card" aria-labelledby="ceilingPressureMapTitle">
               <div class="fine-map-copy">
                 <p class="app-step">Ceiling and pressure map</p>
-                <h4 id="ceilingPressureMapTitle">See the route gap and pressure at a glance</h4>
+                <div class="fine-map-title-row">
+                  <h4 id="ceilingPressureMapTitle">See the route gap and pressure at a glance</h4>
+                  <button class="fine-help" type="button" aria-label="Explain ceiling and pressure map" aria-describedby="ceiling-map-overview-help">
+                    <span class="label-help-dot" aria-hidden="true">?</span>
+                    <span class="metric-tooltip" id="ceiling-map-overview-help" role="tooltip">
+                      <strong>Ceiling and pressure map</strong>
+                      <span class="tooltip-intro">This is a compact reading of the diagnosis area.</span>
+                      <span class="tooltip-coda">It shows the route you want, the route fully earned, the route still tentatively live, and the three surrounding pressure readings in one place so you do not have to reconstruct the comparison mentally.</span>
+                    </span>
+                  </button>
+                </div>
                 <p>
                   Rightward means a thicker claim. If the selected route sits to the right of the
                   strict ceiling, the current argument is asking fine-tuning to carry more than the

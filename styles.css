@@ -14170,7 +14170,19 @@ body.app-fine-tuning .site-header {
   background: rgba(221, 231, 215, 0.42);
 }
 
-.fine-mini-ledger span {
+.fine-help-head,
+.fine-map-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fine-map-title-row {
+  align-items: center;
+}
+
+.fine-mini-ledger .fine-help-head > span {
   display: block;
   margin-bottom: 4px;
   color: var(--muted);
@@ -14186,6 +14198,49 @@ body.app-fine-tuning .site-header {
   color: var(--muted);
   font-size: 0.82rem;
   line-height: 1.45;
+}
+
+.fine-label-cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.fine-help {
+  position: relative;
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: help;
+  flex: 0 0 auto;
+}
+
+.fine-help .label-help-dot {
+  position: static;
+  transform: none;
+  margin-left: 0;
+}
+
+.fine-help .metric-tooltip {
+  left: 0;
+  right: auto;
+  bottom: calc(100% + 10px);
+  top: auto;
+  width: min(360px, calc(100vw - 48px));
+  z-index: 48;
+}
+
+.fine-help:hover .metric-tooltip,
+.fine-help:focus-visible .metric-tooltip,
+.fine-help:focus .metric-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
 }
 
 .fine-map-card {
@@ -14240,7 +14295,7 @@ body.app-fine-tuning .site-header {
 }
 
 .fine-map-row-label,
-.fine-pressure-head span {
+.fine-pressure-label {
   color: var(--teal-dark);
   font-size: 0.76rem;
   font-weight: 800;
@@ -14250,11 +14305,16 @@ body.app-fine-tuning .site-header {
 }
 
 .fine-map-row-value,
-.fine-pressure-head strong {
+.fine-pressure-value {
   color: var(--ink);
   font-size: 0.9rem;
   font-weight: 850;
   line-height: 1.2;
+}
+
+.fine-map-row-head .fine-label-cluster,
+.fine-pressure-head .fine-label-cluster {
+  min-width: 0;
 }
 
 .fine-map-track {
