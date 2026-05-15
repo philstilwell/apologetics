@@ -6,7 +6,7 @@
   "scripts": {
     "seo:apply": "node scripts/apply-seo.mjs",
     "test:smoke": "node scripts/smoke-test.mjs",
-    "test:calculations": "node apps/fine-tuning-bridge-audit/calculations.test.js",
+    "test:calculations": "node apps/fine-tuning-bridge-audit/calculations.test.js && node apps/belief-overreach-audit/calculations.test.js",
     "test": "npm run test:calculations && npm run test:smoke"
   },
   "repository": {
