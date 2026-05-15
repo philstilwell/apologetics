@@ -735,6 +735,11 @@ export const TOOLS = [
           label: "Start with fine-tuning",
           secondary: true,
         },
+        {
+          href: "./apps/theism-gradient-audit/docs/deism-theism-gradient-audit-manual.pdf",
+          label: "Manual",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
