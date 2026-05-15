@@ -168,6 +168,28 @@ COURSE_NORMS = [
     "Protect the room for sincere believers, skeptics, and mixed cases alike.",
 ]
 
+PRE_COURSE_CHECKLIST = [
+    "Read through the Fine-Tuning Bridge Audit once and complete one sample run yourself before teaching the course.",
+    "Print or prepare the claim ladder, the eight bridge cards, the beach analogy image, and the diagnosis vocabulary sheet.",
+    "Decide how students will access the tool: shared screen, paired laptops, or printed screenshots for key diagnosis moments.",
+    "Choose at least two case-study profiles in advance so the room can compare honest differences without improvising everything live.",
+    "Tell students from the start that lowered ceilings are a sign of discipline, not of failure or betrayal.",
+]
+
+PACER_NOTES = [
+    "Standard version: 12 sessions of 90 minutes works best for a reflective small group that can sustain both discussion and tool-based labs.",
+    "Shorter version: for 60-minute meetings, keep the opening hook and the lab, but shorten the mini lesson and move part of the discussion into the homework reflection.",
+    "Retreat version: combine Sessions 4 to 6 into one longer 'early bridges' block and Sessions 9 to 11 into one 'diagnosis lab' block, but keep Session 12 as a separate capstone meeting if possible.",
+]
+
+TEACHER_SELF_AUDIT = [
+    "Which rung of the ladder am I personally most tempted to smuggle in too early?",
+    "How will I praise precision, honesty, and narrowed claims more visibly than confidence or cleverness?",
+    "What will I do if the room divides into believers versus skeptics instead of staying with the bridge under discussion?",
+    "How will I make sure quieter students get real airtime during the labs and diagnosis work?",
+    "What is one place where my own prior pressure could shape the way I teach this material?",
+]
+
 ASSESSMENT_PILLARS = [
     "Conceptual clarity: the student can name the claim level, the bridge, and the pressure point without muddling them together.",
     "Charity to rivals: the student can state the strongest live alternative before critiquing it.",
@@ -485,6 +507,33 @@ GLOSSARY_ROWS = [
     ("Human-target pressure", "Pressure created when the case leans toward persons more quickly than the bridge support allows."),
 ]
 
+CASE_STUDY_ROWS = [
+    (
+        "Natural-emergence seeker",
+        "Starts with observer selection, unknown physics, and wide search-space explanations as live default options.",
+        "Good at keeping impersonal competitors visible and resisting premature agency language.",
+        "May flatten every design move too quickly or treat all purposive readings as equally inflated.",
+    ),
+    (
+        "Fair-minded agnostic",
+        "Allows a thin design possibility but resists loading life-purpose or human-purpose into the data too quickly.",
+        "Usually gives the best balanced diagnosis for the middle of the ladder.",
+        "May stay so balanced that no positive conclusion is ever allowed to become more than a shrug.",
+    ),
+    (
+        "Design-friendly deist",
+        "Finds purposive calibration plausible and is open to some life-directed reading of the universe.",
+        "Useful for showing what a real design-leaning case can look like without racing to Christianity.",
+        "May excuse sparseness or target ambiguity too quickly by appealing to economy or mystery.",
+    ),
+    (
+        "Christian apologist",
+        "Feels the pull toward human-centered or Christian-purpose conclusions and often treats later theological meaning as near at hand.",
+        "Useful for exposing where emotionally resonant later claims can borrow support from earlier bridges.",
+        "May smuggle human-target and theistic claims into the reading before those bridges are actually paid for.",
+    ),
+]
+
 
 def on_page(canvas, doc):
     page_width, page_height = letter
@@ -685,7 +734,16 @@ def build_course_map_page():
             tint=TEAL_SOFT,
         )
     )
-    story.append(PageBreak())
+    story.append(Spacer(1, 0.1 * inch))
+    story.append(Paragraph("Pre-course setup checklist", styles["SubTitle"]))
+    story.extend(hyphen_list(PRE_COURSE_CHECKLIST))
+    story.append(
+        callout(
+            "Pacing adaptations",
+            "<br/>".join(PACER_NOTES),
+            tint=SAND,
+        )
+    )
     return story
 
 
@@ -722,6 +780,26 @@ def build_teacher_toolkit_page():
                 "Goal slider chips or scoring cards",
                 "Diagnosis worksheet and capstone rubric",
             ]
+        )
+    )
+    story.append(Paragraph("Care for mixed rooms", styles["SubTitle"]))
+    story.extend(
+        hyphen_list(
+            [
+                "Keep first-person language alive when discussing pressure: students should name their own pull before diagnosing someone else's.",
+                "When the room splits sharply, move from worldview labels back to the exact bridge under discussion.",
+                "If one student dominates with confidence, ask for the narrowest clean sentence they can defend rather than the biggest one they can imagine.",
+                "If a student feels exposed, let them revise a claim in writing before speaking it aloud.",
+            ]
+        )
+    )
+    story.append(Paragraph("Launch-week rehearsal questions", styles["SubTitle"]))
+    story.extend(hyphen_list(TEACHER_SELF_AUDIT))
+    story.append(
+        callout(
+            "Best room setup",
+            "Keep the claim ladder visible on one side of the room and the beach image visible on the other. When possible, leave open floor space for A/B/C mapping and use seats that can pivot quickly between pairs, triads, and full-group debriefs.",
+            tint=TEAL_SOFT,
         )
     )
     story.append(
@@ -794,9 +872,48 @@ def build_bridge_reference_page():
     return story
 
 
+def build_case_study_bank_page():
+    story = []
+    story.extend(section("5. Case-study bank", "Appendix"))
+    story.append(
+        Paragraph(
+            "These four teaching profiles mirror the tool's preset lenses and give the teacher reusable voices for labs, role-play, and diagnosis practice. They help students see that the same evidence can be read with different background instincts without collapsing into relativism.",
+            styles["Body"],
+        )
+    )
+    rows = [
+        [
+            Paragraph("<b>Profile</b>", styles["BodyTight"]),
+            Paragraph("<b>Starting instinct</b>", styles["BodyTight"]),
+            Paragraph("<b>Best classroom use</b>", styles["BodyTight"]),
+            Paragraph("<b>Main caution</b>", styles["BodyTight"]),
+        ]
+    ]
+    for profile, instinct, use, caution in CASE_STUDY_ROWS:
+        rows.append(
+            [
+                Paragraph(profile, styles["BodyTight"]),
+                Paragraph(instinct, styles["BodyTight"]),
+                Paragraph(use, styles["BodyTight"]),
+                Paragraph(caution, styles["BodyTight"]),
+            ]
+        )
+    story.append(table_block(rows, widths=(1.35 * inch, 1.95 * inch, 1.8 * inch, 1.5 * inch), header_fill=SAND))
+    story.append(Spacer(1, 0.12 * inch))
+    story.append(
+        callout(
+            "Best use of the profiles",
+            "Do not assign students permanent identities. Use the profiles as temporary lenses for testing arguments, naming pressure points, and practicing charitable rival readings. The goal is flexibility and honesty, not tribal sorting.",
+            tint=TEAL_SOFT,
+        )
+    )
+    story.append(PageBreak())
+    return story
+
+
 def build_assessment_pages():
     story = []
-    story.extend(section("5. Assessment and capstone", "Evaluation"))
+    story.extend(section("6. Assessment and capstone", "Evaluation"))
     story.append(
         Paragraph(
             "Assessment in this course should reward clarity, charity, and self-suspicion more than rhetorical force. Students are not being graded on whether they end up pro-design or anti-design. They are being graded on whether they speak more truthfully about the support they actually have.",
@@ -813,6 +930,17 @@ def build_assessment_pages():
                 "Weekly exit tickets: one concept mastered, one confusion, one overreach caught.",
                 "Mid-course oral check: explain the beach analogy, strict versus tentative ceiling, and one live alternative.",
                 "Capstone presentation: five minutes plus two minutes of questions.",
+            ]
+        )
+    )
+    story.append(Paragraph("Capstone packet should include", styles["SubTitle"]))
+    story.extend(
+        hyphen_list(
+            [
+                "The selected route and a one-sentence explanation of why that was the route under review.",
+                "The current strict ceiling, the tentative ceiling, and the two most important pressure points.",
+                "The strongest live rival explanation stated fairly before criticism begins.",
+                "One best repair move that would strengthen the case without pretending more has already been earned.",
             ]
         )
     )
@@ -834,7 +962,7 @@ def build_assessment_pages():
 
 def build_glossary_page():
     story = []
-    story.extend(section("6. Glossary and quick teacher prompts", "Reference"))
+    story.extend(section("7. Glossary and quick teacher prompts", "Reference"))
     glossary_rows = [
         [Paragraph("<b>Term</b>", styles["BodyTight"]), Paragraph("<b>Meaning</b>", styles["BodyTight"])]
     ]
@@ -874,6 +1002,7 @@ def build_story():
     story.extend(build_session_pages())
     story.append(PageBreak())
     story.extend(build_bridge_reference_page())
+    story.extend(build_case_study_bank_page())
     story.extend(build_assessment_pages())
     story.extend(build_glossary_page())
     return story
