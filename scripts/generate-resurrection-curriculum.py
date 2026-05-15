@@ -440,6 +440,85 @@ def course_map(styles):
     ]
 
 
+def use_guide(styles):
+    prep = [
+        ("Best group size", "Six to twelve students. Small enough for candor, large enough for disagreement to become visible."),
+        ("Room setup", "A screen for the tool, a whiteboard for claim ladders, and chairs arranged so students can see one another."),
+        ("Teacher preparation", "Run the teaching parallel and resurrection preset before the first meeting. Know which settings make the largest changes."),
+        ("Student preparation", "No prior philosophy is required. Students need only a willingness to state claims clearly and follow evidence patiently."),
+        ("Tone target", "Serious but not severe. The room should feel intellectually brave rather than combative."),
+        ("Output", "Each student leaves with a final audit presentation and a written statement of what would change their confidence."),
+    ]
+    materials = [
+        "Laptop or tablet with the Resurrection Evidence Audit open.",
+        "Projector or shared screen.",
+        "Printed copies of the workbook pages or a shared digital notes file.",
+        "Index cards for exit tickets and anonymous questions.",
+        "A visible parking-lot board for important issues that are real but off track.",
+    ]
+    rhythm = [
+        ("Open with a concrete case", "Begin each meeting with a situation students can feel before naming the abstract principle."),
+        ("Teach one move", "Do not teach all of probability at once. Each session gives students one reusable reasoning move."),
+        ("Run the tool slowly", "Move one slider at a time. Ask students to predict the direction before showing the result."),
+        ("Name discomfort", "When numbers feel threatening, pause and ask what the number seems to imply emotionally."),
+        ("End with articulation", "Students should finish every meeting by saying what changed and why."),
+    ]
+    return [
+        p("How to Use This Curriculum", styles["H1"]),
+        p(
+            "This curriculum is built for a teacher who can improvise, but it should not feel improvised. Each session has a stable spine: a vivid case, a clear reasoning skill, hands-on use of the tool, and a short act of self-reporting.",
+            styles["Body"],
+        ),
+        two_col(prep, styles),
+        p("Materials", styles["H2"]),
+        bullets(materials, styles),
+        p("Teaching rhythm", styles["H2"]),
+        two_col(rhythm, styles),
+        callout(
+            "Facilitator warning",
+            "Do not let the tool become a scoreboard for a team identity. The tool is an assumption mirror. It shows what follows if the current assumptions are granted.",
+            styles,
+            fill=PALE_CLAY,
+            border=CLAY,
+        ),
+        PageBreak(),
+    ]
+
+
+def tool_vocabulary(styles):
+    rows = [
+        ("Selected claim", "The exact sentence being tested. It should be clear enough that a critic can say what would count for it or against it."),
+        ("Starting point", "The confidence you have before adding the case evidence. Refusing to name it usually hides a judgment rather than avoiding one."),
+        ("Evidence lift", "How much the evidence moves confidence after its strength, direction, and independence are considered."),
+        ("Independence", "How separate the evidence items are. Four reports are not four full supports if they come from the same stream."),
+        ("Known material alternatives", "Named non-miracle explanations that could account for some or all of the data."),
+        ("Unknown reserve", "Space left for causes not yet conceived or records not yet found. It is epistemic humility, not a new theory."),
+        ("Cause credence", "How the current probability is divided among the selected claim, known alternatives, and unknown reserve."),
+        ("Audit pressure", "A warning that the conclusion is leaning heavily on assumptions that may need more defense."),
+        ("Contribution map", "The chart that answers: which evidence items are doing the most work, and which ones are dragging confidence down?"),
+        ("Report", "A readable record of the assumptions, result, warnings, and repair moves. It should be clear enough for a critic to inspect."),
+    ]
+    lab_sequence = [
+        ("1", "State the claim", "Students rewrite the claim until it stops moving."),
+        ("2", "Name the starting point", "Students give a rough baseline and explain what background knowledge shaped it."),
+        ("3", "Weigh evidence", "Students adjust each evidence item for strength, direction, and independence."),
+        ("4", "Compare alternatives", "Students give serious room to known alternatives and unknown reserve."),
+        ("5", "Interpret the result", "Students read confidence, audit pressure, cause credence, and repair moves together."),
+        ("6", "Report honestly", "Students explain what the result does and does not justify."),
+    ]
+    return [
+        p("Tool Vocabulary and Lab Sequence", styles["H1"]),
+        p(
+            "The teacher should translate every technical term into a plain classroom question. The goal is not to make students sound philosophical; the goal is to make their reasoning inspectable.",
+            styles["Body"],
+        ),
+        two_col(rows, styles),
+        p("Six-part lab sequence", styles["H2"]),
+        three_col(lab_sequence, styles, widths=(0.45 * inch, 1.6 * inch, 4.65 * inch)),
+        PageBreak(),
+    ]
+
+
 SESSION_DATA = [
     {
         "title": "Session 1 - What Honest Inquiry Requires",
@@ -777,6 +856,112 @@ def assessment_and_covenant(styles):
     ]
 
 
+def misconception_repairs(styles):
+    rows = [
+        (
+            "If a student says: 'God can do miracles, so the prior should not matter.'",
+            "Reply: Ability and probability are different questions. The audit asks not merely whether God could do it, but whether this evidence makes this claim more likely than its live alternatives.",
+        ),
+        (
+            "If a student says: 'You cannot put numbers on sacred things.'",
+            "Reply: The number is not measuring sacredness. It is making an already-existing confidence judgment visible so others can inspect it.",
+        ),
+        (
+            "If a student says: 'The disciples were sincere, so the claim is true.'",
+            "Reply: Sincerity is evidence about belief. The next question is whether the belief was accurate, mistaken, embellished, or shaped by expectation.",
+        ),
+        (
+            "If a student says: 'No alternative explains everything.'",
+            "Reply: A selected claim also must explain the evidence without special pleading. Competing explanations are compared by total fit, background plausibility, and evidential cost.",
+        ),
+        (
+            "If a student says: 'Unknown reserve is just skepticism.'",
+            "Reply: Unknown reserve is humility about incomplete information. It should not be inflated to avoid a conclusion, but it should not be erased to force one.",
+        ),
+        (
+            "If a student says: 'The app says the answer, so we are done.'",
+            "Reply: The app gives a conditional result: if these assumptions are accepted, this is the movement. The real work is defending the assumptions.",
+        ),
+    ]
+    practice = [
+        ("One-sentence repair", "Each student rewrites one weak claim into a stronger, clearer claim."),
+        ("Hidden prior hunt", "Students underline phrases that smuggle in a probability judgment without naming it."),
+        ("Alternative fairness test", "Students must state the best version of an alternative before criticizing it."),
+        ("Direction check", "For each evidence item, students say whether it supports, weakly supports, is neutral, or counts against the selected claim."),
+        ("Independence discount", "Students explain why overlapping sources should lower the combined evidential force."),
+    ]
+    return [
+        p("Common Misunderstandings and Teacher Repairs", styles["H1"]),
+        p(
+            "These moments are predictable. Treat them as learning opportunities, not interruptions. The teacher's task is to keep the student in the inquiry without letting the reasoning blur.",
+            styles["Body"],
+        ),
+        two_col(rows, styles, widths=(2.65 * inch, 4.0 * inch), small=True),
+        p("Repair drills", styles["H2"]),
+        two_col(practice, styles),
+        PageBreak(),
+    ]
+
+
+def mastery_ladder(styles):
+    rows = [
+        ("Emerging", "Student can use the tool with help, but may still confuse possibility with probability or evidence for belief with evidence for truth."),
+        ("Developing", "Student can state a precise claim, name a starting point, and identify at least one serious alternative."),
+        ("Competent", "Student can explain how evidence strength, independence, negative evidence, and unknown reserve affect the result."),
+        ("Strong", "Student can defend a complete audit report, revise assumptions when challenged, and avoid overstating the conclusion."),
+        ("Excellent", "Student can apply the same standard to cherished and non-cherished claims, name what would change their mind, and hold uncertainty without evasive language."),
+    ]
+    teacher_checks = [
+        ("Precision check", "Can the student state the exact claim without switching to a broader or safer claim under pressure?"),
+        ("Comparison check", "Can the student explain why the selected claim beats or fails to beat the best alternatives?"),
+        ("Proportion check", "Does the student's final confidence match the actual evidence movement rather than personal preference?"),
+        ("Humility check", "Does the student preserve unknowns without using them as a fog machine?"),
+        ("Transfer check", "Can the student apply the same method to a non-Christian claim, a secular claim, or an everyday claim?"),
+    ]
+    return [
+        p("Mastery Ladder", styles["H1"]),
+        p(
+            "Use this ladder for feedback after Session 4, after Session 7, and after the final presentation. It lets students see that the course is not grading belief or disbelief; it is grading clarity, fairness, and proportion.",
+            styles["Body"],
+        ),
+        two_col(rows, styles),
+        p("Teacher checks", styles["H2"]),
+        two_col(teacher_checks, styles),
+        PageBreak(),
+    ]
+
+
+def facilitation_scripts(styles):
+    rows = [
+        ("When the room gets defensive", "Pause the calculation. Say: 'Something important is being touched. Before we defend it, let's name exactly what claim is at stake.'"),
+        ("When a student refuses a prior", "Say: 'You do not need a perfect number. Give me a rough range. If you refuse every range, you are still making a comparison, but no one can inspect it.'"),
+        ("When someone treats alternatives as hostile", "Say: 'A fair alternative is not an attack. It is part of the price of claiming that one explanation is better than the others.'"),
+        ("When the result is very low", "Say: 'This is not a verdict on your worth or sincerity. It is a sign that the current assumptions are not doing enough work.'"),
+        ("When the result is very high", "Say: 'High confidence is allowed, but it must be reportable. Which assumptions would a careful critic challenge first?'"),
+        ("When students want certainty too quickly", "Say: 'The point is not to escape uncertainty. The point is to deserve whatever confidence we keep.'"),
+    ]
+    final_questions = [
+        "What exact claim are you now willing to defend?",
+        "Which evidence item is doing the most work?",
+        "Which evidence item counts against the selected claim?",
+        "Which alternative deserves the most respect?",
+        "How much room are you leaving for what you have not yet considered?",
+        "What would lower your confidence?",
+        "What would raise your confidence?",
+    ]
+    return [
+        p("Facilitation Scripts and Final Questions", styles["H1"]),
+        p(
+            "A dynamic teacher does not need to sound scripted. Still, having precise language ready prevents the class from sliding into slogans when the pressure rises.",
+            styles["Body"],
+        ),
+        two_col(rows, styles),
+        p("Questions every final presentation should answer", styles["H2"]),
+        bullets(final_questions, styles),
+        PageBreak(),
+    ]
+
+
 def teacher_notes(styles):
     return [
         p("Teacher Notes for a Dynamic Facilitator", styles["H1"]),
@@ -826,6 +1011,8 @@ def build_story(styles):
     story = []
     story.extend(cover(styles))
     story.extend(orientation(styles))
+    story.extend(use_guide(styles))
+    story.extend(tool_vocabulary(styles))
     story.extend(course_map(styles))
     for session in SESSION_DATA:
         story.extend(session_page(session, styles))
@@ -833,6 +1020,9 @@ def build_story(styles):
     story.extend(activities_bank(styles))
     story.extend(worksheets(styles))
     story.extend(assessment_and_covenant(styles))
+    story.extend(misconception_repairs(styles))
+    story.extend(mastery_ladder(styles))
+    story.extend(facilitation_scripts(styles))
     story.extend(teacher_notes(styles))
     story.extend(final_page(styles))
     return story
