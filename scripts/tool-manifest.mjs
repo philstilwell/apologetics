@@ -285,6 +285,11 @@ export const TOOLS = [
           label: "Theory notes",
           secondary: true,
         },
+        {
+          href: "./output/pdf/inductive-symmetry-audit-manual.pdf",
+          label: "Manual",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
@@ -644,6 +649,11 @@ export const TOOLS = [
         "Pushes the larger moral system into concrete Christian moral judgments, then compares those grounders with how disagreement is explained across severe, ordinary, sexual, civic, and generosity cases.",
       actions: [
         { href: "./apps/moral-particulars-audit/", label: "Run particulars audit" },
+        {
+          href: "./assets/manuals/moral-particulars-audit-manual.pdf",
+          label: "Manual",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
