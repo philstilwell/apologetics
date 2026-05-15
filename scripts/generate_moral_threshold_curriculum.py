@@ -52,6 +52,22 @@ PROGRAM_OUTCOMES = [
 ]
 
 
+TEACHING_GUARDRAILS = [
+    "Do not use the curriculum as a shortcut to proving a worldview true before the structure is even clear.",
+    "Do not let students weaponize collapse labels against people rather than against weak architecture.",
+    "Do not reward polished rhetoric over honest downgrades and repairs.",
+    "Do not let the later tools replace the threshold question they presuppose.",
+]
+
+
+HEALTHY_ROOM_MARKERS = [
+    "Students begin asking route and component questions without prompting from the teacher.",
+    "Participants revise their own ratings in public without embarrassment or theatrics.",
+    "Disagreement becomes calmer because the underlying structure is clearer.",
+    "The same live claim improves across multiple weeks instead of being abandoned for a fresher slogan.",
+]
+
+
 DISCUSSION_COVENANT = [
     "Clarity before confidence.",
     "Structure before conclusion.",
@@ -59,6 +75,14 @@ DISCUSSION_COVENANT = [
     "Charity without vagueness.",
     "Public reasons over private intensity.",
     "Revision is a strength, not an embarrassment.",
+]
+
+
+GROWTH_SIGNS = [
+    "Students make cleaner distinctions between source, route, conclusion, and system.",
+    "Grounding notes get shorter, sharper, and more public rather than more decorative.",
+    "Students become more willing to downgrade weak components honestly before trying to repair them.",
+    "Transfer judgments become calmer: participants can say why a claim should stay at Threshold or move forward.",
 ]
 
 
@@ -195,6 +219,22 @@ RESOURCE_KIT = [
     "Claim clinic worksheets and capstone feedback forms",
     "Markers, sticky notes, floor tape, and a visible writing surface",
     "A short pre-course teacher note that explains why revision is a course virtue",
+]
+
+
+LAUNCH_CHECKLIST = [
+    "Send a short pre-course note explaining that public revision will be treated as a strength.",
+    "Choose two or three live claims that can recur throughout the course instead of resetting every week.",
+    "Print route cards, component cards, diagnosis labels, and capstone feedback sheets before the first meeting.",
+    "Test the threshold tool, stress-test handoff, and any projector or browser setup in advance.",
+]
+
+
+BETWEEN_SESSION_DISCIPLINES = [
+    "Review exit tickets and note which threshold components still bottleneck the room.",
+    "Carry at least one live claim forward so students can see what real revision looks like over time.",
+    "Track recurring route confusions and name them explicitly at the start of the next meeting.",
+    "Invite short written repairs between sessions instead of letting weak answers simply disappear.",
 ]
 
 
@@ -1455,6 +1495,16 @@ def build_story(doc_width: float):
         ),
     ]
     story.append(two_column(cover_cards, doc_width))
+    story.append(PageBreak())
+
+    story.extend(
+        section_heading(
+            s,
+            "At a glance",
+            "Course outcomes and teaching guardrails",
+            "Use this page before launch so the teacher remembers both what the curriculum is trying to build and what it must refuse to become.",
+        )
+    )
     story.append(
         card_block(
             s,
@@ -1466,6 +1516,27 @@ def build_story(doc_width: float):
             compact=True,
         )
     )
+    at_a_glance_cards = [
+        card_block(
+            s,
+            "Teaching guardrails",
+            paragraph_bullets(s, TEACHING_GUARDRAILS, small=True),
+            PALETTE["gold"],
+            PALETTE["gold_soft"],
+            (doc_width - 10) / 2,
+            compact=True,
+        ),
+        card_block(
+            s,
+            "Signs the room is healthy",
+            paragraph_bullets(s, HEALTHY_ROOM_MARKERS, small=True),
+            PALETTE["blue"],
+            PALETTE["blue_soft"],
+            (doc_width - 10) / 2,
+            compact=True,
+        ),
+    ]
+    story.append(two_column(at_a_glance_cards, doc_width))
     story.append(PageBreak())
 
     story.extend(
@@ -1613,6 +1684,27 @@ def build_story(doc_width: float):
         ),
     ]
     story.append(two_column(assessment_cards, doc_width))
+    story.append(
+        card_block(
+            s,
+            "How to interpret growth in this room",
+            paragraph_bullets(s, GROWTH_SIGNS, small=True),
+            PALETTE["green"],
+            PALETTE["green_soft"],
+            doc_width,
+            compact=True,
+        )
+    )
+    story.append(PageBreak())
+
+    story.extend(
+        section_heading(
+            s,
+            "Implementation",
+            "Delivery formats, launch prep, and materials",
+            "This page turns the curriculum from a good document into a teachable event. Use it to choose a format, prepare the room, and keep the weekly work cumulative.",
+        )
+    )
     variant_cards = [
         card_block(
             s,
@@ -1637,6 +1729,27 @@ def build_story(doc_width: float):
             compact=True,
         )
     )
+    implementation_cards = [
+        card_block(
+            s,
+            "Launch checklist before session 1",
+            paragraph_bullets(s, LAUNCH_CHECKLIST, small=True),
+            PALETTE["blue"],
+            PALETTE["blue_soft"],
+            (doc_width - 10) / 2,
+            compact=True,
+        ),
+        card_block(
+            s,
+            "Between-session teacher disciplines",
+            paragraph_bullets(s, BETWEEN_SESSION_DISCIPLINES, small=True),
+            PALETTE["red"],
+            PALETTE["red_soft"],
+            (doc_width - 10) / 2,
+            compact=True,
+        ),
+    ]
+    story.append(two_column(implementation_cards, doc_width))
     story.append(PageBreak())
 
     for session in SESSIONS:
