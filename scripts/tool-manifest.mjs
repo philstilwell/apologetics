@@ -408,6 +408,11 @@ export const TOOLS = [
         "Tests resurrection and miracle claims with accessible baseline confidence, evidence comparisons, independence checks, alternative explanations, and a live audit-pressure score.",
       actions: [
         { href: "./apps/resurrection-evidence-audit/", label: "Run audit" },
+        {
+          href: "./assets/manuals/resurrection-evidence-audit-manual.pdf",
+          label: "Manual",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
