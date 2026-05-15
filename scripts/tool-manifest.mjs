@@ -139,6 +139,11 @@ export const TOOLS = [
           secondary: true,
         },
         {
+          href: "./assets/curricula/fine-tuning-bridge-audit-curriculum.pdf",
+          label: "Curriculum",
+          secondary: true,
+        },
+        {
           href: "./apps/theism-gradient-audit/app.html",
           label: "Next: Theism Gradient",
           secondary: true,
