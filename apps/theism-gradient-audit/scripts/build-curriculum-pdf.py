@@ -208,15 +208,16 @@ def cover(canvas, doc):
         canvas.line(width - 0.65 * inch - offset, 1.22 * inch, width - 2.3 * inch - offset, 2.7 * inch)
 
     canvas.setFillColor(INK)
-    canvas.setFont("Helvetica-Bold", 53)
-    canvas.drawString(0.9 * inch, 7.1 * inch, "Deism-")
-    canvas.drawString(0.9 * inch, 6.45 * inch, "Theism")
-    canvas.drawString(0.9 * inch, 5.8 * inch, "Gradient")
-    canvas.drawString(0.9 * inch, 5.15 * inch, "Curriculum")
+    canvas.setFont("Helvetica-Bold", 47)
+    canvas.drawString(0.9 * inch, 7.18 * inch, "Deism-")
+    canvas.drawString(0.9 * inch, 6.6 * inch, "Theism")
+    canvas.drawString(0.9 * inch, 6.02 * inch, "Gradient")
+    canvas.drawString(0.9 * inch, 5.44 * inch, "Audit")
+    canvas.drawString(0.9 * inch, 4.86 * inch, "Curriculum")
 
     canvas.setFillColor(DARK_OLIVE)
     canvas.setFont("Helvetica-Bold", 18.5)
-    canvas.drawString(0.93 * inch, 4.55 * inch, "A 12-session course for young, honest seekers")
+    canvas.drawString(0.93 * inch, 4.27 * inch, "A 12-session course for young, honest seekers")
 
     canvas.setFillColor(TEXT)
     canvas.setFont("Helvetica", 12.6)
@@ -226,7 +227,7 @@ def cover(canvas, doc):
         "Built around Confidence, Personal Substantiation, bridge",
         "premises, dependency tension, and belief repair.",
     ]
-    y = 4.08 * inch
+    y = 3.8 * inch
     for line in intro:
         canvas.drawString(0.94 * inch, y, line)
         y -= 0.22 * inch
@@ -244,6 +245,7 @@ def cover(canvas, doc):
 def contents(story):
     story.extend(section("Contents", "Curriculum map"))
     rows = [
+        ("Orientation", "Course at a glance"),
         ("1", "Course identity and learning aims"),
         ("2", "The teacher's stance"),
         ("3", "Course architecture and pacing"),
@@ -256,6 +258,7 @@ def contents(story):
         ("Appendix B", "Facilitator prompts and Socratic moves"),
         ("Appendix C", "Rubrics and final portfolio"),
         ("Appendix D", "The 50-claim architecture"),
+        ("Appendix E", "Adaptations, troubleshooting, and extensions"),
     ]
     table = Table([[p(num, STYLES["TocNum"]), p(title, STYLES["TocText"])] for num, title in rows], colWidths=[1.0 * inch, 5.35 * inch])
     table.setStyle(
@@ -276,6 +279,45 @@ def contents(story):
         callout(
             "Design standard",
             "This curriculum is built for a dynamic teacher who can hold rigor and warmth together. The goal is not to manufacture certainty. The goal is to help students become clearer, fairer, and more responsible with belief.",
+        )
+    )
+
+
+def course_at_glance(story):
+    story.append(PageBreak())
+    story.extend(section("Course at a Glance", "Orientation"))
+    story.append(
+        p(
+            "This one-page orientation is the teacher's quick-start view. Use it before the first meeting, during planning conversations with co-leaders, and whenever the group needs to remember the shape of the whole course."
+        )
+    )
+    overview_rows = [
+        [p("Element", STYLES["TableHeader"]), p("Recommendation", STYLES["TableHeader"]), p("Reason", STYLES["TableHeader"])],
+        [p("Group size", STYLES["TableCellBold"]), p("6-12 students", STYLES["TableCell"]), p("Small enough for trust, large enough for real disagreement.", STYLES["TableCell"])],
+        [p("Session length", STYLES["TableCellBold"]), p("75-100 minutes; 90 is ideal", STYLES["TableCell"]), p("Enough time for concept, lab, debrief, and portfolio work.", STYLES["TableCell"])],
+        [p("Teacher posture", STYLES["TableCellBold"]), p("Warm, rigorous, playful, non-coercive", STYLES["TableCell"]), p("Students need courage and safety, not pressure to perform certainty.", STYLES["TableCell"])],
+        [p("Privacy norm", STYLES["TableCellBold"]), p("Scores are private unless voluntarily shared", STYLES["TableCell"]), p("The course audits claims and reasoning, not personal worth.", STYLES["TableCell"])],
+        [p("Primary artifact", STYLES["TableCellBold"]), p("Personal Belief Audit Portfolio", STYLES["TableCell"]), p("Learning becomes durable when each session leaves a trace.", STYLES["TableCell"])],
+    ]
+    story.append(data_table(overview_rows, [1.25 * inch, 2.4 * inch, 2.9 * inch]))
+    story.append(Spacer(1, 0.14 * inch))
+    story.append(subhead("Course arc"))
+    story.append(
+        data_table(
+            [
+                [p("Sessions", STYLES["TableHeader"]), p("Movement", STYLES["TableHeader"]), p("Teacher emphasis", STYLES["TableHeader"])],
+                [p("1-4", STYLES["TableCellBold"]), p("Build posture and concepts: honesty, C/P, gradient, evidence types.", STYLES["TableCell"]), p("Make the room safe enough for precision.", STYLES["TableCell"])],
+                [p("5-8", STYLES["TableCellBold"]), p("Move across the gradient: source, design, personal agency, divine action, Christian specificity.", STYLES["TableCell"]), p("Name bridge premises before conclusions thicken.", STYLES["TableCell"])],
+                [p("9-12", STYLES["TableCellBold"]), p("Inspect tension, complete the audit, review Socratically, and present final maps.", STYLES["TableCell"]), p("Turn pressure into repair and next-study plans.", STYLES["TableCell"])],
+            ],
+            [0.95 * inch, 3.25 * inch, 2.35 * inch],
+        )
+    )
+    story.append(Spacer(1, 0.14 * inch))
+    story.append(
+        callout(
+            "Pre-course teacher checklist",
+            "Read the tool manual, run your own 50-claim audit, choose privacy norms, prepare the claim deck, test the app on the room's devices, and write one example of a claim you are willing to repair publicly.",
         )
     )
 
@@ -960,6 +1002,75 @@ def appendices(story, claims):
             rows.append([p(claim["id"], STYLES["TableCellBold"]), p(claim["text"], STYLES["TableCell"])])
         story.append(data_table(rows, [0.65 * inch, 5.9 * inch]))
 
+    story.append(PageBreak())
+    story.extend(section("Appendix E: Adaptations, Troubleshooting, and Extensions", "Appendix E"))
+    story.append(
+        p(
+            "The same curriculum can behave very differently in a devout youth group, a mixed campus group, a skeptical study circle, or a room of students carrying religious hurt. Adapt the pressure without lowering the standard of honesty."
+        )
+    )
+    story.append(subhead("Adaptation matrix"))
+    story.append(
+        data_table(
+            [
+                [p("Group condition", STYLES["TableHeader"]), p("Likely risk", STYLES["TableHeader"]), p("Teacher adjustment", STYLES["TableHeader"])],
+                [p("Highly devout", STYLES["TableCellBold"]), p("Students may treat high Confidence as loyalty.", STYLES["TableCell"]), p("Emphasize that low Personal Substantiation can be a study invitation rather than betrayal.", STYLES["TableCell"])],
+                [p("Highly skeptical", STYLES["TableCellBold"]), p("Students may treat low Confidence as sophistication.", STYLES["TableCell"]), p("Require charitable repair of Christian claims before critique.", STYLES["TableCell"])],
+                [p("Mixed maturity", STYLES["TableCellBold"]), p("Some students disclose too much or argue performatively.", STYLES["TableCell"]), p("Use anonymous cards, written reflection, and opt-in sharing.", STYLES["TableCell"])],
+                [p("Time-constrained", STYLES["TableCellBold"]), p("The course becomes lecture-heavy.", STYLES["TableCell"]), p("Cut teacher talk first; preserve labs, debriefs, and portfolio artifacts.", STYLES["TableCell"])],
+                [p("Emotionally tender", STYLES["TableCellBold"]), p("Claims may feel fused with family, trauma, or belonging.", STYLES["TableCell"]), p("Separate claim inspection from personal disclosure and offer private follow-up.", STYLES["TableCell"])],
+            ],
+            [1.35 * inch, 2.25 * inch, 2.95 * inch],
+        )
+    )
+    story.append(Spacer(1, 0.14 * inch))
+    story.append(subhead("Troubleshooting common moments"))
+    story.append(
+        card_grid(
+            [
+                ("A student wants certainty now", "Ask what the next honest question is. Do not let urgency force a premature verdict."),
+                ("A student hides behind vagueness", "Invite a one-sentence claim, a slider score, and one reason. Precision is kindness here."),
+                ("A debate becomes tribal", "Pause for steelmanning. Each side must state the other side's strongest version before continuing."),
+                ("A testimony enters the room", "Protect the person, then distinguish private meaning from public evidential force."),
+                ("Scores become competitive", "Return to the privacy norm. The goal is a truer map, not a better-looking profile."),
+                ("The group gets discouraged", "Name repair as progress. A modest claim honestly held is stronger than an inflated claim defended by pressure."),
+            ]
+        )
+    )
+    story.append(Spacer(1, 0.16 * inch))
+    story.append(PageBreak())
+    story.append(subhead("Optional extensions"))
+    story.append(
+        bullets(
+            [
+                "Three-month follow-up audit: students repeat the 50-claim profile and compare which scores, gaps, and notes changed.",
+                "Claim research brief: each student chooses one high-gap claim and writes a two-page evidence map with rival explanations.",
+                "Bridge premise debate: teams defend or critique a single bridge premise rather than debating Christianity as a whole.",
+                "Testimony analysis night: students practice honoring testimony while asking what it can and cannot establish.",
+                "Public presentation option: students present only revised claims and next questions, keeping private scores private.",
+            ]
+        )
+    )
+    story.append(
+        callout(
+            "Healthy ending",
+            "A successful group does not require every student to land in the same place. It requires students to leave with clearer claims, fairer questions, named tensions, and less need to pretend.",
+        )
+    )
+    story.append(Spacer(1, 0.14 * inch))
+    story.append(subhead("90-day follow-up protocol"))
+    story.append(
+        bullets(
+            [
+                "Repeat the audit without looking at the old scores first.",
+                "Compare only three things: largest Confidence changes, largest Personal Substantiation changes, and claims that became more modest.",
+                "Ask which study, conversation, practice, or experience actually changed the profile.",
+                "Choose one bridge premise for the next round of study.",
+                "Write a five-sentence update: what is clearer, what is still tense, what is more modest, what deserves more evidence, and what I will do next.",
+            ]
+        )
+    )
+
 
 def build_pdf():
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
@@ -989,6 +1100,7 @@ def build_pdf():
     story.append(NextPageTemplate("body"))
     story.append(PageBreak())
     contents(story)
+    course_at_glance(story)
     opening_framework(story)
     scope_sequence(story)
     session_plans(story)
