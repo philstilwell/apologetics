@@ -58,6 +58,11 @@ export const TOOLS = [
           label: "Manual",
           secondary: true,
         },
+        {
+          href: "./assets/manuals/belief-overreach-audit-curriculum.pdf",
+          label: "Curriculum",
+          secondary: true,
+        },
       ],
     },
     primaryPage: {
@@ -313,6 +318,11 @@ export const TOOLS = [
         {
           href: "./assets/manuals/inductive-symmetry-audit-manual.pdf",
           label: "Manual",
+          secondary: true,
+        },
+        {
+          href: "./assets/manuals/inductive-symmetry-audit-curriculum.pdf",
+          label: "Curriculum",
           secondary: true,
         },
       ],
