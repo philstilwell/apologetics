@@ -58,17 +58,23 @@ def p(text: str, style: ParagraphStyle = None) -> Paragraph:
     return Paragraph(clean(text), style or STYLES["Body"])
 
 
-def bullets(items: list[str], level: int = 0) -> ListFlowable:
+def bullets(items: list[str], level: int = 0) -> Table:
     style = STYLES["BulletBody"] if level == 0 else STYLES["Small"]
-    return ListFlowable(
-        [ListItem(p(item, style), leftIndent=0) for item in items],
-        bulletType="bullet",
-        start="circle",
-        leftIndent=16,
-        bulletFontName="Helvetica-Bold",
-        bulletFontSize=6,
-        bulletColor=OLIVE,
+    table = Table(
+        [[p(f"- {item}", style)] for item in items],
+        colWidths=[6.35 * inch],
     )
+    table.setStyle(
+        TableStyle(
+            [
+                ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                ("TOPPADDING", (0, 0), (-1, -1), 1.5),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 1.5),
+            ]
+        )
+    )
+    return table
 
 
 def number_list(items: list[str]) -> ListFlowable:
@@ -197,14 +203,15 @@ def cover(canvas, doc):
         canvas.line(width - 0.65 * inch - offset, 1.18 * inch, width - 2.2 * inch - offset, 2.6 * inch)
 
     canvas.setFillColor(INK)
-    canvas.setFont("Helvetica-Bold", 70)
-    canvas.drawString(0.9 * inch, 6.95 * inch, "Deism-")
-    canvas.drawString(0.9 * inch, 6.05 * inch, "Theism")
-    canvas.drawString(0.9 * inch, 5.15 * inch, "Gradient")
+    canvas.setFont("Helvetica-Bold", 61)
+    canvas.drawString(0.9 * inch, 7.12 * inch, "Deism-")
+    canvas.drawString(0.9 * inch, 6.37 * inch, "Theism")
+    canvas.drawString(0.9 * inch, 5.62 * inch, "Gradient")
+    canvas.drawString(0.9 * inch, 4.87 * inch, "Audit")
 
     canvas.setFillColor(DARK_OLIVE)
     canvas.setFont("Helvetica-Bold", 22)
-    canvas.drawString(0.93 * inch, 4.56 * inch, "A Manual for Sincere Seekers")
+    canvas.drawString(0.93 * inch, 4.28 * inch, "A Manual for Sincere Seekers")
 
     canvas.setFillColor(TEXT)
     canvas.setFont("Helvetica", 13)
@@ -213,7 +220,7 @@ def cover(canvas, doc):
         "why you believe it, and where confidence, evidence, experience,",
         "testimony, and bridge premises may be carrying uneven weight.",
     ]
-    y = 4.08 * inch
+    y = 3.8 * inch
     for line in intro:
         canvas.drawString(0.94 * inch, y, line)
         y -= 0.24 * inch
@@ -234,13 +241,14 @@ def estimate_toc_page(story):
         ("1", "Why the tool exists"),
         ("2", "The core problem: confidence can outrun substantiation"),
         ("3", "The five-band gradient"),
-        ("4", "A quick-start workflow"),
-        ("5", "How to rate claims well"),
-        ("6", "How to read the dashboard"),
-        ("7", "Bridge premises and dependency tension"),
-        ("8", "Preset lenses, reports, and the AI prompt"),
-        ("9", "Common use cases"),
-        ("10", "Limits, cautions, and a healthy outcome"),
+        ("4", "Basic functions at a glance"),
+        ("5", "A quick-start workflow"),
+        ("6", "How to rate claims well"),
+        ("7", "How to read the dashboard"),
+        ("8", "Bridge premises and dependency tension"),
+        ("9", "Preset lenses, reports, and the AI prompt"),
+        ("10", "Common use cases"),
+        ("11", "Limits, cautions, and a healthy outcome"),
         ("Appendix", "Glossary, scoring formulas, and the 50 claims"),
     ]
     rows = [[p(num, STYLES["TocNum"]), p(label, STYLES["TocText"])] for num, label in toc]
@@ -262,7 +270,7 @@ def estimate_toc_page(story):
     story.append(
         callout(
             "How to use this manual",
-            "Read chapters 1-4 before your first pass. Keep chapters 5-8 open while rating. Use the appendix when you want exact definitions, formulas, or the full claim map.",
+            "Read chapters 1-5 before your first pass. Keep chapters 6-9 open while rating. Use the appendix when you want exact definitions, formulas, or the full claim map.",
         )
     )
 
@@ -378,7 +386,34 @@ def add_manual_body(story):
     )
 
     story.append(PageBreak())
-    story.extend(section("A Quick-Start Workflow", "4"))
+    story.extend(section("Basic Functions at a Glance", "4"))
+    story.append(
+        p(
+            "The app is intentionally compact, but it contains several working surfaces. Use the claim cards for rating, the dashboard for pattern recognition, and the reports for reflection or follow-up analysis."
+        )
+    )
+    function_rows = [
+        [p("Function", STYLES["TableHeader"]), p("What it does", STYLES["TableHeader"]), p("Use it when...", STYLES["TableHeader"])],
+        [p("Claim cards", STYLES["TableCellBold"]), p("Present one auditable claim, two sliders, notes, diagnostics, and an annotation accordion.", STYLES["TableCell"]), p("You are doing the actual rating work.", STYLES["TableCell"])],
+        [p("Confidence slider", STYLES["TableCellBold"]), p("Records how credible the claim currently seems.", STYLES["TableCell"]), p("You want to name belief-strength without pretending it is all personally defended.", STYLES["TableCell"])],
+        [p("Personal Substantiation slider", STYLES["TableCellBold"]), p("Records how well you can personally explain and defend the claim.", STYLES["TableCell"]), p("You want to separate personal mastery from delegated trust.", STYLES["TableCell"])],
+        [p("View, Category, Search", STYLES["TableCellBold"]), p("Restrict which of the 50 claims appear below.", STYLES["TableCell"]), p("You want only matching items, such as prayer, scripture, high-gap, or unrated claims.", STYLES["TableCell"])],
+        [p("Next Unrated", STYLES["TableCellBold"]), p("Jumps to the next claim without scores.", STYLES["TableCell"]), p("You want a systematic first pass.", STYLES["TableCell"])],
+        [p("Review Pressure", STYLES["TableCellBold"]), p("Jumps to the most urgent gap or dependency alert.", STYLES["TableCell"]), p("You want to repair the profile rather than keep rating new claims.", STYLES["TableCell"])],
+        [p("Export / Import", STYLES["TableCellBold"]), p("Saves or restores a JSON profile with scores and notes.", STYLES["TableCell"]), p("You want backups, comparison over time, or movement between browsers.", STYLES["TableCell"])],
+        [p("Reports and AI prompt", STYLES["TableCellBold"]), p("Turn the current profile into readable summaries or a rigorous follow-up prompt.", STYLES["TableCell"]), p("You want a second-stage review outside the live interface.", STYLES["TableCell"])],
+    ]
+    story.append(data_table(function_rows, [1.45 * inch, 2.85 * inch, 2.25 * inch]))
+    story.append(Spacer(1, 0.14 * inch))
+    story.append(
+        callout(
+            "Important filter rule",
+            "The View, Category, and Search controls do not change the 50-claim bank or erase saved ratings. They only determine which matching items are displayed in the Claim Explorer.",
+        )
+    )
+
+    story.append(PageBreak())
+    story.extend(section("A Quick-Start Workflow", "5"))
     story.append(number_list([
         "Open the audit and make a quick first pass through claims that feel central to your faith, doubt, or inquiry.",
         "For each claim, assign Confidence separately from Personal Substantiation.",
@@ -404,7 +439,7 @@ def add_manual_body(story):
     )
 
     story.append(PageBreak())
-    story.extend(section("How To Rate Claims Well", "5"))
+    story.extend(section("How To Rate Claims Well", "6"))
     story.append(
         p(
             "The sliders use a 0-100 scale, but the numbers are not meant to look scientific beyond the user's honesty. The aim is disciplined self-rating: enough precision to reveal patterns, not false precision that pretends to settle the matter."
@@ -430,14 +465,14 @@ def add_manual_body(story):
     ]))
 
     story.append(PageBreak())
-    story.extend(section("How To Read The Dashboard", "6"))
+    story.extend(section("How To Read The Dashboard", "7"))
     story.append(
         p(
             "The dashboard is not a grade. It is a map of pressure points. Its job is to show where a profile is earning rightward movement on the gradient and where confidence may be outrunning personal support."
         )
     )
     metric_cards = [
-        ("Aggregate Position", "A 1-to-5 progress estimate. It starts at 1 and adds effective support in the four rightward bands."),
+        ("Aggregate Position", "A 1-to-5 progress estimate. It starts at 1 and adds each rightward band's average effective support divided by 100."),
         ("Theism Index", "The same position converted to a 0-to-100 progress scale."),
         ("Average Substantiation Gap", "The average positive amount by which Confidence exceeds Personal Substantiation."),
         ("Claim Scatter", "A visual field showing where rated claims sit by category lane and Confidence."),
@@ -454,7 +489,7 @@ def add_manual_body(story):
     )
 
     story.append(PageBreak())
-    story.extend(section("Bridge Premises and Dependency Tension", "7"))
+    story.extend(section("Bridge Premises and Dependency Tension", "8"))
     story.append(
         p(
             "A downstream claim can be more specific than the claims that support it. Dependency tension appears when a later claim has much higher effective support than its prerequisites. This is especially important for claims about miraculous healing, answered prayer, prophecy, scripture, Jesus, and the Holy Spirit."
@@ -481,7 +516,7 @@ def add_manual_body(story):
     )
 
     story.append(PageBreak())
-    story.extend(section("Preset Lenses, Reports, and the AI Prompt", "8"))
+    story.extend(section("Preset Lenses, Reports, and the AI Prompt", "9"))
     story.append(
         p(
             "Preset lenses are comparison profiles. They are not identities to adopt or answers to submit. Apply one, inspect the pattern, then ask where your actual profile is more skeptical, more doctrinal, more experiential, or more cautious than the label you might use for yourself."
@@ -509,7 +544,7 @@ def add_manual_body(story):
     )
 
     story.append(PageBreak())
-    story.extend(section("Common Use Cases", "9"))
+    story.extend(section("Common Use Cases", "10"))
     story.append(
         card_grid(
             [
@@ -531,7 +566,7 @@ def add_manual_body(story):
     )
 
     story.append(PageBreak())
-    story.extend(section("Limits, Cautions, and a Healthy Outcome", "10"))
+    story.extend(section("Limits, Cautions, and a Healthy Outcome", "11"))
     story.append(subhead("What the tool does not do"))
     story.append(bullets([
         "It does not decide whether Christianity is true.",
@@ -550,6 +585,13 @@ def add_manual_body(story):
     story.append(
         p(
             "Some users may end with a more carefully defended Christian profile. Others may end with a more modest Christian profile, a deistic profile, or an agnostic profile with sharper open questions. The common gain is reduced blur."
+        )
+    )
+    story.append(Spacer(1, 0.14 * inch))
+    story.append(
+        callout(
+            "Quality standard",
+            "Use the tool well when your final profile contains clear notes, proportionate scores, named bridge premises, fair rival explanations, and at least one claim you are willing to make more modest.",
         )
     )
 
@@ -571,7 +613,7 @@ def add_appendix(story, claims):
     story.append(
         callout(
             "Formula summary",
-            "Aggregate Position = 1 + average effective support in bands 2-5. Theism Index = ((Aggregate Position - 1) / 4) x 100.",
+            "Effective Support is measured from 0 to 100. Aggregate Position = 1 + ((Design support + Personal support + Interventionist support + Specific Christian support) / 100). Theism Index = ((Aggregate Position - 1) / 4) x 100.",
         )
     )
 
