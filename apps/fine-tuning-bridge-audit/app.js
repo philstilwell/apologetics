@@ -1,5 +1,10 @@
 const STORAGE_KEY = "fine-tuning-bridge-audit-v1";
 const THEISM_GRADIENT_BASE_URL = "../theism-gradient-audit/app.html";
+const calculations = window.FineTuningCalculations;
+
+if (!calculations) {
+  throw new Error("Fine-Tuning calculations failed to load.");
+}
 
 const routes = [
   {
@@ -58,18 +63,18 @@ const diagnosisMapHelp = {
   },
   "prior-pressure": {
     title: "Prior pressure",
-    intro: "This is background commitment pressure from identity pull, delegated trust, asymmetry, and low willingness to change your mind.",
+    intro: "This is an even average of identity pull, delegated trust, asymmetry, and low willingness to change your mind.",
     coda: "A high score does not prove the claim false. It warns that some confidence may be arriving before the bridge work is finished."
   },
   "world-shape-tension": {
     title: "World-shape tension",
-    intro: "This compares the actual universe you selected with the route-relevant expected universe.",
+    intro: "This compares the actual universe you selected with the route-relevant expected universe on two axes: beach size and stack abundance.",
     coda: "A higher score means the observed world looks less like what that route would naturally predict."
   },
   "human-target-pressure": {
     title: "Human-target pressure",
-    intro: "This measures whether the case is leaning toward humans or persons more strongly than the visible bridge work supports.",
-    coda: "It rises on thicker routes and rises further when the human-target bridge is still weak."
+    intro: "This combines human-goal lead, any explicit human-route overreach, the gap between the strict ceiling and the human rung, and the weakness of the human-target bridge.",
+    coda: "It is lower when the human route is actually earned and higher when a human-centered reading is arriving faster than support."
   }
 };
 
@@ -216,12 +221,6 @@ const scenarioDetails = {
   A: "Massive beach, one rare five-high stack",
   B: "Tiny beach, one five-high stack",
   C: "Massive beach, stacks nearly everywhere"
-};
-
-const scenarioOrder = {
-  A: 0,
-  B: 1,
-  C: 2
 };
 
 const worldQuestions = [
@@ -788,13 +787,7 @@ function ladderPercent(id) {
 }
 
 function priorPressure() {
-  const scores = [
-    state.commitments.identityPull,
-    state.commitments.delegatedTrust,
-    100 - state.commitments.symmetryWillingness,
-    100 - state.commitments.mindChangeReadiness
-  ];
-  return Math.round(scores.reduce((sum, value) => sum + value, 0) / scores.length);
+  return calculations.calculatePriorPressure(state.commitments);
 }
 
 function relevantWorldModelKey() {
@@ -806,33 +799,27 @@ function relevantWorldModelKey() {
 function worldMismatchScore() {
   const actual = state.world.actualUniverse;
   const expected = state.world[relevantWorldModelKey()];
-  if (!actual || !expected) return null;
-  return Math.abs(scenarioOrder[actual] - scenarioOrder[expected]) * 50;
+  return calculations.calculateWorldMismatch(actual, expected);
 }
 
 function worldMismatchLabel(score) {
-  if (score === null) return "Not set";
-  if (score >= 100) return "High";
-  if (score >= 50) return "Moderate";
-  return "Low";
+  return calculations.worldMismatchLabel(score);
+}
+
+function humanBridgeDescriptor() {
+  return {
+    status: state.bridges["human-step"]?.status || "missing",
+    notePresent: noteIsPresent("human-step")
+  };
 }
 
 function targetPressure() {
-  const humanBias = Math.max(
-    state.goals.humansPersons - state.goals.unknownEnds,
-    state.goals.humansPersons - state.goals.orderElegance,
-    state.goals.humansPersons - state.goals.blackHolesStars
-  );
-  const routePenalty =
-    state.route === "design-only"
-      ? 0
-      : state.route === "life-purpose"
-        ? 10
-        : state.route === "human-purpose"
-          ? 20
-          : 30;
-  const bridgePenalty = bridgeStrictReady("human-step") ? 0 : 20;
-  return Math.max(0, Math.min(100, humanBias + routePenalty + bridgePenalty));
+  return calculations.calculateHumanTargetPressure({
+    routeId: state.route,
+    strictCeilingId: strictCeilingId(),
+    goals: state.goals,
+    humanBridge: humanBridgeDescriptor()
+  });
 }
 
 function severityLabel(score) {
@@ -1132,6 +1119,7 @@ function classifyAudit() {
   const strictIndex = routes.findIndex((route) => route.id === strictCeiling);
   const mismatch = worldMismatchScore();
   const prior = priorPressure();
+  const target = targetPressure();
   const flags = buildFlags();
 
   if (strictCeiling === "below-design") {
@@ -1158,6 +1146,16 @@ function classifyAudit() {
     return {
       status: "World-shape mismatch",
       copy: "The actual universe has been mapped to a world-shape that does not look like the selected route's own expected target. That weakens the thicker interpretation even if thin design remains live.",
+      strictCeiling,
+      tentativeCeiling,
+      flags
+    };
+  }
+
+  if (target >= 60) {
+    return {
+      status: "Human-target pressure visible",
+      copy: "The argument is leaning toward a human-centered reading faster than the visible bridge work has earned. Keep the route thinner unless the human-target step becomes much stronger.",
       strictCeiling,
       tentativeCeiling,
       flags
