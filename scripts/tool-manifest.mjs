@@ -590,7 +590,7 @@ export const TOOLS = [
     hub: {
       cardClass: "hub-card-morality",
       kicker: "Advanced follow-up",
-      tags: ["Advanced", "System-level", "Manual"],
+      tags: ["Advanced", "System-level", "Manual", "Curriculum"],
       summary:
         "Takes the threshold result into a fuller system-level pressure test, asking whether Christian morality survives counterfactuals, authority checks, disagreement strain, and collapse risks.",
       note: "Continues where Moral System Threshold leaves off.",
@@ -604,6 +604,11 @@ export const TOOLS = [
         {
           href: "./output/pdf/moral-system-stress-test-manual.pdf",
           label: "Manual",
+          secondary: true,
+        },
+        {
+          href: "./output/pdf/moral-system-stress-test-curriculum.pdf",
+          label: "Curriculum",
           secondary: true,
         },
       ],
@@ -682,6 +687,11 @@ export const TOOLS = [
         {
           href: "./assets/manuals/moral-particulars-audit-manual-v2.pdf",
           label: "Manual",
+          secondary: true,
+        },
+        {
+          href: "./assets/curricula/moral-particulars-audit-curriculum.pdf",
+          label: "Curriculum",
           secondary: true,
         },
       ],
