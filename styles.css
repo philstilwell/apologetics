@@ -7536,9 +7536,103 @@ body.app-falsifiability #summary {
   line-height: 1.25;
 }
 
+.score-method-details {
+  border: 1px solid #a8c4c7;
+  border-radius: var(--radius);
+  background: #f3faf8;
+  overflow: hidden;
+}
+
+.score-method-details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  color: var(--ff-blue-dark);
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.score-method-details summary::after {
+  content: "+";
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.score-method-details[open] summary::after {
+  content: "-";
+}
+
+.score-method-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.score-method-body {
+  display: grid;
+  gap: 10px;
+  padding: 0 12px 12px;
+}
+
+.score-method-body p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 680;
+  line-height: 1.45;
+}
+
+.score-method-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.score-method-grid div {
+  min-width: 0;
+  padding: 8px 9px;
+  border: 1px solid rgba(168, 196, 199, 0.8);
+  border-radius: 8px;
+  background: #fbfff9;
+}
+
+.score-method-grid span,
+.score-method-grid strong {
+  display: block;
+}
+
+.score-method-grid span {
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  line-height: 1.16;
+  text-transform: uppercase;
+}
+
+.score-method-grid strong {
+  margin-top: 4px;
+  color: var(--ff-blue-dark);
+  font-size: 0.86rem;
+  line-height: 1.1;
+}
+
+.score-method-formula code {
+  padding: 2px 5px;
+  border-radius: 5px;
+  background: #fffdf6;
+  color: var(--ff-ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
 @media (max-width: 1060px) {
   .promise-dashboard,
-  .claim-mini-ledger {
+  .claim-mini-ledger,
+  .score-method-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -7617,6 +7711,7 @@ body.app-falsifiability #summary {
   .study-comparison-grid,
   .excuse-grid,
   .claim-mini-ledger,
+  .score-method-grid,
   .preset-grid,
   .custom-study-grid,
   .outcome-rules-grid {

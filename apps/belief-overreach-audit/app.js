@@ -292,8 +292,8 @@ const scenarios = {
       "Portfolio dollars. The overreach cost appears as larger positions taken in weaker businesses.",
     assumptions: [
       "Each round compresses a company into two simplified signals: fundamentals and hype.",
-      "All four investors evaluate the same company at the same moment; only their thresholds and position sizing differ.",
-      "Cash left on the sidelines earns a tiny reserve yield instead of sitting perfectly still.",
+      "All four investors evaluate the same company at the same moment; only their perceived edge and position sizing differ.",
+      "The buy-or-pass decision is now an explicit expected-value comparison against a small passive cash yield.",
       "The model ignores diversification, hedging, and macro shocks so the focus stays on how overbelief changes what gets bought."
     ],
     guidePoints: [
@@ -342,7 +342,7 @@ const scenarios = {
       "Trust-and-time capital. This line tracks the life energy spent on people who either deserved or did not deserve deep commitment.",
     assumptions: [
       "Each try reduces a prospect to a few simplified signals such as character, spark, distance, and verification.",
-      "All four people meet the same prospect; only their trust threshold and pacing differ.",
+      "All four people meet the same prospect; only their perceived chance of trust paying off and their pacing differ.",
       "The line measures trust-and-time capital rather than literal dollars.",
       "The model compresses messy human relationships so the focus stays on when desire is allowed to outrun vetting."
     ],
@@ -393,7 +393,7 @@ const scenarios = {
       "Life-budget capital. This tracks time, energy, money, autonomy, and identity pressure rather than cash alone.",
     assumptions: [
       "Each try compresses a religious encounter into evidence, emotional-social pull, and demand level.",
-      "All four agents face the same encounter; only their commitment threshold differs.",
+      "All four agents face the same encounter; only their perceived expected value of surrender differs.",
       "The line tracks life-budget capital: time, attention, money, autonomy, and identity pressure.",
       "The model does not claim every religious community is identical; it isolates what happens when confidence outruns perceived evidence."
     ],
@@ -2263,7 +2263,7 @@ function computeRomancePerceivedFailureValue(agent, remote, character, verificat
 }
 
 function computeReligionGroundedProbability(evidence) {
-  return clampNumber(0.03 + evidence * 0.0035, 0.04, 0.32, 0.14);
+  return clampNumber(0.03 + evidence * 0.0075, 0.04, 0.56, 0.14);
 }
 
 function computeReligionPerceivedEvidence(agent, evidence, pull) {
@@ -2271,16 +2271,16 @@ function computeReligionPerceivedEvidence(agent, evidence, pull) {
 }
 
 function computeReligionWaitValue(evidence) {
-  return 10 + evidence * 0.06;
+  return 4 + evidence * 0.03;
 }
 
 function computeReligionGroundedValue(agent, evidence, pull, demand) {
   const baseCost = 22 + agent.bias * 38 + demand * 0.12;
-  return 10 + evidence * 0.28 + pull * 0.05 - baseCost * 0.45;
+  return 18 + evidence * 0.42 + pull * 0.05 - baseCost * 0.28;
 }
 
 function computeReligionOvercommitValue(agent, evidence, demand) {
-  return -(12 + (100 - evidence) * 0.34 + demand * 0.35 + agent.bias * 18);
+  return -(8 + (100 - evidence) * 0.20 + demand * 0.24 + agent.bias * 14);
 }
 
 function computeReligionPerceivedGroundedValue(agent, evidence, pull, demand) {

@@ -1740,7 +1740,7 @@ function renderPromiseMap() {
       ringColor,
     };
   });
-  const thresholdCount = plottedClaims.filter((item) => item.score >= 50).length;
+  const thresholdCount = plottedClaims.filter((item) => item.score >= scoringModel.thresholds.testable).length;
   const protectedCount = plottedClaims.length - thresholdCount;
   const excuseCount = plottedClaims.reduce((total, item) => total + item.excuseCount, 0);
 
@@ -1767,7 +1767,7 @@ function renderPromiseMap() {
       ${[0, 25, 50, 75, 100]
         .map((value) => `<span class="promise-map-y-tick" style="bottom:${value}%">${value}</span>`)
         .join("")}
-      <span class="promise-map-threshold" style="bottom:50%" aria-hidden="true">
+      <span class="promise-map-threshold" style="bottom:${scoringModel.thresholds.testable}%" aria-hidden="true">
         <span>Falsifiability threshold</span>
       </span>
       ${plottedClaims
@@ -1777,7 +1777,7 @@ function renderPromiseMap() {
           return `
             <button
               type="button"
-              class="promise-map-point${item.claim.id === selectedClaimId ? " active" : ""}${item.score > 70 ? " tooltip-below" : ""}"
+              class="promise-map-point${item.claim.id === selectedClaimId ? " active" : ""}${item.score >= scoringModel.thresholds.exposed ? " tooltip-below" : ""}"
               data-claim-id="${escapeHtml(item.claim.id)}"
               data-score="${item.score}"
               style="--x:${item.x}; --score:${item.score}; --size:${item.size}px; --alpha:${item.opacity.toFixed(2)}; --claim-color:${item.claim.color}; --ring-width:${item.ringWidth.toFixed(1)}px; --ring-color:${item.ringColor};"
@@ -1830,7 +1830,7 @@ function renderAllStanceTable() {
     const score = scoreClaim(claim);
     const diagnosis = diagnosisFor(score);
     const row = document.createElement("tr");
-    row.className = score >= 50 ? "threshold-passed" : "";
+    row.className = score >= scoringModel.thresholds.testable ? "threshold-passed" : "";
     row.innerHTML = `
       <td>${escapeHtml(claim.title)}</td>
       <td>${score}/100</td>
@@ -1982,10 +1982,11 @@ function updateMetrics() {
   const claim = getClaim();
   const current = state[claim.id];
   const study = getStudy(claim);
-  const score = scoreClaim(claim);
+  const scoreBreakdown = scoreClaimBreakdown(claim);
+  const score = scoreBreakdown.score;
   const diagnosis = diagnosisFor(score);
   const excuseCount = current.excuses.size;
-  const excusePenalty = excusePenaltyFor(claim.id);
+  const excusePenalty = scoreBreakdown.excusePenalty;
   const personalAssessment = personalLifeAssessment(score, current, excuseCount);
 
   document.querySelector("#metric-claim").textContent = claim.title;
@@ -2009,6 +2010,21 @@ function updateMetrics() {
   activeRunSetting.textContent = `${current.willingness}%`;
   activeFailureSetting.textContent = `${current.failure}%`;
   activeExcuseDrag.textContent = excusePenalty === 0 ? "0" : `-${excusePenalty}`;
+  if (scoreMethodStudy) {
+    scoreMethodStudy.textContent = `${study.rigor}/100`;
+  }
+  if (scoreMethodRun) {
+    scoreMethodRun.textContent = formatMultiplier(scoreBreakdown.willingnessMultiplier);
+  }
+  if (scoreMethodMiss) {
+    scoreMethodMiss.textContent = formatMultiplier(scoreBreakdown.failureMultiplier);
+  }
+  if (scoreMethodDrag) {
+    scoreMethodDrag.textContent = excusePenalty === 0 ? "0" : `-${excusePenalty}`;
+  }
+  if (scoreMethodRaw) {
+    scoreMethodRaw.textContent = scoreBreakdown.rawScore.toFixed(1);
+  }
 
   document.querySelector("#diagnosis-title").textContent = diagnosis.title;
   document.querySelector("#diagnosis-body").textContent = diagnosis.body;
@@ -2281,5 +2297,6 @@ loadJsonButton?.addEventListener("click", () => {
   }
 });
 
+runCalculationSelfCheck();
 loadStateFromHash();
 update();
