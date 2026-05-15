@@ -1186,8 +1186,10 @@ function getAllPromisesSummary() {
       excuseCount: state[claim.id].excuses.size,
     };
   });
-  const farRight = snapshots.filter((item) => item.score >= 72).length;
-  const partlyOpen = snapshots.filter((item) => item.score >= 50 && item.score < 72).length;
+  const farRight = snapshots.filter((item) => item.score >= scoringModel.thresholds.exposed).length;
+  const partlyOpen = snapshots.filter(
+    (item) => item.score >= scoringModel.thresholds.testable && item.score < scoringModel.thresholds.exposed,
+  ).length;
   const protectedCount = snapshots.length - farRight - partlyOpen;
   const totalExcuses = snapshots.reduce((total, item) => total + item.excuseCount, 0);
   const strongest = snapshots.reduce((best, item) => (item.score > best.score ? item : best), snapshots[0]);
@@ -1344,7 +1346,8 @@ function renderReport() {
   const claim = getClaim();
   const current = state[claim.id];
   const study = getStudy(claim);
-  const score = scoreClaim(claim);
+  const scoreBreakdown = scoreClaimBreakdown(claim);
+  const score = scoreBreakdown.score;
   const diagnosis = diagnosisFor(score);
   const activeExcuses = selectedExcuseDetails(claim.id);
   const datasetItems = datasetSuggestions[claim.id] || [];
@@ -1364,6 +1367,11 @@ function renderReport() {
       <section>
         <h5>Study choice</h5>
         <p>${escapeHtml(study.title)} (${escapeHtml(study.tier)}, ${study.rigor}/100 rigor). ${escapeHtml(study.detail)}</p>
+      </section>
+      <section>
+        <h5>Score calculation</h5>
+        <p>${escapeHtml(scoringMethodSummary())}</p>
+        <p>${scoringModel.baseline} + ${study.rigor} x ${formatMultiplier(scoreBreakdown.willingnessMultiplier)} x ${formatMultiplier(scoreBreakdown.failureMultiplier)} x ${scoringModel.capFactor} - ${scoreBreakdown.excusePenalty} = ${scoreBreakdown.rawScore.toFixed(1)} before rounding and bounds.</p>
       </section>
       <section>
         <h5>What would change the user's mind?</h5>
@@ -1406,7 +1414,8 @@ function buildSelectedAiPrompt() {
   const claim = getClaim();
   const current = state[claim.id];
   const study = getStudy(claim);
-  const score = scoreClaim(claim);
+  const scoreBreakdown = scoreClaimBreakdown(claim);
+  const score = scoreBreakdown.score;
   const diagnosis = diagnosisFor(score);
   const activeExcuses = selectedExcuseDetails(claim.id);
   const personalAssessment = personalLifeAssessment(score, current, activeExcuses.length);
@@ -1454,6 +1463,10 @@ ${activeExcuses.length === 0 ? "None selected" : activeExcuses.map((excuse) => `
 Current field result:
 ${score}/100, ${diagnosis.title}. ${diagnosis.body}
 
+Score calculation:
+${scoringMethodSummary()}
+Current calculation: ${scoringModel.baseline} + ${study.rigor} x ${formatMultiplier(scoreBreakdown.willingnessMultiplier)} x ${formatMultiplier(scoreBreakdown.failureMultiplier)} x ${scoringModel.capFactor} - ${scoreBreakdown.excusePenalty} = ${scoreBreakdown.rawScore.toFixed(1)} before rounding and bounds.
+
 Personal-and-active-God question:
 ${personalAssessment.title}. ${personalAssessment.body}
 
@@ -1476,6 +1489,9 @@ function buildAllPromisesAiPrompt() {
 
 Suite-wide result:
 ${buildAllPromisesResult()}
+
+Scoring method:
+${scoringMethodSummary()}
 
 All promise snapshots:
 ${allPromiseSnapshots()}

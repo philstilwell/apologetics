@@ -134,6 +134,81 @@ function verifyManifestCoverage() {
   );
 }
 
+async function verifyMoralParticularsCalculations(baseUrl, browser) {
+  const page = await browser.newPage();
+  const calculationState = {
+    selectedIssueId: "1a",
+    reportMode: "all",
+    issueStates: {
+      "1a": {
+        stance: "oppose",
+        grounders: { scripture: 9, "unknown-grounder": 10 },
+        disagreement: { "different-facts": 4, "unknown-disagreement": 10 },
+        notes: "",
+      },
+      "1b": {
+        stance: "support",
+        grounders: { "social-norms": 7 },
+        disagreement: {},
+        notes: "",
+      },
+      "2": {
+        stance: "support",
+        grounders: { "social-norms": 7 },
+        disagreement: { "different-facts": 2 },
+        notes: "",
+      },
+      "3": {
+        stance: "oppose",
+        grounders: { "unknown-grounder": 10 },
+        disagreement: { "unknown-disagreement": 10 },
+        notes: "",
+      },
+    },
+  };
+
+  try {
+    await page.goto(`${baseUrl}/apps/moral-particulars-audit/`, { waitUntil: "load" });
+    await page.evaluate((state) => {
+      localStorage.setItem("moral-particulars-audit-v1", JSON.stringify(state));
+    }, calculationState);
+    await page.reload({ waitUntil: "load" });
+    await page.waitForTimeout(500);
+
+    assert.equal(
+      normalizeText(await page.locator("#completedCases").innerText()),
+      "2/13",
+      "Moral Particulars mapped-case count should require a valid stance, a known grounder weight, and a known disagreement weight."
+    );
+
+    const patternText = normalizeText(await page.locator("#patternList").innerText());
+    assert.match(
+      patternText,
+      /2 give social norms strong weight/,
+      "Social-norm pattern should be triggered by the fully mapped case."
+    );
+    assert.doesNotMatch(
+      patternText,
+      /1b,\s*2 give social norms strong weight/,
+      "Social-norm pattern should not include partial cases in its mapped-case warning."
+    );
+
+    const coverageText = normalizeText(await page.locator("#grounderConcentrationCoverage").innerText());
+    assert.match(
+      coverageText,
+      /Scripture 1\/2/,
+      "Grounder coverage should use only the two fully mapped cases as the denominator."
+    );
+    assert.match(
+      coverageText,
+      /Norms 1\/2/,
+      "Partial social-norm input should not inflate graph coverage."
+    );
+  } finally {
+    await page.close();
+  }
+}
+
 async function listen(server) {
   await new Promise((resolve, reject) => {
     server.once("error", reject);
@@ -228,6 +303,9 @@ async function run() {
       await mobilePage.close();
       console.log(`PASS ${pageDef.file}`);
     }
+
+    await verifyMoralParticularsCalculations(baseUrl, browser);
+    console.log("PASS Moral Particulars calculation checks");
   } finally {
     await browser.close();
     await new Promise((resolve, reject) => {

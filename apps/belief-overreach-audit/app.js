@@ -1,4 +1,4 @@
-const STORAGE_KEY = "belief-overreach-audit-v7";
+const STORAGE_KEY = "belief-overreach-audit-v8";
 
 const agents = [
   {
@@ -109,6 +109,9 @@ const CASINO_OPENING_MIN = 16;
 const CASINO_OPENING_MAX = 20;
 const CASINO_CARD_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const CASINO_WIN_PROFIT = 30;
+const INVEST_PASSIVE_YIELD = 0.0025;
+const INVEST_RESERVE_YIELD = 0.0027;
+const INVEST_MAX_POSITION = 0.34;
 const casinoDefaultThresholds = {
   milo18: 82,
   willa18: 65,
@@ -768,11 +771,8 @@ function renderChart() {
   const innerHeight = height - margin.top - margin.bottom;
   const minValue = Math.min(...seriesValues);
   const maxValue = Math.max(...seriesValues);
-  const padding = scenario.unit === "currency" ? 80 : 60;
-  const yMin = Math.max(0, Math.floor((minValue - padding) / 50) * 50);
-  const yMax = Math.ceil((maxValue + padding) / 50) * 50;
-  const ySpan = Math.max(100, yMax - yMin);
-  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((ratio) => yMin + ySpan * ratio);
+  const { min: yMin, max: yMax, ticks: yTicks } = buildYAxisScale(minValue, maxValue, scenario.unit);
+  const ySpan = Math.max(1, yMax - yMin);
   const xTicks = buildXTicks(scenario.maxTries);
   const getX = (index) => margin.left + (index / scenario.maxTries) * innerWidth;
   const getY = (value) => margin.top + innerHeight - ((value - yMin) / ySpan) * innerHeight;
@@ -1761,27 +1761,27 @@ function createInvestmentEvent(scenarioState) {
   const company = investmentNames[(index - 1) % investmentNames.length];
   const fundamentals = randomInt(25, 92);
   const hype = randomInt(18, 97);
-  const mania = Math.max(0, hype - fundamentals);
-  const pGain = clampNumber(0.30 + fundamentals * 0.0047 - hype * 0.0031, 0.12, 0.76, 0.44);
-  const returnRate = Math.random() < pGain
-    ? randomRange(0.03, 0.10 + fundamentals / 540 + mania / 720)
-    : -randomRange(0.05, 0.12 + (100 - fundamentals) / 220 + mania / 240);
+  const returnRate = drawInvestmentReturnRate(fundamentals, hype);
   const after = {};
   const delta = {};
   const actions = {};
 
   agents.forEach((agent) => {
     const previous = getCurrentValue(scenarioState, agent.id);
-    const decisionScore = fundamentals * (1 - agent.bias) + hype * agent.bias;
-    const invest = decisionScore >= 62;
+    const perceivedFundamentals = computeInvestmentPerceivedFundamentals(agent, fundamentals, hype);
+    const decisionScore = perceivedFundamentals;
+    const perceivedExpectedRate = computeInvestmentExpectedReturnRate(perceivedFundamentals, hype);
+    const stakeFraction = computeInvestmentStakeFraction(agent, fundamentals, hype, perceivedExpectedRate);
+    const expectedInvestChange = previous * (stakeFraction * perceivedExpectedRate + (1 - stakeFraction) * INVEST_RESERVE_YIELD);
+    const passiveChange = previous * INVEST_PASSIVE_YIELD;
+    const invest = previous > 0 && expectedInvestChange > passiveChange;
     let change;
     let tag;
     let text;
 
     if (invest) {
-      const stakeFraction = Math.min(0.34, 0.10 + agent.bias * 0.11 + (mania * agent.bias) / 620);
       const stake = previous * stakeFraction;
-      const reserveYield = (previous - stake) * 0.0027;
+      const reserveYield = (previous - stake) * INVEST_RESERVE_YIELD;
       change = stake * returnRate + reserveYield;
       tag = returnRate >= 0 ? "Bought well" : "Bought weakly";
       text = buildInvestmentActionText({
@@ -1796,7 +1796,7 @@ function createInvestmentEvent(scenarioState) {
         invest
       });
     } else {
-      change = previous * 0.0025;
+      change = passiveChange;
       tag = "Passed";
       text = buildInvestmentActionText({
         agent,
@@ -1844,10 +1844,8 @@ function createRomanceEvent(scenarioState) {
   const spark = remote ? randomInt(74, 97) : randomInt(24, 92);
   const verification = remote ? randomInt(8, 28) : randomInt(48, 96);
   const supportScore = character * 0.65 + verification * 0.35;
-  const pStable = remote
-    ? 0.02 + character * 0.002 + verification * 0.002
-    : 0.08 + character * 0.005 + verification * 0.0025;
-  const success = forceCatfish ? false : Math.random() < clampNumber(pStable, 0.04, 0.86, 0.42);
+  const successProbability = computeRomanceSuccessProbability(remote, supportScore);
+  const success = forceCatfish ? false : Math.random() < successProbability;
   const handle = remote
     ? remoteHandles[(index - 1) % remoteHandles.length]
     : localProspects[(index - 1) % localProspects.length];
@@ -1857,17 +1855,23 @@ function createRomanceEvent(scenarioState) {
 
   agents.forEach((agent) => {
     const previous = getCurrentValue(scenarioState, agent.id);
-    const decisionScore = supportScore * (1 - agent.bias) + spark * agent.bias;
+    const perceivedSupport = computeRomancePerceivedSupport(agent, supportScore, spark);
+    const decisionScore = perceivedSupport;
     const forcedCatfishCommit = forceCatfish && remote && agent.id === catfishTargetId;
-    const commit = forcedCatfishCommit ? true : forceCatfish && remote ? false : decisionScore >= 60;
+    const waitValue = computeRomanceWaitValue(remote, character);
+    const successValue = computeRomanceSuccessValue(agent, character, verification);
+    const failureValue = computeRomanceFailureValue(agent, remote, character, verification, spark, false);
+    const perceivedSuccessProbability = computeRomanceSuccessProbability(remote, perceivedSupport);
+    const expectedCommitValue =
+      perceivedSuccessProbability * successValue + (1 - perceivedSuccessProbability) * failureValue;
+    const commit = forcedCatfishCommit ? true : forceCatfish && remote ? false : expectedCommitValue > waitValue;
     let change;
     let tag;
     let text;
 
     if (commit) {
-      const commitmentCost = 18 + agent.bias * 22;
       if (success) {
-        change = 28 + character * 0.6 + verification * 0.18 - commitmentCost;
+        change = successValue;
         tag = remote ? "Remote success" : "Committed";
         text = buildRomanceActionText({
           agent,
@@ -1885,8 +1889,7 @@ function createRomanceEvent(scenarioState) {
           spark
         });
       } else {
-        const catfishPenalty = remote ? 36 + (100 - verification) * 0.42 + (forcedCatfishCommit ? 18 : 0) : 0;
-        change = -(30 + (100 - character) * 0.66 + spark * 0.18 + commitmentCost + catfishPenalty);
+        change = computeRomanceFailureValue(agent, remote, character, verification, spark, forcedCatfishCommit);
         tag = forcedCatfishCommit ? "Catfished" : remote ? "Remote collapse" : "Bad commitment";
         text = buildRomanceActionText({
           agent,
@@ -1905,7 +1908,7 @@ function createRomanceEvent(scenarioState) {
         });
       }
     } else {
-      change = remote ? 12 : character < 55 ? 8 : 4;
+      change = waitValue;
       tag = forceCatfish && remote ? "Vetted first" : "Held back";
       text = buildRomanceActionText({
         agent,
@@ -1965,33 +1968,39 @@ function createReligionEvent(scenarioState) {
   const evidence = randomInt(8, 58);
   const pull = randomInt(34, 96);
   const demand = randomInt(26, 86);
-  const pGrounded = clampNumber(0.03 + evidence * 0.0035, 0.04, 0.32, 0.14);
-  const grounded = Math.random() < pGrounded;
+  const groundedProbability = computeReligionGroundedProbability(evidence);
+  const grounded = Math.random() < groundedProbability;
   const after = {};
   const delta = {};
   const actions = {};
 
   agents.forEach((agent) => {
     const previous = getCurrentValue(scenarioState, agent.id);
-    const decisionScore = evidence * (1 - agent.bias) + pull * agent.bias;
-    const commit = decisionScore >= 54;
+    const perceivedEvidence = computeReligionPerceivedEvidence(agent, evidence, pull);
+    const decisionScore = perceivedEvidence;
+    const waitValue = computeReligionWaitValue(evidence);
+    const groundedValue = computeReligionGroundedValue(agent, evidence, pull, demand);
+    const overcommitValue = computeReligionOvercommitValue(agent, evidence, demand);
+    const perceivedGroundedProbability = computeReligionGroundedProbability(perceivedEvidence);
+    const expectedCommitValue =
+      perceivedGroundedProbability * groundedValue + (1 - perceivedGroundedProbability) * overcommitValue;
+    const commit = previous > 0 && expectedCommitValue > waitValue;
     let change;
     let tag;
     let text;
 
     if (commit) {
-      const baseCost = 22 + agent.bias * 38 + demand * 0.12;
       if (grounded) {
-        change = 10 + evidence * 0.28 + pull * 0.05 - baseCost * 0.45;
+        change = groundedValue;
         tag = "Committed";
         text = buildReligionActionText({ agent, index, encounter, evidence, pull, demand, commit, grounded });
       } else {
-        change = -(12 + (100 - evidence) * 0.34 + demand * 0.35 + agent.bias * 18);
+        change = overcommitValue;
         tag = "Overcommitted";
         text = buildReligionActionText({ agent, index, encounter, evidence, pull, demand, commit, grounded });
       }
     } else {
-      change = 10 + evidence * 0.06;
+      change = waitValue;
       tag = "Waited";
       text = buildReligionActionText({ agent, index, encounter, evidence, pull, demand, commit, grounded });
     }
@@ -2094,11 +2103,13 @@ function loadState() {
         return;
       }
 
+      const limitedTries = candidate.tries.slice(0, scenario.maxTries);
+
       loaded.scenarios[scenarioId] = {
-        tries: candidate.tries.slice(0, scenario.maxTries),
+        tries: limitedTries,
         series: Object.fromEntries(
           agents.map((agent) => {
-            const values = candidate.series[agent.id].slice(0, candidate.tries.length + 1);
+            const values = candidate.series[agent.id].slice(0, limitedTries.length + 1);
             return [agent.id, values];
           })
         )
@@ -2162,6 +2173,134 @@ function formatPercent(value) {
 
 function formatNumber(value) {
   return Math.abs(value - Math.round(value)) < 0.05 ? String(Math.round(value)) : value.toFixed(1);
+}
+
+function computeInvestmentGainProbability(fundamentals, hype) {
+  return clampNumber(0.30 + fundamentals * 0.0047 - hype * 0.0031, 0.12, 0.76, 0.44);
+}
+
+function computeInvestmentReturnBounds(fundamentals, hype) {
+  const mania = Math.max(0, hype - fundamentals);
+  return {
+    gainMin: 0.03,
+    gainMax: 0.10 + fundamentals / 540 + mania / 720,
+    lossMin: 0.05,
+    lossMax: 0.12 + (100 - fundamentals) / 220 + mania / 240
+  };
+}
+
+function computeInvestmentExpectedReturnRate(fundamentals, hype) {
+  const probabilityGain = computeInvestmentGainProbability(fundamentals, hype);
+  const bounds = computeInvestmentReturnBounds(fundamentals, hype);
+  const meanGain = (bounds.gainMin + bounds.gainMax) / 2;
+  const meanLoss = (bounds.lossMin + bounds.lossMax) / 2;
+  return probabilityGain * meanGain - (1 - probabilityGain) * meanLoss;
+}
+
+function drawInvestmentReturnRate(fundamentals, hype) {
+  const probabilityGain = computeInvestmentGainProbability(fundamentals, hype);
+  const bounds = computeInvestmentReturnBounds(fundamentals, hype);
+  return Math.random() < probabilityGain
+    ? randomRange(bounds.gainMin, bounds.gainMax)
+    : -randomRange(bounds.lossMin, bounds.lossMax);
+}
+
+function computeInvestmentPerceivedFundamentals(agent, fundamentals, hype) {
+  return clampNumber(fundamentals * (1 - agent.bias) + hype * agent.bias, 0, 100, fundamentals);
+}
+
+function computeInvestmentStakeFraction(agent, fundamentals, hype, perceivedExpectedRate) {
+  const edgeOverPassive = Math.max(0, perceivedExpectedRate - INVEST_PASSIVE_YIELD);
+  const hypePremium = Math.max(0, hype - fundamentals) / 100;
+  return clampNumber(
+    0.08 + (edgeOverPassive / 0.07) * 0.16 + hypePremium * agent.bias * 0.10 + agent.bias * 0.02,
+    0.08,
+    INVEST_MAX_POSITION,
+    0.12
+  );
+}
+
+function computeRomanceSuccessProbability(remote, supportScore) {
+  return remote
+    ? clampNumber(0.02 + supportScore * 0.0038, 0.04, 0.86, 0.14)
+    : clampNumber(0.08 + supportScore * 0.006, 0.04, 0.86, 0.42);
+}
+
+function computeRomancePerceivedSupport(agent, supportScore, spark) {
+  return clampNumber(supportScore * (1 - agent.bias) + spark * agent.bias, 0, 100, supportScore);
+}
+
+function computeRomanceWaitValue(remote, character) {
+  return remote ? 12 : character < 55 ? 8 : 4;
+}
+
+function computeRomanceCommitmentCost(agent) {
+  return 18 + agent.bias * 22;
+}
+
+function computeRomanceSuccessValue(agent, character, verification) {
+  return 28 + character * 0.6 + verification * 0.18 - computeRomanceCommitmentCost(agent);
+}
+
+function computeRomanceFailureValue(agent, remote, character, verification, spark, forcedCatfishCommit) {
+  const catfishPenalty = remote ? 36 + (100 - verification) * 0.42 + (forcedCatfishCommit ? 18 : 0) : 0;
+  return -(30 + (100 - character) * 0.66 + spark * 0.18 + computeRomanceCommitmentCost(agent) + catfishPenalty);
+}
+
+function computeReligionGroundedProbability(evidence) {
+  return clampNumber(0.03 + evidence * 0.0035, 0.04, 0.32, 0.14);
+}
+
+function computeReligionPerceivedEvidence(agent, evidence, pull) {
+  return clampNumber(evidence * (1 - agent.bias) + pull * agent.bias, 0, 100, evidence);
+}
+
+function computeReligionWaitValue(evidence) {
+  return 10 + evidence * 0.06;
+}
+
+function computeReligionGroundedValue(agent, evidence, pull, demand) {
+  const baseCost = 22 + agent.bias * 38 + demand * 0.12;
+  return 10 + evidence * 0.28 + pull * 0.05 - baseCost * 0.45;
+}
+
+function computeReligionOvercommitValue(agent, evidence, demand) {
+  return -(12 + (100 - evidence) * 0.34 + demand * 0.35 + agent.bias * 18);
+}
+
+function niceStep(rawStep) {
+  const magnitude = 10 ** Math.floor(Math.log10(Math.max(rawStep, 1)));
+  const normalized = rawStep / magnitude;
+
+  if (normalized <= 1) {
+    return magnitude;
+  }
+  if (normalized <= 2) {
+    return 2 * magnitude;
+  }
+  if (normalized <= 2.5) {
+    return 2.5 * magnitude;
+  }
+  if (normalized <= 5) {
+    return 5 * magnitude;
+  }
+  return 10 * magnitude;
+}
+
+function buildYAxisScale(minValue, maxValue, unit) {
+  const padding = unit === "currency" ? 80 : 60;
+  const rawMin = Math.max(0, minValue - padding);
+  const rawMax = Math.max(rawMin + 1, maxValue + padding);
+  const step = niceStep((rawMax - rawMin) / 4);
+  const min = Math.max(0, Math.floor(rawMin / step) * step);
+  const max = Math.max(min + step, Math.ceil(rawMax / step) * step);
+  const ticks = [];
+
+  for (let value = min; value <= max + step * 0.25; value += step) {
+    ticks.push(Number(value.toFixed(8)));
+  }
+
+  return { min, max, ticks };
 }
 
 function randomInt(min, max) {
