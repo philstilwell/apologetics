@@ -13,6 +13,15 @@ The app rates 50 auditable claims using confidence and personal-substantiation s
 - category summaries
 - plain-English profile summaries
 
+## Calculation Model
+
+- Effective support = `100 * sqrt((Confidence / 100) * (Personal Substantiation / 100))`.
+- Claim weight is the same value on a 0-1 scale.
+- Aggregate gradient position starts at `1` and adds the average effective support in the four rightward bands: Design Deism, Personal Theism, Interventionist Theism, and Specific Christian Theism. Minimal Deism anchors the baseline.
+- Theism index = `((Aggregate Position - 1) / 4) * 100`.
+- Substantiation gap = `max(0, Confidence - Personal Substantiation)`, so high Personal Substantiation does not cancel unsupported confidence elsewhere.
+- Dependency tension compares a downstream claim's effective support with the average effective support of its prerequisite bridge claims; unrated prerequisites count as zero current support.
+
 ## Run
 
 ```bash
@@ -30,6 +39,7 @@ Then open [http://localhost:4173](http://localhost:4173) for the hub, or [http:/
 - `public/claims.json`: the 50-claim bank and metadata
 - `src/scoring.ts`: TypeScript scoring model from the project seed
 - `src/scoring.js`: browser module used by the static app
+- `scripts/verify-calculations.mjs`: calculation and claim-bank verification
 - `src/app.js`: dashboard state, rendering, persistence, and interactions
 - `src/styles.css`: dashboard styling
 - `docs/deism_theism_gradient_app_brief.md`: current app brief

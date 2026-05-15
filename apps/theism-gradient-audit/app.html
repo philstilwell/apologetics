@@ -312,12 +312,12 @@
         <article>
           <span>Aggregate position</span>
           <strong id="aggregate-position">0.00</strong>
-          <p>Weighted 1-5 location across the deism-to-Christian-theism gradient.</p>
+          <p>Effective-support progress across the 1-to-5 deism-to-Christian-theism gradient.</p>
         </article>
         <article>
           <span>Theism index</span>
           <strong id="theism-index">0</strong>
-          <p>How much rightward commitment is carried by claims you rate as both credible and personally substantiated.</p>
+          <p>Aggregate position converted to a 0-to-100 rightward-progress scale.</p>
         </article>
         <article>
           <span>Average substantiation gap</span>
@@ -379,7 +379,7 @@
           </details>
           <details>
             <summary>Dependency tension</summary>
-            <p>Downstream claims often depend on bridge claims. For example, a strong rating for miraculous healing carries pressure if the more basic claims about divine agency, prayer response, or distinguishable divine action are rated much lower.</p>
+            <p>Downstream claims often depend on bridge claims. For example, a strong rating for miraculous healing carries pressure if the more basic claims about divine agency, prayer response, or distinguishable divine action have much lower effective support.</p>
           </details>
           <details>
             <summary>What counts as adequate support</summary>
@@ -434,15 +434,16 @@
           <details>
             <summary>What do Weight, Gap, and Tension mean on a claim card?</summary>
             <div class="qa-body">
-              <p>Weight is the claim's effective contribution after combining Confidence and Personal Substantiation. If Confidence is high but Personal Substantiation is low, the claim receives less weight because the tool is discounting unsupported confidence.</p>
-              <p>Gap is Confidence minus Personal Substantiation. Tension is how far the claim outruns its rated prerequisite bridge claims. A large Gap points to possible overconfidence. A large Tension points to a possible skipped step in the chain of support.</p>
+              <p>Weight is the claim's effective contribution after combining Confidence and Personal Substantiation: sqrt((C/100) x (P/100)). If Confidence is high but Personal Substantiation is low, the claim receives less weight because the tool is discounting unsupported confidence.</p>
+              <p>Gap is max(0, Confidence minus Personal Substantiation), so unusually high Personal Substantiation does not cancel overconfidence elsewhere. Tension is how far the claim's effective support outruns its prerequisite bridge claims; unrated prerequisites count as zero current support. A large Gap points to possible overconfidence. A large Tension points to a possible skipped step in the chain of support.</p>
             </div>
           </details>
 
           <details>
             <summary>How should I read the top metric cards?</summary>
             <div class="qa-body">
-              <p>Aggregate Position estimates where your weighted ratings land on the 1-to-5 gradient. Theism Index estimates how much rightward commitment is carried by claims that have both Confidence and Personal Substantiation. Average Substantiation Gap shows how much Confidence tends to outrun Personal Substantiation across rated claims.</p>
+              <p>Aggregate Position estimates how much rightward progress your rated profile has earned on the 1-to-5 gradient. It starts at 1, then adds the average effective support in Design Deism, Personal Theism, Interventionist Theism, and Specific Christian Theism. Minimal Deism anchors the baseline rather than moving the score rightward.</p>
+              <p>Theism Index converts that Aggregate Position to a 0-to-100 progress score. Average Substantiation Gap shows how much Confidence tends to outrun Personal Substantiation across rated claims, using only positive gaps.</p>
               <p>Claims Rated is simply progress. The other three metrics should not be treated as grades. They are directional summaries that help you decide which parts of the profile deserve a closer look.</p>
             </div>
           </details>
@@ -474,7 +475,7 @@
           <details>
             <summary>What should I do with Diagnostic Alerts?</summary>
             <div class="qa-body">
-              <p>Diagnostic Alerts identify high-pressure claims. A substantiation alert means Confidence is much higher than Personal Substantiation. A dependency alert means a downstream claim is rated much higher than its prerequisites.</p>
+              <p>Diagnostic Alerts identify high-pressure claims. A substantiation alert means Confidence is much higher than Personal Substantiation. A dependency alert means a downstream claim has much higher effective support than its prerequisite bridge claims.</p>
               <p>Click an alert to jump to the claim. Then decide whether to lower Confidence, raise Personal Substantiation by adding better support, revise the note, or inspect the prerequisite claims that make the alert appear.</p>
             </div>
           </details>
@@ -570,7 +571,7 @@
           <details>
             <summary>What is a substantiation gap?</summary>
             <div class="qa-body">
-              <p>A substantiation gap is the distance between Confidence and Personal Substantiation. If you rate Confidence at 80 and Personal Substantiation at 45, the gap is 35 points. Large gaps suggest that belief-strength may be outrunning what you can personally defend.</p>
+              <p>A substantiation gap is the positive distance between Confidence and Personal Substantiation. If you rate Confidence at 80 and Personal Substantiation at 45, the gap is 35 points. If Personal Substantiation is higher than Confidence, the app records the gap as 0 rather than letting it cancel overconfidence elsewhere.</p>
               <p>The gap is not a verdict of falsehood. It is a prompt to ask: Why am I more confident than my own present ability to substantiate the claim? Is that because I am relying on good delegated evidence, or because I have not inspected the claim carefully?</p>
             </div>
           </details>
@@ -578,7 +579,8 @@
           <details>
             <summary>What is dependency tension?</summary>
             <div class="qa-body">
-              <p>Dependency tension appears when a downstream claim is rated much higher than its prerequisite bridge claims. For example, a strong rating for miraculous healing creates pressure if the more basic claims about divine agency, answered prayer, and distinguishing divine action from coincidence are rated much lower.</p>
+              <p>Dependency tension appears when a downstream claim has much higher effective support than its prerequisite bridge claims. Effective support is the geometric combination of Confidence and Personal Substantiation, so a prerequisite with high Confidence but low Personal Substantiation will still be treated as weak support.</p>
+              <p>Unrated prerequisites count as zero current support. That does not mean the prerequisite is false; it means the app has no entered support for it yet. This makes skipped bridge claims visible rather than quietly treating them as if they had already been established.</p>
               <p>This does not prove the downstream claim is wrong. It shows where the argument may have skipped steps. The most useful repair is usually not to abandon the downstream claim immediately, but to inspect the weakest bridge claim and decide whether it can be strengthened.</p>
             </div>
           </details>
@@ -738,8 +740,9 @@
           <details>
             <summary>How should I interpret Aggregate Position and Theism Index?</summary>
             <div class="qa-body">
-              <p>Aggregate Position estimates where your weighted ratings sit on the 1-to-5 gradient. A lower number reflects more weight on minimal or design-deistic claims; a higher number reflects more weight on interventionist and specifically Christian claims.</p>
-              <p>Theism Index measures how much rightward commitment is carried by claims rated with both Confidence and Personal Substantiation. Because the app discounts claims when Personal Substantiation lags, a high-confidence but weakly substantiated Christian claim will not move the index as much as a personally defensible one.</p>
+              <p>Aggregate Position is a progress estimate, not a simple average of category numbers. The app first calculates effective support for each rated claim as 100 x sqrt((C/100) x (P/100)), then averages effective support within each gradient band.</p>
+              <p>The position starts at 1. The Design Deism, Personal Theism, Interventionist Theism, and Specific Christian Theism band averages each add up to one point of rightward movement. If every rightward band had full effective support, the position would be 5.00. If only Minimal Deism were supported, the position would remain near 1.00.</p>
+              <p>Theism Index is the same result converted to a 0-to-100 scale: ((Aggregate Position - 1) / 4) x 100. Because the app discounts claims when Personal Substantiation lags, a high-confidence but weakly substantiated Christian claim will not move the index as much as a personally defensible one.</p>
             </div>
           </details>
 

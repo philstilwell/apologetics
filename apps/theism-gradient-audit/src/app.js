@@ -4,8 +4,10 @@ import {
   buildDiagnostics,
   categories,
   categoryAverages,
+  categorySupportAverages,
   claimWeight,
   dependencyTension,
+  effectiveSupportScore,
   evidentiallyWeightedTheismIndex,
   profileSummary,
   substantiationGap
@@ -348,7 +350,8 @@ function ratedClaimRows() {
       const gap = substantiationGap(response.confidence, response.personalSubstantiation);
       const tension = dependencyTension(claim, state.profile) ?? 0;
       const weight = claimWeight(response.confidence, response.personalSubstantiation);
-      return { claim, response, gap, tension, weight };
+      const support = effectiveSupportScore(response.confidence, response.personalSubstantiation);
+      return { claim, response, gap, tension, weight, support };
     })
     .filter(Boolean);
 }
@@ -370,9 +373,15 @@ function buildFinalReport() {
   const alerts = buildDiagnostics(state.claims, state.profile);
   const rows = ratedClaimRows();
   const rated = rows.length;
+  const supportByCategory = new Map(
+    categorySupportAverages(state.claims, state.profile).map((item) => [item.category, item])
+  );
 
   const categoryLines = categoryAverages(state.claims, state.profile)
-    .map((item) => `- ${item.category}: C ${Math.round(item.confidence)}, P ${Math.round(item.personalSubstantiation)} (${item.count} rated)`)
+    .map((item) => {
+      const support = supportByCategory.get(item.category)?.effectiveSupport ?? 0;
+      return `- ${item.category}: C ${Math.round(item.confidence)}, P ${Math.round(item.personalSubstantiation)}, effective support ${Math.round(support)} (${item.count} rated)`;
+    })
     .join("\n");
 
   const alertLines = alerts.length
@@ -382,7 +391,7 @@ function buildFinalReport() {
   const strongestLines = topLines(
     rows,
     (a, b) => b.weight - a.weight,
-    ({ claim, response, weight }) => `- ${claim.id} (${claim.category}): weight ${weight.toFixed(2)}, C ${Math.round(response.confidence)}, P ${Math.round(response.personalSubstantiation)} — ${claim.text}`
+    ({ claim, response, weight, support }) => `- ${claim.id} (${claim.category}): effective support ${Math.round(support)}, weight ${weight.toFixed(2)}, C ${Math.round(response.confidence)}, P ${Math.round(response.personalSubstantiation)} — ${claim.text}`
   );
 
   const gapLines = topLines(
@@ -415,6 +424,9 @@ function buildFinalReport() {
     "How to read Personal Substantiation:",
     "Personal Substantiation is not a measure of whether Christianity is true or meaningful to you. It asks whether you can personally make a responsible case for a claim, including the evidence, bridge premises, rival explanations, and defeaters you would need to address. The app discounts high Confidence when Personal Substantiation is much lower, because that pattern can indicate inherited belief, social trust, hope, or possibility being treated as evidential permission.",
     "",
+    "Calculation notes:",
+    "Effective support = 100 x sqrt((Confidence/100) x (Personal Substantiation/100)). Claim weight is the same value on a 0-1 scale. Aggregate Position starts at 1 and adds the average effective support in Design Deism, Personal Theism, Interventionist Theism, and Specific Christian Theism; Minimal Deism anchors the baseline rather than moving the profile rightward. Theism Index is the Aggregate Position converted to a 0-100 rightward-progress scale. Substantiation Gap is max(0, Confidence - Personal Substantiation), so unusually high Personal Substantiation does not cancel overconfidence elsewhere. Dependency Tension compares a downstream claim's effective support with the average effective support of its prerequisite bridge claims; unrated prerequisites count as zero current support.",
+    "",
     `Aggregate position: ${aggregate ? aggregate.toFixed(2) : "0.00"}`,
     `Evidentially weighted theism index: ${ewti ? Math.round(ewti) : 0}`,
     `Average substantiation gap: ${gap ? Math.round(gap) : 0}`,
@@ -441,7 +453,7 @@ function buildFinalReport() {
 }
 
 function claimLine(row) {
-  return `${row.claim.id} | ${row.claim.category} | C ${Math.round(row.response.confidence)} | P ${Math.round(row.response.personalSubstantiation)} | weight ${row.weight.toFixed(2)} | gap ${Math.round(row.gap)} | tension ${Math.round(row.tension)} | ${row.claim.text}`;
+  return `${row.claim.id} | ${row.claim.category} | C ${Math.round(row.response.confidence)} | P ${Math.round(row.response.personalSubstantiation)} | support ${Math.round(row.support)} | weight ${row.weight.toFixed(2)} | gap ${Math.round(row.gap)} | tension ${Math.round(row.tension)} | ${row.claim.text}`;
 }
 
 function bridgeLedgerLine(row) {
@@ -499,7 +511,7 @@ function buildFollowUpPrompts(rows) {
   const visualData = rows
     .sort((a, b) => (b.gap + b.tension + b.weight * 25) - (a.gap + a.tension + a.weight * 25))
     .slice(0, 8)
-    .map((row) => `${row.claim.id}: C ${Math.round(row.response.confidence)}, P ${Math.round(row.response.personalSubstantiation)}, gap ${Math.round(row.gap)}, tension ${Math.round(row.tension)}, weight ${row.weight.toFixed(2)}, category ${row.claim.category}`)
+    .map((row) => `${row.claim.id}: C ${Math.round(row.response.confidence)}, P ${Math.round(row.response.personalSubstantiation)}, effective support ${Math.round(row.support)}, gap ${Math.round(row.gap)}, tension ${Math.round(row.tension)}, weight ${row.weight.toFixed(2)}, category ${row.claim.category}`)
     .join("; ");
 
   return [
@@ -518,8 +530,14 @@ function buildAiPrompt() {
   const gap = averageSubstantiationGap(state.claims, state.profile);
   const rows = ratedClaimRows();
   const alerts = buildDiagnostics(state.claims, state.profile);
+  const supportByCategory = new Map(
+    categorySupportAverages(state.claims, state.profile).map((item) => [item.category, item])
+  );
   const categoryLines = categoryAverages(state.claims, state.profile)
-    .map((item) => `- ${item.category}: confidence ${Math.round(item.confidence)}, personal substantiation ${Math.round(item.personalSubstantiation)}, rated ${item.count}`)
+    .map((item) => {
+      const support = supportByCategory.get(item.category)?.effectiveSupport ?? 0;
+      return `- ${item.category}: confidence ${Math.round(item.confidence)}, personal substantiation ${Math.round(item.personalSubstantiation)}, effective support ${Math.round(support)}, rated ${item.count}`;
+    })
     .join("\n");
 
   const strongestRows = [...rows].sort((a, b) => b.weight - a.weight).slice(0, 10);
@@ -548,8 +566,9 @@ function buildAiPrompt() {
     "Theory vocabulary to use:",
     "- Claim gradient: claims become more specific as they move from minimal source claims toward Christian divine-action claims.",
     "- Bridge premise: a premise needed to move from a thinner claim to a thicker downstream claim.",
+    "- Effective support: 100 x sqrt((Confidence/100) x (Personal Substantiation/100)); this discounts claims when either rating is low.",
     "- Substantiation gap: confidence exceeds the user's ability to personally substantiate the claim.",
-    "- Dependency tension: a downstream claim is rated much higher than its prerequisite bridge claims.",
+    "- Dependency tension: a downstream claim's effective support is much higher than the effective support of its prerequisite bridge claims.",
     "- Scope drift: evidence from one domain is moved into another domain without showing the transfer is licensed.",
     "- Specificity inflation: modest evidence for a broad claim is treated as evidence for a much richer Christian claim.",
     "- Testimonial overreach: testimony is treated as stronger than its independence, specificity, controls, or rival explanations allow.",
@@ -565,6 +584,7 @@ function buildAiPrompt() {
     `Average substantiation gap: ${gap ? Math.round(gap) : 0} / 100`,
     `Claims rated: ${rows.length} / ${state.claims.length}`,
     `Profile summary: ${profileSummary(state.claims, state.profile)}`,
+    "Score definitions: Aggregate Position = 1 + the effective-support progress in categories 2-5; Theism Index = Aggregate Position converted to a 0-100 rightward-progress scale; Substantiation Gap = max(0, Confidence - Personal Substantiation); Dependency Tension = downstream effective support minus average prerequisite effective support, with unrated prerequisites counted as zero current support.",
     "",
     "Category profile:",
     categoryLines,
@@ -595,7 +615,7 @@ function buildAiPrompt() {
         `Claim: ${row.claim.id} ${row.claim.text}`,
         `Tension type: ${tensionKind(row)}`,
         `Evidence warning: ${evidenceWarning(row)}`,
-        `Current numbers: C ${Math.round(row.response.confidence)}, P ${Math.round(row.response.personalSubstantiation)}, gap ${Math.round(row.gap)}, dependency tension ${Math.round(row.tension)}, weight ${row.weight.toFixed(2)}`
+        `Current numbers: C ${Math.round(row.response.confidence)}, P ${Math.round(row.response.personalSubstantiation)}, effective support ${Math.round(row.support)}, gap ${Math.round(row.gap)}, dependency tension ${Math.round(row.tension)}, weight ${row.weight.toFixed(2)}`
       ].join("\n")).join("\n\n")
       : "- No rated claims yet.",
     "",
@@ -643,6 +663,7 @@ function buildBriefReport() {
     `Claims rated: ${ratedCountFor()} / ${state.claims.length}`,
     "",
     "Personal Substantiation means the portion of your confidence you can personally defend with evidence, bridge premises, rival-explanation handling, and defeater awareness.",
+    "Effective support is the geometric mean of Confidence and Personal Substantiation. Aggregate Position adds effective support in the rightward gradient bands, while Theism Index converts that position to a 0-100 progress score.",
     "",
     "Top diagnostic flags:",
     alerts.length
@@ -997,9 +1018,9 @@ function renderClaims() {
           </label>
             <textarea data-field="note" rows="2" placeholder="Rationale, evidence, doubts, or repair note">${escapeHtml(response.note)}</textarea>
           <div class="claim-diagnostics">
-            <span title="Geometric score from Confidence and Personal Substantiation. High confidence is discounted when substantiation is low.">Weight ${claimWeight(response.confidence, response.personalSubstantiation).toFixed(2)}</span>
-            <span title="Confidence minus Personal Substantiation. Large positive gaps flag possible overconfidence.">Gap ${Math.round(gap)}</span>
-            <span title="How far this claim outruns its rated prerequisite bridge claims.">Tension ${Math.round(tension)}</span>
+            <span title="Effective support on a 0-1 scale: sqrt((Confidence/100) x (Personal Substantiation/100)). High confidence is discounted when substantiation is low.">Weight ${claimWeight(response.confidence, response.personalSubstantiation).toFixed(2)}</span>
+            <span title="Unsupported-confidence gap: max(0, Confidence minus Personal Substantiation).">Gap ${Math.round(gap)}</span>
+            <span title="How far this claim's effective support outruns its prerequisite bridge claims. Unrated prerequisites count as zero current support.">Tension ${Math.round(tension)}</span>
           </div>
         </div>
       </article>

@@ -18,52 +18,68 @@ export function claimWeight(confidence, personalSubstantiation) {
   return Math.sqrt(c * p);
 }
 
+export function effectiveSupportScore(confidence, personalSubstantiation) {
+  return 100 * claimWeight(confidence, personalSubstantiation);
+}
+
 export function substantiationGap(confidence, personalSubstantiation) {
-  return clampScore(confidence) - clampScore(personalSubstantiation);
+  return Math.max(0, clampScore(confidence) - clampScore(personalSubstantiation));
+}
+
+export function categorySupportAverages(claims, profile) {
+  const buckets = new Map(categories.map((category) => [category, {
+    category,
+    effectiveSupport: 0,
+    count: 0
+  }]));
+
+  for (const claim of claims) {
+    const response = profile.responses[claim.id];
+    if (!response) continue;
+    const current = buckets.get(claim.category);
+    current.effectiveSupport += effectiveSupportScore(response.confidence, response.personalSubstantiation);
+    current.count += 1;
+  }
+
+  return Array.from(buckets.values()).map((values) => ({
+    ...values,
+    effectiveSupport: values.count ? values.effectiveSupport / values.count : 0
+  }));
 }
 
 export function aggregateGradientPosition(claims, profile) {
-  let weightedSum = 0;
-  let totalWeight = 0;
+  const ratedClaims = claims.filter((claim) => profile.responses[claim.id]);
+  if (!ratedClaims.length) return null;
 
-  for (const claim of claims) {
-    const response = profile.responses[claim.id];
-    if (!response) continue;
-    const weight = claimWeight(response.confidence, response.personalSubstantiation);
-    weightedSum += claim.gradientPosition * weight;
-    totalWeight += weight;
-  }
+  const supportByCategory = new Map(
+    categorySupportAverages(claims, profile).map((item) => [item.category, item.effectiveSupport / 100])
+  );
+  const rightwardProgress = categories
+    .slice(1)
+    .reduce((sum, category) => sum + (supportByCategory.get(category) ?? 0), 0);
 
-  return totalWeight === 0 ? null : weightedSum / totalWeight;
+  return 1 + rightwardProgress;
 }
 
 export function evidentiallyWeightedTheismIndex(claims, profile) {
-  let weightedRightwardCommitment = 0;
-  let ratedClaims = 0;
-
-  for (const claim of claims) {
-    const response = profile.responses[claim.id];
-    if (!response) continue;
-    const rightwardPosition = (claim.gradientPosition - 1) / 4;
-    weightedRightwardCommitment += rightwardPosition * claimWeight(response.confidence, response.personalSubstantiation);
-    ratedClaims += 1;
-  }
-
-  return ratedClaims === 0 ? null : 100 * (weightedRightwardCommitment / ratedClaims);
+  const aggregate = aggregateGradientPosition(claims, profile);
+  return aggregate === null ? null : ((aggregate - 1) / 4) * 100;
 }
 
 export function dependencyTension(claim, profile) {
   const response = profile.responses[claim.id];
   if (!response || claim.dependencyIds.length === 0) return null;
 
-  const prerequisites = claim.dependencyIds
-    .map((id) => profile.responses[id])
-    .filter(Boolean);
+  const prerequisiteScores = claim.dependencyIds.map((id) => {
+    const prerequisite = profile.responses[id];
+    return prerequisite
+      ? effectiveSupportScore(prerequisite.confidence, prerequisite.personalSubstantiation)
+      : 0;
+  });
 
-  if (prerequisites.length === 0) return null;
-
-  const prerequisiteAverage = prerequisites.reduce((sum, item) => sum + clampScore(item.confidence), 0) / prerequisites.length;
-  return Math.max(0, clampScore(response.confidence) - prerequisiteAverage);
+  const claimSupport = effectiveSupportScore(response.confidence, response.personalSubstantiation);
+  const prerequisiteAverage = prerequisiteScores.reduce((sum, score) => sum + score, 0) / prerequisiteScores.length;
+  return Math.max(0, claimSupport - prerequisiteAverage);
 }
 
 export function averageSubstantiationGap(claims, profile) {
@@ -124,7 +140,7 @@ export function buildDiagnostics(claims, profile) {
         severity: tension >= 45 ? "high" : "medium",
         claim,
         value: tension,
-        message: `${claim.id} is ${Math.round(tension)} points above its rated prerequisite claims.`
+        message: `${claim.id} is ${Math.round(tension)} effective-support points above its prerequisite bridge claims.`
       });
     }
   }
@@ -142,6 +158,9 @@ export function profileSummary(claims, profile) {
 
   if (!rated) {
     return "No claims have been rated yet. Start with the claims that feel most central, then use the diagnostics to find unsupported leaps.";
+  }
+  if (aggregate === null) {
+    return "No numerically supported claims have been rated yet. Add Confidence and Personal Substantiation scores to generate a profile.";
   }
 
   const positionText = aggregate < 1.8

@@ -33,9 +33,18 @@ export interface DiagnosticAlert {
   message: string;
 }
 
+export const categories: ClaimCategory[] = [
+  'Minimal Deism',
+  'Design Deism',
+  'Personal Theism',
+  'Interventionist Theism',
+  'Specific Christian Theism',
+];
+
 export function clampScore(value: number): number {
-  if (!Number.isFinite(value)) return 0;
-  return Math.max(0, Math.min(100, value));
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return 0;
+  return Math.max(0, Math.min(100, numeric));
 }
 
 export function claimWeight(confidence: number, personalSubstantiation: number): number {
@@ -44,55 +53,68 @@ export function claimWeight(confidence: number, personalSubstantiation: number):
   return Math.sqrt(c * p);
 }
 
+export function effectiveSupportScore(confidence: number, personalSubstantiation: number): number {
+  return 100 * claimWeight(confidence, personalSubstantiation);
+}
+
 export function substantiationGap(confidence: number, personalSubstantiation: number): number {
-  return clampScore(confidence) - clampScore(personalSubstantiation);
+  return Math.max(0, clampScore(confidence) - clampScore(personalSubstantiation));
+}
+
+export function categorySupportAverages(claims: Claim[], profile: UserProfile) {
+  const buckets = new Map<ClaimCategory, { category: ClaimCategory; effectiveSupport: number; count: number }>(
+    categories.map(category => [category, { category, effectiveSupport: 0, count: 0 }])
+  );
+
+  for (const claim of claims) {
+    const response = profile.responses[claim.id];
+    if (!response) continue;
+
+    const current = buckets.get(claim.category) ?? { category: claim.category, effectiveSupport: 0, count: 0 };
+    current.effectiveSupport += effectiveSupportScore(response.confidence, response.personalSubstantiation);
+    current.count += 1;
+    buckets.set(claim.category, current);
+  }
+
+  return Array.from(buckets.values()).map(values => ({
+    ...values,
+    effectiveSupport: values.count ? values.effectiveSupport / values.count : 0,
+  }));
 }
 
 export function aggregateGradientPosition(claims: Claim[], profile: UserProfile): number | null {
-  let weightedSum = 0;
-  let totalWeight = 0;
+  const ratedClaims = claims.filter(claim => profile.responses[claim.id]);
+  if (!ratedClaims.length) return null;
 
-  for (const claim of claims) {
-    const response = profile.responses[claim.id];
-    if (!response) continue;
+  const supportByCategory = new Map<ClaimCategory, number>(
+    categorySupportAverages(claims, profile).map(item => [item.category, item.effectiveSupport / 100])
+  );
+  const rightwardProgress = categories
+    .slice(1)
+    .reduce((sum, category) => sum + (supportByCategory.get(category) ?? 0), 0);
 
-    const w = claimWeight(response.confidence, response.personalSubstantiation);
-    weightedSum += claim.gradientPosition * w;
-    totalWeight += w;
-  }
-
-  return totalWeight === 0 ? null : weightedSum / totalWeight;
+  return 1 + rightwardProgress;
 }
 
 export function evidentiallyWeightedTheismIndex(claims: Claim[], profile: UserProfile): number | null {
-  let weightedRightwardCommitment = 0;
-  let ratedClaims = 0;
-
-  for (const claim of claims) {
-    const response = profile.responses[claim.id];
-    if (!response) continue;
-
-    const rightwardPosition = (claim.gradientPosition - 1) / 4;
-    const w = claimWeight(response.confidence, response.personalSubstantiation);
-    weightedRightwardCommitment += rightwardPosition * w;
-    ratedClaims += 1;
-  }
-
-  return ratedClaims === 0 ? null : 100 * (weightedRightwardCommitment / ratedClaims);
+  const aggregate = aggregateGradientPosition(claims, profile);
+  return aggregate === null ? null : ((aggregate - 1) / 4) * 100;
 }
 
 export function dependencyTension(claim: Claim, profile: UserProfile): number | null {
   const response = profile.responses[claim.id];
   if (!response || claim.dependencyIds.length === 0) return null;
 
-  const prereqResponses = claim.dependencyIds
-    .map(id => profile.responses[id])
-    .filter((r): r is UserClaimResponse => Boolean(r));
+  const prerequisiteScores = claim.dependencyIds.map(id => {
+    const prerequisite = profile.responses[id];
+    return prerequisite
+      ? effectiveSupportScore(prerequisite.confidence, prerequisite.personalSubstantiation)
+      : 0;
+  });
 
-  if (prereqResponses.length === 0) return null;
-
-  const prereqAvg = prereqResponses.reduce((sum, r) => sum + clampScore(r.confidence), 0) / prereqResponses.length;
-  return Math.max(0, clampScore(response.confidence) - prereqAvg);
+  const claimSupport = effectiveSupportScore(response.confidence, response.personalSubstantiation);
+  const prereqAvg = prerequisiteScores.reduce((sum, score) => sum + score, 0) / prerequisiteScores.length;
+  return Math.max(0, claimSupport - prereqAvg);
 }
 
 export function averageSubstantiationGap(claims: Claim[], profile: UserProfile): number | null {
@@ -108,13 +130,6 @@ export function averageSubstantiationGap(claims: Claim[], profile: UserProfile):
 }
 
 export function categoryAverages(claims: Claim[], profile: UserProfile) {
-  const categories: ClaimCategory[] = [
-    'Minimal Deism',
-    'Design Deism',
-    'Personal Theism',
-    'Interventionist Theism',
-    'Specific Christian Theism',
-  ];
   const buckets = new Map<ClaimCategory, { confidence: number; personalSubstantiation: number; count: number }>(
     categories.map(category => [category, { confidence: 0, personalSubstantiation: 0, count: 0 }])
   );
@@ -163,7 +178,7 @@ export function buildDiagnostics(claims: Claim[], profile: UserProfile): Diagnos
         severity: tension >= 45 ? 'high' : 'medium',
         claim,
         value: tension,
-        message: `${claim.id} is ${Math.round(tension)} points above its rated prerequisite claims.`,
+        message: `${claim.id} is ${Math.round(tension)} effective-support points above its prerequisite bridge claims.`,
       });
     }
   }

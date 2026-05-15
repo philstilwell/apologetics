@@ -4,6 +4,7 @@ import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(fileURLToPath(import.meta.url));
+const suiteRoot = normalize(join(root, "../.."));
 const port = Number(process.env.PORT || 4173);
 const host = process.env.HOST || "127.0.0.1";
 
@@ -17,6 +18,11 @@ const types = {
 
 function resolvePath(url) {
   const pathname = decodeURIComponent(new URL(url, `http://localhost:${port}`).pathname);
+  if (pathname.startsWith("/scripts/")) {
+    const resolved = normalize(join(suiteRoot, pathname));
+    return resolved.startsWith(suiteRoot) ? resolved : null;
+  }
+
   const requested = pathname === "/" ? "/index.html" : pathname;
   const resolved = normalize(join(root, requested));
   if (!resolved.startsWith(root)) return null;
