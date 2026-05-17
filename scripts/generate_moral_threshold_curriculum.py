@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 from reportlab.lib import colors
@@ -21,6 +22,7 @@ from reportlab.platypus.flowables import Flowable
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "assets" / "curricula" / "moral-system-threshold-curriculum-v2.pdf"
+LEGACY_OUTPUT = ROOT / "assets" / "curricula" / "moral-system-threshold-curriculum.pdf"
 
 
 PALETTE = {
@@ -801,32 +803,42 @@ class PhaseStrip(Flowable):
     def __init__(self, width: float):
         super().__init__()
         self.width = width
-        self.height = 104
+        self.height = 182
 
     def draw(self) -> None:
         canvas = self.canv
-        gap = 10
-        card_width = (self.width - gap * 3) / 4
+        gap_x = 20
+        gap_y = 16
+        card_width = (self.width - gap_x) / 2
+        card_height = 70
         for index, phase in enumerate(PHASES):
-            x = index * (card_width + gap)
-            y = 8
+            column = index % 2
+            row = index // 2
+            x = column * (card_width + gap_x)
+            y = self.height - 10 - card_height - row * (card_height + gap_y)
             canvas.setFillColor(phase["fill"])
             canvas.setStrokeColor(phase["accent"])
             canvas.setLineWidth(1.2)
-            canvas.roundRect(x, y, card_width, 88, 12, stroke=1, fill=1)
+            canvas.roundRect(x, y, card_width, card_height, 12, stroke=1, fill=1)
             canvas.setFillColor(phase["accent"])
-            canvas.setFont("Helvetica-Bold", 8.2)
-            canvas.drawString(x + 10, y + 69, phase["label"].upper())
+            canvas.setFont("Helvetica-Bold", 8.4)
+            canvas.drawString(x + 11, y + card_height - 15, phase["label"].upper())
             canvas.setFillColor(PALETTE["ink"])
-            canvas.setFont("Helvetica-Bold", 11.2)
-            canvas.drawString(x + 10, y + 53, phase["title"])
+            title_lines = wrap_canvas_text(canvas, phase["title"], "Helvetica-Bold", 10.4, card_width - 22)
+            title_text = canvas.beginText(x + 11, y + card_height - 29)
+            title_text.setFont("Helvetica-Bold", 10.4)
+            title_text.setLeading(12)
+            for line in title_lines[:2]:
+                title_text.textLine(line)
+            canvas.drawText(title_text)
             canvas.setFillColor(PALETTE["muted"])
-            canvas.setFont("Helvetica-Bold", 8)
-            canvas.drawString(x + 10, y + 40, f"Sessions {phase['sessions']}")
-            canvas.setFont("Helvetica", 7.6)
-            text = canvas.beginText(x + 10, y + 28)
-            text.setLeading(9)
-            for line in wrap_text(phase["copy"], 5)[:3]:
+            canvas.setFont("Helvetica-Bold", 7.8)
+            sessions_y = y + 26
+            canvas.drawString(x + 11, sessions_y, f"Sessions {phase['sessions']}")
+            text = canvas.beginText(x + 11, y + 14)
+            text.setFont("Helvetica", 7.2)
+            text.setLeading(8.2)
+            for line in wrap_canvas_text(canvas, phase["copy"], "Helvetica", 7.2, card_width - 22)[:2]:
                 text.textLine(line)
             canvas.drawText(text)
 
@@ -842,6 +854,23 @@ def wrap_text(text: str, words_per_line: int) -> list[str]:
             current = []
     if current:
         lines.append(" ".join(current))
+    return lines
+
+
+def wrap_canvas_text(canvas, text: str, font_name: str, font_size: float, max_width: float) -> list[str]:
+    words = text.split()
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        candidate = word if not current else f"{current} {word}"
+        if canvas.stringWidth(candidate, font_name, font_size) <= max_width:
+            current = candidate
+            continue
+        if current:
+            lines.append(current)
+        current = word
+    if current:
+        lines.append(current)
     return lines
 
 
@@ -1812,3 +1841,4 @@ def build_pdf(output: Path) -> None:
 
 if __name__ == "__main__":
     build_pdf(OUTPUT)
+    shutil.copyfile(OUTPUT, LEGACY_OUTPUT)
