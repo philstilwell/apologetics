@@ -1076,27 +1076,43 @@ def card_block(style_map, title: str, blocks: list, accent: colors.Color, fill: 
     return table
 
 
-def two_column(cards: list, doc_width: float, gap: float = 10):
+class TopAlignedPair(Flowable):
+    def __init__(self, left, right, left_width: float, right_width: float, gap: float):
+        super().__init__()
+        self.left = left
+        self.right = right
+        self.left_width = left_width
+        self.right_width = right_width
+        self.gap = gap
+        self.width = left_width + gap + right_width
+        self.height = 0
+        self._left_height = 0
+        self._right_height = 0
+
+    def wrap(self, availWidth, availHeight):
+        _, self._left_height = self.left.wrap(self.left_width, availHeight)
+        _, self._right_height = self.right.wrap(self.right_width, availHeight)
+        self.height = max(self._left_height, self._right_height)
+        return self.width, self.height
+
+    def draw(self):
+        left_y = self.height - self._left_height
+        right_y = self.height - self._right_height
+        self.left.drawOn(self.canv, 0, left_y)
+        self.right.drawOn(self.canv, self.left_width + self.gap, right_y)
+
+
+def two_column(cards: list, doc_width: float, gap: float = 10, row_gap: float = 12):
     rows = []
     column_width = (doc_width - gap) / 2
     for index in range(0, len(cards), 2):
         row = cards[index:index + 2]
         if len(row) < 2:
             row.append(Spacer(1, 1))
-        rows.append(row)
-    table = Table(rows, colWidths=[column_width, column_width])
-    table.setStyle(
-        TableStyle(
-            [
-                ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
-                ("TOPPADDING", (0, 0), (-1, -1), 0),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-            ]
-        )
-    )
-    return table
+        rows.append(TopAlignedPair(row[0], row[1], column_width, column_width, gap))
+        if index + 2 < len(cards):
+            rows.append(Spacer(1, row_gap))
+    return KeepTogether(rows)
 
 
 def chip_row(style_map, chips: list[tuple[str, colors.Color, colors.Color]], width: float):
@@ -1383,6 +1399,7 @@ def build_session_page(style_map, story: list, session: dict, doc_width: float):
             session["rationale"],
         )
     )
+    story.append(Spacer(1, 6))
     top_cards = [
         card_block(
             style_map,
@@ -1402,13 +1419,14 @@ def build_session_page(style_map, story: list, session: dict, doc_width: float):
         ),
     ]
     story.append(two_column(top_cards, doc_width))
+    story.append(Spacer(1, 6))
     story.append(
         card_block(
             style_map,
             "Session setup",
-            [Paragraph("<b>Before you teach</b>", style_map["card_copy"])]
+            [Paragraph("<b>Before you teach</b>", style_map["card_copy"]), Spacer(1, 2)]
             + paragraph_bullets(style_map, session["prep"], small=True)
-            + [Paragraph("<b>Materials</b>", style_map["card_copy"])]
+            + [Spacer(1, 5), Paragraph("<b>Materials</b>", style_map["card_copy"]), Spacer(1, 2)]
             + paragraph_bullets(style_map, session["materials"], small=True),
             PALETTE["slate_line"],
             PALETTE["slate"],
@@ -1416,6 +1434,7 @@ def build_session_page(style_map, story: list, session: dict, doc_width: float):
             compact=True,
         )
     )
+    story.append(Spacer(1, 8))
     story.append(session_agenda_table(style_map, session["agenda"], doc_width, session["accent"], session["fill"]))
     story.append(PageBreak())
     story.extend(
@@ -1426,6 +1445,7 @@ def build_session_page(style_map, story: list, session: dict, doc_width: float):
             "Use this page while the room is active: it holds the creative exercise, the teacher instincts to keep repeating, the likely confusions, and the final closing move.",
         )
     )
+    story.append(Spacer(1, 6))
     bottom_cards = [
         card_block(
             style_map,
@@ -1453,6 +1473,7 @@ def build_session_page(style_map, story: list, session: dict, doc_width: float):
         ),
     ]
     story.append(two_column(bottom_cards, doc_width))
+    story.append(Spacer(1, 6))
     story.append(
         card_block(
             style_map,
