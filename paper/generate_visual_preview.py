@@ -92,6 +92,16 @@ def centered_text(draw, xy, text, font, fill):
     draw.text((x - w / 2, y - h / 2), text, font=font, fill=fill)
 
 
+def centered_wrapped_text(draw, box, text, font, fill, max_chars, line_gap=6):
+    x1, y1, x2, _ = box
+    lines = wrap(text, width=max_chars)
+    y = y1
+    for line in lines:
+        centered_text(draw, ((x1 + x2) / 2, y + font.size / 2), line, font, fill)
+        y += font.size + line_gap
+    return len(lines), y
+
+
 def boxed_label(draw, box, title, subtitle=None, accent=SLATE):
     rounded(draw, box, PANEL, accent, radius=26, width=3)
     x1, y1, x2, y2 = box
@@ -265,7 +275,14 @@ def build_preview():
     bottom_box = (130, 1180, 3070, 1650)
     rounded(draw, bottom_box, PANEL, STONE, radius=34, width=2)
     draw.text((bottom_box[0] + 34, bottom_box[1] + 28), "Nine-tool pathway", font=SECTION_FONT, fill=INK)
-    draw.text((bottom_box[2] - 870, bottom_box[1] + 32), "A pedagogical progression from generic calibration to moral architecture and theological bridge control.", font=SMALL_FONT, fill=MUTED)
+    centered_wrapped_text(
+        draw,
+        (bottom_box[0] + 520, bottom_box[1] + 28, bottom_box[2] - 46, bottom_box[1] + 78),
+        "A pedagogical progression from generic calibration to moral architecture and theological bridge control.",
+        SMALL_FONT,
+        MUTED,
+        88,
+    )
 
     group_boxes = [
         ((bottom_box[0] + 34, bottom_box[1] + 92, bottom_box[0] + 640, bottom_box[1] + 396), "1. Calibration", "Belief Overreach Audit", ["confidence vs support", "overcommitment becomes visible"], SLATE),
@@ -290,7 +307,7 @@ def build_preview():
 
     rgb = img.convert("RGB")
     rgb.save(PREVIEW_OUT, quality=96)
-    rgb.crop((118, 1160, 3082, 1668)).save(PATHWAY_OUT, quality=96)
+    rgb.crop((118, 1128, 3082, 1668)).save(PATHWAY_OUT, quality=96)
 
     if qrcode is not None:
         qr_img = qrcode.make(HUB_URL)

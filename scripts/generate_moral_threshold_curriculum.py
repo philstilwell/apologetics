@@ -1573,7 +1573,7 @@ def build_story(doc_width: float):
             paragraph_bullets(s, TEACHING_GUARDRAILS, small=True),
             PALETTE["gold"],
             PALETTE["gold_soft"],
-            (doc_width - 10) / 2,
+            (doc_width - 16) / 2,
             compact=True,
         ),
         card_block(
@@ -1582,11 +1582,12 @@ def build_story(doc_width: float):
             paragraph_bullets(s, HEALTHY_ROOM_MARKERS, small=True),
             PALETTE["blue"],
             PALETTE["blue_soft"],
-            (doc_width - 10) / 2,
+            (doc_width - 16) / 2,
             compact=True,
         ),
     ]
-    story.append(two_column(at_a_glance_cards, doc_width))
+    story.append(Spacer(1, 12))
+    story.append(two_column(at_a_glance_cards, doc_width, gap=16, row_gap=14))
     story.append(PageBreak())
 
     story.extend(
@@ -1638,7 +1639,7 @@ def build_story(doc_width: float):
             paragraph_bullets(s, DISCUSSION_COVENANT, small=True),
             PALETTE["gold"],
             PALETTE["gold_soft"],
-            (doc_width - 10) / 2,
+            (doc_width - 16) / 2,
         ),
         card_block(
             s,
@@ -1655,7 +1656,7 @@ def build_story(doc_width: float):
             ),
             PALETTE["blue"],
             PALETTE["blue_soft"],
-            (doc_width - 10) / 2,
+            (doc_width - 16) / 2,
         ),
         card_block(
             s,
@@ -1672,7 +1673,7 @@ def build_story(doc_width: float):
             ),
             PALETTE["green"],
             PALETTE["green_soft"],
-            (doc_width - 10) / 2,
+            (doc_width - 16) / 2,
         ),
         card_block(
             s,
@@ -1689,10 +1690,12 @@ def build_story(doc_width: float):
             ),
             PALETTE["red"],
             PALETTE["red_soft"],
-            (doc_width - 10) / 2,
+            (doc_width - 16) / 2,
         ),
     ]
-    story.append(two_column(teacher_cards, doc_width))
+    story.append(Spacer(1, 8))
+    story.append(two_column(teacher_cards, doc_width, gap=16, row_gap=14))
+    story.append(Spacer(1, 12))
     story.append(schedule_table(s, doc_width))
     story.append(PageBreak())
 
@@ -1755,19 +1758,34 @@ def build_story(doc_width: float):
             "This page turns the curriculum from a good document into a teachable event. Use it to choose a format, prepare the room, and keep the weekly work cumulative.",
         )
     )
-    variant_cards = [
+    story.append(Spacer(1, 8))
+    top_variant_cards = [
         card_block(
             s,
             title,
             [Paragraph(copy, s["card_copy"])],
             accent,
             fill,
-            (doc_width - 10) / 2,
-            compact=True,
+            (doc_width - 16) / 2,
+            compact=False,
         )
-        for title, copy, accent, fill in DELIVERY_VARIANTS
+        for title, copy, accent, fill in DELIVERY_VARIANTS[:2]
     ]
-    story.append(two_column(variant_cards, doc_width))
+    story.append(two_column(top_variant_cards, doc_width, gap=16, row_gap=18))
+    story.append(Spacer(1, 10))
+    retreat_title, retreat_copy, retreat_accent, retreat_fill = DELIVERY_VARIANTS[2]
+    story.append(
+        card_block(
+            s,
+            retreat_title,
+            [Paragraph(retreat_copy, s["card_copy"])],
+            retreat_accent,
+            retreat_fill,
+            doc_width,
+            compact=False,
+        )
+    )
+    story.append(Spacer(1, 12))
     story.append(
         card_block(
             s,
@@ -1776,9 +1794,10 @@ def build_story(doc_width: float):
             PALETTE["gold"],
             PALETTE["gold_soft"],
             doc_width,
-            compact=True,
+            compact=False,
         )
     )
+    story.append(Spacer(1, 12))
     implementation_cards = [
         card_block(
             s,
@@ -1786,8 +1805,8 @@ def build_story(doc_width: float):
             paragraph_bullets(s, LAUNCH_CHECKLIST, small=True),
             PALETTE["blue"],
             PALETTE["blue_soft"],
-            (doc_width - 10) / 2,
-            compact=True,
+            (doc_width - 16) / 2,
+            compact=False,
         ),
         card_block(
             s,
@@ -1795,11 +1814,11 @@ def build_story(doc_width: float):
             paragraph_bullets(s, BETWEEN_SESSION_DISCIPLINES, small=True),
             PALETTE["red"],
             PALETTE["red_soft"],
-            (doc_width - 10) / 2,
-            compact=True,
+            (doc_width - 16) / 2,
+            compact=False,
         ),
     ]
-    story.append(two_column(implementation_cards, doc_width))
+    story.append(two_column(implementation_cards, doc_width, gap=16, row_gap=18))
     story.append(PageBreak())
 
     for session in SESSIONS:

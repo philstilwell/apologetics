@@ -22,9 +22,10 @@ format:
 
 ::: {.content-visible when-format="pdf"}
 \thispagestyle{empty}
+\vspace{1.5em}
 \noindent\textbf{\Large Visual Preview:}
 
-\vspace{0.75em}
+\vspace{0.3em}
 
 \begin{center}
 \makebox[\textwidth][c]{\includegraphics[width=\paperwidth,height=0.72\textheight,keepaspectratio]{assets/visual-preview.png}}
@@ -702,58 +703,59 @@ Print-friendly tool URLs:
 | Moral Particulars Audit | `xhairs.com/apps/moral-particulars-audit/` |
 | Deism-Theism Gradient Audit | `xhairs.com/apps/theism-gradient-audit/app.html` |
 
+\newpage
+
 Digital resource inventory:
 
-1. [Belief Overreach Audit](https://xhairs.com/apps/belief-overreach-audit/) — calibrates the gap between confidence and perceived support.
+::: {.content-visible when-format="pdf"}
+\begingroup
+\small
+\setlength{\parskip}{0.15em}
+:::
 
-   — [Manual](https://xhairs.com/assets/manuals/belief-overreach-audit-manual-v2.pdf)
-
+1. [Belief Overreach Audit](https://xhairs.com/apps/belief-overreach-audit/) — calibrates the gap between confidence and perceived support.\
+   — [Manual](https://xhairs.com/assets/manuals/belief-overreach-audit-manual-v2.pdf)\
    — [Curriculum](https://xhairs.com/assets/manuals/belief-overreach-audit-curriculum.pdf)
 
-2. [Fine-Tuning Bridge Audit](https://xhairs.com/apps/fine-tuning-bridge-audit/) — checks whether fine-tuning really licenses design, purpose, or theism.
-
-   — [Manual](https://xhairs.com/assets/manuals/fine-tuning-bridge-audit-manual.pdf)
-
+2. [Fine-Tuning Bridge Audit](https://xhairs.com/apps/fine-tuning-bridge-audit/) — checks whether fine-tuning really licenses design, purpose, or theism.\
+   — [Manual](https://xhairs.com/assets/manuals/fine-tuning-bridge-audit-manual.pdf)\
    — [Curriculum](https://xhairs.com/assets/curricula/fine-tuning-bridge-audit-curriculum.pdf)
 
-3. [Earthly Promise Test Field](https://xhairs.com/apps/falsifiability-field/) — tests whether earthly divine-promise claims remain open to ordinary verification.
-
-   — [Manual](https://xhairs.com/output/pdf/earthly-promise-test-field-manual.pdf)
-
+3. [Earthly Promise Test Field](https://xhairs.com/apps/falsifiability-field/) — tests whether earthly divine-promise claims remain open to ordinary verification.\
+   — [Manual](https://xhairs.com/output/pdf/earthly-promise-test-field-manual.pdf)\
    — [Curriculum](https://xhairs.com/output/pdf/earthly-promise-test-field-curriculum.pdf)
 
-4. [Inductive Symmetry Audit](https://xhairs.com/apps/inductive-symmetry-audit/) — compares whether similar patterns are judged fairly across favored and unfavored cases.
-
-   — [Manual](https://xhairs.com/assets/manuals/inductive-symmetry-audit-manual.pdf)
-
+4. [Inductive Symmetry Audit](https://xhairs.com/apps/inductive-symmetry-audit/) — compares whether similar patterns are judged fairly across favored and unfavored cases.\
+   — [Manual](https://xhairs.com/assets/manuals/inductive-symmetry-audit-manual.pdf)\
    — [Curriculum](https://xhairs.com/assets/manuals/inductive-symmetry-audit-curriculum.pdf)
 
-5. [Resurrection Evidence Audit](https://xhairs.com/apps/resurrection-evidence-audit/) — makes miracle and resurrection reasoning explicit through structured evidential accounting.
-
-   — [Manual](https://xhairs.com/assets/manuals/resurrection-evidence-audit-manual.pdf)
-
+5. [Resurrection Evidence Audit](https://xhairs.com/apps/resurrection-evidence-audit/) — makes miracle and resurrection reasoning explicit through structured evidential accounting.\
+   — [Manual](https://xhairs.com/assets/manuals/resurrection-evidence-audit-manual.pdf)\
    — [Curriculum](https://xhairs.com/assets/manuals/resurrection-evidence-audit-curriculum.pdf)
 
-6. [Moral System Threshold](https://xhairs.com/apps/moral-system-threshold/) — asks whether a full enough moral system exists to support strong truth claims.
-
-   — [Manual](https://xhairs.com/assets/manuals/moral-system-threshold-manual-v2.pdf)
-
+6. [Moral System Threshold](https://xhairs.com/apps/moral-system-threshold/) — asks whether a full enough moral system exists to support strong truth claims.\
+   — [Manual](https://xhairs.com/assets/manuals/moral-system-threshold-manual-v2.pdf)\
    — [Curriculum](https://xhairs.com/assets/curricula/moral-system-threshold-curriculum-v2.pdf)
 
-7. [Moral System Stress Test](https://xhairs.com/apps/moral-system-stress-test/) — pressure-tests the user's moral framework for authority, consistency, and substantiation.
-
-   — [Manual](https://xhairs.com/output/pdf/moral-system-stress-test-manual.pdf)
-
+7. [Moral System Stress Test](https://xhairs.com/apps/moral-system-stress-test/) — pressure-tests the user's moral framework for authority, consistency, and substantiation.\
+   — [Manual](https://xhairs.com/output/pdf/moral-system-stress-test-manual.pdf)\
    — [Curriculum](https://xhairs.com/output/pdf/moral-system-stress-test-curriculum.pdf)
 
-8. [Moral Particulars Audit](https://xhairs.com/apps/moral-particulars-audit/) — checks whether concrete moral judgments remain consistent across cases and grounders.
-
-   — [Manual](https://xhairs.com/assets/manuals/moral-particulars-audit-manual-v2.pdf)
-
+8. [Moral Particulars Audit](https://xhairs.com/apps/moral-particulars-audit/) — checks whether concrete moral judgments remain consistent across cases and grounders.\
+   — [Manual](https://xhairs.com/assets/manuals/moral-particulars-audit-manual-v2.pdf)\
    — [Curriculum](https://xhairs.com/assets/curricula/moral-particulars-audit-curriculum.pdf)
 
-9. [Deism-Theism Gradient Audit](https://xhairs.com/apps/theism-gradient-audit/app.html) — maps how thin design inferences are thickened into broader theistic and Christian claims.
-
-   — [Manual](https://xhairs.com/apps/theism-gradient-audit/docs/deism-theism-gradient-audit-manual.pdf)
-
+9. [Deism-Theism Gradient Audit](https://xhairs.com/apps/theism-gradient-audit/app.html) — maps how thin design inferences are thickened into broader theistic and Christian claims.\
+   — [Manual](https://xhairs.com/apps/theism-gradient-audit/docs/deism-theism-gradient-audit-manual.pdf)\
    — [Curriculum](https://xhairs.com/apps/theism-gradient-audit/docs/deism-theism-gradient-audit-curriculum.pdf)
+
+::: {.content-visible when-format="pdf"}
+\endgroup
+:::
+
+\newpage
+
+# References {.unnumbered}
+
+::: {#refs}
+:::
