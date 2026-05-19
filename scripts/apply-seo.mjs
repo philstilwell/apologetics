@@ -103,6 +103,15 @@ function stripHtml(html) {
     .trim();
 }
 
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function extractFaqEntries(html, containerId) {
   if (!containerId) {
     return [];
@@ -533,6 +542,68 @@ function renderHubCatalog() {
   return `          <p class="section-note">\n            ${HUB_CATALOG_INTRO.note}\n          </p>\n\n          <div class="hub-catalog-intro">\n            <p class="eyebrow">${HUB_PATHWAYS_INTRO.eyebrow}</p>\n            <h3 id="pathways-title">${HUB_PATHWAYS_INTRO.title}</h3>\n            <p>\n              ${HUB_PATHWAYS_INTRO.copy}\n            </p>\n          </div>\n\n          <div class="hub-pathways" aria-labelledby="pathways-title">\n${pathways}\n          </div>\n\n          <div class="hub-catalog-intro">\n            <p class="eyebrow">${HUB_CATALOG_INTRO.eyebrow}</p>\n            <h3>${HUB_CATALOG_INTRO.title}</h3>\n            <p>\n              ${HUB_CATALOG_INTRO.copy}\n            </p>\n          </div>\n\n          <div class="app-grid">\n${cards}\n          </div>`;
 }
 
+function parseGentleNudges() {
+  const markdown = read("apologist-question-writeups.md").replace(/\r\n/g, "\n");
+  const sections = markdown
+    .split(/\n## /)
+    .slice(1)
+    .map((section) => {
+      const normalized = `## ${section}`.trim();
+      const lines = normalized.split("\n");
+      const title = lines[0].replace(/^##\s+/, "").trim();
+      const body = lines.slice(1).join("\n").trim();
+      const linkMatch = body.match(/Tool link:\s+\[([^\]]+)\]\(([^)]+)\)\s*$/m);
+
+      if (!title || !linkMatch) {
+        return null;
+      }
+
+      const introMatch = body.match(/^([\s\S]*?)\n\n1\.\s+/);
+      const intro = (introMatch?.[1] || "").trim();
+      const questions = [...body.matchAll(/^\d+\.\s+(.+)$/gm)].map((match) => match[1].trim());
+      const focusMatch = intro.match(/^This write-up focuses on ([^.]+)\.\s*/i);
+      const focus = focusMatch ? focusMatch[1].trim() : "";
+      const introBody = focusMatch ? intro.slice(focusMatch[0].length).trim() : intro;
+
+      return {
+        title,
+        focus,
+        intro: introBody,
+        questions,
+        linkLabel: linkMatch[1].trim(),
+        href: linkMatch[2].trim(),
+      };
+    })
+    .filter(Boolean);
+
+  if (!sections.length) {
+    throw new Error("No gentle nudge sections found in apologist-question-writeups.md");
+  }
+
+  return sections;
+}
+
+function renderHubGentleNudges() {
+  const nudges = parseGentleNudges();
+  const cards = nudges
+    .map((nudge) => {
+      const questions = nudge.questions
+        .map((question) => `                    <li>${escapeHtml(question)}</li>`)
+        .join("\n");
+      const focus = nudge.focus
+        ? `                  <p class="hub-nudge-focus">Focus: ${escapeHtml(nudge.focus)}</p>\n`
+        : "";
+      const intro = nudge.intro
+        ? `                  <p>${escapeHtml(nudge.intro)}</p>\n`
+        : "";
+
+      return `                <article class="hub-nudge-card">\n                  <h3>${escapeHtml(nudge.title)}</h3>\n${focus}${intro}                  <ol>\n${questions}\n                  </ol>\n                  <p class="hub-nudge-linkline">Tool link: <a href="${escapeHtml(nudge.href)}">${escapeHtml(nudge.linkLabel)}</a></p>\n                </article>`;
+    })
+    .join("\n");
+
+  return `      <section class="hub-nudges-band" aria-labelledby="nudges-title">\n        <div class="section-inner">\n          <div class="section-heading">\n            <div>\n              <p class="eyebrow">Question-led challenge</p>\n              <h2 id="nudges-title">Gentle Nudges for Christian Apologists</h2>\n            </div>\n          </div>\n\n          <p class="section-note">\n            These prompts are not ad copy for the tools. They are short, question-led pressure tests aimed at familiar apologetic habits, each with a different methodological focus.\n          </p>\n\n          <details class="hub-nudges-accordion">\n            <summary>Open the nine question-led write-ups</summary>\n            <div class="hub-nudges-grid">\n${cards}\n            </div>\n          </details>\n        </div>\n      </section>`;
+}
+
 function renderReadmeApps() {
   return TOOLS.map((tool) => `- ${tool.name}: ${tool.readmeDescription}`).join("\n");
 }
@@ -550,6 +621,12 @@ function renderReadmePaths() {
 function updateHubCatalog() {
   const html = read("index.html");
   const updated = replaceGeneratedBlock(html, "hub-catalog", renderHubCatalog());
+  write("index.html", updated);
+}
+
+function updateHubGentleNudges() {
+  const html = read("index.html");
+  const updated = replaceGeneratedBlock(html, "hub-gentle-nudges", renderHubGentleNudges());
   write("index.html", updated);
 }
 
@@ -585,6 +662,7 @@ for (const page of ALL_PAGES) {
 }
 
 updateHubCatalog();
+updateHubGentleNudges();
 updateReadme();
 writeSitemap();
 ensureCloudflareAnalyticsOnAllHtmlFiles();
