@@ -366,11 +366,15 @@ main {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.5fr);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 24rem);
   gap: 54px;
   align-items: center;
   max-width: 1180px;
   padding: 74px 0 56px;
+}
+
+.hero-copy {
+  min-width: 0;
 }
 
 .hub-landing .eyebrow,
@@ -379,10 +383,14 @@ main {
 }
 
 .landing-inner h1 {
-  max-width: 760px;
+  max-width: none;
   font-size: 5.65rem;
   line-height: 0.94;
   letter-spacing: 0;
+}
+
+.hero-title-line {
+  display: block;
 }
 
 .landing-inner .lede {
@@ -395,6 +403,8 @@ main {
 .hub-url-feature {
   display: inline-grid;
   gap: 5px;
+  width: fit-content;
+  max-width: 100%;
   margin-top: 24px;
   padding: 14px 18px;
   border: 1px solid #cfcfcf;
@@ -419,6 +429,9 @@ main {
   font-size: clamp(1.35rem, 3vw, 2.3rem);
   letter-spacing: 0;
   line-height: 1.05;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
 }
 
 .hub-url-feature:hover,
@@ -428,6 +441,8 @@ main {
 }
 
 .audit-preview {
+  width: min(100%, 24rem);
+  justify-self: end;
   padding: 24px;
   border: 1px solid #cfcfcf;
   border-radius: 8px;
@@ -5026,7 +5041,8 @@ body:has(.guided-resurrection) a:focus-visible {
   }
 
   .audit-preview {
-    max-width: 720px;
+    width: min(100%, 720px);
+    justify-self: start;
   }
 
   .author-card {

@@ -1,4 +1,4 @@
-export const LASTMOD = "2026-05-15";
+export const LASTMOD = "2026-05-20";
 export const SITE_URL = "https://xhairs.com/";
 export const SITE_NAME = "Crosshairs Audit Lab";
 export const PERSON_ID = `${SITE_URL}#phil-stilwell`;
@@ -20,32 +20,45 @@ function docAction(href, label) {
 
 const manualPdf = (href) => docAction(href, "Manual");
 const curriculumPdf = (href) => docAction(href, "Curriculum");
+const SEO_CORE_KEYWORDS = [
+  "Christian apologetics",
+  "apologist",
+  "apologetics",
+];
+
+function withSeoCoreKeywords(items) {
+  return Array.from(new Set([...SEO_CORE_KEYWORDS, ...items]));
+}
+
+function withSeoCoreAbout(items) {
+  return Array.from(new Set(["Christian apologetics", "apologetics", ...items]));
+}
 
 export const HOME_PAGE = {
   file: "index.html",
   kind: "home",
-  title: "Christian Apologetics Audit Tools | Crosshairs Audit Lab",
+  title: "Christian Apologetics Tools for Apologists | Crosshairs Audit Lab",
   description:
-    "Explore interactive Christian apologetics audit tools for fine-tuning, resurrection evidence, prayer claims, moral arguments, theism gradients, and belief overreach.",
+    "Explore Christian apologetics tools for apologists auditing fine-tuning, resurrection evidence, prayer claims, moral arguments, theism gradients, and belief overreach.",
   ogType: "website",
   url: SITE_URL,
-  keywords: [
-    "Christian apologetics",
+  keywords: withSeoCoreKeywords([
+    "Christian apologetics tools",
     "apologetics tools",
+    "apologist tools",
     "fine-tuning audit",
     "resurrection evidence",
     "moral argument",
     "prayer claims",
     "belief audit",
-  ],
-  about: [
-    "Christian apologetics",
+  ]),
+  about: withSeoCoreAbout([
     "epistemology",
     "fine-tuning argument",
     "resurrection evidence",
     "moral reasoning",
     "religious belief",
-  ],
+  ]),
   faqContainerId: "hub-general-qa",
   sitemap: { changefreq: "weekly", priority: "1.0" },
   expectedH1: "Crosshairs Audit Lab",
@@ -73,25 +86,23 @@ export const TOOLS = [
     primaryPage: {
       file: "apps/belief-overreach-audit/index.html",
       kind: "app",
-      title: "Belief Overreach Audit | Faith vs Evidence Simulator",
+      title: "Belief Overreach Audit | Christian Apologetics Calibration Tool",
       description:
-        "Compare faith and evidence across gambling, investing, romance, and religion to see how overconfidence can outrun warranted belief.",
+        "Use this Christian apologetics calibration tool to compare faith and evidence across gambling, investing, romance, and religion and see how overconfidence can outrun warranted belief.",
       ogType: "website",
       url: "https://xhairs.com/apps/belief-overreach-audit/",
       name: "Belief Overreach Audit",
-      keywords: [
+      keywords: withSeoCoreKeywords([
         "faith vs evidence",
         "belief overreach",
-        "Christian apologetics",
         "confidence and substantiation",
         "epistemic risk",
-      ],
-      about: [
-        "Christian apologetics",
+      ]),
+      about: withSeoCoreAbout([
         "epistemology",
         "faith and evidence",
         "belief calibration",
-      ],
+      ]),
       features: [
         "Compare four epistemic agents across religion and other stochastic domains",
         "Watch how confidence above support changes practical outcomes over repeated trials",
@@ -155,25 +166,24 @@ export const TOOLS = [
     primaryPage: {
       file: "apps/fine-tuning-bridge-audit/index.html",
       kind: "app",
-      title: "Fine-Tuning Bridge Audit | Prior Christian Apologetics Tool",
+      title: "Fine-Tuning Bridge Audit | Christian Apologetics Tool",
       description:
-        "Audit the bridge from fine-tuning to design, life-purpose, human-purpose, and theism by checking prior commitments, world-shape expectations, and target ambiguity.",
+        "Audit Christian apologetics and apologist moves from fine-tuning to design, life-purpose, human-purpose, and theism by checking prior commitments, world-shape expectations, and target ambiguity.",
       ogType: "website",
       url: "https://xhairs.com/apps/fine-tuning-bridge-audit/",
       name: "Fine-Tuning Bridge Audit",
-      keywords: [
+      keywords: withSeoCoreKeywords([
         "fine-tuning audit",
         "design argument",
         "life-permitting universe",
         "anthropic reasoning",
-        "Christian apologetics",
-      ],
-      about: [
+        "fine-tuning apologetics",
+      ]),
+      about: withSeoCoreAbout([
         "fine-tuning argument",
-        "Christian apologetics",
         "anthropic reasoning",
         "teleology",
-      ],
+      ]),
       features: [
         "Check prior-commitment pressure before loading apologetic conclusions into fine-tuning",
         "Audit the bridge from purposive calibration to life-purpose, human-purpose, and theism",
@@ -230,26 +240,25 @@ export const TOOLS = [
     primaryPage: {
       file: "apps/falsifiability-field/index.html",
       kind: "app",
-      title: "Earthly Promise Test Field | Prayer Claim Audit",
+      title: "Earthly Promise Test Field | Christian Apologetics Prayer Claim Audit",
       description:
-        "Test prayer, healing, protection, wisdom, prophecy, and other Christian promise claims to see whether they stay open to ordinary verification.",
+        "Test prayer, healing, protection, wisdom, prophecy, and other Christian apologetics promise claims to see whether they stay open to ordinary verification.",
       ogType: "website",
       url: "https://xhairs.com/apps/falsifiability-field/",
       name: "Earthly Promise Test Field",
-      keywords: [
+      keywords: withSeoCoreKeywords([
         "prayer claims",
         "healing claims",
-        "Christian apologetics",
         "falsifiability",
         "religious verification",
-      ],
-      about: [
-        "Christian apologetics",
+        "prayer apologetics",
+      ]),
+      about: withSeoCoreAbout([
         "prayer",
         "healing",
         "falsifiability",
         "religious claims",
-      ],
+      ]),
       features: [
         "Test whether earthly divine promises remain open to public checks",
         "Compare study strength, escape hatches, and mind-change commitments",
@@ -317,19 +326,18 @@ export const TOOLS = [
       ogType: "website",
       url: "https://xhairs.com/apps/inductive-symmetry-audit/",
       name: "Inductive Symmetry Audit",
-      keywords: [
+      keywords: withSeoCoreKeywords([
         "inductive symmetry",
-        "Christian apologetics",
         "evidence standards",
         "special pleading",
         "religious arguments",
-      ],
-      about: [
-        "Christian apologetics",
+        "apologist reasoning",
+      ]),
+      about: withSeoCoreAbout([
         "inductive reasoning",
         "evidential symmetry",
         "special pleading",
-      ],
+      ]),
       features: [
         "Compare apologetic arguments with structurally similar counter-patterns",
         "Surface modal smuggling, scope drift, and specificity inflation",
@@ -369,22 +377,21 @@ export const TOOLS = [
         kind: "article",
         title: "Inductive Symmetry Theory Notes | Christian Apologetics",
         description:
-          "Read the theory behind the Inductive Symmetry Audit, including modal smuggling, scope drift, specificity inflation, and fair inductive comparison.",
+          "Read the Christian apologetics theory behind the Inductive Symmetry Audit, including modal smuggling, scope drift, specificity inflation, and fair inductive comparison for apologist arguments.",
         ogType: "article",
         url: "https://xhairs.com/apps/inductive-symmetry-audit/theory.html",
         name: "Inductive Symmetry Theory Notes",
-        keywords: [
+        keywords: withSeoCoreKeywords([
           "inductive symmetry theory",
-          "Christian apologetics",
           "modal smuggling",
           "scope drift",
           "specificity inflation",
-        ],
-        about: [
-          "Christian apologetics",
+          "apologist reasoning",
+        ]),
+        about: withSeoCoreAbout([
           "inductive reasoning",
           "argument analysis",
-        ],
+        ]),
         breadcrumbs: [
           { name: SITE_NAME, href: "../../" },
           { name: "Inductive Symmetry Audit", href: "./" },
@@ -438,23 +445,22 @@ export const TOOLS = [
       kind: "app",
       title: "Resurrection Evidence Audit | Christian Apologetics Tool",
       description:
-        "Audit resurrection, miracle, and answered-prayer arguments with priors, evidence comparisons, source dependence checks, and alternative explanations.",
+        "Audit Christian apologetics and apologist arguments about resurrection, miracle, and answered-prayer claims with priors, evidence comparisons, source dependence checks, and alternative explanations.",
       ogType: "website",
       url: "https://xhairs.com/apps/resurrection-evidence-audit/",
       name: "Resurrection Evidence Audit",
-      keywords: [
+      keywords: withSeoCoreKeywords([
         "resurrection evidence",
-        "Christian apologetics",
         "miracle claims",
         "Bayesian reasoning",
         "historical evidence",
-      ],
-      about: [
-        "Christian apologetics",
+        "resurrection apologetics",
+      ]),
+      about: withSeoCoreAbout([
         "resurrection",
         "miracle claims",
         "Bayesian reasoning",
-      ],
+      ]),
       features: [
         "Compare priors, likelihoods, and alternatives for resurrection claims",
         "Stress-test miracle evidence with source dependence and pressure checks",
@@ -517,25 +523,24 @@ export const TOOLS = [
     primaryPage: {
       file: "apps/moral-system-threshold/index.html",
       kind: "app",
-      title: "Moral System Threshold | Preliminary Morality Checklist",
+      title: "Moral System Threshold | Christian Apologetics Morality Checklist",
       description:
-        "Run a preliminary checklist to see whether an alleged Christian moral system has the minimum architecture to count as a coherent moral system at all.",
+        "Run a Christian apologetics morality checklist to see whether an alleged Christian moral system has the minimum architecture to count as a coherent moral system at all.",
       ogType: "website",
       url: "https://xhairs.com/apps/moral-system-threshold/",
       name: "Moral System Threshold",
-      keywords: [
+      keywords: withSeoCoreKeywords([
         "Christian morality",
         "objective morality",
         "moral system",
         "preliminary checklist",
-        "apologetics",
-      ],
-      about: [
-        "Christian apologetics",
+        "moral apologetics",
+      ]),
+      about: withSeoCoreAbout([
         "objective morality",
         "moral coherence",
         "divine command theory",
-      ],
+      ]),
       features: [
         "Classify whether the user currently has a moral system, a rule source, an intuition set, or a practical framework",
         "Check the eight mandatory components needed for moral coherence",
@@ -598,25 +603,24 @@ export const TOOLS = [
     primaryPage: {
       file: "apps/moral-system-stress-test/index.html",
       kind: "app",
-      title: "Moral System Stress Test | Christian Morality Audit",
+      title: "Moral System Stress Test | Christian Apologetics Morality Audit",
       description:
-        "Test whether Christian moral arguments yield a workable moral system with truth-makers, obligations, authority, and clear action guidance.",
+        "Test whether Christian apologetics and apologist moral arguments yield a workable moral system with truth-makers, obligations, authority, and clear action guidance.",
       ogType: "website",
       url: "https://xhairs.com/apps/moral-system-stress-test/",
       name: "Moral System Stress Test",
-      keywords: [
+      keywords: withSeoCoreKeywords([
         "Christian morality",
         "moral argument",
         "divine command",
         "objective morality",
-        "Christian apologetics",
-      ],
-      about: [
-        "Christian apologetics",
+        "moral apologetics",
+      ]),
+      about: withSeoCoreAbout([
         "moral philosophy",
         "divine command theory",
         "objective morality",
-      ],
+      ]),
       features: [
         "Test whether Christian moral claims form a coherent moral system",
         "Probe truth-makers, obligations, authority, and action guidance",
@@ -673,26 +677,25 @@ export const TOOLS = [
     primaryPage: {
       file: "apps/moral-particulars-audit/index.html",
       kind: "app",
-      title: "Moral Particulars Audit | Christian Ethics Tool",
+      title: "Moral Particulars Audit | Christian Apologetics Ethics Tool",
       description:
-        "Map concrete Christian ethics judgments to scripture, conscience, community, and Spirit-based grounders, then compare how disagreement is explained.",
+        "Map concrete Christian apologetics ethics judgments to scripture, conscience, community, and Spirit-based grounders, then compare how disagreement is explained.",
       ogType: "website",
       url: "https://xhairs.com/apps/moral-particulars-audit/",
       name: "Moral Particulars Audit",
-      keywords: [
+      keywords: withSeoCoreKeywords([
         "Christian ethics",
         "moral particulars",
         "scripture and conscience",
-        "Christian apologetics",
         "moral disagreement",
-      ],
-      about: [
-        "Christian apologetics",
+        "ethics apologetics",
+      ]),
+      about: withSeoCoreAbout([
         "Christian ethics",
         "moral disagreement",
         "scripture",
         "conscience",
-      ],
+      ]),
       features: [
         "Map moral judgments to scripture, conscience, Spirit, and community grounders",
         "Compare severity, weight, and disagreement explanations across case types",
@@ -758,24 +761,23 @@ export const TOOLS = [
       kind: "app",
       title: "Deism-Theism Gradient Audit | Christian Apologetics Tool",
       description:
-        "Rate 50 Christian apologetics claims across a deism-to-Christian-theism gradient, then inspect substantiation gaps, bridge claims, and dependency tension.",
+        "Rate 50 Christian apologetics claims and apologist bridge moves across a deism-to-Christian-theism gradient, then inspect substantiation gaps, bridge claims, and dependency tension.",
       ogType: "website",
       url: "https://xhairs.com/apps/theism-gradient-audit/app.html",
       name: "Deism-Theism Gradient Audit",
-      keywords: [
+      keywords: withSeoCoreKeywords([
         "deism theism gradient",
-        "Christian apologetics",
         "belief substantiation",
         "bridge claims",
         "dependency tension",
-      ],
-      about: [
-        "Christian apologetics",
+        "theism apologetics",
+      ]),
+      about: withSeoCoreAbout([
         "deism",
         "theism",
         "religious belief",
         "epistemology",
-      ],
+      ]),
       features: [
         "Rate 50 claims across a deism-to-Christian-theism gradient",
         "Compare confidence with personal substantiation",
@@ -816,24 +818,23 @@ export const TOOLS = [
         kind: "collection",
         title: "Theism Gradient Audit | Christian Apologetics Claims Tool",
         description:
-          "Start the Theism Gradient Audit to rate 50 Christian claims by confidence, personal substantiation, and dependency tension across a deism-to-theism spectrum.",
+          "Start the Theism Gradient Audit to rate 50 Christian apologetics claims for apologists by confidence, personal substantiation, and dependency tension across a deism-to-theism spectrum.",
         ogType: "website",
         url: "https://xhairs.com/apps/theism-gradient-audit/",
         name: "Theism Gradient Audit",
-        keywords: [
+        keywords: withSeoCoreKeywords([
           "theism gradient",
-          "Christian apologetics",
           "belief substantiation",
           "dependency tension",
           "deism to theism",
-        ],
-        about: [
-          "Christian apologetics",
+          "theism apologetics",
+        ]),
+        about: withSeoCoreAbout([
           "religious belief",
           "deism",
           "theism",
           "epistemology",
-        ],
+        ]),
         breadcrumbs: [
           { name: SITE_NAME, href: "../../" },
           { name: "Theism Gradient Audit" },
