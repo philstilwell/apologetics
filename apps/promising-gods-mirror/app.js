@@ -351,6 +351,7 @@ const refs = {
   progressNote: document.querySelector("#progress-note"),
   activeSelectionTitle: document.querySelector("#active-selection-title"),
   activeSelectionDetail: document.querySelector("#active-selection-detail"),
+  activeSelectionStopLineLabel: document.querySelector("#active-selection-stop-line-label"),
   activeSelectionDomain: document.querySelector("#active-selection-domain"),
   promiseTitle: document.querySelector("#promise-title"),
   promiseGodChip: document.querySelector("#promise-god-chip"),
@@ -630,10 +631,16 @@ function renderCaseButtons() {
 function renderActiveSelection() {
   const promise = activePromise();
   const god = godById.get(promise.godId);
+  const selected = stopLineFor(promise.id);
+  const verdict = verdictFor(promise);
 
   refs.activeSelectionTitle.textContent = `${god.name}: ${promise.title}`;
   refs.activeSelectionDetail.textContent =
     "This is the promise currently controlling the verse, the test, and the verdict. Your next step is to go to Step 3 and set the collapse line by choosing the first point where this promise stops being a real-world promise.";
+  refs.activeSelectionStopLineLabel.textContent =
+    selected === null ? "Unset" : collapseStages[selected].short;
+  refs.activeSelectionStopLineLabel.className =
+    `mirror-case-status mirror-active-selection-status verdict-${verdict.code}`;
   refs.activeSelectionDomain.textContent = promise.domain;
   refs.activeSelectionDomain.style.setProperty("--chip-accent", god.accent);
 }

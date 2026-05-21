@@ -8430,6 +8430,23 @@ body.app-promising-gods #qa-step {
   line-height: 1.5;
 }
 
+.mirror-active-selection-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.mirror-active-selection-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border: 1px solid rgba(79, 47, 17, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
 .mirror-active-selection-actions {
   display: grid;
   gap: 10px;
