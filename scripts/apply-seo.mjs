@@ -435,8 +435,12 @@ function insertBreadcrumbs(html, page) {
 }
 
 function insertRelatedLinks(html, page) {
-  if (!page.related?.length || html.includes('class="seo-related"')) {
+  if (!page.related?.length) {
     return html;
+  }
+
+  if (html.includes('class="seo-related"')) {
+    return html.replace(/\n\s*<section class="seo-related"[\s\S]*?<\/section>/i, buildRelatedHtml(page));
   }
 
   return html.replace(/\n\s*<\/main>/i, `${buildRelatedHtml(page)}\n    </main>`);

@@ -270,6 +270,12 @@ export const TOOLS = [
       ],
       related: [
         {
+          href: "../promising-gods-mirror/",
+          name: "Promising Gods Mirror",
+          summary:
+            "Begin with invented scriptures and flat outcomes to test whether the same collapse line is kept before moving into biblical promise claims.",
+        },
+        {
           href: "../resurrection-evidence-audit/",
           name: "Resurrection Evidence Audit",
           summary:
@@ -1001,12 +1007,12 @@ export const HUB_PATHWAYS = [
       "Use this route when a claim is being presented as a worldly fact that should stay open to ordinary checks, comparisons, and rival explanations.",
     steps: [
       {
-        toolId: "falsifiability-field",
-        detail: "Check whether prayer, healing, and protection claims stay exposed to straightforward verification.",
-      },
-      {
         toolId: "promising-gods-mirror",
         detail: "Strip away biblical familiarity first and test whether the same collapse line is kept when flat outcomes belong to invented scriptures.",
+      },
+      {
+        toolId: "falsifiability-field",
+        detail: "Carry the same promise domains into direct Christian prayer, healing, and protection claims and test whether they stay exposed to straightforward verification.",
       },
       {
         toolId: "resurrection-evidence-audit",
