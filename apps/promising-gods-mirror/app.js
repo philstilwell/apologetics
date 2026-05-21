@@ -360,6 +360,7 @@ const refs = {
   promiseClaim: document.querySelector("#promise-claim"),
   promiseTest: document.querySelector("#promise-test"),
   promiseResult: document.querySelector("#promise-result"),
+  promiseStopLineLabel: document.querySelector("#promise-stop-line-label"),
   promiseRequiredRetreat: document.querySelector("#promise-required-retreat"),
   collapseLadder: document.querySelector("#collapse-ladder"),
   verdictTitle: document.querySelector("#verdict-title"),
@@ -631,8 +632,8 @@ function renderActiveSelection() {
   const god = godById.get(promise.godId);
 
   refs.activeSelectionTitle.textContent = `${god.name}: ${promise.title}`;
-  refs.activeSelectionDetail.innerHTML =
-    "This is the promise currently controlling the verse, the test, and the verdict. Your next step is to go to <strong>Step 3: Set the collapse line</strong> and choose the first point where this promise stops being a real-world promise.";
+  refs.activeSelectionDetail.textContent =
+    "This is the promise currently controlling the verse, the test, and the verdict. Your next step is to go to Step 3 and set the collapse line by choosing the first point where this promise stops being a real-world promise.";
   refs.activeSelectionDomain.textContent = promise.domain;
   refs.activeSelectionDomain.style.setProperty("--chip-accent", god.accent);
 }
@@ -640,6 +641,8 @@ function renderActiveSelection() {
 function renderActivePromise() {
   const promise = activePromise();
   const god = godById.get(promise.godId);
+  const selected = stopLineFor(promise.id);
+  const verdict = verdictFor(promise);
 
   refs.promiseTitle.textContent = promise.title;
   refs.promiseGodChip.textContent = god.name;
@@ -650,6 +653,10 @@ function renderActivePromise() {
   refs.promiseClaim.textContent = promise.claim;
   refs.promiseTest.textContent = promise.test;
   refs.promiseResult.textContent = promise.result;
+  refs.promiseStopLineLabel.textContent =
+    selected === null ? "Unset" : collapseStages[selected].short;
+  refs.promiseStopLineLabel.className =
+    `mirror-case-status mirror-required-retreat-status verdict-${verdict.code}`;
   refs.promiseRequiredRetreat.textContent = promise.requiredRetreat;
 }
 

@@ -8413,6 +8413,11 @@ body.app-promising-gods #qa-step {
   gap: 14px;
 }
 
+.mirror-active-selection-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .mirror-active-selection-row strong {
   display: block;
   font-size: 1.02rem;
@@ -8429,6 +8434,7 @@ body.app-promising-gods #qa-step {
   display: grid;
   gap: 10px;
   justify-items: end;
+  flex: 0 0 auto;
 }
 
 .mirror-next-step-button {
@@ -8443,6 +8449,7 @@ body.app-promising-gods #qa-step {
   color: #fff;
   font-weight: 850;
   line-height: 1.1;
+  white-space: nowrap;
   text-decoration: none;
   box-shadow: 0 10px 20px rgba(47, 107, 131, 0.18);
 }
@@ -8534,11 +8541,31 @@ body.app-promising-gods #qa-step {
 
 .mirror-required-retreat {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   margin-top: 16px;
   padding: 16px 18px;
   border-left: 6px solid #7a4d22;
   background: rgba(255, 244, 222, 0.75);
+}
+
+.mirror-required-retreat-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: #4c392b;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.mirror-required-retreat-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border: 1px solid rgba(79, 47, 17, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .mirror-required-retreat strong,

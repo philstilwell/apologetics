@@ -325,12 +325,12 @@
           <section class="mirror-active-selection" aria-live="polite">
             <p class="app-step">Current case</p>
             <div class="mirror-active-selection-row">
-              <div>
+              <div class="mirror-active-selection-copy">
                 <strong id="active-selection-title">Aurion: Shielded from plague and violence</strong>
                 <p id="active-selection-detail">
                   This is the promise currently controlling the verse, the test, and the verdict.
-                  Your next step is to go to <strong>Step 3: Set the collapse line</strong> and
-                  choose the first point where this promise stops being a real-world promise.
+                  Your next step is to go to Step 3 and set the collapse line by choosing the
+                  first point where this promise stops being a real-world promise.
                 </p>
               </div>
               <div class="mirror-active-selection-actions">
@@ -377,6 +377,13 @@
 
             <div class="mirror-required-retreat" aria-live="polite">
               <strong>What it takes to keep this verse alive</strong>
+              <p class="mirror-required-retreat-line">
+                <strong>Current stop line:</strong>
+                <span
+                  class="mirror-case-status mirror-required-retreat-status verdict-pending"
+                  id="promise-stop-line-label"
+                >Unset</span>
+              </p>
               <p id="promise-required-retreat"></p>
             </div>
           </section>
