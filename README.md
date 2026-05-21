@@ -10,6 +10,7 @@ Author: Phil Stilwell
 - Belief Overreach Audit: a fair-die calibration drill and transfer audit for showing how confidence can outrun perceived evidence and create unsupported commitments.
 - Fine-Tuning Bridge Audit: an upstream bridge audit for checking whether fine-tuning really licenses design, life-purpose, human-purpose, or thicker theistic conclusions.
 - Earthly Promise Test Field: a verification-willingness tool for testing whether earthly God-claims are exposed to ordinary checks or protected by escape hatches.
+- Promising Gods Mirror: a companion mirror that uses fictive gods and flat earthly outcomes to show where public promises collapse into protected or merely comforting non-promises.
 - Inductive Symmetry Audit: an interactive diagnostic for spotting cherry-picked inductive standards in apologetic arguments.
 - Resurrection Evidence Audit: a Bayesian self-audit for resurrection and miracle claims, including explicit priors, likelihoods, dependence weights, required Bayes factors, pitfall flags, and a postdiction comparator.
 - Moral System Threshold: a preliminary checklist for deciding whether a claimed Christian morality has enough architecture to count as a moral system at all.
@@ -43,6 +44,7 @@ Useful paths:
 - Belief Overreach Audit: `http://localhost:8080/apps/belief-overreach-audit/`
 - Fine-Tuning Bridge Audit: `http://localhost:8080/apps/fine-tuning-bridge-audit/`
 - Earthly Promise Test Field: `http://localhost:8080/apps/falsifiability-field/`
+- Promising Gods Mirror: `http://localhost:8080/apps/promising-gods-mirror/`
 - Inductive Symmetry Audit: `http://localhost:8080/apps/inductive-symmetry-audit/`
 - Resurrection Evidence Audit: `http://localhost:8080/apps/resurrection-evidence-audit/`
 - Moral System Threshold: `http://localhost:8080/apps/moral-system-threshold/`

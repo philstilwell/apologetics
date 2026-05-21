@@ -1,4 +1,4 @@
-export const LASTMOD = "2026-05-20";
+export const LASTMOD = "2026-05-21";
 export const SITE_URL = "https://xhairs.com/";
 export const SITE_NAME = "Crosshairs Audit Lab";
 export const PERSON_ID = `${SITE_URL}#phil-stilwell`;
@@ -291,6 +291,87 @@ export const TOOLS = [
       sitemap: { changefreq: "monthly", priority: "0.8" },
       faqContainerId: "qa-step",
       expectedH1: "Earthly Promise Test Field",
+    },
+    supportPages: [],
+  },
+  {
+    id: "promising-gods-mirror",
+    name: "Promising Gods Mirror",
+    previewPath: "/apps/promising-gods-mirror/",
+    readmeDescription:
+      "a companion mirror that uses fictive gods and flat earthly outcomes to show where public promises collapse into protected or merely comforting non-promises.",
+    hub: {
+      cardClass: "hub-card-promising-gods",
+      kicker: "Companion audit",
+      tags: ["Moderate", "Asymmetry check"],
+      summary:
+        "Presents invented holy-book promises about protection, healing, prayer, wisdom, prophecy, behavior, provision, morbidity, and longevity, then asks where each promise stops being a real promise once public outcomes stay flat.",
+      note:
+        "Designed as a companion to Earthly Promise Test Field: remove biblical familiarity first, then compare the collapse line with familiar Christian promise claims.",
+      actions: [
+        { href: "./apps/promising-gods-mirror/", label: "Open mirror" },
+        {
+          href: "./apps/falsifiability-field/",
+          label: "Open companion field",
+          secondary: true,
+        },
+      ],
+    },
+    primaryPage: {
+      file: "apps/promising-gods-mirror/index.html",
+      kind: "app",
+      title: "Promising Gods Mirror | Christian Apologetics Promise Comparison Tool",
+      description:
+        "Use fictive gods, fictive holy-book promises, and flat earthly outcomes to test where a promise collapses into a merely comforting non-promise, then compare the result with familiar Christian promise claims.",
+      ogType: "website",
+      url: "https://xhairs.com/apps/promising-gods-mirror/",
+      name: "Promising Gods Mirror",
+      keywords: withSeoCoreKeywords([
+        "promise comparison",
+        "prayer promises",
+        "religious promises",
+        "falsifiability",
+        "apologetics promise audit",
+      ]),
+      about: withSeoCoreAbout([
+        "religious promises",
+        "falsifiability",
+        "prayer",
+        "healing",
+        "religious claims",
+      ]),
+      features: [
+        "Judge fictive public promises against flat matched earthly outcomes",
+        "Mark the first reinterpretation rung where a promise stops being a real promise",
+        "Reveal parallel Bible references often invoked in the same promise domains",
+      ],
+      breadcrumbs: [
+        { name: SITE_NAME, href: "../../" },
+        { name: "Promising Gods Mirror" },
+      ],
+      related: [
+        {
+          href: "../falsifiability-field/",
+          name: "Earthly Promise Test Field",
+          summary:
+            "Carry the same promise domains into a broader audit of study strength, escape hatches, and willingness to count clean failures.",
+        },
+        {
+          href: "../inductive-symmetry-audit/",
+          name: "Inductive Symmetry Audit",
+          summary:
+            "Check whether the same evidential standard is being applied to familiar and unfamiliar religious claims.",
+        },
+        {
+          href: "../belief-overreach-audit/",
+          name: "Belief Overreach Audit",
+          summary:
+            "Compare the promise-collapse tension with a wider audit of confidence outrunning support.",
+        },
+      ],
+      sitemap: { changefreq: "monthly", priority: "0.8" },
+      faqContainerId: "qa-step",
+      expectedH1: "Promising Gods Mirror",
     },
     supportPages: [],
   },
