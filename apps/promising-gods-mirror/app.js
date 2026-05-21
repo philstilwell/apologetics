@@ -372,6 +372,7 @@ const refs = {
   summaryAllowed: document.querySelector("#summary-allowed"),
   summaryTitle: document.querySelector("#summary-title"),
   summaryBody: document.querySelector("#summary-body"),
+  revealNextStep: document.querySelector("#reveal-next-step"),
   revealGrid: document.querySelector("#reveal-grid"),
   reportOutput: document.querySelector("#report-output"),
   reportStatus: document.querySelector("#report-status"),
@@ -723,7 +724,7 @@ function revealCard(promise) {
   const parallels = promise.parallels
     .map(
       (item) =>
-        `<span class="mirror-parallel-tag"><strong>${escapeHtml(item.ref)}</strong> ${escapeHtml(item.note)}</span>`
+        `<span class="mirror-parallel-tag"><strong class="mirror-parallel-ref">${escapeHtml(item.ref)}</strong><span class="mirror-parallel-note">${escapeHtml(item.note)}</span></span>`
     )
     .join("");
 
@@ -845,6 +846,7 @@ function renderReveal() {
   if (done < promises.length) {
     refs.revealStatus.textContent =
       `Reveal is locked: decide ${promises.length - done} more case${promises.length - done === 1 ? "" : "s"} first.`;
+    refs.revealNextStep.hidden = true;
     refs.revealGrid.hidden = true;
     refs.revealGrid.innerHTML = "";
     return;
@@ -852,6 +854,7 @@ function renderReveal() {
 
   refs.revealStatus.textContent =
     "Reveal unlocked: these Bible references are often invoked in the same promise-domains as the fictive verses above.";
+  refs.revealNextStep.hidden = false;
   refs.revealGrid.hidden = false;
   refs.revealGrid.innerHTML = promises.map(revealCard).join("");
 }
