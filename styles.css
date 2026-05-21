@@ -8430,11 +8430,25 @@ body.app-promising-gods #qa-step {
   line-height: 1.5;
 }
 
-.mirror-active-selection-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
+.mirror-active-selection-actions {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+  flex: 0 0 auto;
+}
+
+.mirror-active-selection-status-group {
+  display: grid;
+  gap: 5px;
+  justify-items: end;
+}
+
+.mirror-active-selection-status-label {
+  color: #5b4638;
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .mirror-active-selection-status {
@@ -8445,13 +8459,6 @@ body.app-promising-gods #qa-step {
   border: 1px solid rgba(79, 47, 17, 0.14);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.72);
-}
-
-.mirror-active-selection-actions {
-  display: grid;
-  gap: 10px;
-  justify-items: end;
-  flex: 0 0 auto;
 }
 
 .mirror-next-step-button {
