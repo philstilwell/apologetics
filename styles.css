@@ -8283,7 +8283,11 @@ body.app-promising-gods #qa-step {
   top: 102px;
   display: grid;
   gap: 16px;
+  max-height: calc(100vh - 118px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 18px;
+  scrollbar-gutter: stable;
 }
 
 .mirror-progress-card {
@@ -8386,6 +8390,39 @@ body.app-promising-gods #qa-step {
 .mirror-case-stage {
   display: grid;
   gap: 22px;
+}
+
+.mirror-active-selection {
+  position: sticky;
+  top: 86px;
+  z-index: 6;
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid rgba(79, 47, 17, 0.16);
+  border-radius: 14px;
+  background: rgba(255, 251, 244, 0.95);
+  box-shadow: 0 12px 28px rgba(79, 47, 17, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.mirror-active-selection-row {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.mirror-active-selection-row strong {
+  display: block;
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+.mirror-active-selection-row p {
+  margin: 6px 0 0;
+  color: #534133;
+  line-height: 1.5;
 }
 
 .mirror-promise-panel {
@@ -8596,6 +8633,12 @@ body.app-promising-gods #qa-step {
   font-size: 1.5rem;
 }
 
+.mirror-summary-ledger small {
+  color: #5a4737;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
 .mirror-summary-box {
   margin-bottom: 18px;
 }
@@ -8686,6 +8729,8 @@ body.app-promising-gods #qa-step {
 
   .mirror-case-picker {
     position: static;
+    max-height: none;
+    overflow: visible;
   }
 
   .mirror-promise-head {
@@ -8694,6 +8739,14 @@ body.app-promising-gods #qa-step {
 
   .mirror-promise-chips {
     justify-content: flex-start;
+  }
+
+  .mirror-active-selection {
+    position: static;
+  }
+
+  .mirror-active-selection-row {
+    flex-direction: column;
   }
 }
 

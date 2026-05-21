@@ -339,6 +339,9 @@ const refs = {
   caseButtons: document.querySelector("#case-buttons"),
   progressCount: document.querySelector("#progress-count"),
   progressNote: document.querySelector("#progress-note"),
+  activeSelectionTitle: document.querySelector("#active-selection-title"),
+  activeSelectionDetail: document.querySelector("#active-selection-detail"),
+  activeSelectionDomain: document.querySelector("#active-selection-domain"),
   promiseTitle: document.querySelector("#promise-title"),
   promiseGodChip: document.querySelector("#promise-god-chip"),
   promiseDomainChip: document.querySelector("#promise-domain-chip"),
@@ -418,6 +421,16 @@ function activePromise() {
   return promiseById.get(state.selectedPromiseId) || promises[0];
 }
 
+function selectPromise(promiseId) {
+  if (!promiseById.has(promiseId) || state.selectedPromiseId === promiseId) {
+    return;
+  }
+
+  state.selectedPromiseId = promiseId;
+  persistState();
+  renderAll();
+}
+
 function stopLineFor(promiseId) {
   return Number.isInteger(state.stopLines[promiseId]) ? state.stopLines[promiseId] : null;
 }
@@ -436,7 +449,7 @@ function verdictFor(promise) {
   if (selected < promise.requiredStopIndex) {
     return {
       code: "strict",
-      title: "Collapsed before comfort",
+      title: "Fails as a real promise",
       body:
         "By your own line, this verse stopped being a real promise before the only remaining escape. Since the measured earthly effect is flat, the promise has already failed on your standard.",
     };
@@ -445,7 +458,7 @@ function verdictFor(promise) {
   if (selected === promise.requiredStopIndex) {
     return {
       code: "comfort",
-      title: "Collapsed into comfort",
+      title: "Survives only as comfort",
       body:
         "You are drawing the line exactly where the verse stops predicting a distinct public outcome and becomes inward reassurance instead. That preserves devotion, not a testable earthly promise.",
     };
@@ -453,7 +466,7 @@ function verdictFor(promise) {
 
   return {
     code: "allowed",
-    title: "Comfort still counts as promise",
+    title: "Still treated as a promise",
     body:
       "You are still allowing inward comfort or symbolic reassurance to count as fulfillment after the public outcome disappears. That keeps the language alive only as a protected non-promise.",
   }
@@ -480,40 +493,40 @@ function buildSummaryMessage() {
 
   if (!done) {
     return {
-      title: "Reveal locked",
+      title: "No cases decided yet",
       body:
-        "No stop lines have been set yet. Work through the cases and decide where each fictive promise stops being a real earthly promise.",
+        "Choose where each fictive verse stops being a real-world promise. The three boxes above will then sort your decisions into failure, comfort-only survival, or still treating comfort as fulfillment.",
     };
   }
 
   if (done < promises.length) {
     return {
-      title: `${done} of ${promises.length} cases completed`,
+      title: `${done} of ${promises.length} cases decided`,
       body:
-        `${counts.strict + counts.comfort} completed case${counts.strict + counts.comfort === 1 ? "" : "s"} already collapse by your own line. Finish all nine to see the Christian parallels together.`,
+        `The three boxes above update as you judge each case. Finish all nine to unlock the Bible parallels and compare your line with familiar Christian promise language.`,
     };
   }
 
   if (counts.allowed === 0) {
     return {
-      title: "Every fictive promise collapses by your own line",
+      title: "Every case stops being a real promise",
       body:
-        "Across the full suite, the flat earthly results force each promise either to fail outright or to collapse into inward comfort rather than a public effect. The reveal now asks whether the same line is kept when the verses are biblical.",
+        "Across all nine cases, the flat earthly results force each verse either to fail as a promise or to survive only as comfort. The reveal now asks whether the same line is kept when the verses are biblical.",
     };
   }
 
   if (counts.allowed <= 2) {
     return {
-      title: "Most promises collapse; a few survive only as comfort",
+      title: "Most cases fail; a few survive only as comfort",
       body:
-        "Most of the fictive verses fail by your own stop line. The remaining cases stay alive only because inward reassurance is still being allowed to do the work of a public promise.",
+        "Most of the fictive verses fail by your own line. The remaining cases stay alive only because comfort is still being allowed to do the work of a public promise.",
     };
   }
 
   return {
-    title: "The suite survives mainly by softening the promises",
+    title: "Several cases survive only by softening the promise",
     body:
-      "On the current stop lines, several fictive verses remain alive only because inward comfort, symbolic meaning, or protected reinterpretation is still being counted as fulfillment after the public result disappears.",
+      "On your current lines, several fictive verses remain alive only because comfort, symbolism, or protected reinterpretation is still being counted as fulfillment after the public result disappears.",
   };
 }
 
@@ -579,14 +592,17 @@ function renderCaseButtons() {
       `;
     })
     .join("");
+}
 
-  refs.caseButtons.querySelectorAll("[data-promise-id]").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.selectedPromiseId = button.dataset.promiseId;
-      persistState();
-      renderAll();
-    });
-  });
+function renderActiveSelection() {
+  const promise = activePromise();
+  const god = godById.get(promise.godId);
+
+  refs.activeSelectionTitle.textContent = `${god.name}: ${promise.title}`;
+  refs.activeSelectionDetail.textContent =
+    "This is the promise currently controlling the verse, the test, the stop line, and the verdict on the right.";
+  refs.activeSelectionDomain.textContent = promise.domain;
+  refs.activeSelectionDomain.style.setProperty("--chip-accent", god.accent);
 }
 
 function renderActivePromise() {
@@ -680,9 +696,9 @@ function buildReportText() {
     "Promising Gods Mirror report",
     "",
     `Completed cases: ${completedCount()} / ${promises.length}`,
-    `Collapsed before comfort: ${counts.strict}`,
-    `Collapsed into comfort: ${counts.comfort}`,
-    `Comfort still counted as promise: ${counts.allowed}`,
+    `Fails as a real promise: ${counts.strict}`,
+    `Survives only as comfort: ${counts.comfort}`,
+    `Still treated as a promise: ${counts.allowed}`,
     "",
     summary.title,
     summary.body,
@@ -739,9 +755,9 @@ function renderReport() {
   refs.reportOutput.innerHTML = `
     <div class="mirror-report-summary">
       <p><strong>Completed:</strong> ${completedCount()} / ${promises.length}</p>
-      <p><strong>Collapsed before comfort:</strong> ${counts.strict}</p>
-      <p><strong>Collapsed into comfort:</strong> ${counts.comfort}</p>
-      <p><strong>Comfort still counted as promise:</strong> ${counts.allowed}</p>
+      <p><strong>Fails as a real promise:</strong> ${counts.strict}</p>
+      <p><strong>Survives only as comfort:</strong> ${counts.comfort}</p>
+      <p><strong>Still treated as a promise:</strong> ${counts.allowed}</p>
       <p><strong>${escapeHtml(summary.title)}</strong> ${escapeHtml(summary.body)}</p>
     </div>
     <div class="mirror-report-entries">
@@ -758,8 +774,8 @@ function renderReveal() {
   refs.progressCount.textContent = `${done} / ${promises.length} complete`;
   refs.progressNote.textContent =
     done === promises.length
-      ? "Reveal unlocked. Compare your stop lines with the Christian parallels below."
-      : "Set a collapse line for each promise to unlock the reveal.";
+      ? "Reveal unlocked. Compare your decisions with the Bible parallels below."
+      : "Choose one stop line for each promise to unlock the Bible parallels.";
 
   refs.summaryStrict.textContent = String(counts.strict);
   refs.summaryComfort.textContent = String(counts.comfort);
@@ -769,7 +785,7 @@ function renderReveal() {
 
   if (done < promises.length) {
     refs.revealStatus.textContent =
-      `Reveal locked: ${promises.length - done} case${promises.length - done === 1 ? "" : "s"} still need a stop line.`;
+      `Reveal is locked: decide ${promises.length - done} more case${promises.length - done === 1 ? "" : "s"} first.`;
     refs.revealGrid.hidden = true;
     refs.revealGrid.innerHTML = "";
     return;
@@ -791,6 +807,14 @@ async function copyReport() {
 }
 
 function attachGlobalEvents() {
+  refs.caseButtons.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-promise-id]");
+    if (!button || !refs.caseButtons.contains(button)) {
+      return;
+    }
+
+    selectPromise(button.dataset.promiseId);
+  });
   refs.copyReport.addEventListener("click", copyReport);
   refs.printReport.addEventListener("click", () => window.print());
 }
@@ -798,6 +822,7 @@ function attachGlobalEvents() {
 function renderAll() {
   renderGodCards();
   renderCaseButtons();
+  renderActiveSelection();
   renderActivePromise();
   renderCollapseLadder();
   renderVerdict();
