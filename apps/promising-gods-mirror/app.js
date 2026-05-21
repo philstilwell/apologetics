@@ -408,7 +408,7 @@ const refs = {
   revealStatus: document.querySelector("#reveal-status"),
   summaryStrict: document.querySelector("#summary-strict"),
   summaryComfort: document.querySelector("#summary-comfort"),
-  summaryAllowed: document.querySelector("#summary-allowed"),
+  summaryNonpublic: document.querySelector("#summary-nonpublic"),
   summaryTitle: document.querySelector("#summary-title"),
   summaryBody: document.querySelector("#summary-body"),
   revealNextStep: document.querySelector("#reveal-next-step"),
@@ -510,7 +510,7 @@ function verdictFor(promise) {
       meaning:
         "Pick the first rung where you think the verse stops functioning as a real-world promise.",
       significance:
-        "That choice decides whether the verse fails, survives only as comfort, or is still being treated as fulfilled.",
+        "That choice decides whether the verse fails, survives only as comfort, or is preserved only by denying that it made a public promise.",
     };
   }
 
@@ -537,12 +537,12 @@ function verdictFor(promise) {
   }
 
   return {
-    code: "allowed",
-    title: "Still treated as a promise",
+    code: "nonpublic",
+    title: "Now denied as a public promise",
     meaning:
-      "By your line, comfort or symbolism is still being counted as fulfillment.",
+      "By your line, the verse is preserved only by saying it never made a real-world promise in the first place.",
     significance:
-      "That keeps the verse alive only by protecting it from ordinary public failure.",
+      "That protects the wording only by retreating from the original public claim completely.",
   }
 }
 
@@ -551,7 +551,7 @@ function completedCount() {
 }
 
 function summaryCounts() {
-  const counts = { strict: 0, comfort: 0, allowed: 0, pending: 0 };
+  const counts = { strict: 0, comfort: 0, nonpublic: 0, pending: 0 };
 
   promises.forEach((promise) => {
     const verdict = verdictFor(promise);
@@ -569,7 +569,7 @@ function buildSummaryMessage() {
     return {
       title: "No cases decided yet",
       body:
-        "Choose where each fictive verse stops being a real-world promise. The three boxes above will then sort your decisions into failure, comfort-only survival, or still treating comfort as fulfillment.",
+        "Choose where each fictive verse stops being a real-world promise. The three boxes above will then sort your decisions into failure, comfort-only survival, or retreating to the claim that no public promise was made.",
     };
   }
 
@@ -581,7 +581,7 @@ function buildSummaryMessage() {
     };
   }
 
-  if (counts.allowed === 0) {
+  if (counts.nonpublic === 0) {
     return {
       title: "Every case stops being a real promise",
       body:
@@ -589,18 +589,18 @@ function buildSummaryMessage() {
     };
   }
 
-  if (counts.allowed <= 2) {
+  if (counts.nonpublic <= 2) {
     return {
-      title: "Most cases fail; a few survive only as comfort",
+      title: "Most cases fail; a few are kept only by retreat",
       body:
-        "Most of the fictive verses fail by your own line. The remaining cases stay alive only because comfort is still being allowed to do the work of a public promise.",
+        "Most of the fictive verses fail by your own line. The remaining cases are preserved only by retreating to the claim that no public promise was made in the first place.",
     };
   }
 
   return {
-    title: "Several cases survive only by softening the promise",
+    title: "Several cases survive only by retreating from public promise language",
     body:
-      "On your current lines, several fictive verses remain alive only because comfort, symbolism, or protected reinterpretation is still being counted as fulfillment after the public result disappears.",
+      "On your current lines, several fictive verses remain alive only because the original public promise is being withdrawn after the public result disappears.",
   };
 }
 
@@ -783,6 +783,28 @@ function revealCard(promise) {
   `;
 }
 
+function reportParallelsText(parallels) {
+  return parallels
+    .map(
+      (item) =>
+        `- ${item.ref}: ${item.note}\n  Verse: ${item.verse}`
+    )
+    .join("\n");
+}
+
+function reportParallelsHtml(parallels) {
+  return parallels
+    .map(
+      (item) => `
+        <article class="mirror-report-parallel-item">
+          <p><strong>${escapeHtml(item.ref)}</strong> ${escapeHtml(item.note)}</p>
+          <p class="mirror-report-parallel-verse">${escapeHtml(item.verse)}</p>
+        </article>
+      `
+    )
+    .join("");
+}
+
 function buildReportText() {
   const summary = buildSummaryMessage();
   const counts = summaryCounts();
@@ -792,7 +814,7 @@ function buildReportText() {
     `Completed cases: ${completedCount()} / ${promises.length}`,
     `Fails as a real promise: ${counts.strict}`,
     `Survives only as comfort: ${counts.comfort}`,
-    `Still treated as a promise: ${counts.allowed}`,
+    `Now denied as a public promise: ${counts.nonpublic}`,
     "",
     summary.title,
     summary.body,
@@ -815,11 +837,8 @@ function buildReportText() {
     lines.push(`Verdict: ${verdict.title}`);
     lines.push(`Meaning: ${verdict.meaning}`);
     lines.push(`Why it matters: ${verdict.significance}`);
-    lines.push(
-      `Christian parallels: ${promise.parallels
-        .map((item) => `${item.ref} (${item.note})`)
-        .join("; ")}`
-    );
+    lines.push("Christian parallels:");
+    lines.push(reportParallelsText(promise.parallels));
     lines.push("");
   });
 
@@ -846,6 +865,12 @@ function renderReport() {
             <p><strong>Verdict:</strong> ${escapeHtml(verdict.title)}</p>
             ${explanationPairHtml(verdict.meaning, verdict.significance)}
           </div>
+          <div class="mirror-report-parallels">
+            <p><strong>Christian parallels:</strong></p>
+            <div class="mirror-report-parallel-list">
+              ${reportParallelsHtml(promise.parallels)}
+            </div>
+          </div>
         </article>
       `;
     })
@@ -856,7 +881,7 @@ function renderReport() {
       <p><strong>Completed:</strong> ${completedCount()} / ${promises.length}</p>
       <p><strong>Fails as a real promise:</strong> ${counts.strict}</p>
       <p><strong>Survives only as comfort:</strong> ${counts.comfort}</p>
-      <p><strong>Still treated as a promise:</strong> ${counts.allowed}</p>
+      <p><strong>Now denied as a public promise:</strong> ${counts.nonpublic}</p>
       <p><strong>${escapeHtml(summary.title)}</strong> ${escapeHtml(summary.body)}</p>
     </div>
     <div class="mirror-report-entries">
@@ -878,7 +903,7 @@ function renderReveal() {
 
   refs.summaryStrict.textContent = String(counts.strict);
   refs.summaryComfort.textContent = String(counts.comfort);
-  refs.summaryAllowed.textContent = String(counts.allowed);
+  refs.summaryNonpublic.textContent = String(counts.nonpublic);
   refs.summaryTitle.textContent = summary.title;
   refs.summaryBody.textContent = summary.body;
 

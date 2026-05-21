@@ -321,6 +321,8 @@ export const TOOLS = [
           label: "Open companion field",
           secondary: true,
         },
+        manualPdf("./output/pdf/promising-gods-mirror-manual.pdf"),
+        curriculumPdf("./output/pdf/promising-gods-mirror-curriculum.pdf"),
       ],
     },
     primaryPage: {

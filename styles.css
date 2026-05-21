@@ -8383,7 +8383,7 @@ body.app-promising-gods #qa-step {
   color: #7a1d12;
 }
 
-.mirror-case-status.verdict-allowed {
+.mirror-case-status.verdict-nonpublic {
   color: #77550d;
 }
 
@@ -8673,7 +8673,7 @@ body.app-promising-gods #qa-step {
   background: linear-gradient(180deg, rgba(255, 236, 232, 0.96), rgba(255, 249, 247, 0.94));
 }
 
-.mirror-verdict-box.verdict-allowed {
+.mirror-verdict-box.verdict-nonpublic {
   background: linear-gradient(180deg, rgba(255, 247, 225, 0.96), rgba(255, 252, 244, 0.94));
 }
 
@@ -8897,6 +8897,34 @@ body.app-promising-gods #qa-step {
 .mirror-report-verdict {
   display: grid;
   gap: 8px;
+}
+
+.mirror-report-parallels {
+  display: grid;
+  gap: 8px;
+}
+
+.mirror-report-parallels > p {
+  margin: 0;
+}
+
+.mirror-report-parallel-list {
+  display: grid;
+  gap: 8px;
+}
+
+.mirror-report-parallel-item {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid rgba(79, 47, 17, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.mirror-report-parallel-verse {
+  color: #554438;
+  font-style: italic;
 }
 
 @media (max-width: 1050px) {
