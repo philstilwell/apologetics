@@ -8824,25 +8824,28 @@ body.app-promising-gods #qa-step {
 }
 
 .mirror-parallel-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  gap: 10px;
 }
 
 .mirror-parallel-tag {
-  display: inline-grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  align-items: start;
-  column-gap: 14px;
-  row-gap: 4px;
-  min-height: 32px;
-  padding: 7px 10px;
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
   border: 1px solid rgba(79, 47, 17, 0.14);
-  border-radius: 999px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.86);
   color: #3f3026;
   font-size: 0.78rem;
   line-height: 1.3;
+}
+
+.mirror-parallel-head {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: start;
+  column-gap: 14px;
+  row-gap: 4px;
 }
 
 .mirror-parallel-ref {
@@ -8853,6 +8856,14 @@ body.app-promising-gods #qa-step {
 .mirror-parallel-note {
   display: block;
   min-width: 0;
+}
+
+.mirror-parallel-verse {
+  margin: 0;
+  color: #554438;
+  font-size: 0.8rem;
+  font-style: italic;
+  line-height: 1.55;
 }
 
 .mirror-report-summary {
@@ -8936,7 +8947,7 @@ body.app-promising-gods #qa-step {
     align-items: flex-start;
   }
 
-  .mirror-parallel-tag {
+  .mirror-parallel-head {
     grid-template-columns: 1fr;
   }
 }

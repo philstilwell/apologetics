@@ -100,10 +100,14 @@ const promises = [
       {
         ref: "Psalm 91:9-10",
         note: "Often invoked as protection from plague and calamity for those who dwell in God.",
+        verse:
+          "Because thou hast made the LORD, which is my refuge, even the most High, thy habitation; There shall no evil befall thee, neither shall any plague come nigh thy dwelling.",
       },
       {
         ref: "Luke 10:19",
         note: "Often invoked as protection from hostile earthly harm.",
+        verse:
+          "Behold, I give unto you power to tread on serpents and scorpions, and over all the power of the enemy: and nothing shall by any means hurt you.",
       },
     ],
   },
@@ -128,10 +132,13 @@ const promises = [
       {
         ref: "Matthew 6:31-33",
         note: "Often invoked as a promise of provision for those who seek God's kingdom first.",
+        verse:
+          "Therefore take no thought, saying, What shall we eat? or, What shall we drink? or, Wherewithal shall we be clothed? (For after all these things do the Gentiles seek:) for your heavenly Father knoweth that ye have need of all these things. But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.",
       },
       {
         ref: "Philippians 4:19",
         note: "Often invoked as assurance that God will supply needs.",
+        verse: "But my God shall supply all your need according to his riches in glory by Christ Jesus.",
       },
     ],
   },
@@ -156,10 +163,14 @@ const promises = [
       {
         ref: "Proverbs 3:1-2",
         note: "Often invoked as a long-life promise attached to obedience.",
+        verse:
+          "My son, forget not my law; but let thine heart keep my commandments: For length of days, and long life, and peace, shall they add to thee.",
       },
       {
         ref: "Exodus 23:25-26",
         note: "Often invoked as a promise of health and a full span of days.",
+        verse:
+          "And ye shall serve the LORD your God, and he shall bless thy bread, and thy water; and I will take sickness away from the midst of thee. There shall nothing cast their young, nor be barren, in thy land: the number of thy days I will fulfil.",
       },
     ],
   },
@@ -184,10 +195,14 @@ const promises = [
       {
         ref: "James 5:14-15",
         note: "Often invoked as a promise of healing after prayer by elders.",
+        verse:
+          "Is any sick among you? let him call for the elders of the church; and let them pray over him, anointing him with oil in the name of the Lord: And the prayer of faith shall save the sick, and the Lord shall raise him up; and if he have committed sins, they shall be forgiven him.",
       },
       {
         ref: "Psalm 103:2-3",
         note: "Often invoked as assurance that God heals disease.",
+        verse:
+          "Bless the LORD, O my soul, and forget not all his benefits: Who forgiveth all thine iniquities; who healeth all thy diseases;",
       },
     ],
   },
@@ -212,14 +227,20 @@ const promises = [
       {
         ref: "Mark 11:24",
         note: "Often invoked as a promise that believing prayer receives what is asked.",
+        verse:
+          "Therefore I say unto you, What things soever ye desire, when ye pray, believe that ye receive them, and ye shall have them.",
       },
       {
         ref: "John 14:13-14",
         note: "Often invoked as a promise that requests in Jesus' name are granted.",
+        verse:
+          "And whatsoever ye shall ask in my name, that will I do, that the Father may be glorified in the Son. If ye shall ask any thing in my name, I will do it.",
       },
       {
         ref: "Matthew 7:7-11",
         note: "Often invoked as assurance that askers receive.",
+        verse:
+          "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you: For every one that asketh receiveth; and he that seeketh findeth; and to him that knocketh it shall be opened. Or what man is there of you, whom if his son ask bread, will he give him a stone? Or if he ask a fish, will he give him a serpent? If ye then, being evil, know how to give good gifts unto your children, how much more shall your Father which is in heaven give good things to them that ask him?",
       },
     ],
   },
@@ -244,10 +265,14 @@ const promises = [
       {
         ref: "James 1:5",
         note: "Often invoked as a promise that God gives wisdom to those who ask.",
+        verse:
+          "If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.",
       },
       {
         ref: "Proverbs 3:5-6",
         note: "Often invoked as assurance of directed paths.",
+        verse:
+          "Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
       },
     ],
   },
@@ -272,10 +297,14 @@ const promises = [
       {
         ref: "Acts 2:17",
         note: "Often invoked as a promise of prophecy and revelatory speech among believers.",
+        verse:
+          "And it shall come to pass in the last days, saith God, I will pour out of my Spirit upon all flesh: and your sons and your daughters shall prophesy, and your young men shall see visions, and your old men shall dream dreams:",
       },
       {
         ref: "John 16:13",
         note: "Often invoked as guidance into truth and what is to come.",
+        verse:
+          "Howbeit when he, the Spirit of truth, is come, he will guide you into all truth: for he shall not speak of himself; but whatsoever he shall hear, that shall he speak: and he will shew you things to come.",
       },
     ],
   },
@@ -300,14 +329,20 @@ const promises = [
       {
         ref: "John 13:35",
         note: "Often invoked as a public mark of believers' love.",
+        verse:
+          "By this shall all men know that ye are my disciples, if ye have love one to another.",
       },
       {
         ref: "Ezekiel 36:26-27",
         note: "Often invoked as a promise of transformed conduct through God's Spirit.",
+        verse:
+          "A new heart also will I give you, and a new spirit will I put within you: and I will take away the stony heart out of your flesh, and I will give you an heart of flesh. And I will put my spirit within you, and cause you to walk in my statutes, and ye shall keep my judgments, and do them.",
       },
       {
         ref: "Galatians 5:22-23",
         note: "Often invoked as visible fruit expected in believers' lives.",
+        verse:
+          "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, Meekness, temperance: against such there is no law.",
       },
     ],
   },
@@ -332,10 +367,14 @@ const promises = [
       {
         ref: "Exodus 15:26",
         note: "Often invoked as a promise that God removes disease from the obedient.",
+        verse:
+          "And said, If thou wilt diligently hearken to the voice of the LORD thy God, and wilt do that which is right in his sight, and wilt give ear to his commandments, and keep all his statutes, I will put none of these diseases upon thee, which I have brought upon the Egyptians: for I am the LORD that healeth thee.",
       },
       {
         ref: "Deuteronomy 7:15",
         note: "Often invoked as a promise that God keeps sickness away from his people.",
+        verse:
+          "And the LORD will take away from thee all sickness, and will put none of the evil diseases of Egypt, which thou knowest, upon thee; but will lay them upon all them that hate thee.",
       },
     ],
   },
@@ -724,7 +763,7 @@ function revealCard(promise) {
   const parallels = promise.parallels
     .map(
       (item) =>
-        `<span class="mirror-parallel-tag"><strong class="mirror-parallel-ref">${escapeHtml(item.ref)}</strong><span class="mirror-parallel-note">${escapeHtml(item.note)}</span></span>`
+        `<article class="mirror-parallel-tag"><div class="mirror-parallel-head"><strong class="mirror-parallel-ref">${escapeHtml(item.ref)}</strong><span class="mirror-parallel-note">${escapeHtml(item.note)}</span></div><p class="mirror-parallel-verse">${escapeHtml(item.verse)}</p></article>`
     )
     .join("");
 
