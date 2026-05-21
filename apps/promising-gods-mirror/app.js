@@ -33,38 +33,48 @@ const gods = [
 const collapseStages = [
   {
     id: "public-effect",
-    short: "No distinct public effect",
-    title: "The promised public effect disappears.",
-    detail:
-      "Once matched public data stop showing the promised outcome, the verse is no longer a real earthly promise.",
+    short: "Public result is gone",
+    title: "The real-world result is gone.",
+    meaning:
+      "The promised benefit no longer shows up better than ordinary life or matched comparison cases.",
+    significance:
+      "If you stop here, the verse has already failed as a real-world promise.",
   },
   {
     id: "defined-subgroup",
-    short: "Only a named devout subgroup counts",
-    title: "Only a pre-defined elite subgroup still counts.",
-    detail:
-      "If the promise must shrink to a narrow devout subgroup to survive, the original promise has already been reduced.",
+    short: "Only a smaller special group counts",
+    title: "The promise now works only for a smaller special group.",
+    meaning:
+      "The original promise survives only after being narrowed to a more devout, more approved, or more sincere subgroup.",
+    significance:
+      "If a promise must shrink this much to survive, the original promise has already been weakened.",
   },
   {
     id: "hidden-conditions",
-    short: "Hidden sincerity or timing rescues the misses",
-    title: "Hidden sincerity, hidden sin, or mysterious timing rescue every miss.",
-    detail:
-      "If the misses can only be dismissed by conditions discovered after the result, the promise is no longer carrying public risk.",
+    short: "Misses are explained away afterward",
+    title: "Misses are explained away afterward.",
+    meaning:
+      "Failures are dismissed by hidden sincerity, hidden sin, or mysterious timing discovered only after the bad result.",
+    significance:
+      "A promise that can explain away every miss is no longer taking real public risk.",
   },
   {
     id: "inward-comfort",
-    short: "It means comfort or presence instead",
-    title: "The verse now means inward comfort, presence, or symbol rather than a public effect.",
-    detail:
-      "At this rung, the public promise is gone. A devotional reassurance may remain, but the earthly promise has collapsed.",
+    short: "Now it means comfort instead",
+    title: "The verse now means comfort instead of a real-world result.",
+    meaning:
+      "The public promise is gone. What remains is reassurance, inward presence, or symbolism.",
+    significance:
+      "If you stop here, the verse survives only as comfort, not as a testable public promise.",
   },
   {
     id: "never-public",
     short: "Nothing public was promised",
-    title: "Nothing public was ever really promised.",
-    detail:
-      "This preserves the language only by denying that any earthly prediction was being made in the first place.",
+    title: "Nothing public was promised in the first place.",
+    meaning:
+      "The wording is kept only by denying that the verse ever made an earthly prediction.",
+    significance:
+      "This preserves the verse only by retreating from the original claim completely.",
   },
 ];
 
@@ -435,14 +445,30 @@ function stopLineFor(promiseId) {
   return Number.isInteger(state.stopLines[promiseId]) ? state.stopLines[promiseId] : null;
 }
 
+function explanationPairHtml(meaning, significance, note = "") {
+  const noteHtml = note
+    ? `<p class="mirror-explain-note"><strong>Why this rung matters here:</strong> ${escapeHtml(note)}</p>`
+    : "";
+
+  return `
+    <div class="mirror-explain-pair">
+      <p><strong>Meaning:</strong> ${escapeHtml(meaning)}</p>
+      <p><strong>Why it matters:</strong> ${escapeHtml(significance)}</p>
+      ${noteHtml}
+    </div>
+  `;
+}
+
 function verdictFor(promise) {
   const selected = stopLineFor(promise.id);
   if (selected === null) {
     return {
       code: "pending",
-      title: "Choose a stop line",
-      body:
-        "The pressure point appears after you choose the first rung where the fictive verse stops being a real earthly promise.",
+      title: "Choose your stop line",
+      meaning:
+        "Pick the first rung where you think the verse stops functioning as a real-world promise.",
+      significance:
+        "That choice decides whether the verse fails, survives only as comfort, or is still being treated as fulfilled.",
     };
   }
 
@@ -450,8 +476,10 @@ function verdictFor(promise) {
     return {
       code: "strict",
       title: "Fails as a real promise",
-      body:
-        "By your own line, this verse stopped being a real promise before the only remaining escape. Since the measured earthly effect is flat, the promise has already failed on your standard.",
+      meaning:
+        "By your own line, the verse already fails before the comfort-only fallback.",
+      significance:
+        "Because the measured public effect is flat, the verse cannot still count as a successful real-world promise.",
     };
   }
 
@@ -459,16 +487,20 @@ function verdictFor(promise) {
     return {
       code: "comfort",
       title: "Survives only as comfort",
-      body:
-        "You are drawing the line exactly where the verse stops predicting a distinct public outcome and becomes inward reassurance instead. That preserves devotion, not a testable earthly promise.",
+      meaning:
+        "By your line, the verse now survives only as reassurance, symbolism, or inward meaning.",
+      significance:
+        "That may preserve devotion, but it no longer preserves a testable public promise.",
     };
   }
 
   return {
     code: "allowed",
     title: "Still treated as a promise",
-    body:
-      "You are still allowing inward comfort or symbolic reassurance to count as fulfillment after the public outcome disappears. That keeps the language alive only as a protected non-promise.",
+    meaning:
+      "By your line, comfort or symbolism is still being counted as fulfillment.",
+    significance:
+      "That keeps the verse alive only by protecting it from ordinary public failure.",
   }
 }
 
@@ -639,8 +671,13 @@ function renderCollapseLadder() {
           >
           <span class="mirror-collapse-rung">Rung ${index + 1}</span>
           <strong>${escapeHtml(stage.title)}</strong>
-          <span>${escapeHtml(stage.detail)}</span>
-          ${required ? '<small class="mirror-required-chip">This is the first remaining escape after the flat result.</small>' : ""}
+          ${explanationPairHtml(
+            stage.meaning,
+            stage.significance,
+            required
+              ? "This is the first point where the verse survives only by becoming comfort instead of keeping its original public promise."
+              : ""
+          )}
         </label>
       `;
     })
@@ -660,7 +697,7 @@ function renderVerdict() {
   const verdict = verdictFor(promise);
 
   refs.verdictTitle.textContent = verdict.title;
-  refs.verdictBody.textContent = verdict.body;
+  refs.verdictBody.innerHTML = explanationPairHtml(verdict.meaning, verdict.significance);
   refs.verdictTitle.parentElement.className = `diagnosis-box mirror-verdict-box verdict-${verdict.code}`;
 }
 
@@ -683,7 +720,10 @@ function revealCard(promise) {
       <p class="mirror-reveal-verse"><strong>${escapeHtml(promise.verseRef)}</strong> ${escapeHtml(promise.verse)}</p>
       <p class="mirror-reveal-line"><strong>Your stop line:</strong> ${escapeHtml(stopLineText)}</p>
       <p class="mirror-reveal-line"><strong>Needed retreat:</strong> ${escapeHtml(collapseStages[promise.requiredStopIndex].title)}</p>
-      <p class="mirror-reveal-verdict"><strong>${escapeHtml(verdict.title)}.</strong> ${escapeHtml(verdict.body)}</p>
+      <div class="mirror-reveal-verdict">
+        <strong>${escapeHtml(verdict.title)}</strong>
+        ${explanationPairHtml(verdict.meaning, verdict.significance)}
+      </div>
       <div class="mirror-parallel-tags">${parallels}</div>
     </article>
   `;
@@ -718,7 +758,9 @@ function buildReportText() {
     lines.push(
       `Your stop line: ${selected === null ? "Not set" : collapseStages[selected].title}`
     );
-    lines.push(`Verdict: ${verdict.title}. ${verdict.body}`);
+    lines.push(`Verdict: ${verdict.title}`);
+    lines.push(`Meaning: ${verdict.meaning}`);
+    lines.push(`Why it matters: ${verdict.significance}`);
     lines.push(
       `Christian parallels: ${promise.parallels
         .map((item) => `${item.ref} (${item.note})`)
@@ -746,7 +788,10 @@ function renderReport() {
           <p><strong>Your stop line:</strong> ${escapeHtml(
             selected === null ? "Not set" : collapseStages[selected].title
           )}</p>
-          <p><strong>Verdict:</strong> ${escapeHtml(verdict.title)}. ${escapeHtml(verdict.body)}</p>
+          <div class="mirror-report-verdict">
+            <p><strong>Verdict:</strong> ${escapeHtml(verdict.title)}</p>
+            ${explanationPairHtml(verdict.meaning, verdict.significance)}
+          </div>
         </article>
       `;
     })

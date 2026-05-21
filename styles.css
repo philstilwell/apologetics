@@ -8587,13 +8587,8 @@ body.app-promising-gods #qa-step {
   pointer-events: none;
 }
 
-.mirror-collapse-option strong {
+.mirror-collapse-option > strong {
   font-size: 1.02rem;
-}
-
-.mirror-collapse-option span {
-  color: #4c3b2f;
-  line-height: 1.55;
 }
 
 .mirror-collapse-option.active {
@@ -8612,12 +8607,6 @@ body.app-promising-gods #qa-step {
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.mirror-required-chip {
-  color: #6b3f17;
-  font-size: 0.8rem;
-  font-weight: 800;
 }
 
 .mirror-verdict-box {
@@ -8704,11 +8693,50 @@ body.app-promising-gods #qa-step {
 }
 
 .mirror-reveal-verse,
-.mirror-reveal-line,
-.mirror-reveal-verdict {
+.mirror-reveal-line {
   margin: 0;
   color: #48372c;
   line-height: 1.58;
+}
+
+.mirror-explain-pair {
+  display: grid;
+  gap: 8px;
+}
+
+.mirror-explain-pair p {
+  margin: 0;
+  color: #4b3a2f;
+  line-height: 1.58;
+}
+
+.mirror-explain-pair strong {
+  color: #2d1b10;
+}
+
+.mirror-explain-note {
+  padding-top: 2px;
+  color: #6b3f17;
+  font-weight: 800;
+}
+
+.mirror-collapse-option .mirror-explain-pair {
+  margin-top: 4px;
+}
+
+.mirror-verdict-box .mirror-explain-pair,
+.mirror-reveal-verdict .mirror-explain-pair,
+.mirror-report-verdict .mirror-explain-pair {
+  margin-top: 10px;
+}
+
+.mirror-reveal-verdict {
+  display: grid;
+  gap: 8px;
+}
+
+.mirror-reveal-verdict > strong {
+  font-size: 1rem;
 }
 
 .mirror-parallel-tags {
@@ -8756,6 +8784,11 @@ body.app-promising-gods #qa-step {
 .mirror-report-entry h4 {
   margin: 0 0 8px;
   font-size: 1rem;
+}
+
+.mirror-report-verdict {
+  display: grid;
+  gap: 8px;
 }
 
 @media (max-width: 1050px) {
