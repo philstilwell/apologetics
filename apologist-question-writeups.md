@@ -1,4 +1,4 @@
-# Question-Led Write-Ups for the Nine Crosshairs Tools
+# Question-Led Write-Ups for the Ten Crosshairs Tools
 
 These short write-ups are aimed at Christian apologists, but they are intentionally framed around pressure points rather than promotion. Each section foregrounds a central tension, asks a small set of direct questions, and then gives a plain link to the relevant tool.
 
@@ -34,6 +34,17 @@ This write-up focuses on public vulnerability to correction. Christian apologist
 4. Why should outsiders regard such claims as evidentially serious if no clean disconfirmation conditions are allowed?
 
 Tool link: [Earthly Promise Test Field](https://xhairs.com/apps/falsifiability-field/)
+
+## Promising Gods Mirror
+
+This write-up focuses on asymmetry under fictionalized parallels. Christian apologists can often recognize a failed promise more quickly when it belongs to an invented religion than when it belongs to their own tradition. That asymmetry is the pressure point here. By using fictive gods, fictive holy-book verses, and flat public outcomes, this tool asks where a promise stops being a real promise and becomes subgroup restriction, after-the-fact excuse, symbolic comfort, or outright retreat from any earthly prediction. If an invented promise would be judged collapsed once its public effect disappears, why should a familiar biblical promise be granted a softer standard? The issue is not whether comfort has value. It is whether comfort is being allowed to replace a failed public claim without the apologist admitting that the promise has changed its meaning.
+
+1. At what exact point would you say an invented promise is no longer a real-world promise, and do you keep that same line when the promise is biblical?
+2. If a fictive god promised protection, healing, or answered prayer and the public results stayed flat, would inward reassurance still count as fulfillment?
+3. What principled difference, other than familiarity or loyalty, allows a Christian promise to survive reinterpretations you would reject in a rival scripture?
+4. When a promise is preserved only by becoming symbolic, inward, or non-public, why should outsiders still treat it as evidence for Christianity rather than as devotional reframing?
+
+Tool link: [Promising Gods Mirror](https://xhairs.com/apps/promising-gods-mirror/)
 
 ## Inductive Symmetry Audit
 

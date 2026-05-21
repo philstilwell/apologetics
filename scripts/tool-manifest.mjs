@@ -1005,6 +1005,10 @@ export const HUB_PATHWAYS = [
         detail: "Check whether prayer, healing, and protection claims stay exposed to straightforward verification.",
       },
       {
+        toolId: "promising-gods-mirror",
+        detail: "Strip away biblical familiarity first and test whether the same collapse line is kept when flat outcomes belong to invented scriptures.",
+      },
+      {
         toolId: "resurrection-evidence-audit",
         detail: "Pressure-test miracle arguments with source dependence, alternative stories, and required Bayes factors.",
       },
