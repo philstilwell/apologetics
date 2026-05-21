@@ -599,8 +599,8 @@ function renderActiveSelection() {
   const god = godById.get(promise.godId);
 
   refs.activeSelectionTitle.textContent = `${god.name}: ${promise.title}`;
-  refs.activeSelectionDetail.textContent =
-    "This is the promise currently controlling the verse, the test, the stop line, and the verdict on the right.";
+  refs.activeSelectionDetail.innerHTML =
+    "This is the promise currently controlling the verse, the test, and the verdict. Your next step is to go to <strong>Step 3: Set the collapse line</strong> and choose the first point where this promise stops being a real-world promise.";
   refs.activeSelectionDomain.textContent = promise.domain;
   refs.activeSelectionDomain.style.setProperty("--chip-accent", god.accent);
 }

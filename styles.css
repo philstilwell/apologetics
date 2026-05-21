@@ -8399,10 +8399,10 @@ body.app-promising-gods #qa-step {
   display: grid;
   gap: 10px;
   padding: 16px 18px;
-  border: 1px solid rgba(79, 47, 17, 0.16);
+  border: 1px solid rgba(46, 101, 126, 0.24);
   border-radius: 14px;
-  background: rgba(255, 251, 244, 0.95);
-  box-shadow: 0 12px 28px rgba(79, 47, 17, 0.1);
+  background: linear-gradient(180deg, rgba(233, 246, 251, 0.97), rgba(245, 251, 253, 0.96));
+  box-shadow: 0 12px 28px rgba(35, 84, 106, 0.12);
   backdrop-filter: blur(8px);
 }
 
@@ -8425,8 +8425,38 @@ body.app-promising-gods #qa-step {
   line-height: 1.5;
 }
 
+.mirror-active-selection-actions {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+}
+
+.mirror-next-step-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 9px 14px;
+  border: 1px solid #2f6b83;
+  border-radius: 999px;
+  background: #2f6b83;
+  color: #fff;
+  font-weight: 850;
+  line-height: 1.1;
+  text-decoration: none;
+  box-shadow: 0 10px 20px rgba(47, 107, 131, 0.18);
+}
+
+.mirror-next-step-button:hover,
+.mirror-next-step-button:focus-visible {
+  background: #215368;
+  border-color: #215368;
+}
+
 .mirror-promise-panel {
   padding: clamp(18px, 3vw, 28px);
+  border-color: rgba(122, 77, 34, 0.18);
+  background: linear-gradient(180deg, rgba(255, 248, 236, 0.98), rgba(255, 252, 246, 0.96));
 }
 
 .mirror-promise-head {
@@ -8508,6 +8538,7 @@ body.app-promising-gods #qa-step {
   margin-top: 16px;
   padding: 16px 18px;
   border-left: 6px solid #7a4d22;
+  background: rgba(255, 244, 222, 0.75);
 }
 
 .mirror-required-retreat strong,
@@ -8525,7 +8556,13 @@ body.app-promising-gods #qa-step {
   padding: 14px 16px;
   border-left: 6px solid #8a3f34;
   color: #4b3126;
+  background: rgba(255, 238, 234, 0.82);
   line-height: 1.58;
+}
+
+.mirror-collapse-panel {
+  border-color: rgba(167, 71, 46, 0.2);
+  background: linear-gradient(180deg, rgba(255, 242, 238, 0.98), rgba(255, 250, 247, 0.96));
 }
 
 .mirror-collapse-ladder {
@@ -8605,6 +8642,11 @@ body.app-promising-gods #qa-step {
   color: #4d3a2b;
   font-weight: 700;
   line-height: 1.55;
+}
+
+.mirror-reveal-panel {
+  border-color: rgba(63, 112, 91, 0.18);
+  background: linear-gradient(180deg, rgba(239, 248, 243, 0.98), rgba(249, 253, 250, 0.96));
 }
 
 .mirror-summary-ledger {
@@ -8747,6 +8789,10 @@ body.app-promising-gods #qa-step {
 
   .mirror-active-selection-row {
     flex-direction: column;
+  }
+
+  .mirror-active-selection-actions {
+    justify-items: start;
   }
 }
 
