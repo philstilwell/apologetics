@@ -15,5 +15,25 @@
 .ai-assessment [data-ai-action=copy]{background:#293b2d;color:#fff7e9}
 .ai-assessment [hidden]{display:none!important}
 .ai-assessment :focus-visible{outline:2px solid #916128;outline-offset:3px}
+.ai-readiness-progress{padding:18px 22px;background:#e9e7db;border-bottom:1px solid #b9bcac;color:#28342d}
+.ai-progress-heading{display:flex;justify-content:space-between;gap:15px;font:600 16px/1.4 Barlow,Arial,sans-serif}
+.ai-percent{font-variant-numeric:tabular-nums;color:#795724}
+.ai-readiness-progress progress{appearance:none;display:block;width:100%;height:10px;margin:10px 0;background:#cccec0;border:0;border-radius:0;overflow:hidden}
+.ai-readiness-progress progress::-webkit-progress-bar{background:#cccec0}
+.ai-readiness-progress progress::-webkit-progress-value{background:#987342}
+.ai-readiness-progress progress::-moz-progress-bar{background:#987342}
+.ai-readiness-progress[data-ready=true] progress::-webkit-progress-value{background:#3a6048}
+.ai-readiness-progress[data-ready=true] progress::-moz-progress-bar{background:#3a6048}
+.ai-readiness-progress .ai-progress-note{margin:0;font:400 13px/1.5 Barlow,Arial,sans-serif;color:#4c594f}
+.ai-readiness-checklist{margin:18px 0}
+.ai-readiness-checklist ul{margin:0;padding:0;list-style:none}
+.ai-readiness-checklist li{margin:8px 0;font:400 14px/1.45 Barlow,Arial,sans-serif;color:#69552e}
+.ai-readiness-checklist li[data-complete=true]{color:#3a6048}
+.ai-readiness-checklist button{display:block;width:100%;margin:8px 0;text-align:left}
+.ai-assessment .ai-field-hint{display:block;margin-top:5px;font:400 13px/1.5 Barlow,Arial,sans-serif;color:#4c594f}
+.ai-assessment .ai-confirmation{display:flex;align-items:flex-start;gap:12px;margin:18px 0}
+.ai-confirmation input{appearance:auto;flex:0 0 20px;width:20px;height:20px;min-height:20px;margin:3px 0;accent-color:#395c44}
+.ai-assessment button:disabled{opacity:.55;cursor:not-allowed}
+.ai-assessment .ai-clear-review{padding:4px 0;border:0;text-decoration:underline;font-size:13px}
 @media(max-width:560px){.ai-assessment summary{font-size:21px;padding:18px}.ai-assessment-body{padding:0 18px 18px}.ai-assessment-actions button{width:100%}}
 @media print{.ai-assessment{display:none}}

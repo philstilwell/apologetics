@@ -265,6 +265,7 @@ function render() {
   const answer = activeAnswer();
   $("#exercise-counter").textContent = `PROMISE ${String(PROMISES.indexOf(promise) + 1).padStart(2, "0")} / ${String(PROMISES.length).padStart(2, "0")} · ${step === 1 ? "READ" : step === 2 ? "TEST" : "RECORD"}`;
   content.innerHTML = `<ol class="exercise-steps" aria-label="Your three steps">${["Read the promise", "Name a fair test", "See what remains"].map((label, i) => `<li ${step === i + 1 ? 'aria-current="step"' : ""}><span>0${i + 1}</span>${label}</li>`).join("")}</ol><div class="exercise-body">${step === 1 ? renderInterpretation(promise, answer) : step === 2 ? renderTesting(promise, answer) : renderResult(promise, answer)}</div>`;
+  if (step < 3) content.querySelector('.exercise-steps').after(window.CrosshairsAI.createProgress({ getData: () => promiseAiData(promise.id) }));
   if (step === 3) {
     const aiPanel = window.CrosshairsAI.createPanel({
       id: 'promises', scope: activeId,
@@ -279,7 +280,7 @@ function promiseAiData(id = null) {
   const selected = id ? PROMISES.filter(p => p.id === id) : PROMISES;
   return {
     moduleId: 'promises', module: id ? `Promise commitment: ${selected[0].name}` : 'All promise commitments',
-    source: 'https://xhairs.com/', scope: id || 'All six promise categories and earlier saved records',
+    source: 'https://xhairs.com/', reviewScope: id || undefined, scope: id || 'All six promise categories and earlier saved records',
     inputs: { answers: Object.fromEntries(selected.map(p => [p.id, answers[p.id] || emptyAnswer()])),
       additionalExplanations: Object.fromEntries(selected.map(p => [p.id, window.CrosshairsAI.getExplanation('promises', p.id)])),
       previousAnswers: !id || id === 'longevity' ? previousAnswers : {} },
@@ -420,8 +421,8 @@ document.addEventListener("click", (event) => {
     event.preventDefault();
     openPromise(card.dataset.promise, card);
   }
-  const review = event.target.closest("[data-review]");
-  if (review) openPromise(review.dataset.review, review);
+  const review = event.target.closest("[data-review], [data-ai-review]");
+  if (review) openPromise(review.dataset.review || review.dataset.aiReview, review);
 });
 
 for (const wrap of document.querySelectorAll(".tip-wrap")) {

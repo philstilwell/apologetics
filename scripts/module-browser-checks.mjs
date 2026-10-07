@@ -24,7 +24,8 @@ export async function verifyModuleJourneys(baseUrl, browser) {
       await page.locator('body.module-guide-ready').waitFor();
       assert.equal(await page.locator('h1').count(), 1);
       const m = MODULES[tool.id];
-      const originalControls = await page.locator('main input, main textarea, main select').count();
+      const countOriginalControls = () => page.locator('main input, main textarea, main select').evaluateAll(nodes => nodes.filter(node => !node.closest('[data-ai-assessment]')).length);
+      const originalControls = await countOriginalControls();
       for (const width of [1360, 390, 320]) {
         await page.setViewportSize({ width, height: 900 });
         for (let i = 0; i < 3; i++) {
@@ -37,7 +38,7 @@ export async function verifyModuleJourneys(baseUrl, browser) {
       }
       await page.locator('.module-view-toggle').click();
       assert.equal(await page.locator('[data-guide-hidden]').count(), 0, 'Full view reveals all mapped sections');
-      assert.equal(await page.locator('main input, main textarea, main select').count(), originalControls, 'Stage navigation must not recreate or discard controls');
+      assert.equal(await countOriginalControls(), originalControls, 'Stage navigation must not recreate or discard original controls');
       await fits(`${tool.id} full view at 320px`);
       await page.locator('.module-help > summary').click();
       assert(await page.locator('.module-help-content').isVisible());
@@ -140,6 +141,8 @@ async function verifyMirror(page, baseUrl) {
   assert.match(await page.evaluate(() => buildReportText()), /1 Timothy 4:8/);
   const ai = page.locator('[data-ai-assessment]');
   await ai.locator('summary').click();
+  for (const id of ['position', 'reasons', 'revision']) await ai.locator(`[data-ai-field="${id}"]`).fill('I judge each promise by the same stated conditions and evidence.');
+  await ai.locator('.ai-confirm').check();
   await ai.locator('[data-ai-action="preview"]').click();
   assert.match(await ai.locator('.ai-prompt-preview').inputValue(), /1 Timothy 4:8/, 'AI prompt includes unlocked comparisons after all nine decisions');
   await page.reload();
