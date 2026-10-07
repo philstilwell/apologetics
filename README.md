@@ -4,6 +4,25 @@ Static GitHub Pages suite for Crosshairs audits: compact tools that inspect Chri
 
 Author: Phil Stilwell
 
+## Continuing the project
+
+The working project is **XHAIRS.com — Crosshairs Audit Lab**.
+
+- [Project brief](PROJECT_BRIEF.md): purpose, ten tools, structure, and publishing instructions.
+- [Restoration audit](RESTORATION_AUDIT.md): October 7, 2026 verification results and maintenance priorities.
+- [Agent instructions](AGENTS.md): working conventions and required checks for future chats.
+
+Development checks:
+
+```sh
+npm ci --ignore-scripts
+npx playwright install chromium --only-shell
+npm test
+npm --prefix apps/theism-gradient-audit test
+```
+
+The first two commands prepare local test dependencies. The website itself is served directly from this repository.
+
 ## Apps
 
 <!-- GENERATED:readme-apps:start -->

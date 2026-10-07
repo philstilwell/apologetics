@@ -322,9 +322,10 @@ async function run() {
 
   const server = createStaticServer();
   const baseUrl = await listen(server);
-  const browser = await chromium.launch({ headless: true });
+  let browser;
 
   try {
+    browser = await chromium.launch({ headless: true });
     for (const pageDef of ALL_PAGES) {
       const page = await browser.newPage();
       const pageErrors = [];
@@ -403,16 +404,19 @@ async function run() {
     await verifyMoralStressCalculations(baseUrl, browser);
     console.log("PASS Moral System Stress calculation checks");
   } finally {
-    await browser.close();
-    await new Promise((resolve, reject) => {
-      server.close((error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve();
+    try {
+      await browser?.close();
+    } finally {
+      await new Promise((resolve, reject) => {
+        server.close((error) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          resolve();
+        });
       });
-    });
+    }
   }
 
   console.log(`Smoke suite passed for ${ALL_PAGES.length} pages.`);
