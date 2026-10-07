@@ -1,5 +1,5 @@
-import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, bibleLink, interpretationOptions } from "./promise-catalog.mjs";
-import { STORAGE_KEY, emptyAnswer, isEarthly, requiredCommitments, sanitizeAnswers, assess, reportText } from "./promise-model.mjs";
+import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, bibleLink, interpretationOptions } from "./promise-catalog.mjs?v=20261007-clear-responses";
+import { STORAGE_KEY, emptyAnswer, isEarthly, requiredCommitments, sanitizeAnswers, assess, reportText } from "./promise-model.mjs?v=20261007-clear-responses";
 
 const $ = (selector) => document.querySelector(selector);
 const escape = (text) => String(text).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -85,7 +85,7 @@ function renderInterpretation(promise, answer) {
   return `${heading(promise)}
     <blockquote class="verse-block">“${escape(promise.verse)}”<cite>${escape(promise.ref)} · King James Version</cite></blockquote>
     <details class="context-details"><summary>Read the context before deciding</summary><p>${escape(promise.context)}</p><a href="${bibleLink(promise.contextRef)}" target="_blank" rel="noopener noreferrer">Read the surrounding passage ↗</a><p class="related-verses">Related passages: ${promise.related.map((ref) => `<a href="${bibleLink(ref)}" target="_blank" rel="noopener noreferrer">${escape(ref)}</a>`).join(" · ")}. These may call for different interpretations.</p></details>
-    <fieldset><legend>${escape(promise.question)}</legend><p class="field-hint">Choose the closest reading. For a layered reading, choose its earthly claim and explain the rest below.</p>${radios("interpretation", interpretationOptions(promise), answer.interpretation)}</fieldset>
+    <fieldset><legend>${escape(promise.question)}</legend><p class="field-hint">Choose one statement. “Qualifying” means meeting the passage’s conditions, identified before checking results. If you affirm both an earthly and a spiritual promise, choose the earthly claim.</p>${radios("interpretation", interpretationOptions(promise), answer.interpretation)}</fieldset>
     ${note(answer, "What does this verse mean to you? Which conditions or audience matter?")}
     <div class="exercise-actions"><span class="field-hint">You can change your answer.</span><button class="solid-button" id="next-step" type="button" ${answer.interpretation ? "" : "disabled"}>Continue <span aria-hidden="true">→</span></button></div>`;
 }
@@ -93,9 +93,11 @@ function renderInterpretation(promise, answer) {
 function renderTesting(promise, answer) {
   const reading = interpretationOptions(promise).find((item) => item.id === answer.interpretation);
   return `${heading(promise, "YOUR STANDARD FOR A FAIR TEST")}
-    <p class="result-body">Your reading: <strong>${escape(reading.detail)}</strong></p>
+    <p class="result-body">Your reading: <strong>${escape(reading.label)}</strong> ${escape(reading.detail)}</p>
     <details class="test-proposal"><summary>What could a fair test look like?</summary><p>${escape(promise.test)}</p><p>${escape(promise.caveat)}</p></details>
-    <fieldset><legend>If a fair test failed, would that count against your reading?</legend><p class="field-hint">Assume it really matched your claim. A guarantee and an improved-chances claim require different standards of failure.</p>${radios("failure", FAILURE_OPTIONS, answer.failure)}</fieldset>
+    <fieldset><legend>What would a failure to deliver mean for this promise?</legend><p class="field-hint">${answer.interpretation === "guarantee"
+      ? "Consider a documented case that meets the conditions you specified beforehand but misses the promised result by your stated deadline."
+      : "Consider a fair comparison that finds no promised advantage, with enough cases and time to detect the improvement you predict. One unsuccessful case alone would not refute a claim about better odds."}</p>${radios("failure", FAILURE_OPTIONS, answer.failure)}</fieldset>
     <details class="safeguards"><summary>Make your testing commitment specific</summary><p class="field-hint">Select the safeguards you accept. These are commitments, not completed test definitions.</p><div class="choice-list">${requiredCommitments(answer).map((item) => `<label class="choice"><input type="checkbox" name="commitment" value="${item.id}" ${answer.commitments.includes(item.id) ? "checked" : ""}><span><strong>${escape(item.label)}</strong><small>${escape(item.detail)}</small></span></label>`).join("")}</div></details>
     ${note(answer, promise.suggested)}
     <div class="exercise-actions"><button class="text-button" data-back="1" type="button">← My interpretation</button><button class="solid-button" id="see-result" type="button" ${answer.failure ? "" : "disabled"}>See what remains <span aria-hidden="true">→</span></button></div>`;
@@ -111,10 +113,10 @@ function renderResult(promise, answer) {
   return `${heading(promise, "WHAT YOUR READING PRESERVES")}
     <span class="result-flag" data-code="${result.code}">${escape(result.label)}</span>
     <h3 class="result-heading">${escape(result.title)}</h3><p class="result-body">${escape(result.body)}</p>
-    <dl class="result-facts"><div><dt>Your interpretation</dt><dd>${escape(reading.detail)}</dd></div>
+    <dl class="result-facts"><div><dt>Your interpretation</dt><dd>${escape(reading.label)} ${escape(reading.detail)}</dd></div>
       ${isEarthly(answer) ? `<div><dt>What can count against it</dt><dd>${escape(FAILURE_OPTIONS.find((item) => item.id === answer.failure).label)}</dd></div><div><dt>${missing.length ? "Safeguards still uncommitted" : "Next: make the commitment concrete"}</dt><dd>${escape(missing.length ? missing.map((item) => item.label).join("; ") : promise.suggested)}</dd></div>` : ""}
       ${answer.note ? `<div><dt>Your own words</dt><dd>${escape(answer.note)}</dd></div>` : ""}
-      ${first && first.id !== reading.id ? `<div><dt>Your first saved reading</dt><dd>${escape(first.detail)} A revision alone is not evidence of avoiding a test.</dd></div>` : ""}
+      ${first && first.id !== reading.id ? `<div><dt>Your first saved reading</dt><dd>${escape(first.label)} ${escape(first.detail)} A revision alone is not evidence of avoiding a test.</dd></div>` : ""}
     </dl>
     <p class="result-caveat">This result describes your interpretation and commitments. No study results were supplied. Neither willingness to test nor a favorable outcome, by itself, establishes divine action.</p>
     <p class="result-links"><a href="./apps/falsifiability-field/">Explore the detailed Promise Test Field ↗</a> · Tablet or larger</p>
