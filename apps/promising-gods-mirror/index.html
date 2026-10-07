@@ -28,7 +28,7 @@
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../../styles.css?v=20260521-promising-gods">
-    <script defer src="../../scripts/small-screen-notice.js?v=20261007-promise-intro"></script>
+    <script defer src="../../scripts/small-screen-notice.js?v=20261007-modules"></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -38,7 +38,7 @@
             "@id": "https://xhairs.com/#website",
             "name": "Crosshairs Audit Lab",
             "url": "https://xhairs.com/",
-            "description": "State what you believe New Testament passages promise across six categories. Define each claim, its conditions, and whether failure could count against it.",
+            "description": "Commit to what you believe New Testament passages promise. Explore nine more modules on evidence, Christian arguments, and morality, with guided stages.",
             "inLanguage": "en-US",
             "publisher": {
               "@id": "https://xhairs.com/#phil-stilwell"
@@ -214,8 +214,10 @@
     </script>
       <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
     <link rel="stylesheet" href="../../assets/site-theme.css?v=20261007" data-crosshairs-theme>
+    <link rel="stylesheet" href="../../assets/module-guide.css?v=20261007-modules" data-module-style>
+    <script type="module" src="../../scripts/module-guide.mjs?v=20261007-modules" data-module-script></script>
   </head>
-  <body class="app-promising-gods">
+  <body class="app-promising-gods" data-guided-module="promising-gods-mirror">
     <header class="site-header">
       <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
         <span class="brand-mark" aria-hidden="true">X</span>
@@ -227,24 +229,29 @@
       <a class="site-domain-link" href="https://xhairs.com" aria-label="Visit xhairs.com">
         https://<strong class="site-domain-x">x</strong>hairs.com
       </a>
-      <nav class="top-nav" aria-label="Primary">
-        <a class="hub-link" href="../../">Hub</a>
-        <a href="#gods">Gods</a>
-        <a href="#cases">Promises</a>
-        <a href="#collapse">Collapse line</a>
-        <a href="#reveal">Reveal</a>
-        <a href="#qa-step">Q&amp;A</a>
-      </nav>
+      <nav class="top-nav" aria-label="Primary"><a class="hub-link" href="../../#promises">The promises</a><a class="hub-link" href="../../#apps">Other modules</a></nav>
     </header>
     <nav class="seo-breadcrumbs" aria-label="Breadcrumb">
       <a href="../../">Crosshairs Audit Lab</a><span aria-hidden="true">/</span><span aria-current="page">Promising Gods Mirror</span>
     </nav>
 
     <main class="app-shell mirror-tool">
+      <!-- GENERATED:module-guide:start -->
+      <section class="module-intro" aria-labelledby="module-title">
+        <a class="module-backlink" href="../../#apps">← Explore the other modules</a>
+        <p class="eyebrow">The promise mirror / CROSSHAIRS</p>
+        <h1 id="module-title">Promising Gods Mirror</h1>
+        <p class="module-question">Would I defend the same promise from another god?</p>
+        <p class="module-description">Read the invented claims and their hypothetical results. Decide when each stops promising a physical outcome, then compare your decisions with familiar claims.</p>
+        <details class="module-purpose"><summary>What this module can tell you</summary><p>Nine explicit decisions to compare with the standards you use for Christian promises.</p><p>The gods, verses, studies, and outcomes in these cases are invented. They are thought experiments, not research findings.</p></details>
+      </section>
+      <nav class="module-step-nav" aria-label="Module stages"><a href="#gods" data-module-step="0"><span>01</span><strong>Read the setup</strong></a><a href="#cases" data-module-step="1"><span>02</span><strong>Decide each case</strong></a><a href="#reveal" data-module-step="2"><span>03</span><strong>Compare your standards</strong></a></nav>
+      <div class="module-stage-heading" id="module-stage-heading" tabindex="-1"><p class="eyebrow" id="module-stage-count">STAGE 1 OF 3</p><h2 id="module-stage-title">Read the setup</h2><p id="module-stage-hint">Meet the three invented gods. The same question applies to every case: what result was actually promised?</p><button class="module-view-toggle" type="button" aria-pressed="false" hidden>Show all sections</button><p class="module-input-note">State your own position. Example settings are not commitments you have made.</p></div>
+      <!-- GENERATED:module-guide:end -->
       <section class="app-header">
         <div class="app-title">
           <p class="eyebrow">Companion to Earthly Promise Test Field</p>
-          <h1>Promising Gods Mirror</h1>
+          <h2 data-original-title>Promising Gods Mirror</h2>
           <p>
             Three invented gods make earthly promises about health, protection, provision,
             guidance, prophecy, behavior, and longevity. Each promise is then pressed against a
@@ -331,7 +338,7 @@
                 <strong id="active-selection-title">Aurion: Shielded from plague and violence</strong>
                 <p id="active-selection-detail">
                   This is the promise currently controlling the verse, the test, and the verdict.
-                  Your next step is to go to Step 3 and set the collapse line by choosing the
+                  Set the collapse line below by choosing the
                   first point where this promise stops being a real-world promise.
                 </p>
               </div>
@@ -599,6 +606,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20261007-nt-passages"></script>
+    <script src="./app.js?v=20261007-modules"></script>
   </body>
 </html>

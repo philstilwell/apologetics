@@ -1,6 +1,6 @@
 # XHAIRS.com restoration audit
 
-The October 7, 2026 restoration establishes a verified starting point for continued work on Crosshairs Audit Lab. The recovered current website contains ten tools and passes its existing automated checks. Its public pages and linked PDFs matched the current GitHub source at the start of the restoration. The remaining work concerns document portability, a reveal-flow defect, small-screen access, and deeper interaction coverage.
+The October 7, 2026 restoration establishes a verified starting point for continued work on Crosshairs Audit Lab. The recovered current website contains ten tools and passes its existing automated checks. Its public pages and linked PDFs matched the current GitHub source at the start of the restoration. The remaining work concerns document portability, the archived/supporting pages’ small-screen restrictions, and deeper interaction coverage. Later October 7 work below resolves the Mirror reveal defect and adds guided, phone-accessible primary modules.
 
 ## Recovered version
 
@@ -38,7 +38,7 @@ No tool formula, public page, published PDF, or domain setting was changed as pa
 
 ## Priorities for the next work
 
-**Subsequent redesign, October 7, 2026:** The home page now offers a phone-accessible nine-promise introduction, with original Imagegen emblems and coordinated typography. The older tools and all document paths remain available. The new introduction has separate interpretation rules and browser journey checks. The original PDF-font and Mirror reveal-flow findings below remain open; the homepage portion of the phone-access concern has been addressed.
+**Subsequent redesign, October 7, 2026:** The home page now offers a phone-accessible nine-promise introduction, with original Imagegen emblems and coordinated typography. The older tools and all document paths remain available. The new introduction has separate interpretation rules and browser journey checks. At that stage the PDF-font and Mirror reveal findings remained open. The later module redesign below resolves the Mirror defect and extends phone access to the nine other primary modules.
 
 ### Embed the fonts in the manuals and curricula
 
@@ -48,11 +48,11 @@ All 20 currently linked tool manuals and curricula, plus five older or duplicate
 
 Promising Gods Mirror says the Christian parallels remain locked until all nine cases are decided. However, its visible classroom report already includes those parallels in the initial state, and `buildReportText()` includes them in the copyable report. The browser spot check confirmed that the report is visible while the reveal still reports eight remaining cases.
 
-Review `renderReport()`, `buildReportText()`, and `renderReveal()` in `apps/promising-gods-mirror/app.js`. Apply the completion condition consistently to the screen report, copied report, and printed report. Add a regression check that parallels are absent before completion and present after all nine decisions. This defect predates restoration and remains open.
+Review `renderReport()`, `buildReportText()`, and `renderReveal()` in `apps/promising-gods-mirror/app.js`. Apply the completion condition consistently to the screen report, copied report, and printed report. Add a regression check that parallels are absent before completion and present after all nine decisions. This defect predates restoration. It was resolved in the later module redesign described below; both report paths now require all nine decisions.
 
 ### Decide how phone users should reach the site
 
-The shared notice deliberately blocks interaction below 768 CSS pixels, including the home page. The current tests confirm that behavior; a passing mobile test does not mean the site is usable on a phone. Consider making the home page, tool explanations, and document links accessible first, then adapting individual tool layouts. Preserve the existing product decision until that work is undertaken.
+At restoration, the shared notice deliberately blocked interaction below 768 CSS pixels, including the home page. The later promise and module redesigns replace that restriction on the home page, transition, and nine primary tools. The previous Promise Test Field interface and two supporting pages still retain it. Tests now distinguish phone access from those remaining restrictions.
 
 ### Expand tests around complete user journeys
 
@@ -103,3 +103,16 @@ Prophecy now uses John 16:13 instead of the Pentecost quotation of Joel. The Mir
 Saved format v3 keeps all previous words and test terms. Earlier Long life and Prophecy answers require review and fresh affirmation because the readings have changed; unchanged categories retain their commitments. First affirmed claims and tests remain available through revisions.
 
 Validation passed: all 15 promise-model checks; all 14 pages at desktop and phone sizes; six-category journeys; revised reading displays; migration and fresh affirmation of v2 answers; first-claim and test preservation; downloads, keyboard access, and previous-version compatibility; and the separate Theism Gradient checks.
+
+
+## October 7, 2026 — Beyond promises and guided modules
+
+The landing page now explicitly introduces nine other modules, with a prominent opening link and a visible directory immediately after the promise exercise and saved record. Plain questions organize the cards into belief and evidence, arguments for Christianity, and morality. Manuals, curricula, original tool URLs, and the Threshold → Stress Test → Particulars order remain available.
+
+All nine primary modules now use three guided stages, concise directions, optional background and explanations, a full-view option, and a clear return to the directory. The original controls are retained, not copied or reset. Stage navigation does not count as completion or belief affirmation. Internal links and programmatic jumps reveal the relevant stage. These modules now support phones; narrow tables and the resurrection evidence chart scroll within their containers. The previous Promise Test Field interface and two supporting pages retain their existing screen restriction.
+
+Fixed the pre-existing Mirror reveal defect: Christian parallels are absent from the displayed and copyable reports until all nine cases are decided. The same rendered report is used for printing. Reloading preserves completed decisions and the unlocked comparison.
+
+Added browser coverage for all three stages of all nine modules at 1360, 390, and 320 CSS pixels; full view, optional help, keyboard navigation, saved section links, browser Back, and preservation of controls; Threshold saved answers and the Threshold → Stress → Particulars transfer; Fine-Tuning → Theism Gradient transfer and a rating export/import round trip; and the complete Mirror reveal flow. The full root suite passes: calculation checks, all 15 promise-model checks, all 14 page startup checks, the promise journeys, and these new module journeys. The separate Theism Gradient calculation checks also pass. Desktop and phone screenshots were inspected. All 362 static local page, asset, document, and anchor references across the 14 HTML pages resolve, and metadata regeneration produces no further changes.
+
+No calculation formula, saved-answer format, or PDF was changed. The historical PDF font limitations remain. The expanded checks cover the listed journeys; they are not an exhaustive audit of every philosophical assumption or control.

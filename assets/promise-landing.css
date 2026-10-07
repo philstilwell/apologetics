@@ -173,3 +173,26 @@ textarea{width:100%;resize:vertical;min-height:85px;padding:12px;border:1px soli
 @media(max-width:560px){.exercise-steps li{padding:10px 12px;font-size:10px}.exercise-steps span{font-size:19px}.test-section>summary{font-size:16px}.exception-rule{padding:11px}.transition-main{padding-top:32px}.transition-steps{padding:25px 21px}}
 
 .combined-passages{margin:24px 0}.combined-passages>h3{font:700 25px 'Barlow Condensed',Impact,sans-serif;margin-bottom:9px}.combined-passage{border:1px solid #c4c7ba;margin:10px 0;padding:14px 16px;font-size:13px;color:#4d584d;scroll-margin-top:80px}.combined-passage>summary{display:flex;align-items:center;gap:13px;cursor:pointer;color:#27352b;list-style:none}.combined-passage>summary::-webkit-details-marker{display:none}.combined-passage>summary::after{content:'+';margin-left:auto;font-size:22px;color:#8c693c}.combined-passage[open]>summary::after{content:'−'}.combined-passage summary img{background:var(--bg);flex-shrink:0}.combined-passage summary strong{display:block;font-size:16px}.combined-passage summary small{display:block;margin-top:3px;font-size:12px}.combined-passage[open]>summary{margin-bottom:20px}.combined-passage .verse-block{font-size:16px}.combined-passage>a{display:inline-block;margin-top:12px;color:#765223}.previous-record{margin:20px 0;padding:18px;border:1px solid #797d6d;font-size:13px}.previous-record summary{cursor:pointer;font-weight:700}.previous-record p{margin-top:12px}.previous-record .test-transcript{max-height:350px;overflow:auto;padding:10px 0}.promise-card .card-index{line-height:1.5}
+
+/* Discovery is part of the introduction, not a closed list of unfamiliar names. */
+.hero-other-modules{display:inline-flex;gap:10px;margin:12px 0 0 22px;font-size:14px;text-decoration:none;color:var(--accent);min-height:44px;align-items:center;border-bottom:1px solid #76684e}
+.hero-lab-note{font-size:14px;color:var(--muted);line-height:1.6;max-width:540px;margin-top:20px}
+.module-route-note{border-left:2px solid var(--accent);padding:3px 0 3px 22px;margin:0 0 35px;max-width:760px}
+.module-route-note strong{font-size:17px;font-weight:600}.module-route-note p{font-size:14px;color:var(--muted);margin-top:8px}
+.module-group{margin:32px 0 40px}.module-group-heading{display:flex;align-items:baseline;gap:26px;margin-bottom:18px}
+.module-group-heading h3{font:700 26px 'Barlow Condensed',Impact,sans-serif;min-width:200px}
+.module-group-heading p{font-size:13px;color:var(--muted);max-width:630px}
+.module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.module-card.library-item{display:flex;flex-direction:column;min-width:0;border:1px solid var(--line);padding:24px;background:var(--surface)}
+.module-category{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.module-card h4{font:600 23px/1.2 'Barlow Condensed',Impact,sans-serif;margin:0;max-width:320px}.module-card h4 a{text-decoration:none}
+.module-card h4 a:hover{color:var(--accent)}
+.module-card.library-item>p{font-size:14px;line-height:1.6;margin:13px 0 23px}
+.module-open{display:flex;justify-content:space-between;align-items:center;color:var(--accent);font-size:14px;font-weight:600;min-height:44px;margin-top:auto;text-decoration:none;border-top:1px solid var(--line);padding-top:12px}
+.module-card-details{margin-top:16px;font-size:12px;color:var(--muted)}
+.module-card.library-item .module-card-details summary{font-size:12px;min-height:36px;line-height:1.5;font-weight:400}
+.module-card-details small{display:block;margin:16px 0 10px;font-size:11px}.module-card-details p{font-size:13px!important}
+.module-card-details .library-links{gap:8px 16px}.module-card-details .library-links a{padding:8px 0;min-height:36px}
+.promise-library-note{padding:22px 0}.promise-library-note h3{font-size:23px}.promise-library-note p{max-width:700px}
+@media(max-width:1000px){.module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-other-modules{margin-left:0;display:flex;width:fit-content}}
+@media(max-width:600px){.module-grid{grid-template-columns:minmax(0,1fr)}.module-group-heading{display:block}.module-group-heading p{margin-top:9px}.module-card.library-item{padding:22px}.module-card h4{font-size:26px;max-width:none}.hero-lab-note{font-size:14px}.module-group{margin-bottom:36px}}

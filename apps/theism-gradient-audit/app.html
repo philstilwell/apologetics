@@ -28,7 +28,7 @@
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="./src/styles.css?v=20260514-small-screen-notice">
-    <script defer src="../../scripts/small-screen-notice.js?v=20261007-promise-intro"></script>
+    <script defer src="../../scripts/small-screen-notice.js?v=20261007-modules"></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -38,7 +38,7 @@
             "@id": "https://xhairs.com/#website",
             "name": "Crosshairs Audit Lab",
             "url": "https://xhairs.com/",
-            "description": "State what you believe New Testament passages promise across six categories. Define each claim, its conditions, and whether failure could count against it.",
+            "description": "Commit to what you believe New Testament passages promise. Explore nine more modules on evidence, Christian arguments, and morality, with guided stages.",
             "inLanguage": "en-US",
             "publisher": {
               "@id": "https://xhairs.com/#phil-stilwell"
@@ -255,8 +255,10 @@
     </script>
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
     <link rel="stylesheet" href="../../assets/site-theme.css?v=20261007" data-crosshairs-theme>
+    <link rel="stylesheet" href="../../assets/module-guide.css?v=20261007-modules" data-module-style>
+    <script type="module" src="../../scripts/module-guide.mjs?v=20261007-modules" data-module-script></script>
   </head>
-  <body class="app-page">
+  <body class="app-page" data-guided-module="theism-gradient-audit">
     <header class="site-header">
       <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
         <span class="brand-mark" aria-hidden="true">X</span>
@@ -268,23 +270,29 @@
       <a class="site-domain-link" href="https://xhairs.com" aria-label="Visit xhairs.com">
         https://<strong class="site-domain-x">x</strong>hairs.com
       </a>
-      <nav class="top-nav" aria-label="Primary">
-        <a class="hub-link" href="../../">Hub</a>
-        <a href="#claim-explorer-title">Start Claims</a>
-        <a href="#qa-title">Q&amp;A</a>
-        <a href="#dashboard-title">Dashboard</a>
-        <a href="#report-title">Report</a>
-      </nav>
+      <nav class="top-nav" aria-label="Primary"><a class="hub-link" href="../../#promises">The promises</a><a class="hub-link" href="../../#apps">Other modules</a></nav>
     </header>
     <nav class="seo-breadcrumbs" aria-label="Breadcrumb">
       <a href="../../">Crosshairs Audit Lab</a><span aria-hidden="true">/</span><a href="./">Theism Gradient Audit</a><span aria-hidden="true">/</span><span aria-current="page">Interactive App</span>
     </nav>
 
     <main class="app-shell">
+      <!-- GENERATED:module-guide:start -->
+      <section class="module-intro" aria-labelledby="module-title">
+        <a class="module-backlink" href="../../#apps">← Explore the other modules</a>
+        <p class="eyebrow">From a creator to Christianity / CROSSHAIRS</p>
+        <h1 id="module-title">Theism Gradient</h1>
+        <p class="module-question">Can I defend each step toward my Christian beliefs?</p>
+        <p class="module-description">Start with one claim or one subject. Give separate ratings for confidence and the support you can explain, then review the gaps and dependencies.</p>
+        <details class="module-purpose"><summary>What this module can tell you</summary><p>A map of which beliefs you can defend, which depend on other claims, and which need more work.</p><p>These are your ratings of confidence and support. The overall index does not measure the probability that Christianity is true.</p></details>
+      </section>
+      <nav class="module-step-nav" aria-label="Module stages"><a href="#guided-title" data-module-step="0"><span>01</span><strong>Choose a starting point</strong></a><a href="#claim-explorer-title" data-module-step="1"><span>02</span><strong>Rate your reasons</strong></a><a href="#dashboard-title" data-module-step="2"><span>03</span><strong>Review the whole picture</strong></a></nav>
+      <div class="module-stage-heading" id="module-stage-heading" tabindex="-1"><p class="eyebrow" id="module-stage-count">STAGE 1 OF 3</p><h2 id="module-stage-title">Choose a starting point</h2><p id="module-stage-hint">Start with an unrated claim or choose a subject. Load a sample only if you want to explore someone else’s example.</p><button class="module-view-toggle" type="button" aria-pressed="false" hidden>Show all sections</button><p class="module-input-note">State your own position. Example settings are not commitments you have made.</p></div>
+      <!-- GENERATED:module-guide:end -->
       <section class="topbar" aria-labelledby="app-title">
         <div>
           <p class="eyebrow">Deism-to-Christian-theism assessment</p>
-          <h1 id="app-title">Theism Gradient</h1>
+          <h2 id="app-title" data-original-title>Theism Gradient</h2>
           <p class="app-intro" id="app-intro">
             Audit 50 Christian apologetics claims across a deism-to-Christian-theism spectrum,
             compare confidence with personal substantiation, and surface where bridge claims or
@@ -930,6 +938,6 @@
       </section>
     </main>
 
-    <script type="module" src="./src/app.js?v=20260511-qa-labels"></script>
+    <script type="module" src="./src/app.js?v=20261007-modules"></script>
   </body>
 </html>

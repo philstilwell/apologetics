@@ -640,6 +640,7 @@ function assessParallelWithResponse(parallel, preferredForce, response, stanceNu
 }
 
 function scrollToParallel(selector) {
+  document.dispatchEvent(new CustomEvent("crosshairs:reveal", { detail: { target: document.querySelector(selector) } }));
   document.querySelector(selector)?.scrollIntoView({
     behavior: "smooth",
     block: "center",

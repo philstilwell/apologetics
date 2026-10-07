@@ -7,8 +7,9 @@ import {
   CLOUDFLARE_ANALYTICS_SNIPPET,
   GITHUB_URL,
   HOME_PAGE,
-  HUB_PATHWAYS,
   LASTMOD,
+  MODULES,
+  MODULE_GROUPS,
   PERSON_ID,
   PROMISES,
   SITE_NAME,
@@ -472,6 +473,8 @@ function applyPage(page) {
     }
   }
 
+  const tool = TOOLS.find(tool => tool.primaryPage.file === page.file);
+  if (tool) html = applyModuleGuide(html, tool);
   write(page.file, html);
 }
 
@@ -489,25 +492,53 @@ function replaceGeneratedBlock(content, key, replacement) {
   return content.replace(pattern, `${startMarker}\n${replacement}\n${endMarker}`);
 }
 
-function renderHubCard(tool) {
-  return `          <details class="library-item"><summary><h3>${escapeHtml(tool.name)}</h3></summary>
-            <p>${escapeHtml(tool.hub.summary)}</p>
-            <div class="library-links">${tool.hub.actions.map((action) => `<a href="${action.href}">${escapeHtml(action.label)}</a>`).join("")}</div>
-          </details>`;
-}
-
-function renderHubPathway(pathway) {
-  const links = pathway.steps.map((step) => {
-    const tool = toolById.get(step.toolId);
-    if (!tool) throw new Error(`Unknown tool in pathway: ${step.toolId}`);
-    return `<a href="${tool.hub.actions[0].href}">${escapeHtml(tool.name)}</a>`;
-  });
-  return `<p><strong>${escapeHtml(pathway.title)}</strong><br>${links.join(" → ")}</p>`;
-}
-
 function renderHubCatalog() {
-  return `<div class="audit-library">${TOOLS.map(renderHubCard).join("\n")}</div>
-    <details class="pathway-note"><summary>Guided routes through the lab</summary>${HUB_PATHWAYS.map(renderHubPathway).join("\n")}</details>`;
+  const groups = MODULE_GROUPS.map(group => `<section class="module-group" aria-labelledby="group-${group.id}">
+    <div class="module-group-heading"><h3 id="group-${group.id}">${escapeHtml(group.name)}</h3><p>${escapeHtml(group.description)}</p></div>
+    <div class="module-grid">${TOOLS.filter(tool => MODULES[tool.id]?.group === group.id).map(tool => {
+      const m = MODULES[tool.id];
+      return `<article class="module-card library-item">
+        <span class="module-category">${escapeHtml(m.label)}</span>
+        <h4><a href="${tool.hub.actions[0].href}">${escapeHtml(m.question)}</a></h4>
+        <p>${escapeHtml(m.summary)}</p>
+        <a class="module-open" href="${tool.hub.actions[0].href}">Explore this module <span aria-hidden="true">↗</span></a>
+        <details class="module-card-details"><summary>What you will get · guides</summary><p>${escapeHtml(m.outcome)}</p><small>${escapeHtml(tool.name)}</small><div class="library-links">${tool.hub.actions.slice(1).map(action => `<a href="${action.href}">${escapeHtml(action.label)}</a>`).join("")}</div></details>
+      </article>`;
+    }).join("\n")}</div></section>`).join("\n");
+  const promise = toolById.get("falsifiability-field");
+  return `<div class="module-route-note"><strong>Choose the question you want to face.</strong><p>Each module has three guided stages, explanations when you need them, and access to the full analysis. You can start anywhere; the morality modules work best in order.</p></div>${groups}
+    <article class="promise-library-note library-item"><h3>The promise audit is already on this page.</h3><p>Read the promise, name a fair test, and see what remains. The earlier Promise Test Field is retained for saved work.</p><div class="library-links">${promise.hub.actions.map(action => `<a href="${action.href}">${escapeHtml(action.label)}</a>`).join("")}</div></article>`;
+}
+
+function applyModuleGuide(html, tool) {
+  const m = MODULES[tool.id];
+  if (!m) return html;
+  html = html.replace(/\s*<!-- GENERATED:module-guide:start -->[\s\S]*?<!-- GENERATED:module-guide:end -->/, "");
+  // Preserve the original introduction as optional background, with only one page h1.
+  html = html.replace(/<h1([^>]*)>([\s\S]*?)<\/h1>/, '<h2$1 data-original-title>$2</h2>');
+  html = html.replace(/<body([^>]*)>/, (match, attrs) => `<body${attrs.replace(/ data-guided-module="[^"]*"/, "")} data-guided-module="${tool.id}">`);
+  const intro = `
+      <!-- GENERATED:module-guide:start -->
+      <section class="module-intro" aria-labelledby="module-title">
+        <a class="module-backlink" href="../../#apps">← Explore the other modules</a>
+        <p class="eyebrow">${escapeHtml(m.label)} / CROSSHAIRS</p>
+        <h1 id="module-title">${escapeHtml(tool.primaryPage.expectedH1)}</h1>
+        <p class="module-question">${escapeHtml(m.question)}</p>
+        <p class="module-description">${escapeHtml(m.intro)}</p>
+        <details class="module-purpose"><summary>What this module can tell you</summary><p>${escapeHtml(m.outcome)}</p><p>${escapeHtml(m.note)}</p></details>
+      </section>
+      <nav class="module-step-nav" aria-label="Module stages">${m.steps.map((step, i) => `<a href="${step.target}" data-module-step="${i}"><span>0${i + 1}</span><strong>${escapeHtml(step.label)}</strong></a>`).join("")}</nav>
+      <div class="module-stage-heading" id="module-stage-heading" tabindex="-1"><p class="eyebrow" id="module-stage-count">STAGE 1 OF 3</p><h2 id="module-stage-title">${escapeHtml(m.steps[0].label)}</h2><p id="module-stage-hint">${escapeHtml(m.steps[0].hint)}</p><button class="module-view-toggle" type="button" aria-pressed="false" hidden>Show all sections</button><p class="module-input-note">State your own position. Example settings are not commitments you have made.</p></div>
+      <!-- GENERATED:module-guide:end -->`;
+  html = html.replace(/<main\b[^>]*>/, match => match + intro);
+  html = html.replace(/<nav class="top-nav"[^>]*>[\s\S]*?<\/nav>/, '<nav class="top-nav" aria-label="Primary"><a class="hub-link" href="../../#promises">The promises</a><a class="hub-link" href="../../#apps">Other modules</a></nav>');
+  const assets = `<link rel="stylesheet" href="../../assets/module-guide.css?v=20261007-modules" data-module-style>
+    <script type="module" src="../../scripts/module-guide.mjs?v=20261007-modules" data-module-script></script>`;
+  html = html.replace(/\s*<link[^>]*data-module-style[^>]*>/g, "").replace(/\s*<script[^>]*data-module-script[^>]*><\/script>/g, "");
+  html = html.replace(/  <\/head>/, `    ${assets}
+  </head>`);
+  html = html.replace(/small-screen-notice.js\?v=[^"]+/, 'small-screen-notice.js?v=20261007-modules');
+  return html;
 }
 
 function renderPromiseCards() {

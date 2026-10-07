@@ -831,6 +831,7 @@ function revealBaselineRefusalResponse() {
 }
 
 function focusStartingPoint() {
+  document.dispatchEvent(new CustomEvent("crosshairs:reveal", { detail: { target: document.querySelector("#starting-step") } }));
   document.querySelector("#starting-step")?.scrollIntoView({ block: "start" });
 }
 

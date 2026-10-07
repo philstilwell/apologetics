@@ -390,6 +390,6 @@ async function verifyChangedSources(baseUrl, browser) {
     assert.doesNotMatch(await page.locator(".verse-block").textContent(), /pour out of my Spirit/);
     await page.goto(`${baseUrl}/apps/promising-gods-mirror/`);
     assert.doesNotMatch(await page.locator("body").textContent(), /Honour thy father|Acts 2:17|by whose stripes|Esaias the prophet/);
-    assert.match(await page.locator("body").textContent(), /1 Timothy 4:8/);
+    assert.doesNotMatch(await page.locator("#report-output").textContent(), /1 Timothy 4:8/, "The Mirror must not reveal parallels before its decisions are complete");
   } finally { await context.close(); }
 }

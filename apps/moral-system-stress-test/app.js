@@ -2072,6 +2072,7 @@ function bindEvents() {
     const card = [...refs.elementGrid.querySelectorAll("[data-element-card]")]
       .find((item) => state.routes[item.dataset.elementCard] === line.dataset.sourceRoute);
     if (!card) return;
+    document.dispatchEvent(new CustomEvent("crosshairs:reveal", { detail: { target: card } }));
     card.scrollIntoView({
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
       block: "center"

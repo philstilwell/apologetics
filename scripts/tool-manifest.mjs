@@ -1,4 +1,6 @@
 export const LASTMOD = "2026-10-07";
+import { MODULES } from "./module-catalog.mjs";
+export { MODULES, MODULE_GROUPS } from "./module-catalog.mjs";
 export { PROMISES } from "./promise-catalog.mjs";
 export const SITE_URL = "https://xhairs.com/";
 export const SITE_NAME = "Crosshairs Audit Lab";
@@ -40,7 +42,7 @@ export const HOME_PAGE = {
   kind: "home",
   title: "What Do You Believe God Promises? | Crosshairs Audit Lab",
   description:
-    "State what you believe New Testament passages promise across six categories. Define each claim, its conditions, and whether failure could count against it.",
+    "Commit to what you believe New Testament passages promise. Explore nine more modules on evidence, Christian arguments, and morality, with guided stages.",
   ogType: "website",
   url: SITE_URL,
   keywords: withSeoCoreKeywords([
@@ -1057,6 +1059,9 @@ export const HUB_CATALOG_INTRO = {
   copy:
     "The same tools are still available individually. They stay ordered from the quickest entry point to the most layered assessment, with difficulty tags showing how much setup or conceptual load each audit asks you to carry.",
 };
+
+// The nine redesigned modules are usable on phones; archived pages retain their restriction.
+for (const tool of TOOLS) if (MODULES[tool.id]) tool.primaryPage.mobileAccessible = true;
 
 export const ALL_PAGES = [
   HOME_PAGE,

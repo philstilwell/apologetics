@@ -652,7 +652,7 @@ function renderActiveSelection() {
 
   refs.activeSelectionTitle.textContent = `${god.name}: ${promise.title}`;
   refs.activeSelectionDetail.textContent =
-    "This is the promise currently controlling the verse, the test, and the verdict. Your next step is to go to Step 3 and set the collapse line by choosing the first point where this promise stops being a real-world promise.";
+    "Read this promise, its hypothetical test, and the result. Then choose the first point below where you think it stops promising the same physical outcome.";
   refs.activeSelectionStopLineLabel.textContent =
     selected === null ? "Unset" : collapseStages[selected].short;
   refs.activeSelectionStopLineLabel.className =
@@ -813,8 +813,10 @@ function buildReportText() {
     lines.push(`Verdict: ${verdict.title}`);
     lines.push(`Meaning: ${verdict.meaning}`);
     lines.push(`Why it matters: ${verdict.significance}`);
-    lines.push("Christian parallels:");
-    lines.push(reportParallelsText(promise.parallels));
+    if (completedCount() === promises.length) {
+      lines.push("Christian parallels:");
+      lines.push(reportParallelsText(promise.parallels));
+    } else lines.push("Christian parallels remain locked until all nine cases are decided.");
     lines.push("");
   });
 
@@ -841,12 +843,12 @@ function renderReport() {
             <p><strong>Verdict:</strong> ${escapeHtml(verdict.title)}</p>
             ${explanationPairHtml(verdict.meaning, verdict.significance)}
           </div>
-          <div class="mirror-report-parallels">
+          ${completedCount() === promises.length ? `<div class="mirror-report-parallels">
             <p><strong>Christian parallels:</strong></p>
             <div class="mirror-report-parallel-list">
               ${reportParallelsHtml(promise.parallels)}
             </div>
-          </div>
+          </div>` : "<p>Christian parallels remain locked until all nine cases are decided.</p>"}
         </article>
       `;
     })

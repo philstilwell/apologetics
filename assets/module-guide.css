@@ -1,0 +1,97 @@
+/* The same charcoal, paper, bronze, and guided rhythm as the promise exercise. */
+body[data-guided-module]{min-width:320px;overflow-wrap:break-word}
+body[data-guided-module] *{box-sizing:border-box;min-width:0}
+body[data-guided-module] .app-shell{display:block;width:min(1120px,calc(100% - 64px));margin:0 auto 60px;padding:0}
+body[data-guided-module] .site-header{position:relative;gap:18px;padding:18px 32px}
+body[data-guided-module] .site-domain-link{display:none}
+body[data-guided-module] .top-nav{gap:10px}
+body[data-guided-module] .top-nav a{font-size:13px;min-height:40px;display:inline-flex;align-items:center}
+body[data-guided-module] .seo-breadcrumbs{width:min(1120px,calc(100% - 64px));margin:20px auto}
+.module-intro{padding:35px 0 27px;max-width:900px}
+.module-backlink{display:inline-block;color:#6c502d;font-size:14px;text-decoration:none;margin-bottom:27px}
+.module-intro .eyebrow{font-size:11px;font-weight:700;letter-spacing:1.8px;color:#805b2e;margin:0 0 10px}
+body[data-guided-module] .module-intro h1{font-size:clamp(36px,5vw,60px);margin:0 0 17px;max-width:900px}
+.module-question{font-size:clamp(20px,2.7vw,28px);font-weight:600;line-height:1.25;margin:0 0 13px;max-width:800px}
+.module-description{font-size:17px;line-height:1.6;max-width:750px;margin:0;color:#4f5b52}
+.module-purpose{margin-top:18px;max-width:760px;font-size:14px;line-height:1.6}
+.module-purpose summary{cursor:pointer;color:#6c502d;padding:8px 0;font-weight:600}
+.module-purpose p{margin:8px 0}
+.module-step-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:8px 0 0;border:1px solid #b9bcac;background:#e1dfd4}
+.module-step-nav a{display:flex;gap:14px;align-items:center;text-decoration:none;padding:20px 22px;color:#535c50;border-right:1px solid #b9bcac;border-bottom:3px solid transparent;font-size:16px;line-height:1.3;min-height:80px}
+.module-step-nav a:last-child{border-right:0}
+.module-step-nav a>span{font:700 30px/1 'Barlow Condensed',Impact,sans-serif;color:#95713f}
+.module-step-nav a[aria-current=step]{background:#f8f6ee;border-bottom-color:#967244;color:#202724}
+.module-step-nav a:hover{background:#f8f6ee}
+.module-stage-heading{position:relative;padding:26px 190px 25px 0;scroll-margin-top:20px}
+.module-stage-heading .eyebrow{font-size:10px;color:#805b2e;margin:0 0 6px}
+body[data-guided-module] .module-stage-heading h2{font-size:31px;margin:0 0 8px}
+.module-stage-heading>p:not(.eyebrow){font-size:16px;line-height:1.55;max-width:750px;color:#4f5b52;margin:0}
+body[data-guided-module] .module-stage-heading .module-input-note{font-size:13px;margin-top:8px;color:#62695c}
+.module-view-toggle{position:absolute;right:0;top:28px;font:600 14px Barlow,Arial,sans-serif;background:transparent;border:1px solid #afb49f;padding:10px 14px;min-height:44px;color:#354032;cursor:pointer}
+body.module-guide-ready [data-guide-hidden]{display:none!important}
+body.module-guide-ready main>.guided-steps,body.module-guide-ready main>.mirror-steps{display:none}
+body[data-guided-module] main>section:not(.module-intro){margin:0 0 22px}
+body[data-guided-module] :is(.moral-dashboard,.fine-dashboard,.overreach-dashboard,.plain-result-strip,.active-promise-sticky,.summary-band,.metric-grid){position:static;top:auto}
+body[data-guided-module] :is(.audit-step,.moral-control-panel,.moral-workspace,.moral-status-panels,.moral-challenge-panel,.moral-report-grid,.overreach-card,.panel,.archetype-panel,.comparison-panel,.stance-board,.mirror-gods-panel){border-radius:2px;box-shadow:none}
+body[data-guided-module] :is(input,select,textarea,button){font-family:Barlow,Arial,sans-serif}
+body[data-guided-module] :is(input:not([type=checkbox]):not([type=radio]),select,button){min-height:44px}
+body[data-guided-module] textarea{min-height:100px;max-width:100%}
+body[data-guided-module] :is(input[type=checkbox],input[type=radio]){min-width:18px;min-height:18px;accent-color:#695933}
+body[data-guided-module] :is(.button,button){border-radius:2px}
+body[data-guided-module] :is(svg,canvas,img){max-width:100%}
+body[data-guided-module] .module-stage-footer{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:23px 0 30px;border-top:1px solid #b9bcac;margin-top:26px}
+.module-stage-footer button,.module-finish{font:600 15px Barlow,Arial,sans-serif;min-height:44px;padding:12px 18px;cursor:pointer;background:transparent;border:1px solid #9ca38e;color:#263025;text-decoration:none}
+.module-stage-footer .module-continue,.module-finish{background:#263025;color:#fff7e8;margin-left:auto}
+.module-stage-status{font-size:12px;color:#626b60}
+.module-help{border-top:1px solid #b9bcac;border-bottom:1px solid #b9bcac;margin:0 0 30px}
+.module-help>summary{font-weight:600;cursor:pointer;padding:20px 0;font-size:17px}
+.module-help-content{padding-bottom:20px}
+.module-help-content>section,.module-help-content>details{margin:18px 0}
+.module-background>summary{cursor:pointer;font-size:15px;padding:14px;background:#e1dfd4}
+.module-background .app-header,.module-background .topbar{margin-top:16px}
+.module-table-scroll{overflow-x:auto;max-width:100%}
+body[data-guided-module] :is(.evidence-contribution-chart,.evidence-contribution-legend){min-width:640px}
+body[data-guided-module] [hidden]{display:none!important}
+body[data-guided-module] :focus-visible{outline:2px solid #916128;outline-offset:4px}
+body[data-guided-module] .mirror-collapse-option:focus-within{outline:2px solid #916128;outline-offset:4px}
+@media(max-width:980px){body[data-guided-module] .gradient-track{flex-basis:auto}}
+@media(max-width:767px){
+  body[data-guided-module] .app-shell,body[data-guided-module] .seo-breadcrumbs{width:calc(100% - 32px)}
+  body[data-guided-module] .site-header{padding:16px;flex-wrap:wrap;justify-content:space-between}
+  body[data-guided-module] .site-header .brand{margin:0}
+  body[data-guided-module] .site-header .top-nav{width:100%;flex-wrap:wrap;justify-content:flex-start;gap:4px 10px}
+  body[data-guided-module] .site-header .top-nav a{padding:3px 0;min-height:36px;border:0;font-size:12px}
+  body.module-guide-ready .site-header .top-nav a:not(.hub-link){display:none}
+  body.module-guide-ready .site-header .top-nav{width:auto}
+  .module-intro{padding:10px 0 24px}.module-backlink{margin-bottom:22px}
+  .module-description{font-size:16px}
+  .module-step-nav a{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px 10px;font-size:12px;min-height:100px}
+  .module-step-nav a>span{font-size:24px}
+  .module-stage-heading{padding:22px 0}.module-stage-heading .module-view-toggle{position:static;margin-top:14px}
+  .module-stage-heading>p:not(.eyebrow){font-size:15px}
+  .module-stage-footer{gap:12px}.module-stage-status{width:100%;order:-1}
+  .module-stage-footer .module-continue,.module-finish{margin-left:0;width:100%}
+  body[data-guided-module] :is([class*="-grid"],[class*="-layout"],.audit-step,.audit-grid,.moral-workspace,.moral-status-panels,.moral-control-panel,.moral-report-grid,.report-grid,.app-header,.topbar,.dashboard-grid,.diagnostics-grid,.analysis-grid,.mirror-workbench,.stance-board,.comparison-panel,.summary-band){grid-template-columns:minmax(0,1fr)!important}
+  body[data-guided-module] :is(.app-title,.app-wide,.full-step){grid-column:auto}
+  body[data-guided-module] .evidence-contribution-panel{grid-template-columns:minmax(0,1fr)}
+  body[data-guided-module] .plain-result-strip{grid-template-columns:minmax(0,1fr)}
+  body[data-guided-module] .plain-result-strip .metric-tooltip{left:0;right:auto;width:100%}
+  body[data-guided-module] .preset-action-help .action-tooltip{left:0;right:auto;width:100%}
+  body[data-guided-module] :is(.mirror-case-picker,.claim-picker,.control-panel,.scenario-controls,.moral-sidebar){position:static;max-height:none;width:auto}
+  body[data-guided-module] :is(.section-heading,.summary-head,.panel-heading,.report-actions,.toolbar,.field-inline,.chart-head,.card-header){flex-wrap:wrap;gap:12px}
+  body[data-guided-module] :is(.audit-step,.overreach-card,.moral-control-panel,.moral-workspace,.moral-status-panels,.moral-challenge-panel,.mirror-gods-panel,.panel,.claim-section,.archetype-panel,.comparison-panel,.stance-board){padding:18px}
+  body[data-guided-module] :is(.button,button,select,input,textarea){max-width:100%}
+  body[data-guided-module] :is(h2,h3){overflow-wrap:anywhere}
+  body[data-guided-module] .module-stage-heading h2{font-size:28px}
+  body[data-guided-module] .module-help-content .app-header{padding:0}
+}
+@media print{
+  body.module-guide-ready [data-guide-hidden]{display:revert!important}
+  body[data-guided-module] :is(.module-step-nav,.module-view-toggle,.module-stage-footer,.module-backlink){display:none!important}
+  body[data-guided-module] .app-shell{width:100%;margin:0}
+}
+@media(prefers-reduced-motion:reduce){body[data-guided-module] *{scroll-behavior:auto!important}}
+
+body.module-guide-ready .module-old-step{display:none}
+.module-step-nav{position:sticky;top:0;z-index:20}
+.module-stage-heading{scroll-margin-top:110px}

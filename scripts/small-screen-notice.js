@@ -29,6 +29,7 @@ function createNotice() {
 }
 
 function boot() {
+  if (document.body.hasAttribute("data-guided-module")) return;
   const media = window.matchMedia(`(max-width: ${IPAD_MIN_WIDTH - 1}px)`);
   const notice = createNotice();
 

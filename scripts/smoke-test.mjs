@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 import { ALL_PAGES } from "./tool-manifest.mjs";
+import { verifyModuleJourneys } from "./module-browser-checks.mjs";
 import { verifyPromiseJourneys } from "./promise-browser-checks.mjs";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -403,6 +404,8 @@ async function run() {
     await verifyMoralStressCalculations(baseUrl, browser);
     console.log("PASS Moral System Stress calculation checks");
     await verifyPromiseJourneys(baseUrl, browser);
+    await verifyModuleJourneys(baseUrl, browser);
+    console.log("PASS Module stages, phone layouts, saved inputs, exports, handoffs, and Mirror reveal boundary");
     console.log("PASS Guided promise audit: all six categories, evidence and exception rules, revisions, storage, downloads, keyboard/phone access, and previous shared-state/JSON compatibility");
   } finally {
     try {

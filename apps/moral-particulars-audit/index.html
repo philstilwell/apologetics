@@ -28,7 +28,7 @@
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../../styles.css?v=20260514-small-screen-notice">
-    <script defer src="../../scripts/small-screen-notice.js?v=20261007-promise-intro"></script>
+    <script defer src="../../scripts/small-screen-notice.js?v=20261007-modules"></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -38,7 +38,7 @@
             "@id": "https://xhairs.com/#website",
             "name": "Crosshairs Audit Lab",
             "url": "https://xhairs.com/",
-            "description": "State what you believe New Testament passages promise across six categories. Define each claim, its conditions, and whether failure could count against it.",
+            "description": "Commit to what you believe New Testament passages promise. Explore nine more modules on evidence, Christian arguments, and morality, with guided stages.",
             "inLanguage": "en-US",
             "publisher": {
               "@id": "https://xhairs.com/#phil-stilwell"
@@ -163,8 +163,10 @@
     </script>
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
     <link rel="stylesheet" href="../../assets/site-theme.css?v=20261007" data-crosshairs-theme>
+    <link rel="stylesheet" href="../../assets/module-guide.css?v=20261007-modules" data-module-style>
+    <script type="module" src="../../scripts/module-guide.mjs?v=20261007-modules" data-module-script></script>
   </head>
-  <body class="app-moral-particulars">
+  <body class="app-moral-particulars" data-guided-module="moral-particulars-audit">
     <header class="site-header">
       <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
         <span class="brand-mark" aria-hidden="true">X</span>
@@ -176,15 +178,7 @@
       <a class="site-domain-link" href="https://xhairs.com" aria-label="Visit xhairs.com">
         https://<strong class="site-domain-x">x</strong>hairs.com
       </a>
-      <nav class="top-nav" aria-label="Primary">
-        <a class="hub-link" href="../../">Hub</a>
-        <a href="#issue-step">Issue</a>
-        <a href="#judgment-step">Judgment</a>
-        <a href="#disagreement-step">Disagreement</a>
-        <a href="#patterns-step">Patterns</a>
-        <a href="#qa-step">Q&A</a>
-        <a href="#report-step">Report</a>
-      </nav>
+      <nav class="top-nav" aria-label="Primary"><a class="hub-link" href="../../#promises">The promises</a><a class="hub-link" href="../../#apps">Other modules</a></nav>
     </header>
     <nav class="seo-breadcrumbs" aria-label="Breadcrumb">
       <a href="../../">Crosshairs Audit Lab</a><span aria-hidden="true">/</span><span aria-current="page">Moral Particulars Audit</span>
@@ -220,10 +214,22 @@
     </section>
 
     <main class="app-shell morality-tool particulars-tool">
+      <!-- GENERATED:module-guide:start -->
+      <section class="module-intro" aria-labelledby="module-title">
+        <a class="module-backlink" href="../../#apps">← Explore the other modules</a>
+        <p class="eyebrow">3. Apply it to real cases / CROSSHAIRS</p>
+        <h1 id="module-title">Moral Particulars Audit</h1>
+        <p class="module-question">Do my moral judgments follow the reasons I give?</p>
+        <p class="module-description">Choose a case and state your judgment. Identify what grounds it, explain disagreement, and compare your reasoning across cases.</p>
+        <details class="module-purpose"><summary>What this module can tell you</summary><p>A case-by-case record showing where your moral reasons are consistent and where they need explanation.</p><p>A pattern in your answers is a prompt for reflection. It is not an automatic verdict about right and wrong.</p></details>
+      </section>
+      <nav class="module-step-nav" aria-label="Module stages"><a href="#issue-step" data-module-step="0"><span>01</span><strong>Choose a case</strong></a><a href="#judgment-step" data-module-step="1"><span>02</span><strong>State your reasons</strong></a><a href="#patterns-step" data-module-step="2"><span>03</span><strong>Check your consistency</strong></a></nav>
+      <div class="module-stage-heading" id="module-stage-heading" tabindex="-1"><p class="eyebrow" id="module-stage-count">STAGE 1 OF 3</p><h2 id="module-stage-title">Choose a case</h2><p id="module-stage-hint">Select a concrete question. A preset supplies example weights; it does not settle your judgment.</p><button class="module-view-toggle" type="button" aria-pressed="false" hidden>Show all sections</button><p class="module-input-note">State your own position. Example settings are not commitments you have made.</p></div>
+      <!-- GENERATED:module-guide:end -->
       <section class="app-header">
         <div class="app-title">
           <p class="eyebrow">Particular judgment audit</p>
-          <h1>Moral Particulars Audit</h1>
+          <h2 data-original-title>Moral Particulars Audit</h2>
           <p>
             Map concrete Christian moral judgments to the grounders carrying them, then compare
             those grounders with the way disagreement is diagnosed.
@@ -670,6 +676,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260514-calculation-audit"></script>
+    <script src="app.js?v=20261007-modules"></script>
   </body>
 </html>

@@ -28,7 +28,7 @@
     <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../../styles.css?v=20260514-calculation-audit">
-    <script defer src="../../scripts/small-screen-notice.js?v=20261007-promise-intro"></script>
+    <script defer src="../../scripts/small-screen-notice.js?v=20261007-modules"></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -38,7 +38,7 @@
             "@id": "https://xhairs.com/#website",
             "name": "Crosshairs Audit Lab",
             "url": "https://xhairs.com/",
-            "description": "State what you believe New Testament passages promise across six categories. Define each claim, its conditions, and whether failure could count against it.",
+            "description": "Commit to what you believe New Testament passages promise. Explore nine more modules on evidence, Christian arguments, and morality, with guided stages.",
             "inLanguage": "en-US",
             "publisher": {
               "@id": "https://xhairs.com/#phil-stilwell"
@@ -244,8 +244,10 @@
     </script>
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "108b2e39d7a948c0b35d5ad64c7fe042"}'></script><!-- End Cloudflare Web Analytics -->
     <link rel="stylesheet" href="../../assets/site-theme.css?v=20261007" data-crosshairs-theme>
+    <link rel="stylesheet" href="../../assets/module-guide.css?v=20261007-modules" data-module-style>
+    <script type="module" src="../../scripts/module-guide.mjs?v=20261007-modules" data-module-script></script>
   </head>
-  <body class="app-resurrection">
+  <body class="app-resurrection" data-guided-module="resurrection-evidence-audit">
     <header class="site-header">
       <a class="brand" href="../../" aria-label="Crosshairs Audit Lab home">
         <span class="brand-mark" aria-hidden="true">X</span>
@@ -257,26 +259,29 @@
       <a class="site-domain-link" href="https://xhairs.com" aria-label="Visit xhairs.com">
         https://<strong class="site-domain-x">x</strong>hairs.com
       </a>
-      <nav class="top-nav" aria-label="Primary">
-        <a class="hub-link" href="../../">Hub</a>
-        <a href="#claim-step">Claim</a>
-        <a href="#starting-step">Starting Point</a>
-        <a href="#evidence-step">Evidence</a>
-        <a href="#alternatives-step">Alternatives</a>
-        <a href="#result-step">Result</a>
-        <a href="#qa-step">Q&A</a>
-        <a href="#report-step">Report</a>
-      </nav>
+      <nav class="top-nav" aria-label="Primary"><a class="hub-link" href="../../#promises">The promises</a><a class="hub-link" href="../../#apps">Other modules</a></nav>
     </header>
     <nav class="seo-breadcrumbs" aria-label="Breadcrumb">
       <a href="../../">Crosshairs Audit Lab</a><span aria-hidden="true">/</span><span aria-current="page">Resurrection Evidence Audit</span>
     </nav>
 
     <main class="app-shell resurrection-audit guided-resurrection">
+      <!-- GENERATED:module-guide:start -->
+      <section class="module-intro" aria-labelledby="module-title">
+        <a class="module-backlink" href="../../#apps">← Explore the other modules</a>
+        <p class="eyebrow">The resurrection / CROSSHAIRS</p>
+        <h1 id="module-title">Resurrection Evidence Audit</h1>
+        <p class="module-question">How much does the resurrection evidence support?</p>
+        <p class="module-description">State exactly what you believe happened. Assess the evidence both with and without that claim, then examine what your assumptions imply.</p>
+        <details class="module-purpose"><summary>What this module can tell you</summary><p>A transparent account of how your starting assumptions, evidence ratings, and alternatives affect the conclusion.</p><p>The displayed probability is conditional on your inputs and this model. It is not an independently established historical probability.</p></details>
+      </section>
+      <nav class="module-step-nav" aria-label="Module stages"><a href="#claim-step" data-module-step="0"><span>01</span><strong>State the claim</strong></a><a href="#evidence-step" data-module-step="1"><span>02</span><strong>Weigh the evidence</strong></a><a href="#result-step" data-module-step="2"><span>03</span><strong>Review your conclusion</strong></a></nav>
+      <div class="module-stage-heading" id="module-stage-heading" tabindex="-1"><p class="eyebrow" id="module-stage-count">STAGE 1 OF 3</p><h2 id="module-stage-title">State the claim</h2><p id="module-stage-hint">Specify the event you are assessing and its starting plausibility before adding this case’s evidence.</p><button class="module-view-toggle" type="button" aria-pressed="false" hidden>Show all sections</button><p class="module-input-note">State your own position. Example settings are not commitments you have made.</p></div>
+      <!-- GENERATED:module-guide:end -->
       <section class="app-header">
         <div class="app-title">
           <p class="eyebrow">Structured evidence audit</p>
-          <h1><span>Resurrection</span> <span>Evidence Audit</span></h1>
+          <h2 data-original-title><span>Resurrection</span> <span>Evidence Audit</span></h2>
           <p>
             Evaluate a claim, its baseline plausibility, the evidence offered for it,
             the alternative explanations still in play, and the confidence the evidence can
@@ -1268,6 +1273,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260514-calculation-audit"></script>
+    <script src="./app.js?v=20261007-modules"></script>
   </body>
 </html>

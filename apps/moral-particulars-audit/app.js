@@ -1034,6 +1034,7 @@ function renderIssueGrid() {
       state.selectedIssueId = button.dataset.issue;
       saveState();
       render();
+      document.dispatchEvent(new CustomEvent("crosshairs:reveal", { detail: { target: document.querySelector("#judgment-step") } }));
       document.querySelector("#judgment-step")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
@@ -1193,6 +1194,7 @@ function renderLedger() {
       state.selectedIssueId = button.dataset.ledgerIssue;
       saveState();
       render();
+      document.dispatchEvent(new CustomEvent("crosshairs:reveal", { detail: { target: document.querySelector("#judgment-step") } }));
       document.querySelector("#judgment-step")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
@@ -2047,6 +2049,7 @@ function selectGrounderMapCase(grounderId) {
   state.selectedIssueId = strongestCase.issue.id;
   saveState();
   render();
+  document.dispatchEvent(new CustomEvent("crosshairs:reveal", { detail: { target: document.querySelector("#judgment-step") } }));
   document.querySelector("#judgment-step")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 

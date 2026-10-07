@@ -20,7 +20,15 @@ The Promise Test Field has been phased out as the primary experience. Its agenda
 
 The original `/apps/falsifiability-field/` URL is a transition to the home-page exercise. Links with `#state=` reopen the exact shared state in `legacy.html`; previous JSON files still import and export there. Previous manuals remain at their published URLs and are labeled as previous-version documents. No automatic conversion treats old scenario settings as personal beliefs.
 
-All six categories, their hover/focus/tap explanations, the transition page, and the exercise work on phones. The detailed audit library retains all ten tools, manuals, curricula, and the academic paper. Those older interactive pages still require at least 768 CSS pixels.
+All six categories, their hover/focus/tap explanations, the transition page, and the exercise work on phones. The detailed audit library retains all ten tools, manuals, curricula, and the academic paper. The nine primary modules now also work on phones; only the previous Promise Test Field interface and two supporting pages retain the 768 CSS pixel restriction.
+
+## Other modules and guided presentation
+
+The home page explicitly presents promises as one starting point. Its visible “Beyond promises” directory introduces nine other modules through plain questions, grouped into belief and evidence, arguments for Christianity, and morality. The morality cards remain in Threshold → Stress Test → Particulars order. Manuals, curricula, and the earlier Promise Test Field remain linked.
+
+Each of the nine primary modules follows three guided stages with concise instructions, previous/continue controls, an optional full view, expandable background, and a route back to the directory. These stages organize the existing exercises; they do not certify that a visitor has supplied or affirmed every answer. Original calculations, storage keys, and transfers remain intact. Internal links reveal the appropriate stage, and tables or wide charts scroll within the page on phones.
+
+Promising Gods Mirror now withholds Christian parallels from both the displayed and copyable reports until all nine decisions are made. The invented cases remain explicitly hypothetical.
 
 ## Purpose and interpretation
 
@@ -50,13 +58,14 @@ Each tool has a manual and curriculum linked from the home page. The full site h
 The site uses ordinary HTML, CSS, and JavaScript and is published directly from the repository root. There is no required production build or paid application backend in this setup. Node.js and Playwright support local tests; PDF and paper generation have separate requirements.
 
 - `index.html`, `assets/promise-landing.css`, and `scripts/promise-intro.mjs` provide the introductory home page. `scripts/promise-catalog.mjs` holds the verses and proposed tests; `scripts/promise-model.mjs` holds the interpretation rules and saved-answer validation; `scripts/promise-testing.mjs` holds evidence and exception guidance and test-term checks.
+- `scripts/module-catalog.mjs` defines the nine module introductions, directory groups, and stage mappings. `scripts/module-guide.mjs` presents the existing controls in guided stages, with `assets/module-guide.css` providing the shared layout and phone adaptations.
 - `styles.css` retains the detailed tool layouts. `assets/site-theme.css` supplies the coordinated charcoal, ivory, and bronze presentation without changing their calculations or saved-answer formats. Self-hosted Barlow fonts and their licenses are in `assets/fonts/`; generated promise emblems and their Imagegen prompts are in `assets/promises/`.
 - `apps/` holds the ten tools and their individual logic.
 - `scripts/tool-manifest.mjs` describes the tool catalog, document links, pathways, and page metadata. `scripts/apply-seo.mjs` applies that material to generated sections and search metadata.
 - `assets/manuals/`, `assets/curricula/`, `output/pdf/`, and the Theism Gradient `docs/` folder contain public PDFs. Preserve the existing paths because they are published links.
 - `paper/crosshairs-audit-paper.qmd` and `paper/references.bib` contain the authoritative paper source and references. Read `paper/README.md` before editing it.
 - `apologist-question-writeups.md` holds question-led descriptions useful for outreach.
-- `scripts/small-screen-notice.js` deliberately disables interaction below 768 CSS pixels on the detailed tool pages. The home page does not load this restriction.
+- `scripts/small-screen-notice.js` deliberately disables interaction below 768 CSS pixels on the previous Promise Test Field interface and the two supporting pages. The nine guided modules bypass it; the home page and transition do not load it.
 
 The home page groups tools into guided pathways. Preserve the progression from Moral System Threshold to Moral System Stress Test to Moral Particulars, and the bridge from Fine-Tuning to the Theism Gradient. Several tools store responses in the visitor's browser and exchange results through imports or handoffs; changes to those formats require compatibility checks.
 

@@ -1157,6 +1157,7 @@ function handleAnchorNavigation(event) {
 }
 
 function scrollToTarget(target, options = {}) {
+  document.dispatchEvent(new CustomEvent("crosshairs:reveal", { detail: { target } }));
   const header = document.querySelector(".site-header");
   const dashboard = document.querySelector(".dashboard-grid");
   const headerHeight = header && getComputedStyle(header).position === "sticky" ? header.offsetHeight : 0;
