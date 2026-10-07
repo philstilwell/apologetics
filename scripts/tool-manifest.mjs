@@ -226,25 +226,28 @@ export const TOOLS = [
     name: "Earthly Promise Test Field",
     previewPath: "/apps/falsifiability-field/",
     readmeDescription:
-      "a verification-willingness tool for testing whether earthly God-claims are exposed to ordinary checks or protected by escape hatches.",
+      "now integrated into the home-page promise commitments, with the previous interface preserved for saved files and shared results.",
     hub: {
       cardClass: "hub-card-promise",
       kicker: "Live audit",
       tags: ["Easy", "Concrete claims"],
       summary:
-        "Maps claims about prayer, healing, protection, future knowledge, wisdom, behavior, morbidity, and longevity onto a live field to show whether they are open to robust testing or insulated by excuses.",
+        "Now part of the guided home-page exercise: read the promise, name a fair test, and see what remains. Record evidence, outcome rules, exceptions, and what would change your belief.",
       actions: [
-        { href: "./apps/falsifiability-field/", label: "Open field" },
-        manualPdf("./output/pdf/earthly-promise-test-field-manual.pdf"),
-        curriculumPdf("./output/pdf/earthly-promise-test-field-curriculum.pdf"),
+        { href: "#promises", label: "Choose a promise" },
+        { href: "./apps/falsifiability-field/", label: "Previous saved work" },
+        { href: "./output/pdf/earthly-promise-test-field-manual.pdf", label: "Previous manual PDF" },
+        { href: "./output/pdf/earthly-promise-test-field-curriculum.pdf", label: "Previous curriculum PDF" },
       ],
     },
     primaryPage: {
       file: "apps/falsifiability-field/index.html",
-      kind: "app",
-      title: "Earthly Promise Test Field | Christian Apologetics Prayer Claim Audit",
+      kind: "article",
+      mobileAccessible: true,
+      landingStyle: true,
+      title: "Promise Test Field | Continue Your Commitment on Crosshairs",
       description:
-        "Test prayer, healing, protection, wisdom, prophecy, and other Christian apologetics promise claims to see whether they stay open to ordinary verification.",
+        "The Promise Test Field now continues in the guided home-page audit. Read the promise, name a fair test, and see what your commitment leaves standing.",
       ogType: "website",
       url: "https://xhairs.com/apps/falsifiability-field/",
       name: "Earthly Promise Test Field",
@@ -263,44 +266,31 @@ export const TOOLS = [
       ]),
       features: [
         "Test whether earthly divine promises remain open to public checks",
-        "Compare study strength, escape hatches, and mind-change commitments",
-        "Map how claims move between protected and testable positions",
+        "Record evidence, outcome rules, exceptions, and belief revision",
+        "Distinguish observable, protected, spiritual, and historical readings",
       ],
       breadcrumbs: [
         { name: SITE_NAME, href: "../../" },
         { name: "Earthly Promise Test Field" },
       ],
-      related: [
-        {
-          href: "../promising-gods-mirror/",
-          name: "Promising Gods Mirror",
-          summary:
-            "Begin with invented scriptures and flat outcomes to test whether the same collapse line is kept before moving into biblical promise claims.",
-        },
-        {
-          href: "../resurrection-evidence-audit/",
-          name: "Resurrection Evidence Audit",
-          summary:
-            "Compare earthly promise claims with a dedicated tool for miracle and resurrection evidence.",
-        },
-        {
-          href: "../theism-gradient-audit/app.html",
-          name: "Deism-Theism Gradient Audit",
-          summary:
-            "See how prayer and healing claims fit inside a wider Christian substantiation profile.",
-        },
-        {
-          href: "../inductive-symmetry-audit/",
-          name: "Inductive Symmetry Audit",
-          summary:
-            "Check whether your standard for religious promise claims matches the standard used elsewhere.",
-        },
-      ],
       sitemap: { changefreq: "monthly", priority: "0.8" },
-      faqContainerId: "qa-step",
-      expectedH1: "Earthly Promise Test Field",
+      expectedH1: "THE SAME QUESTIONS. A CLEARER PATH.",
     },
-    supportPages: [],
+    supportPages: [{
+      file: "apps/falsifiability-field/legacy.html",
+      kind: "app",
+      title: "Earthly Promise Test Field — Previous Version | Crosshairs",
+      description: "Previous Promise Test Field interface, retained for saved JSON files and shared results. Use the home page for the current guided promise audit.",
+      ogType: "website",
+      url: "https://xhairs.com/apps/falsifiability-field/legacy.html",
+      name: "Earthly Promise Test Field — Previous Version",
+      keywords: withSeoCoreKeywords(["promise testing", "previous version"]),
+      about: withSeoCoreAbout(["falsifiability", "religious claims"]),
+      features: ["Open previous saved files and shared results"],
+      robots: "noindex, follow",
+      breadcrumbs: [{ name: SITE_NAME, href: "../../" }, { name: "Promise Test Field", href: "./" }, { name: "Previous Version" }],
+      expectedH1: "Earthly Promise Test Field",
+    }],
   },
   {
     id: "promising-gods-mirror",

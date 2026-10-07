@@ -20,9 +20,10 @@ This repository is Phil Stilwell's Crosshairs Audit Lab at https://xhairs.com/. 
 - `scripts/tool-manifest.mjs` is the shared catalog for tools, page metadata, document links, pathways, and generated content. Read `scripts/apply-seo.mjs` before running `npm run seo:apply`; it rewrites multiple files. Review its complete diff.
 - Preserve the distinction between entered assumptions, model scores, and established evidence. Do not present audit pressure or personal substantiation scores as objective probabilities that a religion is true or false.
 - Keep the morality sequence: Threshold, Stress Test, Particulars. Preserve imports, exports, storage keys, and handoffs when changing a tool.
-- The promise introduction on the home page is usable on phones. The ten detailed tools and their supporting pages deliberately block interaction below 768 CSS pixels. Preserve this distinction and update the tests if it changes.
+- The promise introduction on the home page is usable on phones. The Promise Test Field transition page is also phone-accessible; its previous interface and the other detailed tools and supporting pages deliberately block interaction below 768 CSS pixels. Preserve this distinction and update the tests if it changes.
 - The home-page promise catalog is in `scripts/promise-catalog.mjs`, re-exported by the tool manifest. The introductory answers use a separate storage key, `crosshairs.promise-intro.v1`; never overwrite saved work in the detailed tools.
 - The introduction demands an explicit commitment to the visitor's actual belief about what each passage promises. Count only definite, personally specified, explicitly affirmed positions as committed. Keep uncertainty, unfinished testing standards, and unconfirmed drafts visibly unresolved. Never silently convert earlier saved selections into commitments. Preserve the first affirmed claim and testing standard through revisions.
+- The Promise Test Field now continues inside the home-page three-step exercise. Preserve `apps/falsifiability-field/legacy.html` for older JSON and `#state=` shares. `scripts/promise-testing.mjs` supplies evidence guidance and exception checks. A belief commitment is distinct from a complete test; never describe entered terms as validated research or real-world results.
 - The Quarto manuscript in `paper/crosshairs-audit-paper.qmd` is authoritative for the paper; its Typst counterpart is not kept in sync.
 - Keep private recovery notes and raw audit evidence under ignored `.local/`. Do not commit personal conversation exports, local machine paths, credentials, or browser profile data.
 
@@ -30,7 +31,7 @@ This repository is Phil Stilwell's Crosshairs Audit Lab at https://xhairs.com/. 
 
 After installing the locked development dependencies with `npm ci --ignore-scripts`, install the matching browser if needed with `npx playwright install chromium --only-shell`.
 
-- Run `npm test` for the root calculation tests, promise-interpretation rules, 13-page desktop/mobile startup checks, and complete introductory promise journeys (including saved readings, revisions, downloads, and keyboard/phone access).
+- Run `npm test` for the root calculation tests, promise-interpretation rules, 14-page desktop/mobile startup checks, and complete introductory promise journeys (including saved readings, revisions, downloads, and keyboard/phone access).
 - Run `npm --prefix apps/theism-gradient-audit test` for its separate scoring and claim-bank checks.
 - Exercise changed controls, storage, exports, and handoffs in a browser. A successful startup check is not evidence that every calculation or interaction was audited.
 - Check affected internal links, downloadable files, and PDF font embedding. Document outstanding issues rather than silently changing philosophical assumptions.

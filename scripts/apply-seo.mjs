@@ -362,7 +362,7 @@ function buildMetaBlock(page) {
       ? ""
       : `\n    <link rel="alternate" hreflang="en-US" href="${page.url}">\n    <link rel="alternate" hreflang="x-default" href="${page.url}">`;
 
-  return `    <meta name="author" content="Phil Stilwell">\n    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">\n    <meta name="theme-color" content="${extractMetaContent(page.file, "theme-color")}">\n    <link rel="canonical" href="${page.url}">${alternates}\n    <meta property="og:site_name" content="${SITE_NAME}">\n    <meta property="og:type" content="${page.ogType}">\n    <meta property="og:locale" content="en_US">\n    <meta property="og:title" content="${page.title}">\n    <meta property="og:description" content="${page.description}">\n    <meta property="og:url" content="${page.url}">\n    <meta property="og:image" content="https://xhairs.com/assets/crosshairs-og.svg">\n    <meta property="og:image:alt" content="Crosshairs Audit Lab: belief under inspection.">\n    <meta name="twitter:card" content="summary_large_image">\n    <meta name="twitter:title" content="${page.title}">\n    <meta name="twitter:description" content="${page.description}">\n    <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">`;
+  return `    <meta name="author" content="Phil Stilwell">\n    <meta name="robots" content="${page.robots || "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}">\n    <meta name="theme-color" content="${extractMetaContent(page.file, "theme-color")}">\n    <link rel="canonical" href="${page.url}">${alternates}\n    <meta property="og:site_name" content="${SITE_NAME}">\n    <meta property="og:type" content="${page.ogType}">\n    <meta property="og:locale" content="en_US">\n    <meta property="og:title" content="${page.title}">\n    <meta property="og:description" content="${page.description}">\n    <meta property="og:url" content="${page.url}">\n    <meta property="og:image" content="https://xhairs.com/assets/crosshairs-og.svg">\n    <meta property="og:image:alt" content="Crosshairs Audit Lab: belief under inspection.">\n    <meta name="twitter:card" content="summary_large_image">\n    <meta name="twitter:title" content="${page.title}">\n    <meta name="twitter:description" content="${page.description}">\n    <meta name="twitter:image" content="https://xhairs.com/assets/crosshairs-og.svg">`;
 }
 
 function buildBreadcrumbHtml(page) {
@@ -462,7 +462,7 @@ function applyPage(page) {
   html = insertBreadcrumbs(html, page);
   html = insertRelatedLinks(html, page);
   html = ensureCloudflareAnalytics(html);
-  if (page.kind !== "home") {
+  if (page.kind !== "home" && !page.landingStyle) {
     const themeHref = path.relative(path.dirname(page.file), "assets/site-theme.css").split(path.sep).join("/") + "?v=20261007";
     const themeLink = `<link rel="stylesheet" href="${themeHref}" data-crosshairs-theme>`;
     if (html.includes("data-crosshairs-theme")) {

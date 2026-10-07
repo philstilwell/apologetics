@@ -378,7 +378,7 @@ async function run() {
       const notice = mobilePage.locator(".small-screen-notice");
       if (pageDef.mobileAccessible) {
         assert.equal(await notice.count(), 0, "The new introduction must remain available on phones");
-        assert.equal(await mobilePage.locator(".promise-card").count(), 9);
+        if (pageDef.kind === "home") assert.equal(await mobilePage.locator(".promise-card").count(), 9);
         assert.equal(await mobilePage.locator("main[inert]").count(), 0);
         assert(await mobilePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "Mobile introduction must fit the viewport");
       } else {
@@ -403,7 +403,7 @@ async function run() {
     await verifyMoralStressCalculations(baseUrl, browser);
     console.log("PASS Moral System Stress calculation checks");
     await verifyPromiseJourneys(baseUrl, browser);
-    console.log("PASS Promise introduction: all nine readings, revisions, storage, downloads, keyboard and phone journeys");
+    console.log("PASS Guided promise audit: all nine readings, evidence and exception rules, revisions, storage, downloads, keyboard/phone access, and previous shared-state/JSON compatibility");
   } finally {
     try {
       await browser?.close();

@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { emptyTest, cleanTest, testGaps, testTensions, TEST_GUIDANCE, testSnapshot } from "./promise-testing.mjs";
 import { PROMISES } from "./promise-catalog.mjs";
 import { assess, emptyAnswer, reportText, sanitizeAnswers, canCommit, isCommitted, commitmentSnapshot, hasRevision } from "./promise-model.mjs";
 
-const fullCommitment = { ...emptyAnswer(), interpretation: "tendency", claim: "Qualifying requests will succeed more often than matched requests without prayer within a year.", failure: "yes", commitments: ["scope", "outcome", "records", "comparison"] };
+const definedTest = { ...emptyTest(), method: "comparison", plan: "All cases over a year, matched baseline and independent review", support: "The predicted advantage with sufficient precision", challenge: "No predicted advantage with sufficient precision; withdraw the prediction", inconclusive: "Missing records or insufficient precision", review: "none" };
+const fullCommitment = { ...emptyAnswer(), test: definedTest, interpretation: "tendency", claim: "Qualifying requests will succeed more often than matched requests without prayer within a year.", failure: "yes", commitments: ["scope", "outcome", "records", "comparison"] };
 
 test("consenting to a test is not reported as evidence of fulfillment", () => {
   const result = assess(fullCommitment);
@@ -94,4 +96,44 @@ test("every promise supplies a contextualized passage and a tailored proposed te
   for (const promise of PROMISES) {
     for (const key of ["ref", "verse", "context", "contextRef", "test", "caveat", "suggested"]) assert(promise[key]?.length, `${promise.id}: missing ${key}`);
   }
+});
+
+test("a belief commitment does not manufacture missing test terms or accept stories as comparative evidence", () => {
+  const previous = { ...fullCommitment, test: undefined, affirmed: true, complete: true };
+  const clean = sanitizeAnswers({ prayer: previous }).prayer;
+  assert(isCommitted(clean), "An earlier explicit belief commitment survives the extension");
+  assert.equal(assess(clean).code, "developing");
+  assert(testGaps(clean).length >= 6);
+  assert.equal(assess({ ...fullCommitment, test: { ...definedTest, method: "story" } }).code, "developing");
+  assert.equal(assess({ ...fullCommitment, test: { ...definedTest, method: "records" } }).code, "developing");
+});
+
+test("independently checkable conditions are distinct from unverified protection and unresolved rules", () => {
+  const conditional = { ...fullCommitment, test: { ...definedTest, review: "some", exceptions: { "weak-faith": { policy: "check", check: "Predefined eligibility assessed without knowledge of outcomes" } } } };
+  assert.equal(assess(conditional).code, "open");
+  assert.deepEqual(testTensions(conditional), []);
+  conditional.test.exceptions["weak-faith"].check = "";
+  assert.equal(assess(conditional).code, "developing");
+  conditional.test.exceptions["weak-faith"].policy = "protect";
+  assert.equal(assess(conditional).code, "tension");
+  assert.match(testTensions(conditional)[0], /independent check/);
+  conditional.test.review = "none";
+  assert.equal(assess(conditional).code, "open", "Deselected exceptions have no effect");
+  assert.equal(assess({ ...fullCommitment, test: { ...definedTest, method: "decline" } }).code, "tension");
+});
+
+test("test terms and their first affirmed version round-trip safely without becoming evidence", () => {
+  const revised = { ...fullCommitment, affirmed: true, complete: true, test: { ...definedTest, challenge: "A revised failure threshold" }, firstTest: definedTest };
+  const restored = sanitizeAnswers({ prayer: revised }).prayer;
+  assert.equal(restored.firstTest.challenge, definedTest.challenge);
+  assert.match(reportText({ prayer: restored }), /First affirmed test terms/);
+  assert.deepEqual(cleanTest({ method: "fake", review: "fake", plan: "x".repeat(1900), exceptions: { bad: { policy: "check" }, "weak-faith": { policy: "fake", check: 1 } } }), { ...emptyTest(), plan: "x".repeat(1800), exceptions: { "weak-faith": { policy: "", check: "" } } });
+  for (const promise of PROMISES) for (const key of ["evidence", "alternatives", "question"]) assert(TEST_GUIDANCE[promise.id][key]);
+});
+
+test("hidden drafts do not become current test commitments", () => {
+  const draft = { ...definedTest, review: "some", exceptions: { "weak-faith": { policy: "protect", check: "A previous check" } } };
+  assert.equal(testSnapshot(draft).exceptions["weak-faith"].check, "");
+  assert.deepEqual(testSnapshot({ ...draft, method: "decline" }), { ...emptyTest(), method: "decline" });
+  assert.deepEqual(testSnapshot({ ...draft, review: "none" }).exceptions, {});
 });

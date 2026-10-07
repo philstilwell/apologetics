@@ -16,7 +16,11 @@ Results describe the visitor's interpretation and testing commitments, not study
 
 The October 7 commitment audit corrected three weaknesses: exploratory language obscured the purpose, uncertainty counted as completed, and saved selections lacked personal affirmation. The landing page, nine exercises, progress count, results, export, help, search metadata, and entry guidance in the two detailed promise tools now state the commitment requirement. Text entry and affirmation record what visitors say they believe; the site cannot verify sincerity or automatically judge whether their prose fully specifies a coherent claim.
 
-All nine topics, their hover/focus/tap explanations, and the exercise work on phones. The detailed audit library retains all ten tools, manuals, curricula, and the academic paper. Those older interactive pages still require at least 768 CSS pixels.
+The Promise Test Field has been phased out as the primary experience. Its agenda now continues in three home-page steps: **Read the promise**, **Name a fair test**, and **See what remains**. Step one requires an interpretation and a personally stated claim. Step two records evidence, a concrete plan, support/challenge/inconclusive outcome rules, testing safeguards, and treatment of eight potential explanations for a miss. Independently checked conditions are distinguished from unverified protection. Results expose unfinished terms and conflicts without scoring religious truth. First affirmed test terms survive revisions. Existing affirmed beliefs remain affirmed when the new test extension has not yet been filled in.
+
+The original `/apps/falsifiability-field/` URL is a transition to the home-page exercise. Links with `#state=` reopen the exact shared state in `legacy.html`; previous JSON files still import and export there. Previous manuals remain at their published URLs and are labeled as previous-version documents. No automatic conversion treats old scenario settings as personal beliefs.
+
+All nine topics, their hover/focus/tap explanations, the transition page, and the exercise work on phones. The detailed audit library retains all ten tools, manuals, curricula, and the academic paper. Those older interactive pages still require at least 768 CSS pixels.
 
 ## Purpose and interpretation
 
@@ -39,13 +43,13 @@ Preserve this distinction in explanations, graphs, manuals, and promotional writ
 | Moral Particulars Audit | Apply moral commitments to concrete cases and disagreements | `/apps/moral-particulars-audit/` |
 | Deism-Theism Gradient Audit | Compare confidence and substantiation across 50 progressively specific claims | `/apps/theism-gradient-audit/app.html` |
 
-Each tool has a manual and curriculum linked from the home page. The full site has 13 HTML pages: the home page, ten primary tools, Inductive Symmetry theory notes, and the Theism Gradient introduction.
+Each tool has a manual and curriculum linked from the home page. The full site has 14 HTML pages: the home page, nine other primary tools, the Promise Test Field transition and previous interface, Inductive Symmetry theory notes, and the Theism Gradient introduction.
 
 ## Structure and prior decisions
 
 The site uses ordinary HTML, CSS, and JavaScript and is published directly from the repository root. There is no required production build or paid application backend in this setup. Node.js and Playwright support local tests; PDF and paper generation have separate requirements.
 
-- `index.html`, `assets/promise-landing.css`, and `scripts/promise-intro.mjs` provide the introductory home page. `scripts/promise-catalog.mjs` holds the verses and proposed tests; `scripts/promise-model.mjs` holds the interpretation rules and saved-answer validation.
+- `index.html`, `assets/promise-landing.css`, and `scripts/promise-intro.mjs` provide the introductory home page. `scripts/promise-catalog.mjs` holds the verses and proposed tests; `scripts/promise-model.mjs` holds the interpretation rules and saved-answer validation; `scripts/promise-testing.mjs` holds evidence and exception guidance and test-term checks.
 - `styles.css` retains the detailed tool layouts. `assets/site-theme.css` supplies the coordinated charcoal, ivory, and bronze presentation without changing their calculations or saved-answer formats. Self-hosted Barlow fonts and their licenses are in `assets/fonts/`; generated promise emblems and their Imagegen prompts are in `assets/promises/`.
 - `apps/` holds the ten tools and their individual logic.
 - `scripts/tool-manifest.mjs` describes the tool catalog, document links, pathways, and page metadata. `scripts/apply-seo.mjs` applies that material to generated sections and search metadata.

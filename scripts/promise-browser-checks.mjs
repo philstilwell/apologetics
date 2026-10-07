@@ -25,17 +25,18 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     assert.equal(await page.locator('input[name="interpretation"]:checked').count(), 0, "Do not preselect a reading");
     assert.equal(await page.locator("#next-step").isDisabled(), true);
     await page.locator(`input[name="interpretation"][value="${interpretation}"]`).check();
-    await page.locator("#next-step").click();
     if (interpretation !== "unsure") {
-      assert.equal(await page.locator("#see-result").isDisabled(), true, "A selected category alone is not a commitment");
+      assert.equal(await page.locator("#next-step").isDisabled(), true, "A selected category alone is not a commitment");
       await page.locator("#belief-statement").fill("   ");
-      assert.equal(await page.locator("#see-result").isDisabled(), true, "Blank words cannot be affirmed");
+      assert.equal(await page.locator("#next-step").isDisabled(), true, "Blank words cannot be affirmed");
       await page.locator("#belief-statement").fill(claims[id]);
     }
+    await page.locator("#next-step").click();
     if (failure) {
       assert.equal(await page.locator("#see-result").isDisabled(), true, "An earthly claim also requires a failure standard");
       assert.equal(await page.locator('input[name="commitment"]:checked').count(), 0);
       if (commitments) {
+        await fillTest(page);
         for (const checkbox of await page.locator('input[name="commitment"]').all()) await checkbox.check();
       }
       await page.locator(`input[name="failure"][value="${failure}"]`).check();
@@ -105,8 +106,8 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
       await page.locator(`[data-review="${id}"]`).click();
       await page.locator('[data-back="1"]').click();
       await page.locator(`input[name="interpretation"][value="${reading}"]`).check();
-      await page.locator("#next-step").click();
       await page.locator("#belief-statement").fill(claims[id]);
+      await page.locator("#next-step").click();
       if (["tendency", "other"].includes(reading)) await page.locator('input[name="failure"][value="yes"]').check();
       await page.locator("#see-result").click();
       if (reading === "other") assert.equal(await page.locator(".result-flag").getAttribute("data-code"), "custom", "A custom belief must retain its own statement without an invented assessment");
@@ -124,13 +125,13 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await page.locator(".exercise-note summary").click();
     const note = '<img src=x onerror="alert(1)"> My interpretation changed.';
     await page.locator("#reading-note").fill(note);
-    await page.locator("#next-step").click();
     assert.equal(await page.locator("#progress-label").textContent(), "8 / 9 committed", "A changed draft requires fresh affirmation");
     await page.locator("#belief-statement").fill("I believe God assures believers spiritually through prayer, without promising the requested earthly outcome or better odds of it.");
+    await page.locator("#next-step").click();
     await page.locator("#see-result").click();
     assert.equal(await page.locator(".result-flag").getAttribute("data-code"), "spiritual");
-    assert.match(await page.locator(".result-facts").innerText(), /first affirmed commitment/i);
-    assert((await page.locator(".result-facts").innerText()).includes(note), "Notes must render as text");
+    assert.match(await page.locator(".result-facts").first().innerText(), /first affirmed commitment/i);
+    assert((await page.locator(".result-facts").first().innerText()).includes(note), "Notes must render as text");
     assert.equal(await page.locator('.result-facts img').count(), 0, "A note must not become HTML");
     await close();
     const downloadPending = page.waitForEvent("download");
@@ -169,17 +170,18 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await page.reload();
     await page.locator('[data-promise="health"]').press("Enter");
     assert(await page.locator('input[value="not-promise"]').isChecked(), "Draft choice survives reload");
+    await page.locator("#belief-statement").fill(claims.health);
     await page.locator("#next-step").click();
     for (const width of [320, 390]) {
       await page.setViewportSize({ width, height: 844 });
       assert(await page.locator("#promise-dialog").evaluate((dialog) => dialog.scrollWidth <= dialog.clientWidth), `Commitment form must fit at ${width}px`);
     }
-    await page.locator("#belief-statement").fill(claims.health);
     await page.screenshot({ path: ".local/redesign/commitment-mobile.png" });
     await page.locator("#see-result").click();
     await page.screenshot({ path: ".local/redesign/result-mobile.png" });
     assert.equal(await page.locator(".result-flag").getAttribute("data-code"), "not-promise");
     await close();
+    await verifyGuidedTest(page, baseUrl);
     for (const width of [320, 390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 844 });
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `No horizontal overflow at ${width}px`);
@@ -195,8 +197,8 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     const tab = await unavailable.newPage();
     await tab.goto(`${baseUrl}/#promise-health`);
     await tab.locator('input[value="not-promise"]').check();
-    await tab.locator("#next-step").click();
     await tab.locator("#belief-statement").fill(claims.health);
+    await tab.locator("#next-step").click();
     await tab.locator("#see-result").click();
     await tab.locator("#close-exercise").click();
     assert.match(await tab.locator("#storage-status").innerText(), /cannot save/);
@@ -215,7 +217,93 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await tab.locator('[data-review="prayer"]').click();
     assert(await tab.locator('input[value="guarantee"]').isChecked(), "Earlier choices must be preserved");
     assert.equal(await tab.locator("#reading-note").inputValue(), "My old note");
-    await tab.locator("#next-step").click();
-    assert(await tab.locator("#see-result").isDisabled(), "Legacy completed readings require a specific claim and new affirmation");
+    assert(await tab.locator("#next-step").isDisabled(), "Legacy completed readings require a specific claim and new affirmation");
   } finally { await legacy.close(); }
+}
+
+async function fillTest(page) {
+  await page.locator('input[name="test-method"][value="comparison"]').check();
+  await page.locator("#test-plan").fill("Record all qualifying cases for one year; match baseline conditions and resources. Compare the stated benefit using independent outcome review and enough cases to detect the predicted advantage.");
+  await page.locator('[data-test-next="outcomes-section"]').click();
+  assert.equal(await page.locator("#evidence-section").getAttribute("open"), null);
+  await page.locator("#test-support").fill("The specified advantage is present with sufficiently precise evidence after accounting for baseline differences and ordinary causes.");
+  await page.locator("#test-challenge").fill("A precise comparison rules out the advantage I specified. I will withdraw that prediction and lower my confidence in this reading.");
+  await page.locator("#test-inconclusive").fill("Uncertain eligibility, missing records, or estimates too imprecise to distinguish the promised advantage from no advantage.");
+  await page.locator("#exceptions-section summary").click();
+  await page.locator('input[name="test-review"][value="none"]').check();
+}
+
+async function verifyGuidedTest(page, baseUrl) {
+  await page.goto(`${baseUrl}/#promise-prayer`);
+  await page.locator('input[name="interpretation"][value="tendency"]').check();
+  await page.locator("#belief-statement").fill("Qualifying requests receive the named result ten percentage points more often than matched requests within one year.");
+  await page.locator("#next-step").click();
+  await fillTest(page);
+  for (const checkbox of await page.locator('input[name="commitment"]').all()) await checkbox.check();
+  await page.locator('input[name="failure"][value="yes"]').check();
+  await page.locator('input[name="test-review"][value="some"]').check();
+  await page.locator('input[name="exception"][value="weak-faith"]').check();
+  await page.locator('input[name="exception-policy-weak-faith"][value="check"]').check();
+  await page.locator("#exception-check-weak-faith").fill("Before outcomes, apply publicly stated eligibility criteria with independent reviewers. Do not infer weak faith from a failure.");
+  await page.locator('[data-test-next="failure-decision"]').click();
+  assert.equal(await page.locator("#exceptions-section").getAttribute("open"), null);
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    assert(await page.locator("#promise-dialog").evaluate((d) => d.scrollWidth <= d.clientWidth), `Expanded test and exceptions must fit at ${width}px`);
+  }
+  await page.locator("#see-result").click();
+  assert.equal(await page.locator(".result-flag").getAttribute("data-code"), "open");
+  await page.reload();
+  assert.equal(await page.locator(".result-flag").getAttribute("data-code"), "open");
+  await page.locator('[data-back="2"]').click();
+  await page.locator("#exceptions-section summary").click();
+  assert.equal(await page.locator("#exception-check-weak-faith").inputValue(), "Before outcomes, apply publicly stated eligibility criteria with independent reviewers. Do not infer weak faith from a failure.");
+  await page.locator('input[name="exception-policy-weak-faith"][value="protect"]').check();
+  await page.locator("#see-result").click();
+  assert.equal(await page.locator(".result-flag").getAttribute("data-code"), "tension");
+  await page.getByText("Compare my first affirmed test terms", { exact: true }).click();
+  assert.match(await page.locator(".test-transcript").last().innerText(), /Only with independent evidence/);
+  await page.locator('[data-back="2"]').click();
+  await page.locator('input[name="test-method"][value="decline"]').check();
+  assert.equal(await page.locator("#test-terms").isVisible(), false);
+  await page.locator("#see-result").click();
+  assert.equal(await page.locator(".result-flag").getAttribute("data-code"), "tension");
+  await page.locator("#close-exercise").click();
+  const pending = page.waitForEvent("download");
+  await page.locator("#download-readings").click();
+  const report = await fs.readFile(await (await pending).path(), "utf8");
+  assert.match(report, /First affirmed test terms/);
+  assert.match(report, /I will withdraw that prediction/);
+  assert.match(report, /inconclusive/);
+  assert.match(report, /earlier draft test terms are inactive/);
+  await page.setViewportSize({ width: 1440, height: 1100 });
+  await page.goto(`${baseUrl}/apps/falsifiability-field/`);
+  assert.match(await page.locator("h1").innerText(), /A CLEARER PATH/);
+  await page.getByRole("link", { name: "Choose a promise" }).click();
+  assert.equal(new URL(page.url()).hash, "#promises");
+
+  // Old shared-state links and JSON retain their exact meanings in the previous interface.
+  const old = { version: 1, selectedClaimId: "answered-prayer", promptMode: "selected", claims: { "answered-prayer": { studyId: "prayer-log", willingness: 73, failure: 62, excuses: ["weak-faith"], text: "Saved before the guided version", outcomeRules: { forClaim: "All requests", againstClaim: "Missed requests", neutral: "Missing records" }, mindChange: "I would reconsider" } } };
+  const hash = `#state=${Buffer.from(JSON.stringify(old)).toString("base64url")}`;
+  await page.goto(`${baseUrl}/apps/falsifiability-field/${hash}`);
+  await page.waitForURL(`**/legacy.html${hash}`);
+  await page.locator(".share-details summary").click();
+  await page.locator("#export-json").click();
+  const exported = JSON.parse(await page.locator("#share-state-output").inputValue());
+  assert.equal(exported.claims["answered-prayer"].willingness, 73);
+  assert.equal(exported.claims["answered-prayer"].text, old.claims["answered-prayer"].text);
+  assert.deepEqual(exported.claims["answered-prayer"].outcomeRules, old.claims["answered-prayer"].outcomeRules);
+  exported.claims["answered-prayer"].willingness = 41;
+  await page.locator("#share-state-output").fill(JSON.stringify(exported));
+  await page.locator("#load-json").click();
+  await page.locator("#export-json").click();
+  assert.equal(JSON.parse(await page.locator("#share-state-output").inputValue()).claims["answered-prayer"].willingness, 41);
+  await page.goto(`${baseUrl}/apps/falsifiability-field/#state=invalid`);
+  await page.waitForURL("**/legacy.html#state=invalid");
+  assert.match(await page.locator("#share-status").textContent(), /state link could not be loaded/i);
+  await page.goto(`${baseUrl}/apps/falsifiability-field/`);
+  await page.setViewportSize({ width: 320, height: 844 });
+  assert(await page.getByRole("link", { name: "Choose a promise" }).isVisible());
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  await page.goto(baseUrl);
 }

@@ -4,7 +4,7 @@ Static GitHub Pages suite for Crosshairs audits: compact tools that inspect Chri
 
 Author: Phil Stilwell
 
-The home page asks visitors to commit to what they actually believe nine biblical passages promise, if anything. Each commitment requires a definite position, a specific claim in the visitor’s own words, and explicit affirmation; earthly claims also require a declared standard for failure. Drafts and uncertainty remain unresolved. Original bronze emblems, hover/focus/tap explanations, a saved record, and a text download support the exercise. It works on phones; the ten detailed audits remain available for tablet-size screens and larger.
+The home page asks visitors to commit to what they actually believe nine biblical passages promise, if anything. Each commitment requires a definite position, a specific claim in the visitor’s own words, and explicit affirmation; earthly claims also require a declared standard for failure. Drafts and uncertainty remain unresolved. Original bronze emblems, hover/focus/tap explanations, a saved record, and a text download support the exercise. The Promise Test Field now continues within three guided steps: read the promise, name a fair test, and see what remains. Evidence plans, support/failure/inconclusive rules, and independently checked versus unverified exceptions appear in the record and download. A belief can be committed while its test remains visibly incomplete. The exercise and old-address transition work on phones; other detailed audits and the retained previous interface require tablet-size screens or larger. Older Promise Test Field shared links and JSON files still work in `apps/falsifiability-field/legacy.html`.
 
 ## Continuing the project
 
@@ -30,7 +30,7 @@ The first two commands prepare local test dependencies. The website itself is se
 <!-- GENERATED:readme-apps:start -->
 - Belief Overreach Audit: a fair-die calibration drill and transfer audit for showing how confidence can outrun perceived evidence and create unsupported commitments.
 - Fine-Tuning Bridge Audit: an upstream bridge audit for checking whether fine-tuning really licenses design, life-purpose, human-purpose, or thicker theistic conclusions.
-- Earthly Promise Test Field: a verification-willingness tool for testing whether earthly God-claims are exposed to ordinary checks or protected by escape hatches.
+- Earthly Promise Test Field: now integrated into the home-page promise commitments, with the previous interface preserved for saved files and shared results.
 - Promising Gods Mirror: a companion mirror that uses fictive gods and flat earthly outcomes to show where public promises collapse into protected or merely comforting non-promises.
 - Inductive Symmetry Audit: an interactive diagnostic for spotting cherry-picked inductive standards in apologetic arguments.
 - Resurrection Evidence Audit: a Bayesian self-audit for resurrection and miracle claims, including explicit priors, likelihoods, dependence weights, required Bayes factors, pitfall flags, and a postdiction comparator.

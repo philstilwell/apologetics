@@ -1,7 +1,8 @@
-import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, interpretationOptions } from "./promise-catalog.mjs?v=20261007-commitment";
+import { cleanTest, emptyTest, testGaps, testTensions, testReport, testSnapshot } from "./promise-testing.mjs?v=20261007-guided";
+import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, interpretationOptions } from "./promise-catalog.mjs?v=20261007-guided";
 
 export const STORAGE_KEY = "crosshairs.promise-intro.v1";
-export const emptyAnswer = () => ({ interpretation: "", failure: "", commitments: [], claim: "", note: "", affirmed: false, reviewed: false, complete: false, firstInterpretation: "", firstCommitment: null });
+export const emptyAnswer = () => ({ interpretation: "", failure: "", commitments: [], claim: "", note: "", affirmed: false, reviewed: false, complete: false, firstInterpretation: "", firstCommitment: null, test: emptyTest(), firstTest: null });
 export const isEarthly = (answer) => ["guarantee", "tendency"].includes(answer.interpretation);
 export const needsFailureStandard = (answer) => isEarthly(answer) || answer.interpretation === "other";
 export const requiredCommitments = (answer) => COMMITMENTS.filter((item) => item.id !== "comparison" || answer.interpretation === "tendency");
@@ -10,8 +11,9 @@ export const canCommit = (answer) => definiteReadings.includes(answer.interpreta
   && typeof answer.claim === "string" && Boolean(answer.claim.trim())
   && (!needsFailureStandard(answer) || ["yes", "no"].includes(answer.failure));
 export const isCommitted = (answer) => Boolean(answer?.complete && answer.affirmed && canCommit(answer));
-export const commitmentSnapshot = (answer) => ({ interpretation: answer.interpretation, claim: answer.claim.trim(), failure: needsFailureStandard(answer) ? answer.failure : "", commitments: isEarthly(answer) ? [...answer.commitments].sort() : [] });
+export const commitmentSnapshot = (answer) => ({ interpretation: answer.interpretation, claim: answer.claim.trim(), failure: needsFailureStandard(answer) ? answer.failure : "", commitments: isEarthly(answer) && answer.test?.method !== "decline" ? [...answer.commitments].sort() : [] });
 export const hasRevision = (answer) => Boolean(answer.firstCommitment && JSON.stringify(answer.firstCommitment) !== JSON.stringify(commitmentSnapshot(answer)));
+export const hasTestRevision = (answer) => Boolean(answer.firstTest && JSON.stringify(testSnapshot(answer.firstTest)) !== JSON.stringify(testSnapshot(answer.test)));
 export const recordStatus = (answer) => isCommitted(answer) ? "Committed" : answer?.reviewed ? "Unresolved" : answer?.interpretation ? "Draft — not affirmed" : "No commitment";
 
 function cleanChoice(source, options) {
@@ -21,6 +23,7 @@ function cleanChoice(source, options) {
   answer.commitments = Array.isArray(source.commitments) ? [...new Set(source.commitments.filter((id) => COMMITMENTS.some((item) => item.id === id)))] : [];
   answer.claim = typeof source.claim === "string" ? source.claim.slice(0, 1200) : "";
   answer.note = typeof source.note === "string" ? source.note.slice(0, 1200) : "";
+  answer.test = cleanTest(source.test);
   return answer;
 }
 
@@ -42,6 +45,7 @@ export function sanitizeAnswers(raw) {
       const first = cleanChoice(source.firstCommitment, options);
       if (canCommit(first)) answer.firstCommitment = commitmentSnapshot(first);
     }
+    if (source.firstTest && typeof source.firstTest === "object") answer.firstTest = testSnapshot(source.firstTest);
     result[promise.id] = answer;
   }
   return result;
@@ -60,9 +64,14 @@ export function assess(answer = emptyAnswer()) {
   if (answer.failure === "no") return { code: "protected", label: "Beyond an outcome test", title: "The earthly claim is protected from failure", body: "You expect an earthly benefit, but no earthly outcome would count against this interpretation. It therefore offers no outcome-based way to distinguish fulfillment from nonfulfillment. That protects the assertion, while removing this route to checking it." };
   if (answer.failure === "conditions") return { code: "conditional", label: "Conditions unresolved", title: "The promise’s conditions still need to be specified", body: "You have not yet defined who qualifies or what would count as failure. State those conditions before checking outcomes, and assess them independently of success. Until then, we cannot tell which outcomes could fairly challenge this reading." };
   if (answer.failure !== "yes") return { code: "undecided", label: "Failure standard open", title: "What counts against it is still undecided", body: "Your interpretation predicts an earthly result, but you have not settled whether a fair failure would count against it. The prediction and its failure standard need to be considered together." };
+  const tensions = testTensions(answer);
+  if (tensions.length) return { code: "tension", label: "Testing commitment has a conflict", title: "Your failure rule and your exceptions pull apart", body: tensions.join(" ") };
   const missing = requiredCommitments(answer).filter((item) => !answer.commitments.includes(item.id));
-  if (missing.length) return { code: "developing", label: "Test needs definition", title: "You allow a test; its terms need work", body: "You accept that fair failure could count against your reading. Some safeguards are still uncommitted. Clarify these before treating any proposed test as a fair assessment." };
-  return { code: "open", label: "Open to testing", title: "You have kept an earthly promise testable in principle", body: "You accept both a predicted result and the possibility of evidence against it, with the basic safeguards agreed. This preserves an empirical claim. It is a commitment to testing—not evidence that the promise has been fulfilled, or a completed study design." };
+  const gaps = testGaps(answer);
+  if (missing.length || gaps.length) return { code: "developing", label: "Test still incomplete", title: "You allow a test. Now finish its terms.", body: "Your belief predicts an observable result and you accept that fair failure could count against it. The missing terms below prevent this record from specifying that fair test. Your belief can be affirmed while the test remains incomplete." };
+  if (answer.test?.method === "story") return { code: "developing", label: "Evidence remains too limited", title: "A story does not establish the promised pattern", body: "You have named outcome rules, but selected personal testimony alone. A story can motivate investigation. Check the underlying records and ordinary explanations; a claim of better odds also needs a fair comparison. Favorable stories alone do not establish a general guarantee." };
+  if (answer.interpretation === "tendency" && answer.test?.method === "records") return { code: "developing", label: "Comparison still needed", title: "Better odds require something to compare them with", body: "A record of qualifying cases does not by itself establish an advantage over comparable cases. Specify the comparison and account for ordinary differences before using a success rate as support." };
+  return { code: "open", label: "Test terms on record", title: "You have kept an observable promise open to challenge", body: "You have stated the claim, evidence plan, outcome rules, and limits on explanations for a miss. These are your declared terms—not evidence of fulfillment or a validated study. Independent review must still check whether the design can detect the predicted result and fairly distinguish the alternatives." };
 }
 
 export function reportText(answers) {
@@ -85,7 +94,9 @@ export function reportText(answers) {
         answer.claim ? `My specific claim: ${answer.claim}` : "",
         answer.interpretation ? `Implication of this selection: ${assess(answer).body}` : "",
         needsFailureStandard(answer) ? `Failure standard: ${FAILURE_OPTIONS.find((item) => item.id === answer.failure)?.label ?? "Unresolved"}` : "",
-        isEarthly(answer) ? `Agreed safeguards: ${requiredCommitments(answer).filter((item) => answer.commitments.includes(item.id)).map((item) => item.label).join("; ") || "None selected"}` : "",
+        isEarthly(answer) && answer.test?.method !== "decline" ? `Agreed safeguards: ${requiredCommitments(answer).filter((item) => answer.commitments.includes(item.id)).map((item) => item.label).join("; ") || "None selected"}` : "",
+        needsFailureStandard(answer) ? testReport(answer) : "",
+        hasTestRevision(answer) ? `First affirmed test terms:\n${testReport({ test: answer.firstTest })}\nChanges to test terms are visible; a revision is not by itself evidence of evasion.` : "",
         answer.note ? `Your note: ${answer.note}` : "",
         hasRevision(answer) ? `First affirmed commitment: ${firstReading.label} ${first.claim}\nFirst failure standard: ${FAILURE_OPTIONS.find((item) => item.id === first.failure)?.label ?? "No present earthly prediction"}\nFirst safeguards: ${first.commitments.map((id) => COMMITMENTS.find((item) => item.id === id).label).join("; ") || "None selected"}\nA revision is visible; it is not by itself evidence of evasion.` : "",
         !first && legacy && legacy.id !== current?.id ? `Earlier saved selection (not an affirmed commitment): ${legacy.label}` : "",

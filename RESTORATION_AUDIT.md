@@ -74,3 +74,12 @@ npm --prefix apps/theism-gradient-audit test
 ```
 
 For a particular PDF, use `pdfinfo path/to/file.pdf` and `pdffonts path/to/file.pdf`. Every font row in a newly generated PDF must show `yes` in the embedding column. Local raw results and recovery provenance are kept in `.local/evidence/` and `.local/RESTORATION_HANDOFF.md`; those files are excluded from Git.
+
+
+## October 7, 2026 — Promise Test Field integration
+
+The original restoration results above remain a historical baseline. The Promise Test Field's primary experience now lives in the home-page promise exercise, following Read the promise → Name a fair test → See what remains. Evidence, outcome rules, fair comparisons, ordinary explanations, eight possible defenses against a miss, and belief revision are retained without numerical testability scores. The interface distinguishes an affirmed belief from an incomplete test and distinguishes independent checks from unverified protection.
+
+The original URL now provides a phone-accessible transition; the previous interface is retained at `apps/falsifiability-field/legacy.html`. Original `#state=` links route there with their payload intact. Previous JSON import/export and manual paths are preserved. The suite now contains 14 HTML pages. Existing PDFs were not regenerated; the previously documented font limitations remain.
+
+Validation passed: root calculation checks; 12 promise-model checks; all 14 pages at desktop and phone sizes; all nine promise journeys; independent-condition versus unverified-exception handling; first-test revision records; storage, downloads, keyboard navigation, and narrow-screen forms; old shared-state redirects and JSON round trips; and the separate Theism Gradient checks. All 89 local links from the three affected pages resolve. Metadata regeneration is repeatable without further changes. Desktop and phone views were also inspected in the browser.
