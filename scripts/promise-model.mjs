@@ -1,5 +1,6 @@
-import { cleanTest, emptyTest, testGaps, testTensions, testReport, testSnapshot } from "./promise-testing.mjs?v=20261007-guided";
-import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, interpretationOptions } from "./promise-catalog.mjs?v=20261007-guided";
+import { PREVIOUS_PROMISES } from "./promise-history.mjs?v=20261007-six-promises";
+import { cleanTest, emptyTest, testGaps, testTensions, testReport, testSnapshot } from "./promise-testing.mjs?v=20261007-six-promises";
+import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, interpretationOptions } from "./promise-catalog.mjs?v=20261007-six-promises";
 
 export const STORAGE_KEY = "crosshairs.promise-intro.v1";
 export const emptyAnswer = () => ({ interpretation: "", failure: "", commitments: [], claim: "", note: "", affirmed: false, reviewed: false, complete: false, firstInterpretation: "", firstCommitment: null, test: emptyTest(), firstTest: null });
@@ -27,10 +28,10 @@ function cleanChoice(source, options) {
   return answer;
 }
 
-export function sanitizeAnswers(raw) {
+export function sanitizeAnswers(raw, catalog = PROMISES) {
   const result = {};
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return result;
-  for (const promise of PROMISES) {
+  for (const promise of catalog) {
     const source = raw[promise.id];
     if (!source || typeof source !== "object") continue;
     const options = interpretationOptions(promise).map((item) => item.id);
@@ -49,6 +50,18 @@ export function sanitizeAnswers(raw) {
     result[promise.id] = answer;
   }
   return result;
+}
+
+export function loadSavedRecord(saved) {
+  if (!saved || ![1, 2].includes(saved.version)) return { answers: {}, previousAnswers: {} };
+  const answers = sanitizeAnswers(saved.answers);
+  if (saved.version === 1) {
+    // The combined category has different passages and scope. Never silently affirm it
+    // using a belief about one of the four previous, separate categories.
+    delete answers.longevity;
+    return { answers, previousAnswers: sanitizeAnswers(saved.answers, PREVIOUS_PROMISES) };
+  }
+  return { answers, previousAnswers: sanitizeAnswers(saved.previousAnswers, PREVIOUS_PROMISES) };
 }
 
 export function assess(answer = emptyAnswer()) {
@@ -74,35 +87,51 @@ export function assess(answer = emptyAnswer()) {
   return { code: "open", label: "Test terms on record", title: "You have kept an observable promise open to challenge", body: "You have stated the claim, evidence plan, outcome rules, and limits on explanations for a miss. These are your declared terms—not evidence of fulfillment or a validated study. Independent review must still check whether the design can detect the predicted result and fairly distinguish the alternatives." };
 }
 
-export function reportText(answers) {
+export function reportText(answers, previousAnswers = {}) {
   const committed = PROMISES.filter((promise) => isCommitted(answers[promise.id])).length;
   return [
     "CROSSHAIRS — YOUR PROMISE COMMITMENTS",
     `${committed} of ${PROMISES.length} committed; ${PROMISES.length - committed} unresolved`,
     "A commitment is an explicitly affirmed belief, not evidence that the belief is true. Drafts and unresolved answers are not commitments.",
-    ...PROMISES.map((promise) => {
-      const answer = answers[promise.id] || emptyAnswer();
-      const options = interpretationOptions(promise);
-      const current = options.find((item) => item.id === answer.interpretation);
-      const first = answer.firstCommitment;
-      const firstReading = first && options.find((item) => item.id === first.interpretation);
-      const legacy = options.find((item) => item.id === answer.firstInterpretation);
-      return [
-        `${promise.name} — ${promise.ref} (KJV)`,
-        `Status: ${recordStatus(answer)}`,
-        current ? `${isCommitted(answer) ? "I affirm" : "Unconfirmed selection"}: ${current.label} ${current.detail}` : "No belief has been stated for this passage.",
-        answer.claim ? `My specific claim: ${answer.claim}` : "",
-        answer.interpretation ? `Implication of this selection: ${assess(answer).body}` : "",
-        needsFailureStandard(answer) ? `Failure standard: ${FAILURE_OPTIONS.find((item) => item.id === answer.failure)?.label ?? "Unresolved"}` : "",
-        isEarthly(answer) && answer.test?.method !== "decline" ? `Agreed safeguards: ${requiredCommitments(answer).filter((item) => answer.commitments.includes(item.id)).map((item) => item.label).join("; ") || "None selected"}` : "",
-        needsFailureStandard(answer) ? testReport(answer) : "",
-        hasTestRevision(answer) ? `First affirmed test terms:\n${testReport({ test: answer.firstTest })}\nChanges to test terms are visible; a revision is not by itself evidence of evasion.` : "",
-        answer.note ? `Your note: ${answer.note}` : "",
-        hasRevision(answer) ? `First affirmed commitment: ${firstReading.label} ${first.claim}\nFirst failure standard: ${FAILURE_OPTIONS.find((item) => item.id === first.failure)?.label ?? "No present earthly prediction"}\nFirst safeguards: ${first.commitments.map((id) => COMMITMENTS.find((item) => item.id === id).label).join("; ") || "None selected"}\nA revision is visible; it is not by itself evidence of evasion.` : "",
-        !first && legacy && legacy.id !== current?.id ? `Earlier saved selection (not an affirmed commitment): ${legacy.label}` : "",
-      ].filter(Boolean).join("\n");
-    }),
+    ...PROMISES.map((promise) => answerReport(promise, answers[promise.id])),
+    previousReport(previousAnswers),
     "No real-world results were supplied in this exercise. Positive results also require scrutiny of ordinary explanations before attributing them to divine action.",
     "https://xhairs.com/",
+  ].join("\n\n");
+}
+
+function answerReport(promise, answer = emptyAnswer()) {
+  const options = interpretationOptions(promise);
+  const current = options.find((item) => item.id === answer.interpretation);
+  const first = answer.firstCommitment;
+  const firstReading = first && options.find((item) => item.id === first.interpretation);
+  const legacy = options.find((item) => item.id === answer.firstInterpretation);
+  return [
+    `${promise.name} — ${promise.ref} (KJV)`,
+    promise.passages ? `Other passages in this category: ${promise.passages.map(p => `${p.name}: ${p.ref} (KJV)`).join("; ")}` : "",
+    `Status: ${recordStatus(answer)}`,
+    current ? `${isCommitted(answer) ? "I affirm" : "Unconfirmed selection"}: ${current.label} ${current.detail}` : "No belief has been stated for this passage.",
+    answer.claim ? `My specific claim: ${answer.claim}` : "",
+    answer.interpretation ? `Implication of this selection: ${assess(answer).body}` : "",
+    needsFailureStandard(answer) ? `Failure standard: ${FAILURE_OPTIONS.find((item) => item.id === answer.failure)?.label ?? "Unresolved"}` : "",
+    isEarthly(answer) && answer.test?.method !== "decline" ? `Agreed safeguards: ${requiredCommitments(answer).filter((item) => answer.commitments.includes(item.id)).map((item) => item.label).join("; ") || "None selected"}` : "",
+    needsFailureStandard(answer) ? testReport(answer) : "",
+    hasTestRevision(answer) ? `First affirmed test terms:\n${testReport({ test: answer.firstTest })}\nChanges to test terms are visible; a revision is not by itself evidence of evasion.` : "",
+    answer.note ? `Your note: ${answer.note}` : "",
+    hasRevision(answer) ? `First affirmed commitment: ${firstReading.label} ${first.claim}\nFirst failure standard: ${FAILURE_OPTIONS.find((item) => item.id === first.failure)?.label ?? "No present earthly prediction"}\nFirst safeguards: ${first.commitments.map((id) => COMMITMENTS.find((item) => item.id === id).label).join("; ") || "None selected"}\nA revision is visible; it is not by itself evidence of evasion.` : "",
+    !first && legacy && legacy.id !== current?.id ? `Earlier saved selection (not an affirmed commitment): ${legacy.label}` : "",
+  ].filter(Boolean).join("\n");
+}
+
+export function previousReport(previousAnswers = {}) {
+  const recorded = PREVIOUS_PROMISES.filter((p) => {
+    const a = previousAnswers[p.id];
+    return a && (a.interpretation || a.claim || a.note);
+  });
+  if (!recorded.length) return "";
+  return [
+    "EARLIER SEPARATE CATEGORIES — PRESERVED RECORD",
+    "These answers refer to the earlier healing, protection, health, and long-life questions. They are preserved as originally recorded; they do not count as a commitment to the new combined category. Read its New Testament passages and affirm a new claim.",
+    ...recorded.map((p) => answerReport(p, previousAnswers[p.id])),
   ].join("\n\n");
 }

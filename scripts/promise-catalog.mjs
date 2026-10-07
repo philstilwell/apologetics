@@ -18,40 +18,8 @@ export const PROMISES = [
     caveat: "A comparison must distinguish prayer from differences in practical help, resources, timing, and ordinary coincidence.",
     suggested: "Which requests qualify, what counts as receiving them, and by when?",
   },
-  {
-    id: "healing", name: "Healing", short: "Prayer. Recovery?", ref: "James 5:14–15",
-    verse: "Is any sick among you? let him call for the elders of the church; and let them pray over him, anointing him with oil in the name of the Lord: And the prayer of faith shall save the sick, and the Lord shall raise him up; and if he have committed sins, they shall be forgiven him.",
-    context: "Read James 5:13–18. The passage mentions illness, elders, prayer, anointing, forgiveness, and confession. Christians differ over how its language relates bodily restoration and spiritual salvation.",
-    contextRef: "James 5:13-18", related: ["1 Peter 2:24"],
-    question: "What do you believe this passage promises to a sick person?",
-    hint: "If this means physical healing, which recoveries—and which failures—would count?",
-    outcome: "physical recovery following the described prayer",
-    guaranteed: { label: "Every sick person who meets the conditions will physically recover.", detail: "God guarantees recovery after the prayer described here. This applies to sick people today." },
-    tendency: { label: "This prayer improves a sick person’s chance of recovery.", detail: "God promises a higher recovery rate than among comparable patients without this prayer today. Some patients may not recover." },
-    spiritual: { label: "God promises spiritual restoration only.", detail: "This applies today, but promises neither physical recovery nor an improved chance of recovery." },
-    historical: "The healing promise applied only to the people or period originally addressed. It makes no healing promise to patients today.",
-    notPromise: "This passage gives instructions for caring and praying for the sick without committing God to any result, earthly or spiritual.",
-    test: "Specify qualifying illness, prayer conditions, and the recovery expected by an agreed time. Assess existing, independently documented outcomes and include every eligible case. A probability claim also needs comparable patients and ordinary treatment accounted for.",
-    caveat: "This is a reasoning exercise, not a medical experiment. A fair comparison preserves medical care and accounts for treatment, initial severity, and natural recovery.",
-    suggested: "What counts as healing, whose prayer qualifies, and when should recovery occur?",
-  },
-  {
-    id: "protection", name: "Protection", short: "Faith. Safety?", ref: "Luke 10:19",
-    verse: "Behold, I give unto you power to tread on serpents and scorpions, and over all the power of the enemy: and nothing shall by any means hurt you.",
-    context: "Read Luke 10:17–20. Jesus addresses the returning seventy. Whether this assurance extends to all Christians today is a question to settle before proposing a general protection claim.",
-    contextRef: "Luke 10:17-20", related: ["Matthew 10:29-31", "Psalm 91:9-12"],
-    question: "What protection do you believe this passage promises?",
-    hint: "Is this observable protection from harm, a specific historical assurance, or spiritual security?",
-    outcome: "protection from the specified earthly harms",
-    guaranteed: { label: "Everyone covered by this promise will escape the specified harms.", detail: "God guarantees protection from those harms to qualifying people today. No covered person will suffer them." },
-    tendency: { label: "People covered by this promise are less likely to suffer those harms.", detail: "Today, God promises lower risk than for equally exposed people outside the promise. Some covered people may still be harmed." },
-    spiritual: { label: "God promises spiritual security only.", detail: "This applies today, but promises neither physical safety nor a lower risk of physical harm." },
-    historical: "Jesus promised protection only to the people or period originally addressed. I do not extend that promise to Christians today.",
-    notPromise: "Jesus uses reassurance or imagery here without committing God to protect anyone, physically or spiritually.",
-    test: "Define the protected people and the particular harms in advance. Check existing records over an agreed period. If you predict reduced risk, compare people with similar exposure and circumstances.",
-    caveat: "Use existing evidence; never expose anyone to danger. A harm outside the claimed scope cannot fairly be counted as a failure.",
-    suggested: "Who is covered, against which harms, and for what period?",
-  },
+
+
   {
     id: "provision", name: "Provision", short: "Trust. Enough?", ref: "Matthew 6:33",
     verse: "But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.",
@@ -120,46 +88,48 @@ export const PROMISES = [
     caveat: "Define who qualifies independently of whether they improve. Excluding every counterexample as “not a real Christian” would make the test circular.",
     suggested: "Which changes, over what period, and how is being “in Christ” identified?",
   },
+
   {
-    id: "health", name: "Health", short: "Devotion. Vitality?", ref: "3 John 1:2",
-    verse: "Beloved, I wish above all things that thou mayest prosper and be in health, even as thy soul prospereth.",
-    context: "Read 3 John 1:1–4. This is a greeting addressed to Gaius, phrased as a wish. Consider whether there is a textual basis for treating it as a divine promise to all believers.",
-    contextRef: "3 John 1:1-4", related: ["Matthew 8:16-17", "Exodus 23:25"],
-    question: "Do you believe this verse makes a divine health promise?",
-    hint: "A wish for health and a guarantee of health make very different commitments.",
-    outcome: "the specified level of physical health",
-    guaranteed: { label: "Everyone who meets the conditions will have the promised physical health.", detail: "God guarantees a defined level of health to each qualifying person today. That level must be specified before checking health records." },
-    tendency: { label: "People who meet the conditions will have better physical health on average.", detail: "Today, God promises better average health than among otherwise similar people who do not meet the conditions. Some qualifying people may still be seriously ill." },
-    spiritual: { label: "God promises spiritual well-being only.", detail: "This applies today, but promises neither physical health nor better health on average." },
-    historical: "John conveys a divine health promise for Gaius or his time only. I do not extend that promise to people today.",
-    notPromise: "John expresses a wish for Gaius’s well-being. A wish does not commit God to provide health or any other result.",
-    test: "If you read this as a health promise, specify eligible people and the health outcomes expected over time. Use existing records, including illness. Comparative claims need attention to age, lifestyle, income, and access to care.",
-    caveat: "Do not turn a personal greeting into a universal guarantee without an argument. This exercise allows you to identify it as a wish rather than a promise.",
-    suggested: "Why is this a promise, who receives it, and which health outcomes does it predict?",
-  },
-  {
-    id: "longevity", name: "Long life", short: "Honour. Live longer?", ref: "Ephesians 6:2–3",
+    id: "longevity", name: "Long life", short: "Healing. Protection. Health.", ref: "Ephesians 6:2–3",
+    cardRef: "Healing · Sparrows · Lilies",
     verse: "Honour thy father and mother; (which is the first commandment with promise;) That it may be well with thee, and thou mayest live long on the earth.",
-    context: "Read Ephesians 6:1–4 and Exodus 20:12. Paul cites the commandment about honoring parents. Consider the relationship between its original setting and its application in this letter.",
-    contextRef: "Ephesians 6:1-4", related: ["Exodus 20:12", "1 Timothy 4:8"],
-    question: "What do you believe “live long on the earth” promises?",
-    hint: "Does honoring parents guarantee a long life, improve the odds, or express a general principle?",
-    outcome: "the specified length of earthly life",
-    guaranteed: { label: "Everyone who honors their parents as required will reach old age.", detail: "God guarantees a long earthly life to each qualifying person today. What counts as old age must be settled before checking lifespans." },
-    tendency: { label: "People who honor their parents will live longer on average.", detail: "Today, God promises a longer average lifespan than for otherwise similar people who do not honor their parents. Some qualifying people may still die young." },
-    spiritual: { label: "God promises spiritual fullness of life only.", detail: "This applies today, but promises neither reaching old age nor a longer average earthly lifespan." },
-    historical: "The long-life promise applied only to the people or period originally addressed. It makes no lifespan promise to people today.",
-    notPromise: "This passage offers a general principle about honoring parents without committing God to a longer life or any spiritual benefit.",
-    test: "Define honoring parents and what living long means before consulting lifespan records. If predicting an average advantage, compare similar people while accounting for background, lifestyle, and social support.",
-    caveat: "A general tendency differs from a guarantee for each person. Neither should be silently substituted for the other after seeing outcomes.",
-    suggested: "What age or lifespan advantage is expected, and whose lives count?",
+    context: "Read Ephesians 6:1–4. Paul addresses children and connects the long-life language with honoring parents. The three passages below concern healing, sparrows, and lilies. Decide what each actually commits God to doing; do not assume that healing or divine care automatically guarantees a longer life.",
+    contextRef: "Ephesians 6:1-4", related: ["1 Timothy 4:8"],
+    passages: [
+      {
+        id: "healing", name: "Healing", ref: "James 5:14–15", contextRef: "James 5:13-18",
+        verse: "Is any sick among you? let him call for the elders of the church; and let them pray over him, anointing him with oil in the name of the Lord: And the prayer of faith shall save the sick, and the Lord shall raise him up; and if he have committed sins, they shall be forgiven him.",
+        context: "The passage names sickness, elders, prayer, anointing, and forgiveness. State whether you read it as bodily recovery, spiritual restoration, or both—and whether recovery also implies a longer lifespan.",
+      },
+      {
+        id: "protection", name: "Protection · the sparrows", ref: "Matthew 10:29–31", contextRef: "Matthew 10:16-31",
+        verse: "Are not two sparrows sold for a farthing? and one of them shall not fall on the ground without your Father. But the very hairs of your head are all numbered. Fear ye not therefore, ye are of more value than many sparrows.",
+        context: "Jesus reassures disciples in a passage that also anticipates persecution and bodily death. The sparrows can fall; the text does not say they never die. Does this promise measurable safety, God's care despite harm, or something else? Explain any inference from it to longer life.",
+      },
+      {
+        id: "health", name: "Health & care · the lilies", ref: "Matthew 6:28–30", contextRef: "Matthew 6:25-34",
+        verse: "And why take ye thought for raiment? Consider the lilies of the field, how they grow; they toil not, neither do they spin: And yet I say unto you, That even Solomon in all his glory was not arrayed like one of these. Wherefore, if God so clothe the grass of the field, which to day is, and to morrow is cast into the oven, shall he not much more clothe you, O ye of little faith?",
+        context: "The comparison explicitly concerns clothing, within a discussion of food, drink, and care. It also describes the grass as short-lived. If you infer physical health or longevity, state the additional reasoning; those are not explicit guarantees in this wording.",
+      },
+    ],
+    question: "What earthly benefit do you actually believe these passages promise?",
+    hint: "Do healing and divine care guarantee long life, improve health or survival, or make a different claim? Read the sparrows and lilies in context.",
+    outcome: "the specified benefit to health, safety, recovery, or length of life",
+    guaranteed: { label: "Every qualifying person will receive the physical benefit I specify.", detail: "I affirm a guarantee of healing, protection, health, or long life today. I will name exactly which benefit, who qualifies, and which passage supports it. A guarantee of recovery is not automatically a guarantee of old age." },
+    tendency: { label: "Qualifying people will have the physical advantage I specify on average.", detail: "I affirm better recovery, health, safety, or lifespan than among otherwise comparable people today. I will specify the advantage. Individual people may still become ill, suffer harm, or die young." },
+    spiritual: { label: "God promises spiritual care only, with no physical advantage.", detail: "I affirm spiritual assurance or restoration today. I predict neither physical healing, safety, health, or long life nor improved chances of those outcomes." },
+    historical: "The physical or spiritual promises I identify applied only to their original recipients or period. I do not extend them to people today.",
+    notPromise: "I read these passages as instruction, encouragement, or imagery without a divine commitment to the physical or spiritual benefits being discussed.",
+    test: "Name which passage supports each claimed benefit. Define eligibility, recovery, health, specified harms, or a lifespan threshold before checking existing records. Count illness, injury, non-recovery, and early deaths whenever they fall within that scope. For better odds or longer average life, compare otherwise similar people and account for age, exposure, treatment, resources, and lifestyle.",
+    caveat: "Healing, protection, health, and longevity are related but distinct outcomes. Do not replace an unmet promise of recovery with eventual spiritual care, or treat one recovery as evidence of a longer average life. Use existing evidence; do not expose anyone to danger or withhold care.",
+    suggested: "Which passages support which physical benefits? Define who qualifies, the required result and timing, and whether you claim guaranteed long life or only a particular recovery, health, or safety benefit.",
   },
 ];
 
 export const bibleLink = (reference) => `https://www.biblegateway.com/passage/?search=${encodeURIComponent(reference)}&version=KJV`;
 
 export function interpretationOptions(promise) {
-  return [
+  const options = [
     { id: "guarantee", ...promise.guaranteed },
     { id: "tendency", ...promise.tendency },
     { id: "spiritual", ...promise.spiritual },
@@ -168,6 +138,7 @@ export function interpretationOptions(promise) {
     { id: "other", label: "I believe this passage makes a different claim.", detail: "I will state the claim I actually affirm and whether evidence could count against it." },
     { id: "unsure", label: "I have not settled what this passage promises.", detail: "Record my answer as unresolved. This does not count as a commitment; I still need to state what I believe." },
   ];
+  return promise.passages ? options.map(option => ({ ...option, label: option.label.replace("This passage makes", "These passages make").replace("this passage makes", "these passages make").replace("this passage promises", "these passages promise") })) : options;
 }
 
 export const COMMITMENTS = [

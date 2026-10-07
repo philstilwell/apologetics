@@ -1,16 +1,17 @@
-import { EVIDENCE_OPTIONS, EXCEPTIONS, TEST_GUIDANCE, emptyTest, testGaps, testTensions, testReport, exceptionReport, testSnapshot } from "./promise-testing.mjs?v=20261007-guided";
-import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, bibleLink, interpretationOptions } from "./promise-catalog.mjs?v=20261007-guided";
-import { STORAGE_KEY, emptyAnswer, isEarthly, requiredCommitments, sanitizeAnswers, assess, reportText, canCommit, isCommitted, needsFailureStandard, commitmentSnapshot, hasRevision, hasTestRevision, recordStatus } from "./promise-model.mjs?v=20261007-guided";
+import { EVIDENCE_OPTIONS, EXCEPTIONS, TEST_GUIDANCE, emptyTest, testGaps, testTensions, testReport, exceptionReport, testSnapshot } from "./promise-testing.mjs?v=20261007-six-promises";
+import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, bibleLink, interpretationOptions } from "./promise-catalog.mjs?v=20261007-six-promises";
+import { STORAGE_KEY, emptyAnswer, isEarthly, requiredCommitments, loadSavedRecord, previousReport, assess, reportText, canCommit, isCommitted, needsFailureStandard, commitmentSnapshot, hasRevision, hasTestRevision, recordStatus } from "./promise-model.mjs?v=20261007-six-promises";
 
 const $ = (selector) => document.querySelector(selector);
 const escape = (text) => String(text).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const dialog = $("#promise-dialog");
 const content = $("#exercise-content");
 let answers = {};
+let previousAnswers = {};
 let storageAvailable = true;
 try {
   const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-  if (saved?.version === 1) answers = sanitizeAnswers(saved.answers);
+  ({ answers, previousAnswers } = loadSavedRecord(saved));
 } catch { storageAvailable = false; }
 
 let activeId = null;
@@ -21,7 +22,7 @@ const activeAnswer = () => answers[activeId] ||= emptyAnswer();
 
 function persist() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, answers }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, answers, previousAnswers }));
     storageAvailable = true;
   } catch { storageAvailable = false; }
   $("#storage-status").textContent = storageAvailable
@@ -33,7 +34,7 @@ function updateOverview() {
   const committed = PROMISES.filter((promise) => isCommitted(answers[promise.id]));
   const started = PROMISES.filter((promise) => answers[promise.id]?.interpretation);
   $("#progress-label").textContent = `${committed.length} / ${PROMISES.length} committed`;
-  $("#readings").hidden = started.length === 0;
+  $("#readings").hidden = started.length === 0 && !previousReport(previousAnswers);
   for (const promise of PROMISES) {
     const card = $(`#promise-${promise.id}`);
     const answer = answers[promise.id];
@@ -50,7 +51,7 @@ function updateOverview() {
       <button class="text-button" data-review="${promise.id}" type="button" aria-label="Review ${escape(promise.name)}">${isCommitted(answer) ? "Review" : "Resolve"} ↗</button>
       ${answer?.claim ? `<p class="record-claim">${isCommitted(answer) ? "I affirm:" : "Draft:"} ${escape(answer.claim)}</p>` : ""}
     </div>`;
-  }).join("");
+  }).join("") + previousRecord();
   if (!storageAvailable) $("#storage-status").textContent = "This browser cannot save your choices. Download your commitments before leaving.";
 }
 
@@ -94,11 +95,23 @@ function claimField(promise, answer) {
   return `<div class="belief-statement"><label for="belief-statement">${escape(prompt.label)}</label><p class="field-hint" id="belief-help">${escape(prompt.help)}</p><textarea id="belief-statement" aria-describedby="belief-help" maxlength="1200" rows="3" required placeholder="Write what you actually believe, in your own words.">${escape(answer.claim)}</textarea></div>`;
 }
 
+function previousRecord() {
+  const text = previousReport(previousAnswers);
+  return text ? `<details class="previous-record"><summary>Earlier healing, protection, health, and long-life answers</summary><p>These are preserved records from the separate categories. The combined long-life category needs a new commitment.</p><pre class="test-transcript">${escape(text)}</pre></details>` : "";
+}
+
+function relatedPassages(promise) {
+  if (!promise.passages) return "";
+  return `<section class="combined-passages" aria-label="Healing, protection, and health passages"><h3>One category. Read each claim.</h3><p class="field-hint">Use these New Testament passages alongside the long-life verse above. State which ones support your belief and which do not; they need not all make the same promise.</p>${promise.passages.map((passage) => `<details class="combined-passage" id="passage-${passage.id}"><summary><img src="./assets/promises/${passage.id}.webp" width="40" height="40" alt=""><span><strong>${escape(passage.name)}</strong><small>${escape(passage.ref)} · KJV</small></span></summary><blockquote class="verse-block">“${escape(passage.verse)}”<cite>${escape(passage.ref)} · King James Version</cite></blockquote><p>${escape(passage.context)}</p><a href="${bibleLink(passage.contextRef)}" target="_blank" rel="noopener noreferrer">Read the surrounding passage ↗</a></details>`).join("")}</section>`;
+}
+
 function renderInterpretation(promise, answer) {
   return `${heading(promise, "01 / READ THE PROMISE")}
     <blockquote class="verse-block">“${escape(promise.verse)}”<cite>${escape(promise.ref)} · King James Version</cite></blockquote>
     <details class="context-details"><summary>Read the context before deciding</summary><p>${escape(promise.context)}</p><a href="${bibleLink(promise.contextRef)}" target="_blank" rel="noopener noreferrer">Read the surrounding passage ↗</a><p class="related-verses">Related passages: ${promise.related.map((ref) => `<a href="${bibleLink(ref)}" target="_blank" rel="noopener noreferrer">${escape(ref)}</a>`).join(" · ")}. These may call for different interpretations.</p></details>
-    <fieldset><legend>${escape(promise.question)}</legend><p class="field-hint">Choose what you actually believe this passage commits God to doing. If you affirm both an earthly and a spiritual promise, choose the earthly claim and describe both. No answer is selected for you.</p>${radios("interpretation", interpretationOptions(promise), answer.interpretation)}</fieldset>
+    ${relatedPassages(promise)}
+    ${promise.id === "longevity" ? previousRecord() : ""}
+    <fieldset><legend>${escape(promise.question)}</legend><p class="field-hint">Choose what you actually believe ${promise.passages ? "these passages commit" : "this passage commits"} God to doing. If you affirm both an earthly and a spiritual promise, choose the earthly claim and describe both. No answer is selected for you.</p>${radios("interpretation", interpretationOptions(promise), answer.interpretation)}</fieldset>
     <div id="claim-field">${claimField(promise, answer)}</div>
     ${note(answer, "Which words in the passage support your reading? Explain any conditions or limits on its audience.")}
     <div class="exercise-actions"><span class="field-hint" id="reading-status">${answer.interpretation === "unsure" ? "Uncertainty remains unresolved." : answer.claim.trim() ? "Your claim is a draft until you affirm it." : "State your belief in your own words before continuing."}</span><button class="solid-button" id="next-step" type="button" ${answer.interpretation === "unsure" || (answer.interpretation && answer.claim.trim()) ? "" : "disabled"}>${answer.interpretation === "unsure" ? "Record as unresolved" : "Name a fair test"} <span aria-hidden="true">→</span></button></div>`;
@@ -232,7 +245,7 @@ function renderResult(promise, answer) {
     <p class="eyebrow">${isCommitted(answer) ? "YOUR AFFIRMED COMMITMENT" : "YOUR COMMITMENT IS UNRESOLVED"}</p>
     <span class="result-flag" data-code="${result.code}">${escape(result.label)}</span>
     <h3 class="result-heading">${escape(result.title)}</h3><p class="result-body">${escape(result.body)}</p>
-    ${!isCommitted(answer) ? '<p class="commitment-affirmation">This does not count toward your nine commitments. Return and resolve what you believe and what that belief requires.</p>' : ""}
+    ${!isCommitted(answer) ? `<p class="commitment-affirmation">This does not count toward your ${PROMISES.length} commitments. Return and resolve what you believe and what that belief requires.</p>` : ""}
     <dl class="result-facts"><div><dt>${isCommitted(answer) ? "I affirm this belief" : "Unconfirmed selection"}</dt><dd>${escape(reading.label)} ${escape(reading.detail)}</dd></div>
       ${answer.claim ? `<div><dt>${isCommitted(answer) ? "My specific claim" : "My draft claim"}</dt><dd>${escape(answer.claim)}</dd></div>` : ""}
       ${needsFailureStandard(answer) ? `<div><dt>My standard for failure</dt><dd>${escape(FAILURE_OPTIONS.find((item) => item.id === answer.failure)?.label || "Unresolved")}</dd></div>` : ""}${isEarthly(answer) && answer.test.method !== "decline" ? `<div><dt>${missing.length ? "Safeguards still uncommitted" : "Next: turn these terms into a study"}</dt><dd>${escape(missing.length ? missing.map((item) => item.label).join("; ") : promise.suggested)}</dd></div>` : ""}
@@ -242,13 +255,14 @@ function renderResult(promise, answer) {
     </dl>
     <p class="result-caveat">This record distinguishes affirmed beliefs from unresolved answers. No study results were supplied. Neither willingness to test nor a favorable outcome, by itself, establishes divine action.</p>
     ${needsFailureStandard(answer) ? renderTestRecord(answer) : answer.firstTest ? `<details class="test-section"><summary>My first affirmed test terms</summary><pre class="test-transcript">${escape(testReport({ test: answer.firstTest }))}</pre><p class="field-hint">Your current reading makes no present earthly prediction. These earlier terms are retained for comparison.</p></details>` : ""}
+    ${promise.id === "longevity" ? previousRecord() : ""}
     <div class="exercise-actions"><button class="text-button" data-back="1" type="button">← ${isCommitted(answer) ? "Revise my commitment" : "Resolve my belief"}</button><button class="solid-button" ${next ? `data-next-promise="${next.id}"` : 'data-finish="true"'} type="button">${next ? "Next commitment" : "View my commitments"} <span aria-hidden="true">→</span></button></div>`;
 }
 
 function render() {
   const promise = activePromise();
   const answer = activeAnswer();
-  $("#exercise-counter").textContent = `PASSAGE ${String(PROMISES.indexOf(promise) + 1).padStart(2, "0")} / 09 · ${step === 1 ? "READ" : step === 2 ? "TEST" : "RECORD"}`;
+  $("#exercise-counter").textContent = `PROMISE ${String(PROMISES.indexOf(promise) + 1).padStart(2, "0")} / ${String(PROMISES.length).padStart(2, "0")} · ${step === 1 ? "READ" : step === 2 ? "TEST" : "RECORD"}`;
   content.innerHTML = `<ol class="exercise-steps" aria-label="Your three steps">${["Read the promise", "Name a fair test", "See what remains"].map((label, i) => `<li ${step === i + 1 ? 'aria-current="step"' : ""}><span>0${i + 1}</span>${label}</li>`).join("")}</ol><div class="exercise-body">${step === 1 ? renderInterpretation(promise, answer) : step === 2 ? renderTesting(promise, answer) : renderResult(promise, answer)}</div>`;
 }
 
@@ -420,7 +434,7 @@ document.addEventListener("click", (event) => {
 });
 
 $("#download-readings").addEventListener("click", () => {
-  const url = URL.createObjectURL(new Blob([reportText(answers)], { type: "text/plain;charset=utf-8" }));
+  const url = URL.createObjectURL(new Blob([reportText(answers, previousAnswers)], { type: "text/plain;charset=utf-8" }));
   const link = document.createElement("a");
   link.href = url;
   link.download = "crosshairs-my-promise-commitments.txt";
@@ -432,17 +446,25 @@ $("#download-readings").addEventListener("click", () => {
 });
 $("#reset-readings").addEventListener("click", () => {
   answers = {};
+  previousAnswers = {};
   try { localStorage.removeItem(STORAGE_KEY); } catch { storageAvailable = false; }
   $(".reset-controls").open = false;
   updateOverview();
-  $("#page-status").textContent = "Your introductory commitments and drafts have been cleared. Saved work in the detailed audits is unchanged.";
+  $("#page-status").textContent = "Your introductory commitments, drafts, and earlier records have been cleared. Saved work in the detailed audits is unchanged.";
   $("#promise-prayer .promise-card-link").focus();
 });
 
 updateOverview();
 const openFromHash = () => {
-  const id = location.hash.replace(/^#promise-/, "");
-  if (PROMISES.some((promise) => promise.id === id)) openPromise(id);
+  const requested = location.hash.replace(/^#promise-/, "");
+  const id = ["healing", "protection", "health"].includes(requested) ? "longevity" : requested;
+  if (PROMISES.some((promise) => promise.id === id)) {
+    openPromise(id);
+    if (requested !== id && step === 1) {
+      const passage = $(`#passage-${requested}`);
+      if (passage) { passage.open = true; passage.scrollIntoView({ block: "start" }); }
+    }
+  }
 };
 window.addEventListener("hashchange", openFromHash);
 openFromHash();

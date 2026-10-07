@@ -17,7 +17,7 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     wisdom: "God grants inward spiritual understanding to those who ask in faith; I claim no externally measurable improvement in judgment.",
     prophecy: "God promises inspired spiritual speech to believers today, without promising foreknowledge of future events.",
     character: "Within one year, people identified as in Christ before observation show less dishonest conduct than they did before conversion.",
-    health: "John wishes Gaius well in a personal greeting; he does not commit God to providing physical health.",
+    health: "I read the sparrows and lilies as encouragement to trust, without a divine guarantee of health or safety. I do not read the healing and long-life passages as divine guarantees either.",
     longevity: "Those who honor their parents by my stated criteria have an average lifespan at least two years longer than otherwise comparable people.",
   };
   const choose = async (id, interpretation, failure = null, commitments = false) => {
@@ -52,10 +52,10 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
   try {
     await page.goto(baseUrl);
     await page.evaluate(() => document.fonts.ready);
-    assert.equal(await page.locator(".promise-card").count(), 9);
+    assert.equal(await page.locator(".promise-card").count(), 6);
     assert.equal(await page.locator(".library-item").count(), 10);
     assert.equal(await page.locator("#readings").isVisible(), false);
-    assert(await page.locator(".promise-card-icon").evaluateAll((imgs) => imgs.every((img) => img.complete && img.naturalWidth > 0)), "All nine icons must load");
+    assert(await page.locator(".promise-card-icon").evaluateAll((imgs) => imgs.every((img) => img.complete && img.naturalWidth > 0)), "All six icons must load");
     await fs.mkdir(".local/redesign", { recursive: true });
     await page.screenshot({ path: ".local/redesign/landing-desktop.png", fullPage: true });
     await page.screenshot({ path: ".local/redesign/landing-opening.png" });
@@ -73,13 +73,9 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     assert.equal(await choose("prayer", "tendency", "yes", true), "open");
     await page.screenshot({ path: ".local/redesign/reading-result.png" });
     await close();
-    assert.equal(await page.locator("#progress-label").textContent(), "1 / 9 committed");
+    assert.equal(await page.locator("#progress-label").textContent(), "1 / 6 committed");
     await page.reload();
-    assert.equal(await page.locator("#progress-label").textContent(), "1 / 9 committed", "Reload must preserve saved readings");
-    assert.equal(await choose("healing", "guarantee", "no"), "protected");
-    await close();
-    assert.equal(await choose("protection", "historical"), "historical");
-    await close();
+    assert.equal(await page.locator("#progress-label").textContent(), "1 / 6 committed", "Reload must preserve saved readings");
     assert.equal(await choose("provision", "tendency", "conditions"), "conditional");
     await close();
     assert.equal(await choose("wisdom", "spiritual"), "spiritual");
@@ -88,21 +84,19 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await close();
     assert.equal(await choose("character", "guarantee", "yes"), "developing");
     await close();
-    assert.equal(await choose("health", "not-promise"), "not-promise");
+    assert.equal(await choose("longevity", "guarantee", "no"), "protected");
     await close();
-    assert.equal(await choose("longevity", "tendency", "unsure"), "undecided");
-    await close();
-    assert.equal(await page.locator("#progress-label").textContent(), "6 / 9 committed", "Three unresolved answers must not count as commitments");
-    assert.equal(await page.locator(".reading-row").count(), 9, "Every outstanding passage stays visible");
-    assert.equal(await page.locator('.reading-result').filter({ hasText: /^Unresolved$/ }).count(), 3);
+    assert.equal(await page.locator("#progress-label").textContent(), "4 / 6 committed", "Two unresolved answers must not count as commitments");
+    assert.equal(await page.locator(".reading-row").count(), 6, "Every outstanding passage stays visible");
+    assert.equal(await page.locator('.reading-result').filter({ hasText: /^Unresolved$/ }).count(), 2);
     const unresolvedDownload = page.waitForEvent("download");
     await page.locator("#download-readings").click();
     const unresolvedText = await fs.readFile(await (await unresolvedDownload).path(), "utf8");
-    assert.match(unresolvedText, /6 of 9 committed; 3 unresolved/);
+    assert.match(unresolvedText, /4 of 6 committed; 2 unresolved/);
     assert.match(unresolvedText, /Prophecy —[\s\S]*?Status: Unresolved/);
 
     // Resolve the remaining beliefs; choosing uncertainty earlier is not a first commitment.
-    for (const [id, reading] of [["provision", "tendency"], ["prophecy", "other"], ["longevity", "tendency"]]) {
+    for (const [id, reading] of [["provision", "tendency"], ["prophecy", "other"]]) {
       await page.locator(`[data-review="${id}"]`).click();
       await page.locator('[data-back="1"]').click();
       await page.locator(`input[name="interpretation"][value="${reading}"]`).check();
@@ -111,12 +105,12 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
       if (["tendency", "other"].includes(reading)) await page.locator('input[name="failure"][value="yes"]').check();
       await page.locator("#see-result").click();
       if (reading === "other") assert.equal(await page.locator(".result-flag").getAttribute("data-code"), "custom", "A custom belief must retain its own statement without an invented assessment");
-      if (id === "longevity") {
+      if (id === "prophecy") {
         assert.equal(await page.locator('[data-finish="true"]').count(), 1);
         await page.locator('[data-finish="true"]').click();
       } else await close();
     }
-    assert.equal(await page.locator("#progress-label").textContent(), "9 / 9 committed");
+    assert.equal(await page.locator("#progress-label").textContent(), "6 / 6 committed");
 
     // Revising a completed reading cannot silently retain prior test commitments.
     await page.locator('[data-review="prayer"]').click();
@@ -125,7 +119,7 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await page.locator(".exercise-note summary").click();
     const note = '<img src=x onerror="alert(1)"> My interpretation changed.';
     await page.locator("#reading-note").fill(note);
-    assert.equal(await page.locator("#progress-label").textContent(), "8 / 9 committed", "A changed draft requires fresh affirmation");
+    assert.equal(await page.locator("#progress-label").textContent(), "5 / 6 committed", "A changed draft requires fresh affirmation");
     await page.locator("#belief-statement").fill("I believe God assures believers spiritually through prayer, without promising the requested earthly outcome or better odds of it.");
     await page.locator("#next-step").click();
     await page.locator("#see-result").click();
@@ -138,7 +132,7 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await page.locator("#download-readings").click();
     const download = await downloadPending;
     const downloaded = await fs.readFile(await download.path(), "utf8");
-    assert.match(downloaded, /9 of 9 committed; 0 unresolved/);
+    assert.match(downloaded, /6 of 6 committed; 0 unresolved/);
     assert(downloaded.includes(claims.prayer), "The first affirmed claim must survive a later revision");
     assert.match(downloaded, /No real-world results/);
     assert(downloaded.includes(note));
@@ -148,7 +142,7 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await page.evaluate(() => localStorage.setItem("unrelated-audit", "keep"));
     await page.locator(".reset-controls summary").click();
     await page.locator("#reset-readings").click();
-    assert.equal(await page.locator("#progress-label").textContent(), "0 / 9 committed");
+    assert.equal(await page.locator("#progress-label").textContent(), "0 / 6 committed");
     assert.equal(await page.evaluate(() => localStorage.getItem("unrelated-audit")), "keep");
     assert.equal(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY), null);
 
@@ -156,7 +150,7 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(baseUrl);
     await page.screenshot({ path: ".local/redesign/landing-mobile.png", fullPage: true });
-    for (const id of ["prayer", "health", "longevity"]) {
+    for (const id of ["prayer", "character", "longevity"]) {
       await page.locator(`#promise-${id} .tip-button`).click();
       const box = await page.locator(`#tip-${id}`).boundingBox();
       assert(box && box.x >= 0 && box.x + box.width <= 390, `${id} tooltip should fit a phone`);
@@ -164,11 +158,20 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     }
     await page.goto(`${baseUrl}/#promise-health`);
     await page.locator("#promise-dialog[open]").waitFor();
+    assert.equal(new URL(page.url()).hash, "#promise-longevity", "Old category links lead to the combined category");
+    assert.equal(await page.locator(".combined-passage").count(), 3);
+    assert(await page.locator("#passage-health").getAttribute("open") !== null);
+    assert.match(await page.locator("#passage-health").innerText(), /Consider the lilies/);
+    for (const id of ["healing", "protection"]) {
+      await page.locator(`#passage-${id} summary`).click();
+      assert(await page.locator(`#passage-${id} .verse-block`).isVisible());
+    }
+    await page.screenshot({ path: ".local/redesign/long-life-passages-mobile.png" });
     await page.locator('input[name="interpretation"][value="not-promise"]').check();
     await page.keyboard.press("Escape");
-    assert.equal(await page.locator("#progress-label").textContent(), "0 / 9 committed", "A draft is not a completed reading");
+    assert.equal(await page.locator("#progress-label").textContent(), "0 / 6 committed", "A draft is not a completed reading");
     await page.reload();
-    await page.locator('[data-promise="health"]').press("Enter");
+    await page.locator('[data-promise="longevity"]').press("Enter");
     assert(await page.locator('input[value="not-promise"]').isChecked(), "Draft choice survives reload");
     await page.locator("#belief-statement").fill(claims.health);
     await page.locator("#next-step").click();
@@ -202,7 +205,7 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await tab.locator("#see-result").click();
     await tab.locator("#close-exercise").click();
     assert.match(await tab.locator("#storage-status").innerText(), /cannot save/);
-    assert.equal(await tab.locator("#progress-label").textContent(), "1 / 9 committed", "Exercise must work when browser storage is blocked");
+    assert.equal(await tab.locator("#progress-label").textContent(), "1 / 6 committed", "Exercise must work when browser storage is blocked");
   } finally { await unavailable.close(); }
 
   const legacy = await browser.newContext();
@@ -213,12 +216,13 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     } })), STORAGE_KEY);
     const tab = await legacy.newPage();
     await tab.goto(baseUrl);
-    assert.equal(await tab.locator("#progress-label").textContent(), "0 / 9 committed");
+    assert.equal(await tab.locator("#progress-label").textContent(), "0 / 6 committed");
     await tab.locator('[data-review="prayer"]').click();
     assert(await tab.locator('input[value="guarantee"]').isChecked(), "Earlier choices must be preserved");
     assert.equal(await tab.locator("#reading-note").inputValue(), "My old note");
     assert(await tab.locator("#next-step").isDisabled(), "Legacy completed readings require a specific claim and new affirmation");
   } finally { await legacy.close(); }
+  await verifyMergedRecords(baseUrl, browser);
 }
 
 async function fillTest(page) {
@@ -306,4 +310,45 @@ async function verifyGuidedTest(page, baseUrl) {
   assert(await page.getByRole("link", { name: "Choose a promise" }).isVisible());
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   await page.goto(baseUrl);
+}
+
+async function verifyMergedRecords(baseUrl, browser) {
+  const context = await browser.newContext({ acceptDownloads: true });
+  try {
+    await context.addInitScript((key) => {
+      if (localStorage.getItem(key)) return;
+      const answer = { interpretation: "guarantee", failure: "yes", claim: "Earlier personally affirmed claim", affirmed: true, complete: true, commitments: [] };
+      localStorage.setItem(key, JSON.stringify({ version: 1, answers: {
+        prayer: { ...answer, claim: "My prayer commitment is unchanged" },
+        healing: { ...answer, claim: "My earlier healing commitment" },
+        protection: { ...answer, claim: "My earlier protection commitment" },
+        health: { ...answer, claim: "My earlier health commitment" },
+        longevity: { ...answer, claim: "My earlier lifespan commitment" },
+      } }));
+    }, STORAGE_KEY);
+    const page = await context.newPage();
+    await page.goto(`${baseUrl}/#promise-protection`);
+    assert.equal(await page.locator("#progress-label").textContent(), "1 / 6 committed");
+    assert.equal(await page.locator('input[name="interpretation"]:checked').count(), 0);
+    assert(await page.locator("#passage-protection .verse-block").isVisible());
+    assert.match(await page.locator("#passage-protection").innerText(), /two sparrows/);
+    await page.locator("#promise-dialog .previous-record summary").click();
+    assert.match(await page.locator("#promise-dialog .previous-record").innerText(), /My earlier health commitment/);
+    await page.locator('input[name="interpretation"][value="historical"]').check();
+    await page.locator("#belief-statement").fill("I limit the physical promises in these passages to their original audiences and do not extend them to Christians today.");
+    await page.locator("#next-step").click();
+    await page.locator("#see-result").click();
+    assert.equal(await page.locator(".result-flag").getAttribute("data-code"), "historical");
+    await page.reload();
+    assert.equal(await page.locator("#progress-label").textContent(), "2 / 6 committed");
+    await page.locator("#close-exercise").click();
+    const pending = page.waitForEvent("download");
+    await page.locator("#download-readings").click();
+    const text = await fs.readFile(await (await pending).path(), "utf8");
+    for (const name of ["healing", "protection", "health", "lifespan"]) assert(text.includes(`My earlier ${name} commitment`));
+    assert.match(text, /2 of 6 committed/);
+    const stored = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
+    assert.equal(stored.version, 2);
+    assert.equal(Object.keys(stored.previousAnswers).length, 4);
+  } finally { await context.close(); }
 }

@@ -40,7 +40,7 @@ export const HOME_PAGE = {
   kind: "home",
   title: "What Do You Believe God Promises? | Crosshairs Audit Lab",
   description:
-    "Commit to what you actually believe nine biblical passages promise, if anything. State each claim, its conditions, and whether failure could count against it.",
+    "State what you believe New Testament passages promise across six categories. Define each claim, its conditions, and whether failure could count against it.",
   ogType: "website",
   url: SITE_URL,
   keywords: withSeoCoreKeywords([

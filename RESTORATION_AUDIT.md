@@ -83,3 +83,12 @@ The original restoration results above remain a historical baseline. The Promise
 The original URL now provides a phone-accessible transition; the previous interface is retained at `apps/falsifiability-field/legacy.html`. Original `#state=` links route there with their payload intact. Previous JSON import/export and manual paths are preserved. The suite now contains 14 HTML pages. Existing PDFs were not regenerated; the previously documented font limitations remain.
 
 Validation passed: root calculation checks; 12 promise-model checks; all 14 pages at desktop and phone sizes; all nine promise journeys; independent-condition versus unverified-exception handling; first-test revision records; storage, downloads, keyboard navigation, and narrow-screen forms; old shared-state redirects and JSON round trips; and the separate Theism Gradient checks. All 89 local links from the three affected pages resolve. Metadata regeneration is repeatable without further changes. Desktop and phone views were also inspected in the browser.
+
+
+## October 7, 2026 — Six New Testament categories
+
+Healing, protection, and health are now grouped with Long life, leaving six landing-page categories. The combined category presents Ephesians 6:2–3, James 5:14–15, the sparrows in Matthew 10:29–31, and the lilies in Matthew 6:28–30. Current introductory quotations, context links, and related references are all in the New Testament. Context explains that sparrows can fall and that the lilies comparison explicitly concerns clothing; a health or lifespan inference must be argued. Each passage remains separately readable.
+
+Saved format version 2 preserves v1 answers for the four former categories in a read-only record and in downloads. No prior answer is automatically affirmed as the combined claim. The other five categories retain their commitments. Old healing/protection/health links open their corresponding reading in Long life.
+
+Validation: root checks and 14 promise-model tests passed, including New Testament reference coverage and migration. All 14 pages passed desktop/phone startup checks. Browser journeys covered six categories, expanded passages on phones, old deep links, saved-record migration, fresh affirmation, reloads, downloads, and existing test rules and previous-version compatibility. The separate Theism Gradient checks also passed.
