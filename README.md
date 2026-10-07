@@ -4,7 +4,7 @@ Static GitHub Pages suite for Crosshairs audits: compact tools that inspect Chri
 
 Author: Phil Stilwell
 
-The home page introduces nine biblical promise claims through brief interpretation and testing exercises, with original bronze emblems, hover/focus/tap explanations, saved readings, and a text download. It works on phones; the ten detailed audits remain available for tablet-size screens and larger.
+The home page asks visitors to commit to what they actually believe nine biblical passages promise, if anything. Each commitment requires a definite position, a specific claim in the visitor’s own words, and explicit affirmation; earthly claims also require a declared standard for failure. Drafts and uncertainty remain unresolved. Original bronze emblems, hover/focus/tap explanations, a saved record, and a text download support the exercise. It works on phones; the ten detailed audits remain available for tablet-size screens and larger.
 
 ## Continuing the project
 

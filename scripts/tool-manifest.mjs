@@ -38,9 +38,9 @@ function withSeoCoreAbout(items) {
 export const HOME_PAGE = {
   file: "index.html",
   kind: "home",
-  title: "What Does the Promise Mean? | Crosshairs Audit Lab",
+  title: "What Do You Believe God Promises? | Crosshairs Audit Lab",
   description:
-    "Explore nine biblical promise claims. Read a verse, choose your interpretation, and see what it commits you to testing. Then explore ten detailed Christian apologetics audits.",
+    "Commit to what you actually believe nine biblical passages promise, if anything. State each claim, its conditions, and whether failure could count against it.",
   ogType: "website",
   url: SITE_URL,
   keywords: withSeoCoreKeywords([
@@ -62,7 +62,7 @@ export const HOME_PAGE = {
   ]),
   faqContainerId: "hub-general-qa",
   sitemap: { changefreq: "weekly", priority: "1.0" },
-  expectedH1: "WHAT DOES THE PROMISE MEAN?",
+  expectedH1: "COMMIT TO YOUR BELIEF.",
   mobileAccessible: true,
 };
 

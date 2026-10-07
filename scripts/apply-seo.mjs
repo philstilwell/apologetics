@@ -512,11 +512,11 @@ function renderHubCatalog() {
 
 function renderPromiseCards() {
   return PROMISES.map((promise, index) => `          <article class="promise-card" id="promise-${promise.id}">
-            <a class="promise-card-link" href="#promise-${promise.id}" data-promise="${promise.id}" aria-label="${escapeHtml(promise.name)}: explore this passage">
+            <a class="promise-card-link" href="#promise-${promise.id}" data-promise="${promise.id}" aria-label="${escapeHtml(promise.name)}: state your belief">
               <img class="promise-card-icon" src="./assets/promises/${promise.id}.webp" width="88" height="88" alt="" decoding="async">
               <div class="promise-card-copy"><span class="card-index">${String(index + 1).padStart(2, "0")} / ${escapeHtml(promise.ref)}</span><h3>${escapeHtml(promise.name)}</h3><span class="card-tagline">${escapeHtml(promise.short)}</span><span class="card-status"></span></div><span class="card-arrow" aria-hidden="true">↗</span>
             </a>
-            <div class="tip-wrap"><button class="tip-button" type="button" aria-label="About ${escapeHtml(promise.name)}" aria-expanded="false" aria-controls="tip-${promise.id}" aria-describedby="tip-${promise.id}">i</button><div class="tip-content" role="tooltip" id="tip-${promise.id}"><strong>THE QUESTION</strong>${escapeHtml(promise.hint)}</div></div>
+            <div class="tip-wrap"><button class="tip-button" type="button" aria-label="About ${escapeHtml(promise.name)}" aria-expanded="false" aria-controls="tip-${promise.id}" aria-describedby="tip-${promise.id}">i</button><div class="tip-content" role="tooltip" id="tip-${promise.id}"><strong>YOUR COMMITMENT</strong>${escapeHtml(promise.hint)}</div></div>
             <noscript><p>${escapeHtml(promise.verse)} <a href="https://www.biblegateway.com/passage/?search=${encodeURIComponent(promise.contextRef)}&amp;version=KJV">Read in context</a>.</p></noscript>
           </article>`).join("\n");
 }

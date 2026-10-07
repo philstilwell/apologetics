@@ -22,6 +22,7 @@ This repository is Phil Stilwell's Crosshairs Audit Lab at https://xhairs.com/. 
 - Keep the morality sequence: Threshold, Stress Test, Particulars. Preserve imports, exports, storage keys, and handoffs when changing a tool.
 - The promise introduction on the home page is usable on phones. The ten detailed tools and their supporting pages deliberately block interaction below 768 CSS pixels. Preserve this distinction and update the tests if it changes.
 - The home-page promise catalog is in `scripts/promise-catalog.mjs`, re-exported by the tool manifest. The introductory answers use a separate storage key, `crosshairs.promise-intro.v1`; never overwrite saved work in the detailed tools.
+- The introduction demands an explicit commitment to the visitor's actual belief about what each passage promises. Count only definite, personally specified, explicitly affirmed positions as committed. Keep uncertainty, unfinished testing standards, and unconfirmed drafts visibly unresolved. Never silently convert earlier saved selections into commitments. Preserve the first affirmed claim and testing standard through revisions.
 - The Quarto manuscript in `paper/crosshairs-audit-paper.qmd` is authoritative for the paper; its Typst counterpart is not kept in sync.
 - Keep private recovery notes and raw audit evidence under ignored `.local/`. Do not commit personal conversation exports, local machine paths, credentials, or browser profile data.
 

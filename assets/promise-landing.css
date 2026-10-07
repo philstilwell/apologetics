@@ -82,6 +82,8 @@ button{color:inherit}
 .reading-row{display:grid;grid-template-columns:1fr 1fr auto;gap:20px;align-items:center;border-bottom:1px solid var(--line);padding:16px 0;font-size:14px}
 .reading-row strong{display:block}.reading-row small{color:var(--muted);font-size:11px}
 .reading-result{color:var(--accent);font-size:12px}
+.record-claim{grid-column:1/-1;font-size:13px;color:var(--muted);overflow-wrap:anywhere;white-space:pre-wrap;margin:0}
+.promise-card[data-committed='false'] .card-status{color:#bfc3b7}
 .text-button{background:none;border:0;border-bottom:1px solid #7c806f;padding:7px 0;color:inherit;font-size:12px;min-height:36px}
 .text-button:hover{color:var(--accent)}
 .record-footer{display:flex;justify-content:space-between;gap:30px;margin-top:15px;font-size:11px;color:var(--muted)}
@@ -136,6 +138,8 @@ fieldset{padding:0;border:0;margin:0;min-width:0}legend{font-weight:700;font-siz
 .choice:hover{border-color:#907143}.choice:has(input:checked){border-color:#8d6a36;background:#e7dfcc;box-shadow:inset 3px 0 #8d6a36}
 .choice input{accent-color:#65532e;width:17px;height:17px;margin:3px 0 0}.choice strong{display:block;font-size:14px;line-height:1.4}.choice small{display:block;font-size:12px;line-height:1.5;color:#526051;margin-top:3px}
 .exercise-note{margin-top:18px;font-size:13px}.exercise-note>summary{cursor:pointer;color:#5b624f}.exercise-note label{display:block;margin:12px 0 7px;font-size:12px}
+.belief-statement{margin:23px 0}.belief-statement>label{display:block;font-size:16px;line-height:1.4;font-weight:700;margin-bottom:8px}
+.commitment-affirmation{font-size:14px;line-height:1.6;padding:15px 18px;border-left:3px solid #8d6a36;background:#e7dfcc;margin:22px 0 12px}
 textarea{width:100%;resize:vertical;min-height:85px;padding:12px;border:1px solid #a4ac9c;background:#fffdf8;color:var(--dark);font-size:14px;line-height:1.5;border-radius:0}
 .exercise-actions{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:23px;padding-top:19px;border-top:1px solid #c8c9bb}.exercise-actions .text-button{color:#595e4f}
 .exercise-actions .solid-button{background:#252e28;border-color:#252e28;color:#fff8e8}.exercise-actions .solid-button:hover{background:#424c3d}
