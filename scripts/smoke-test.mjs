@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 import { ALL_PAGES } from "./tool-manifest.mjs";
+import { verifyPromiseJourneys } from "./promise-browser-checks.mjs";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = resolveRoot();
@@ -340,7 +341,7 @@ async function run() {
       assert.equal(response.status(), 200, `Expected 200 for ${pageDef.file}`);
 
       await page.locator("h1").first().waitFor();
-      await page.locator(".small-screen-notice").waitFor({ state: "attached" });
+      if (!pageDef.mobileAccessible) await page.locator(".small-screen-notice").waitFor({ state: "attached" });
       await page.waitForTimeout(500);
 
       const title = await page.title();
@@ -375,19 +376,17 @@ async function run() {
       assert.equal(mobileResponse.status(), 200, `Expected mobile 200 for ${pageDef.file}`);
 
       const notice = mobilePage.locator(".small-screen-notice");
-      await notice.waitFor({ state: "visible" });
-
-      const noticeText = normalizeText(await notice.innerText());
-      assert.match(
-        noticeText,
-        /greater resolution/i,
-        `Small-screen notice text missing expected warning for ${pageDef.file}`
-      );
-      assert.match(
-        noticeText,
-        /iPad-size screen or larger/i,
-        `Small-screen notice text missing device guidance for ${pageDef.file}`
-      );
+      if (pageDef.mobileAccessible) {
+        assert.equal(await notice.count(), 0, "The new introduction must remain available on phones");
+        assert.equal(await mobilePage.locator(".promise-card").count(), 9);
+        assert.equal(await mobilePage.locator("main[inert]").count(), 0);
+        assert(await mobilePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "Mobile introduction must fit the viewport");
+      } else {
+        await notice.waitFor({ state: "visible" });
+        const noticeText = normalizeText(await notice.innerText());
+        assert.match(noticeText, /greater resolution/i, `Small-screen notice text missing expected warning for ${pageDef.file}`);
+        assert.match(noticeText, /iPad-size screen or larger/i, `Small-screen notice text missing device guidance for ${pageDef.file}`);
+      }
 
       assert.equal(
         mobilePageErrors.length,
@@ -403,6 +402,8 @@ async function run() {
     console.log("PASS Moral Particulars calculation checks");
     await verifyMoralStressCalculations(baseUrl, browser);
     console.log("PASS Moral System Stress calculation checks");
+    await verifyPromiseJourneys(baseUrl, browser);
+    console.log("PASS Promise introduction: all nine readings, revisions, storage, downloads, keyboard and phone journeys");
   } finally {
     try {
       await browser?.close();

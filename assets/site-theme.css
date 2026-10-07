@@ -1,0 +1,35 @@
+@import url('./site-fonts.css');
+
+/* Shared editorial treatment. Preserve tool-specific status and chart colors. */
+html body:not(.promise-landing) {
+  --ink:#222a25;--muted:#586258;--line:#c0c5b5;--paper:#eeece3;--soft:#e2dfd0;--card:#faf9f3;--panel:#faf9f3;
+  --teal:#5b674f;--teal-dark:#354832;--rust:#80522f;--wine:#644037;--amber:#8c642b;--brand-cross-color:#d7ae71;
+  --radius:3px;--shadow:0 10px 28px rgba(30,40,27,.06);
+  color:var(--ink);background:#eeece3;font-family:Barlow,Arial,sans-serif;
+}
+html body:not(.promise-landing) .site-header{background:#191c1d;color:#f0ece2;border-bottom:1px solid #484b41;backdrop-filter:none}
+html body:not(.promise-landing) .site-header .brand small{color:#b4b8ad}
+html body:not(.promise-landing) .site-header .brand strong{font-family:'Barlow Condensed',Impact,sans-serif;font-weight:700;letter-spacing:.6px;font-size:22px}
+html body:not(.promise-landing) .site-header .brand-mark{background:#191c1d;color:#d7ae71;border-color:#a98959}
+html body:not(.promise-landing) .brand-mark::before{background:linear-gradient(#a98959,#a98959) center/1px 54px no-repeat,linear-gradient(#a98959,#a98959) center/54px 1px no-repeat}
+html body:not(.promise-landing) .site-header .top-nav a{color:#e5e3d9;background:transparent;border-color:#626654;border-radius:0}
+html body:not(.promise-landing) .site-header .top-nav a:hover{color:#f4d4a4;background:#30382e}
+html body:not(.promise-landing) .site-header .site-domain-link{background:#242a24;color:#d7ae71;border-color:#626654;border-radius:0}
+html body:not(.promise-landing) .site-header .site-domain-x{color:#d7ae71}
+html body:not(.promise-landing) :is(h1,h2){font-family:'Barlow Condensed',Impact,sans-serif;font-weight:700;letter-spacing:.2px}
+html body:not(.promise-landing) h1{line-height:1.04}
+html body:not(.promise-landing) :is(.annotation,.source-note){background:#e4e0d0;border-color:#aaa78e;border-radius:2px}
+html body:not(.promise-landing) :is(.annotation p,.annotation ul){color:#46513f}
+html body:not(.promise-landing) .annotation summary::after{background:#313c2e;color:#f5edda}
+html body:not(.promise-landing) :is(.panel,.seo-related,.seo-related-card,.qa-panel,.hub-layout,.hub-card){border-radius:3px;box-shadow:none}
+html body:not(.promise-landing) .seo-breadcrumbs{font-size:12px;letter-spacing:.3px}
+html body:not(.promise-landing) .eyebrow{letter-spacing:1.6px}
+html body:not(.promise-landing) :is(.button,.card-link){border-radius:2px}
+html body:not(.promise-landing) :is(.button.primary,.card-link:not(.secondary-link)){background:#344331;border-color:#344331;color:#fff9e9}
+html body:not(.promise-landing) :focus-visible{outline:2px solid #a47534;outline-offset:3px}
+html body:not(.promise-landing) .small-screen-notice{background:#191c1d;color:#f0ece2}
+html body:not(.promise-landing) .small-screen-notice__card{background:#242a25;border:1px solid #8f794f;border-radius:2px;color:#f0ece2}
+html body:not(.promise-landing) :is(.small-screen-notice__eyebrow,.small-screen-notice__title){color:#d7ae71}
+html body:not(.promise-landing) .small-screen-notice__text{color:#d2d5c7}
+html body:not(.promise-landing) .small-screen-notice__home{display:inline-block;margin-top:20px;padding:13px 16px;background:#d7ae71;color:#1b241b;font-weight:700;text-decoration:none;font-size:14px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

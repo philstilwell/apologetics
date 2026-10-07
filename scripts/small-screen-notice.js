@@ -22,6 +22,7 @@ function createNotice() {
         The complexity of these tools requires that they be viewed on a device with greater
         resolution. Please reopen this page on an iPad-size screen or larger.
       </p>
+      <a class="small-screen-notice__home" href="../../">Explore the phone-friendly promise introduction →</a>
     </div>
   `;
   return notice;

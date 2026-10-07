@@ -7,11 +7,10 @@ import {
   CLOUDFLARE_ANALYTICS_SNIPPET,
   GITHUB_URL,
   HOME_PAGE,
-  HUB_CATALOG_INTRO,
   HUB_PATHWAYS,
-  HUB_PATHWAYS_INTRO,
   LASTMOD,
   PERSON_ID,
+  PROMISES,
   SITE_NAME,
   SITE_URL,
   TOOLS,
@@ -463,6 +462,15 @@ function applyPage(page) {
   html = insertBreadcrumbs(html, page);
   html = insertRelatedLinks(html, page);
   html = ensureCloudflareAnalytics(html);
+  if (page.kind !== "home") {
+    const themeHref = path.relative(path.dirname(page.file), "assets/site-theme.css").split(path.sep).join("/") + "?v=20261007";
+    const themeLink = `<link rel="stylesheet" href="${themeHref}" data-crosshairs-theme>`;
+    if (html.includes("data-crosshairs-theme")) {
+      html = html.replace(/<link[^>]*data-crosshairs-theme[^>]*>/, themeLink);
+    } else {
+      html = html.replace("</head>", `  ${themeLink}\n  </head>`);
+    }
+  }
 
   write(page.file, html);
 }
@@ -481,69 +489,36 @@ function replaceGeneratedBlock(content, key, replacement) {
   return content.replace(pattern, `${startMarker}\n${replacement}\n${endMarker}`);
 }
 
-function renderCardLink(action) {
-  const classes = ["card-link"];
-
-  if (action.secondary) {
-    classes.push("secondary-link");
-  }
-
-  if (action.compact) {
-    classes.push("compact-link");
-  }
-
-  return `<a class="${classes.join(" ")}" href="${action.href}">${action.label}</a>`;
-}
-
-function renderCardActionRow(actions, className) {
-  if (!actions.length) {
-    return "";
-  }
-
-  return `                <div class="${className}">\n${actions
-    .map((action) => `                  ${renderCardLink(action)}`)
-    .join("\n")}\n                </div>`;
-}
-
 function renderHubCard(tool) {
-  const { hub } = tool;
-  const tags = hub.tags
-    .map((tag) => `                  <span>${tag}</span>`)
-    .join("\n");
-  const mainActions = hub.actions.filter((action) => action.row !== "docs");
-  const docActions = hub.actions.filter((action) => action.row === "docs");
-  const actionRows = [renderCardActionRow(mainActions, "card-actions-main"), renderCardActionRow(docActions, "card-actions-docs")]
-    .filter(Boolean)
-    .join("\n");
-  const actions = `              <div class="card-actions">\n${actionRows}\n              </div>`;
-  const note = hub.note
-    ? `\n                <p class="card-note">\n                  ${hub.note}\n                </p>`
-    : "";
-
-  return `            <article class="app-card ${hub.cardClass}">\n              <div>\n                <p class="card-kicker">${hub.kicker}</p>\n                <div class="difficulty-tags" aria-label="Ease of use">\n${tags}\n                </div>\n                <h3>${tool.name}</h3>\n                <p>\n                  ${hub.summary}\n                </p>${note}\n              </div>\n${actions}\n            </article>`;
+  return `          <details class="library-item"><summary><h3>${escapeHtml(tool.name)}</h3></summary>
+            <p>${escapeHtml(tool.hub.summary)}</p>
+            <div class="library-links">${tool.hub.actions.map((action) => `<a href="${action.href}">${escapeHtml(action.label)}</a>`).join("")}</div>
+          </details>`;
 }
 
 function renderHubPathway(pathway) {
-  const steps = pathway.steps
-    .map((step) => {
-      const tool = toolById.get(step.toolId);
-      if (!tool) {
-        throw new Error(`Unknown tool id in pathway: ${step.toolId}`);
-      }
-
-      const href = tool.hub.actions[0].href;
-      return `            <li>\n              <div>\n                <strong><a href="${href}">${tool.name}</a></strong>\n                <span>${step.detail}</span>\n              </div>\n            </li>`;
-    })
-    .join("\n");
-
-  return `          <article class="hub-pathway ${pathway.className}">\n            <p class="card-kicker">${pathway.kicker}</p>\n            <h3>${pathway.title}</h3>\n            <p>${pathway.summary}</p>\n            <ol class="hub-pathway-steps">\n${steps}\n            </ol>\n          </article>`;
+  const links = pathway.steps.map((step) => {
+    const tool = toolById.get(step.toolId);
+    if (!tool) throw new Error(`Unknown tool in pathway: ${step.toolId}`);
+    return `<a href="${tool.hub.actions[0].href}">${escapeHtml(tool.name)}</a>`;
+  });
+  return `<p><strong>${escapeHtml(pathway.title)}</strong><br>${links.join(" → ")}</p>`;
 }
 
 function renderHubCatalog() {
-  const pathways = HUB_PATHWAYS.map(renderHubPathway).join("\n\n");
-  const cards = TOOLS.map(renderHubCard).join("\n\n");
+  return `<div class="audit-library">${TOOLS.map(renderHubCard).join("\n")}</div>
+    <details class="pathway-note"><summary>Guided routes through the lab</summary>${HUB_PATHWAYS.map(renderHubPathway).join("\n")}</details>`;
+}
 
-  return `          <p class="section-note">\n            ${HUB_CATALOG_INTRO.note}\n          </p>\n\n          <div class="hub-catalog-intro">\n            <p class="eyebrow">${HUB_PATHWAYS_INTRO.eyebrow}</p>\n            <h3 id="pathways-title">${HUB_PATHWAYS_INTRO.title}</h3>\n            <p>\n              ${HUB_PATHWAYS_INTRO.copy}\n            </p>\n          </div>\n\n          <div class="hub-pathways" aria-labelledby="pathways-title">\n${pathways}\n          </div>\n\n          <div class="hub-catalog-intro">\n            <p class="eyebrow">${HUB_CATALOG_INTRO.eyebrow}</p>\n            <h3>${HUB_CATALOG_INTRO.title}</h3>\n            <p>\n              ${HUB_CATALOG_INTRO.copy}\n            </p>\n          </div>\n\n          <div class="app-grid">\n${cards}\n          </div>`;
+function renderPromiseCards() {
+  return PROMISES.map((promise, index) => `          <article class="promise-card" id="promise-${promise.id}">
+            <a class="promise-card-link" href="#promise-${promise.id}" data-promise="${promise.id}" aria-label="${escapeHtml(promise.name)}: explore this passage">
+              <img class="promise-card-icon" src="./assets/promises/${promise.id}.webp" width="88" height="88" alt="" decoding="async">
+              <div class="promise-card-copy"><span class="card-index">${String(index + 1).padStart(2, "0")} / ${escapeHtml(promise.ref)}</span><h3>${escapeHtml(promise.name)}</h3><span class="card-tagline">${escapeHtml(promise.short)}</span><span class="card-status"></span></div><span class="card-arrow" aria-hidden="true">↗</span>
+            </a>
+            <div class="tip-wrap"><button class="tip-button" type="button" aria-label="About ${escapeHtml(promise.name)}" aria-expanded="false" aria-controls="tip-${promise.id}" aria-describedby="tip-${promise.id}">i</button><div class="tip-content" role="tooltip" id="tip-${promise.id}"><strong>THE QUESTION</strong>${escapeHtml(promise.hint)}</div></div>
+            <noscript><p>${escapeHtml(promise.verse)} <a href="https://www.biblegateway.com/passage/?search=${encodeURIComponent(promise.contextRef)}&amp;version=KJV">Read in context</a>.</p></noscript>
+          </article>`).join("\n");
 }
 
 function parseGentleNudges() {
@@ -589,23 +564,7 @@ function parseGentleNudges() {
 
 function renderHubGentleNudges() {
   const nudges = parseGentleNudges();
-  const cards = nudges
-    .map((nudge) => {
-      const questions = nudge.questions
-        .map((question) => `                    <li>${escapeHtml(question)}</li>`)
-        .join("\n");
-      const focus = nudge.focus
-        ? `                  <p class="hub-nudge-focus">Focus: ${escapeHtml(nudge.focus)}</p>\n`
-        : "";
-      const intro = nudge.intro
-        ? `                  <p>${escapeHtml(nudge.intro)}</p>\n`
-        : "";
-
-      return `                <article class="hub-nudge-card">\n                  <h3>${escapeHtml(nudge.title)}</h3>\n${focus}${intro}                  <ol>\n${questions}\n                  </ol>\n                  <p class="hub-nudge-linkline">Tool link: <a href="${escapeHtml(nudge.href)}">${escapeHtml(nudge.linkLabel)}</a></p>\n                </article>`;
-    })
-    .join("\n");
-
-  return `      <section class="hub-nudges-band" aria-labelledby="nudges-title">\n        <div class="section-inner">\n          <div class="section-heading">\n            <div>\n              <p class="eyebrow">Question-led challenge</p>\n              <h2 id="nudges-title">Gentle Nudges for Christian Apologists</h2>\n            </div>\n          </div>\n\n          <p class="section-note">\n            These prompts are not ad copy for the tools. They are short, question-led pressure tests aimed at familiar apologetic habits, each with a different methodological focus.\n          </p>\n\n          <details class="hub-nudges-accordion">\n            <summary>Open the ${nudges.length} question-led write-ups</summary>\n            <div class="hub-nudges-grid">\n${cards}\n            </div>\n          </details>\n        </div>\n      </section>`;
+  return `<section class="extended-prompts landing-container" aria-label="Discussion prompts"><details><summary>More questions for a deeper conversation</summary><div>${nudges.map((nudge) => `<article><h3>${escapeHtml(nudge.title)}</h3><p>${escapeHtml(nudge.intro)}</p><ol>${nudge.questions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}</ol><a href="${escapeHtml(nudge.href)}">Open this audit ↗</a></article>`).join("\n")}</div></details></section>`;
 }
 
 function renderReadmeApps() {
@@ -623,7 +582,7 @@ function renderReadmePaths() {
 }
 
 function updateHubCatalog() {
-  const html = read("index.html");
+  const html = replaceGeneratedBlock(read("index.html"), "promise-cards", renderPromiseCards());
   const updated = replaceGeneratedBlock(html, "hub-catalog", renderHubCatalog());
   write("index.html", updated);
 }
@@ -661,12 +620,12 @@ function writeSitemap() {
   write("sitemap.xml", xml);
 }
 
+updateHubCatalog();
+updateHubGentleNudges();
+
 for (const page of ALL_PAGES) {
   applyPage(page);
 }
-
-updateHubCatalog();
-updateHubGentleNudges();
 updateReadme();
 writeSitemap();
 ensureCloudflareAnalyticsOnAllHtmlFiles();

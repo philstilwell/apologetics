@@ -2,7 +2,15 @@
 
 Crosshairs Audit Lab is Phil Stilwell's collection of interactive tools for examining Christian apologetic claims. It helps users make evidential standards, assumptions, dependencies, and degrees of confidence explicit. The site is available at [xhairs.com](https://xhairs.com/), with its source and history in [philstilwell/apologetics](https://github.com/philstilwell/apologetics).
 
-The project contains ten tools, a shared home page, manuals, curricula, and an academic paper. The October 7, 2026 restoration recovered the current published version and established a new working folder named `XHAIRS.com`. See [the restoration audit](RESTORATION_AUDIT.md) for verification results and priorities.
+The project contains ten tools, a shared home page, manuals, curricula, and an academic paper. The October 7, 2026 restoration recovered the published version and established a new working folder named `XHAIRS.com`. A subsequent redesign replaced the dense home page with an introduction to nine biblical promise claims. See [the restoration audit](RESTORATION_AUDIT.md) for the original verification results and remaining maintenance priorities.
+
+## Promise introduction
+
+The home page now begins with nine illustrated topics: answered prayer, healing, protection, provision, wisdom and guidance, prophecy, transformed character, health, and long life. Each opens a contextualized KJV passage and a short radio-button exercise. Visitors distinguish an earthly guarantee, improved chances, a spiritual reading, a historically limited promise, no such promise, and uncertainty. Earthly readings ask whether fair failure would count against the interpretation; optional checkboxes record safeguards for a proposed test.
+
+Results describe the visitor's interpretation and testing commitments, not study findings. No empirical results are supplied. The first saved interpretation is retained when the visitor revises it, without treating that revision as evidence of evasion. Saved answers stay in this browser under `crosshairs.promise-intro.v1` and can be downloaded as plain text. Reset affects only this introduction.
+
+All nine topics, their hover/focus/tap explanations, and the exercise work on phones. The detailed audit library retains all ten tools, manuals, curricula, and the academic paper. Those older interactive pages still require at least 768 CSS pixels.
 
 ## Purpose and interpretation
 
@@ -31,13 +39,14 @@ Each tool has a manual and curriculum linked from the home page. The full site h
 
 The site uses ordinary HTML, CSS, and JavaScript and is published directly from the repository root. There is no required production build or paid application backend in this setup. Node.js and Playwright support local tests; PDF and paper generation have separate requirements.
 
-- `index.html` and `styles.css` provide the home page and shared presentation.
+- `index.html`, `assets/promise-landing.css`, and `scripts/promise-intro.mjs` provide the introductory home page. `scripts/promise-catalog.mjs` holds the verses and proposed tests; `scripts/promise-model.mjs` holds the interpretation rules and saved-answer validation.
+- `styles.css` retains the detailed tool layouts. `assets/site-theme.css` supplies the coordinated charcoal, ivory, and bronze presentation without changing their calculations or saved-answer formats. Self-hosted Barlow fonts and their licenses are in `assets/fonts/`; generated promise emblems and their Imagegen prompts are in `assets/promises/`.
 - `apps/` holds the ten tools and their individual logic.
 - `scripts/tool-manifest.mjs` describes the tool catalog, document links, pathways, and page metadata. `scripts/apply-seo.mjs` applies that material to generated sections and search metadata.
 - `assets/manuals/`, `assets/curricula/`, `output/pdf/`, and the Theism Gradient `docs/` folder contain public PDFs. Preserve the existing paths because they are published links.
 - `paper/crosshairs-audit-paper.qmd` and `paper/references.bib` contain the authoritative paper source and references. Read `paper/README.md` before editing it.
 - `apologist-question-writeups.md` holds question-led descriptions useful for outreach.
-- `scripts/small-screen-notice.js` deliberately disables interaction below 768 CSS pixels. The current product expects an iPad-size display or larger.
+- `scripts/small-screen-notice.js` deliberately disables interaction below 768 CSS pixels on the detailed tool pages. The home page does not load this restriction.
 
 The home page groups tools into guided pathways. Preserve the progression from Moral System Threshold to Moral System Stress Test to Moral Particulars, and the bridge from Fine-Tuning to the Theism Gradient. Several tools store responses in the visitor's browser and exchange results through imports or handoffs; changes to those formats require compatibility checks.
 

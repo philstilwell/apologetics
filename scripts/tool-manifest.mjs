@@ -1,4 +1,5 @@
-export const LASTMOD = "2026-05-21";
+export const LASTMOD = "2026-10-07";
+export { PROMISES } from "./promise-catalog.mjs";
 export const SITE_URL = "https://xhairs.com/";
 export const SITE_NAME = "Crosshairs Audit Lab";
 export const PERSON_ID = `${SITE_URL}#phil-stilwell`;
@@ -37,9 +38,9 @@ function withSeoCoreAbout(items) {
 export const HOME_PAGE = {
   file: "index.html",
   kind: "home",
-  title: "Christian Apologetics Tools for Apologists | Crosshairs Audit Lab",
+  title: "What Does the Promise Mean? | Crosshairs Audit Lab",
   description:
-    "Explore Christian apologetics tools for apologists auditing fine-tuning, resurrection evidence, prayer claims, moral arguments, theism gradients, and belief overreach.",
+    "Explore nine biblical promise claims. Read a verse, choose your interpretation, and see what it commits you to testing. Then explore ten detailed Christian apologetics audits.",
   ogType: "website",
   url: SITE_URL,
   keywords: withSeoCoreKeywords([
@@ -61,7 +62,8 @@ export const HOME_PAGE = {
   ]),
   faqContainerId: "hub-general-qa",
   sitemap: { changefreq: "weekly", priority: "1.0" },
-  expectedH1: "Crosshairs Audit Lab",
+  expectedH1: "WHAT DOES THE PROMISE MEAN?",
+  mobileAccessible: true,
 };
 
 export const TOOLS = [

@@ -38,6 +38,8 @@ No tool formula, public page, published PDF, or domain setting was changed as pa
 
 ## Priorities for the next work
 
+**Subsequent redesign, October 7, 2026:** The home page now offers a phone-accessible nine-promise introduction, with original Imagegen emblems and coordinated typography. The older tools and all document paths remain available. The new introduction has separate interpretation rules and browser journey checks. The original PDF-font and Mirror reveal-flow findings below remain open; the homepage portion of the phone-access concern has been addressed.
+
 ### Embed the fonts in the manuals and curricula
 
 All 20 currently linked tool manuals and curricula, plus five older or duplicate PDFs, rely on unembedded fonts. Their rendering depends on the reader's system substituting fonts. Regenerate the documents with embedded fonts, then compare extracted text, page counts, and rendered pages with the originals. Preserve their public paths and verify every font with `pdffonts`. The academic paper already has embedded fonts.

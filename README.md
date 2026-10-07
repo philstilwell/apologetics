@@ -4,6 +4,8 @@ Static GitHub Pages suite for Crosshairs audits: compact tools that inspect Chri
 
 Author: Phil Stilwell
 
+The home page introduces nine biblical promise claims through brief interpretation and testing exercises, with original bronze emblems, hover/focus/tap explanations, saved readings, and a text download. It works on phones; the ten detailed audits remain available for tablet-size screens and larger.
+
 ## Continuing the project
 
 The working project is **XHAIRS.com — Crosshairs Audit Lab**.
