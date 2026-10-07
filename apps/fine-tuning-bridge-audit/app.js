@@ -1523,53 +1523,7 @@ function buildMarkdownSummary() {
 }
 
 function buildAiPrompt() {
-  const diagnosis = classifyAudit();
-  return [
-    "You are reviewing a fine-tuning argument for hidden bridge jumps.",
-    "",
-    "Write for a smart high school graduate.",
-    "- Use plain English.",
-    "- Use short, direct sentences.",
-    "- Avoid academic, philosophical, or theological jargon where possible.",
-    "- If you use a tool term like observer selection, impersonal alternatives, or target ambiguity, explain it in simple words.",
-    "",
-    "Do not overstate the result.",
-    "- Treat the strict ceiling as the real limit of the argument right now.",
-    "- Treat the tentative ceiling only as a maybe, not as an earned conclusion.",
-    "- Do not smuggle human-purpose or Christian-purpose into a thinner result.",
-    "",
-    "Please answer in these sections:",
-    "1. Current honest ceiling",
-    "Say plainly what the argument supports right now, and what it does not yet support.",
-    "2. The main steps",
-    "Briefly separate thin design, life-purpose, human-purpose, and Christian-purpose.",
-    "3. What is still doing the work",
-    "Say whether observer selection, impersonal alternatives, and target ambiguity still matter a lot, and explain why in simple terms.",
-    "4. Beach analogy",
-    "Use the A/B/C beach image directly. Say which picture fits the actual universe, and which picture the selected route would naturally predict.",
-    "5. Best repair move",
-    "Name the single best repair move that would improve the argument without making it sound stronger than it is.",
-    "",
-    `Current route: ${routeById(state.route).label}`,
-    `Status: ${diagnosis.status}`,
-    `Summary: ${diagnosis.copy}`,
-    `Strict ceiling: ${ceilingLabel(diagnosis.strictCeiling)}`,
-    `Tentative ceiling: ${ceilingLabel(diagnosis.tentativeCeiling)}`,
-    `Prior pressure: ${priorPressure()}/100 (background commitment pressure)`,
-    `World-shape tension: ${worldMismatchLabel(worldMismatchScore())}`,
-    `Human-target pressure: ${targetPressure()}/100 (pressure toward a human-centered reading)`,
-    "",
-    "Audit data:",
-    buildSummary(),
-    "",
-    "Finish with four short items:",
-    "- Narrowest claim supported now",
-    "- Strongest live alternative explanation",
-    "- Bridge most in need of repair",
-    "- One follow-up question for Theism Gradient claims " + gradientFocusClaims().join(", "),
-    "",
-    "Keep the whole response clear, concrete, and readable. Prefer short paragraphs or bullets. Do not write like an academic paper."
-  ].join("\n");
+  return window.CrosshairsAI.buildPrompt(getAiAssessmentData());
 }
 
 function updateRouteContextCopy() {
@@ -2009,3 +1963,16 @@ function bindEvents() {
 
 render();
 bindEvents();
+
+
+function getAiAssessmentData() {
+  return {
+    moduleId: "fine-tuning-bridge-audit", module: "Fine-Tuning Bridge Audit",
+    source: document.querySelector('link[rel="canonical"]')?.href,
+    inputs: { state, currentControls: window.CrosshairsAI.collectControls() },
+    context: { routes, bridgeDefinitions },
+    report: buildSummary()
+  };
+}
+
+window.CrosshairsAI.register("fine-tuning-bridge-audit", () => getAiAssessmentData());

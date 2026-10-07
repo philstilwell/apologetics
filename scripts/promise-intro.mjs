@@ -265,6 +265,29 @@ function render() {
   const answer = activeAnswer();
   $("#exercise-counter").textContent = `PROMISE ${String(PROMISES.indexOf(promise) + 1).padStart(2, "0")} / ${String(PROMISES.length).padStart(2, "0")} · ${step === 1 ? "READ" : step === 2 ? "TEST" : "RECORD"}`;
   content.innerHTML = `<ol class="exercise-steps" aria-label="Your three steps">${["Read the promise", "Name a fair test", "See what remains"].map((label, i) => `<li ${step === i + 1 ? 'aria-current="step"' : ""}><span>0${i + 1}</span>${label}</li>`).join("")}</ol><div class="exercise-body">${step === 1 ? renderInterpretation(promise, answer) : step === 2 ? renderTesting(promise, answer) : renderResult(promise, answer)}</div>`;
+  if (step === 3) {
+    const aiPanel = window.CrosshairsAI.createPanel({
+      id: 'promises', scope: activeId,
+      getData: () => promiseAiData(promise.id),
+      description: 'Includes this promise’s verses, your claim, written explanations, test terms, exceptions, and first affirmed position. Drafts remain labelled as drafts.'
+    });
+    content.querySelector('.exercise-actions').before(aiPanel);
+  }
+}
+
+function promiseAiData(id = null) {
+  const selected = id ? PROMISES.filter(p => p.id === id) : PROMISES;
+  return {
+    moduleId: 'promises', module: id ? `Promise commitment: ${selected[0].name}` : 'All promise commitments',
+    source: 'https://xhairs.com/', scope: id || 'All six promise categories and earlier saved records',
+    inputs: { answers: Object.fromEntries(selected.map(p => [p.id, answers[p.id] || emptyAnswer()])),
+      additionalExplanations: Object.fromEntries(selected.map(p => [p.id, window.CrosshairsAI.getExplanation('promises', p.id)])),
+      previousAnswers: !id || id === 'longevity' ? previousAnswers : {} },
+    context: { passages: selected, interpretations: Object.fromEntries(selected.map(p => [p.id, interpretationOptions(p)])),
+      failureStandards: FAILURE_OPTIONS, safeguards: COMMITMENTS, evidenceOptions: EVIDENCE_OPTIONS,
+      exceptions: EXCEPTIONS, statuses: Object.fromEntries(selected.map(p => [p.id, recordStatus(answers[p.id])])) },
+    report: id ? `${recordStatus(answers[id])}. ${assess(answers[id]).body}` : reportText(answers, previousAnswers)
+  };
 }
 
 function finishReading() {
@@ -456,6 +479,9 @@ $("#reset-readings").addEventListener("click", () => {
   $("#promise-prayer .promise-card-link").focus();
 });
 
+const allPromiseAi = window.CrosshairsAI.createPanel({ id: 'promises', getData: () => promiseAiData(),
+  description: 'Includes all six categories, your written answers, testing terms, revisions, and earlier saved records. Unfinished answers stay identified as unfinished.' });
+$('#readings .record-footer').before(allPromiseAi);
 updateOverview();
 const openFromHash = () => {
   const requested = location.hash.replace(/^#promise-/, "");

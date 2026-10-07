@@ -475,6 +475,11 @@ function applyPage(page) {
 
   const tool = TOOLS.find(tool => tool.primaryPage.file === page.file);
   if (tool) html = applyModuleGuide(html, tool);
+  if (page.kind === "home" || MODULES[tool?.id] || page.file === "apps/falsifiability-field/legacy.html") {
+    const prefix = page.kind === "home" ? "./" : "../../";
+    html = html.replace(/\s*<link[^>]*data-ai-style[^>]*>/g, "").replace(/\s*<script[^>]*data-ai-script[^>]*><\/script>/g, "");
+    html = html.replace(/  <\/head>/, `    <link rel="stylesheet" href="${prefix}assets/ai-assessment.css?v=20261007-ai" data-ai-style>\n    <script src="${prefix}scripts/ai-assessment.js?v=20261007-ai" data-ai-script></script>\n  </head>`);
+  }
   write(page.file, html);
 }
 
@@ -533,7 +538,7 @@ function applyModuleGuide(html, tool) {
   html = html.replace(/<main\b[^>]*>/, match => match + intro);
   html = html.replace(/<nav class="top-nav"[^>]*>[\s\S]*?<\/nav>/, '<nav class="top-nav" aria-label="Primary"><a class="hub-link" href="../../#promises">The promises</a><a class="hub-link" href="../../#apps">Other modules</a></nav>');
   const assets = `<link rel="stylesheet" href="../../assets/module-guide.css?v=20261007-modules" data-module-style>
-    <script type="module" src="../../scripts/module-guide.mjs?v=20261007-modules" data-module-script></script>`;
+    <script type="module" src="../../scripts/module-guide.mjs?v=20261007-ai" data-module-script></script>`;
   html = html.replace(/\s*<link[^>]*data-module-style[^>]*>/g, "").replace(/\s*<script[^>]*data-module-script[^>]*><\/script>/g, "");
   html = html.replace(/  <\/head>/, `    ${assets}
   </head>`);

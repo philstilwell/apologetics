@@ -1966,6 +1966,10 @@ function buildFullReportWithPatterns() {
 }
 
 function buildAiPrompt() {
+  return window.CrosshairsAI.buildPrompt(getAiAssessmentData());
+}
+
+function getAiAssessmentData() {
   const allCaseInputs = issues.map((issue) => {
     const issueState = state.issueStates[issue.id];
     return {
@@ -1989,22 +1993,13 @@ function buildAiPrompt() {
       }
     };
   });
-  const payload = {
-    selectedIssueId: currentIssue().id,
-    mappedCaseCount: issues.filter((issue) => issueIsMapped(issue.id)).length,
-    totalCaseCount: issues.length,
-    pipelineContext: state.pipelineContext,
-    allCaseInputs,
-    patterns: buildPatterns()
+  return {
+    moduleId: "moral-particulars-audit", module: "Moral Particulars Audit",
+    source: document.querySelector('link[rel="canonical"]')?.href,
+    inputs: { allCaseInputs, pipelineContext: state.pipelineContext, currentControls: window.CrosshairsAI.collectControls() },
+    context: { selectedIssueId: currentIssue().id, mappedCaseCount: issues.filter((issue) => issueIsMapped(issue.id)).length, totalCaseCount: issues.length },
+    report: buildFullReportWithPatterns()
   };
-  return [
-    "You are stress-testing a Christian moral-particulars map. Do not merely restate the user's view.",
-    "Use the full allCaseInputs ledger below, not only the currently selected issue.",
-    "Identify the strongest grounding gaps, inconsistent case distinctions, missing limiting principles, and disagreement-diagnosis problems.",
-    "For each critique, also give the strongest fair Christian repair attempt.",
-    "",
-    JSON.stringify(payload, null, 2)
-  ].join("\n");
 }
 
 async function copyText(text, label) {
@@ -2097,3 +2092,5 @@ refs.resetButton.addEventListener("click", () => {
 
 renderQa();
 render();
+
+window.CrosshairsAI.register("moral-particulars-audit", () => getAiAssessmentData());

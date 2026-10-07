@@ -108,6 +108,7 @@ function mulberry32(seed) {
 function loadAudit(seed = 1) {
   const sandbox = makeSandbox();
   vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync(`${__dirname}/../../scripts/ai-assessment.js`, 'utf8'), sandbox);
   vm.runInContext(APP_CODE, sandbox, { filename: APP_PATH });
   sandbox.Math.random = mulberry32(seed);
   sandbox.window.Math = sandbox.Math;

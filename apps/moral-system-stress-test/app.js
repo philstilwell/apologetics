@@ -1856,53 +1856,7 @@ function buildReport(mode = state.reportMode) {
 }
 
 function buildAiPrompt() {
-  const required = getCoreElements();
-  const matched = getMatchedChallenges().slice(0, 10);
-  const claim = state.claim.trim() || "Christianity provides a coherent objective moral system.";
-  const selectedData = required
-    .map((element) => {
-      const note = (state.notes[element.id] || "").trim() || "No substantiation supplied.";
-      const checked = element.checks.filter((check) => selectedChecks(element.id)[check.id]).map((check) => check.label);
-      const unchecked = missingChecks(element).map((check) => check.label);
-      return [
-        `${element.title}`,
-        `route: ${routeLabel(state.routes[element.id] || "none")}`,
-        `support: ${strengthLabel(strengthValue(element.id))} (${strengthValue(element.id)}/4)`,
-        `checks satisfied: ${checked.length ? checked.join("; ") : "none"}`,
-        `checks missing: ${unchecked.length ? unchecked.join("; ") : "none"}`,
-        `note: ${note}`
-      ].join(" | ");
-    })
-    .join("\n");
-  const challengeData = matched
-    .map((challenge, index) => {
-      const questions = challenge.questions.map((question) => `- ${question}`).join("\n");
-      return `${index + 1}. ${challenge.title} (${challenge.pressure})\nCounterfactual: ${challenge.counterfactual}\n${questions}`;
-    })
-    .join("\n\n");
-
-  return [
-    "Copy/paste this entire prompt into an AI assistant.",
-    "",
-    "I am stress-testing a claimed moral system for coherence. The goal is to assess whether it supplies the required components of an objective moral system, rather than collapsing into emotion, obedience, or practical advice.",
-    "",
-    `Claim under audit: ${claim}`,
-    "",
-    `Completeness score from the tool: ${calculateCompleteness()}%`,
-    "",
-    "Mandatory components and substantiation controls:",
-    selectedData,
-    "",
-    "Matched counterfactuals and questions:",
-    challengeData || "No challenges matched.",
-    "",
-    "Please do five things:",
-    "1. Steelman the strongest coherent version of this moral-system account.",
-    "2. Identify the top unresolved tensions, prioritizing circular authority, access, obligation, guidance, scope, and correction.",
-    "3. Explain where the account risks collapsing into emotion, obedience, or practical advice.",
-    "4. Suggest the strongest possible repair moves and state what each repair would need to substantiate.",
-    "5. Provide cross-examination questions that a Christian defender must answer directly."
-  ].join("\n");
+  return window.CrosshairsAI.buildPrompt(getAiAssessmentData());
 }
 
 function renderReports() {
@@ -2121,3 +2075,16 @@ function bindEvents() {
 
 bindEvents();
 renderAll();
+
+
+function getAiAssessmentData() {
+  return {
+    moduleId: "moral-system-stress-test", module: "Moral System Stress Test",
+    source: document.querySelector('link[rel="canonical"]')?.href,
+    inputs: { state, currentControls: window.CrosshairsAI.collectControls() },
+    context: { routes, elements, boundaryTests: getBoundaryTests() },
+    report: buildReport("full")
+  };
+}
+
+window.CrosshairsAI.register("moral-system-stress-test", () => getAiAssessmentData());

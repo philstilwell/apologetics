@@ -1508,7 +1508,7 @@ Please give a comprehensive review that includes:
 }
 
 function buildAiPrompt() {
-  return promptMode === "all" ? buildAllPromisesAiPrompt() : buildSelectedAiPrompt();
+  return window.CrosshairsAI.buildPrompt(getAiAssessmentData());
 }
 
 function renderClaims() {
@@ -2300,3 +2300,20 @@ loadJsonButton?.addEventListener("click", () => {
 runCalculationSelfCheck();
 loadStateFromHash();
 update();
+
+
+function getAiAssessmentData() {
+  return {
+    moduleId: "falsifiability-field", module: "Previous Promise Test Field",
+    source: document.querySelector('link[rel="canonical"]')?.href,
+    inputs: { state, selectedClaimId, promptMode, currentControls: window.CrosshairsAI.collectControls() },
+    context: { claims, excuses, note: "Hypothetical test settings, not actual study results. Prioritize promptMode while retaining all cases for consistency checks." },
+    report: buildReportText()
+  };
+}
+
+window.CrosshairsAI.register("falsifiability-field", () => getAiAssessmentData());
+
+// Keep the previous-version scope controls and output for older workflows.
+const portablePromptPanel = window.CrosshairsAI.createPanel({ id: 'falsifiability-field' });
+aiPromptOutput.closest('section').after(portablePromptPanel);

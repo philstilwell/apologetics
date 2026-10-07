@@ -936,3 +936,16 @@ function renderAll() {
 
 attachGlobalEvents();
 renderAll();
+
+
+function getAiAssessmentData() {
+  return {
+    moduleId: "promising-gods-mirror", module: "Promising Gods Mirror",
+    source: document.querySelector('link[rel="canonical"]')?.href,
+    inputs: { state, currentControls: window.CrosshairsAI.collectControls() },
+    context: { collapseStages, completedCases: completedCount(), totalCases: promises.length, parallelsUnlocked: completedCount() === promises.length, note: "All case events, verses, and research results are invented." },
+    report: buildReportText()
+  };
+}
+
+window.CrosshairsAI.register("promising-gods-mirror", () => getAiAssessmentData());

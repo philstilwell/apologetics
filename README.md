@@ -8,6 +8,8 @@ The home page covers six New Testament promise categories and asks visitors to c
 
 The visible “Beyond promises” directory introduces nine other modules through plain questions about evidence, arguments for Christianity, and morality. Each opens in three guided stages, with optional background, access to all sections, and a route back to the directory. The original calculations, saved work, and transfers are preserved. Navigation is distinct from completing an exercise.
 
+Every module also prepares a prompt for any AI, including the visitor’s written answers, selections, other cases, and optional further explanation. “Ask any AI to assess my position” appears in the third stage, each promise result, and the complete promise record. Visitors can review, copy, or download a rigorous assessment request covering contradictions, weak premises, missing evidence, possible repairs, and optional fair tests. Prompts are generated locally; the site sends nothing to an AI. Extra explanations are saved separately and can be removed by clearing their field.
+
 ## Continuing the project
 
 The working project is **XHAIRS.com — Crosshairs Audit Lab**.

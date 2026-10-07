@@ -17,6 +17,21 @@ function setupGuide(config) {
       panels.get(node).add(index);
     });
   }));
+  const aiPanel = window.CrosshairsAI.createPanel({ id: document.body.dataset.guidedModule });
+  aiPanel.id = 'ai-assessment';
+  heading.after(aiPanel);
+  panels.set(aiPanel, new Set([2]));
+  // Retain existing output elements for their original report/export handlers.
+  const oldPrompt = main.querySelector('#aiPromptOutput, #aiPrompt, #ai-prompt, #ai-prompt-box');
+  if (oldPrompt) {
+    const oldCard = oldPrompt.closest('article, .panel, .result-panel');
+    const reportCard = oldCard.previousElementSibling;
+    reportCard?.classList.add('ai-retained-report');
+    // Moral Particulars also uses this status for its ordinary report-copy action.
+    const reportStatus = oldCard.querySelector('#copyStatus');
+    if (reportStatus && reportCard) reportCard.append(reportStatus);
+    oldCard.hidden = true;
+  }
 
   // Existing elements are moved, never copied: their controls and listeners survive.
   const help = document.createElement('details');

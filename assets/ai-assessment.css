@@ -1,0 +1,19 @@
+.ai-assessment{margin:24px 0;border:1px solid #b9bcac;border-left:3px solid #987342;background:#f4f2e9;color:#222b26;scroll-margin-top:125px}
+.ai-retained-report{grid-column:1/-1}
+.ai-assessment *{box-sizing:border-box;min-width:0}
+.ai-assessment summary{cursor:pointer;display:flex;gap:20px;justify-content:space-between;padding:20px 22px;font:600 22px/1.25 'Barlow Condensed',Arial,sans-serif;list-style:none}
+.ai-assessment summary::-webkit-details-marker{display:none}
+.ai-assessment-body{padding:0 22px 22px}
+.ai-assessment p{font:400 15px/1.55 Barlow,Arial,sans-serif;margin:0 0 15px;color:#4c594f}
+.ai-assessment label{display:block;font:600 15px/1.5 Barlow,Arial,sans-serif}
+.ai-assessment label span{font-weight:400}
+.ai-assessment textarea{display:block;width:100%;max-width:100%;margin:8px 0 14px;padding:12px;background:#fffef8;color:#222b26;border:1px solid #aeb5a6;resize:vertical;min-height:100px;font:400 15px/1.5 Barlow,Arial,sans-serif}
+.ai-assessment .ai-prompt-preview{min-height:280px;font-size:13px;white-space:pre-wrap}
+.ai-assessment .ai-local-note,.ai-assessment .ai-prompt-size,.ai-assessment .ai-assessment-status{font-size:13px}
+.ai-assessment-actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.ai-assessment button{padding:12px 17px;min-height:44px;border:1px solid #8c9985;background:transparent;color:#253324;font:600 15px Barlow,Arial,sans-serif;border-radius:2px;cursor:pointer}
+.ai-assessment [data-ai-action=copy]{background:#293b2d;color:#fff7e9}
+.ai-assessment [hidden]{display:none!important}
+.ai-assessment :focus-visible{outline:2px solid #916128;outline-offset:3px}
+@media(max-width:560px){.ai-assessment summary{font-size:21px;padding:18px}.ai-assessment-body{padding:0 18px 18px}.ai-assessment-actions button{width:100%}}
+@media print{.ai-assessment{display:none}}

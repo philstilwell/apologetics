@@ -679,43 +679,8 @@ function buildSummary(counts, diagnosis) {
   return lines.join("\n");
 }
 
-function buildAiPrompt(counts, diagnosis) {
-  const elementLines = elements
-    .map((element) => {
-      const current = state.elements[element.id];
-      const effectiveStatus = getEffectiveStatus(element.id);
-      return [
-        `- ${element.title}: ${effectiveStatus}`,
-        selectedSubstantiationNeedsGrounding(element.id)
-          ? "  Status note: selected substantiated without a grounding note, so it still counts as asserted"
-          : "",
-        current.note.trim() ? `  Support note: ${current.note.trim()}` : "  Support note: none supplied",
-        effectiveStatus === "substantiated" ? "" : `  Collapse label: ${element.collapse}`
-      ]
-        .filter(Boolean)
-        .join("\n");
-    })
-    .join("\n");
-
-  return [
-    "You are evaluating whether an alleged Christian moral system has even crossed the threshold into being a coherent moral system.",
-    "",
-    `Claim route: ${formatRouteLabel()}`,
-    `Claim: ${state.claim.trim() || "No claim entered."}`,
-    `Current diagnosis: ${diagnosis.profile}`,
-    `Threshold status: ${diagnosis.status}`,
-    `Counts: ${counts.substantiated} substantiated, ${counts.asserted} asserted, ${counts.missing} missing.`,
-    "",
-    "Mandatory components and current status:",
-    elementLines,
-    "",
-    "Tasks:",
-    "1. Say whether this currently looks more like a moral system, a rule source, an intuition set, a practical framework, or a cluster of conclusions.",
-    "2. Identify the two most serious missing architectural components and explain why they matter.",
-    "3. Explain whether the claim is ready for the advanced Moral System Stress Test, and why.",
-    "4. Give the strongest plausible repair path for the current route without simply repeating the original claim.",
-    "5. Name one short follow-up question for each missing or asserted-only component."
-  ].join("\n");
+function buildAiPrompt() {
+  return window.CrosshairsAI.buildPrompt(getAiAssessmentData());
 }
 
 function mapRouteToStressRoute(routeId) {
@@ -971,3 +936,17 @@ function init() {
 }
 
 init();
+
+
+function getAiAssessmentData() {
+  const counts = countStatuses();
+  return {
+    moduleId: "moral-system-threshold", module: "Moral System Threshold",
+    source: document.querySelector('link[rel="canonical"]')?.href,
+    inputs: { state, currentControls: window.CrosshairsAI.collectControls() },
+    context: { routes, elements },
+    report: buildSummary(counts, classifyThreshold(counts))
+  };
+}
+
+window.CrosshairsAI.register("moral-system-threshold", () => getAiAssessmentData());

@@ -138,6 +138,10 @@ async function verifyMirror(page, baseUrl) {
   assert(await page.locator('#reveal-grid').isVisible());
   assert.match(await page.locator('#report-output').textContent(), /1 Timothy 4:8/);
   assert.match(await page.evaluate(() => buildReportText()), /1 Timothy 4:8/);
+  const ai = page.locator('[data-ai-assessment]');
+  await ai.locator('summary').click();
+  await ai.locator('[data-ai-action="preview"]').click();
+  assert.match(await ai.locator('.ai-prompt-preview').inputValue(), /1 Timothy 4:8/, 'AI prompt includes unlocked comparisons after all nine decisions');
   await page.reload();
   assert.match(await page.locator('#reveal-status').textContent(), /unlocked/i);
 }

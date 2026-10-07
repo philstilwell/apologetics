@@ -30,6 +30,10 @@ Each of the nine primary modules follows three guided stages with concise instru
 
 Promising Gods Mirror now withholds Christian parallels from both the displayed and copyable reports until all nine decisions are made. The invented cases remain explicitly hypothetical.
 
+Every module offers “Ask any AI to assess my position” in its third stage. Visitors can include additional reasons, review the complete prompt, copy it, or download it as text. The home page offers a prompt for each promise result and one for the full saved record; the previous Promise Test Field also retains this facility. All current module inputs and written answers are included, including other cases and filtered-out claims. Extra explanations are saved separately from the original module answers and removed by clearing the field. No answers are sent to an AI automatically and no AI service is called by the site.
+
+The common prompt requests a fair reconstruction, ranked weaknesses supported by exact statements, the strongest replies, and specific repairs. It distinguishes genuine contradictions from missing evidence or disputed assumptions. Optional tests require clear supporting, challenging, and inconclusive outcomes, appropriate methods, and proportionate revision rules. Claims, drafts, unconfirmed defaults, invented examples, and model scores stay distinct. The AI is asked to examine the tool’s assumptions too. Mirror prompts preserve the nine-decision reveal boundary. Large records are never silently truncated; the interface offers a downloaded file or assessment in sections when an AI has an input limit.
+
 ## Purpose and interpretation
 
 The tools inspect reasoning rather than issue automatic verdicts about Christianity. Users should be able to identify which premises support a conclusion, whether confidence exceeds the support supplied, and whether the same standard is applied to rival claims. The home page explicitly distinguishes audit pressure from the probability that a claim is false, and describes scores as structured reflections of user inputs.
@@ -59,6 +63,7 @@ The site uses ordinary HTML, CSS, and JavaScript and is published directly from 
 
 - `index.html`, `assets/promise-landing.css`, and `scripts/promise-intro.mjs` provide the introductory home page. `scripts/promise-catalog.mjs` holds the verses and proposed tests; `scripts/promise-model.mjs` holds the interpretation rules and saved-answer validation; `scripts/promise-testing.mjs` holds evidence and exception guidance and test-term checks.
 - `scripts/module-catalog.mjs` defines the nine module introductions, directory groups, and stage mappings. `scripts/module-guide.mjs` presents the existing controls in guided stages, with `assets/module-guide.css` providing the shared layout and phone adaptations.
+- `scripts/ai-assessment.js` and `assets/ai-assessment.css` provide the portable assessment prompt and shared controls. Each module registers its full current input data and report; prompts are rebuilt at copy/download time. Extra explanations use `crosshairs.ai-explanation.v1.<module>.<scope>`. `scripts/ai-browser-checks.mjs` checks preservation of inputs and prompt actions.
 - `styles.css` retains the detailed tool layouts. `assets/site-theme.css` supplies the coordinated charcoal, ivory, and bronze presentation without changing their calculations or saved-answer formats. Self-hosted Barlow fonts and their licenses are in `assets/fonts/`; generated promise emblems and their Imagegen prompts are in `assets/promises/`.
 - `apps/` holds the ten tools and their individual logic.
 - `scripts/tool-manifest.mjs` describes the tool catalog, document links, pathways, and page metadata. `scripts/apply-seo.mjs` applies that material to generated sections and search metadata.

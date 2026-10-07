@@ -2416,3 +2416,16 @@ function clampNumber(value, min, max, fallback) {
 
   return Math.min(max, Math.max(min, value));
 }
+
+
+function getAiAssessmentData() {
+  return {
+    moduleId: "belief-overreach-audit", module: "Belief Overreach Audit",
+    source: document.querySelector('link[rel="canonical"]')?.href,
+    inputs: { activeScenario: state.activeScenario, triesRun: Object.fromEntries(scenarioOrder.map(id => [id, state.scenarios[id].tries.length])), currentControls: window.CrosshairsAI.collectControls() },
+    context: { note: "All scenario results are generated simulations, not personal beliefs or real-world evidence.", agents },
+    report: scenarioOrder.map(id => buildSummaryOutput(scenarios[id], state.scenarios[id], getStandings(state.scenarios[id]), getLastEvent(state.scenarios[id]))).join("\n\n")
+  };
+}
+
+window.CrosshairsAI.register("belief-overreach-audit", () => getAiAssessmentData());

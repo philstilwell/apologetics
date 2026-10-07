@@ -1974,38 +1974,8 @@ function buildReport(assessment) {
   return lines.join("\n");
 }
 
-function buildAiPrompt(assessment) {
-  return [
-    assessment.meta.aiAuditLine,
-    "",
-    "Use accessible terms first:",
-    "- Baseline confidence = prior.",
-    "- Revised confidence = posterior inside the known cause space.",
-    "- Net evidence lift = item-level Bayes factors after counter-evidence and alternative-fit settings.",
-    "- 'How expected is this if true?' = P(E|H).",
-    "- 'How expected is this if false?' = P(E|not-H).",
-    "- Independent evidence = dependence correction.",
-    "- Room for other explanations = unknown reserve.",
-    "",
-    assessment.meta.aiCheckHint,
-    "",
-    buildReport(assessment),
-    "",
-    "Challenge possible irrational stances, blunders, or oversights in the user's reasoning calculus:",
-    "- Look for motivated reasoning, special pleading, confirmation bias, or protecting a conclusion by lowering rival explanations without a clear reason.",
-    "- Challenge any refusal to state a starting probability. Explain that refusing a probability does not remove the assumption; it hides the assumption and prevents a fair comparison.",
-    "- Check for base-rate neglect, missing alternatives, false independence, sincerity treated as accuracy, and leaps from 'unexplained' to a specific miracle claim.",
-    "- Name any modeling blunder directly: double counting, tiny 'expected if false' values, unjustified starting confidence, overconfident independence, or ignored unknown reserve.",
-    "- Pay special attention to unconceived explanations: missing ordinary causes, missing records, unknown mechanisms, selection effects, and material or immaterial explanations the user did not name.",
-    "- Be direct but fair. Critique the reasoning and the numbers, not the person's intelligence or character.",
-    "",
-    "Questions to answer:",
-    "1. Which assumption is doing the most work?",
-    "2. Which 'expected if false' values are too low, if any?",
-    "3. Which evidence items should be lowered for overlap or dependence?",
-    "4. What revised confidence range results under stricter audit settings and believer-friendly settings?",
-    "5. What claim would be proportionate to the evidence actually entered?",
-  ].join("\n");
+function buildAiPrompt() {
+  return window.CrosshairsAI.buildPrompt(getAiAssessmentData());
 }
 
 async function copyText(text, button) {
@@ -2162,3 +2132,16 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+
+function getAiAssessmentData() {
+  return {
+    moduleId: "resurrection-evidence-audit", module: "Resurrection Evidence Audit",
+    source: document.querySelector('link[rel="canonical"]')?.href,
+    inputs: { state, currentControls: window.CrosshairsAI.collectControls() },
+    context: { alternatives: getCurrentAlternatives(), preset: getCurrentPreset().title },
+    report: buildReport(assess())
+  };
+}
+
+window.CrosshairsAI.register("resurrection-evidence-audit", () => getAiAssessmentData());
