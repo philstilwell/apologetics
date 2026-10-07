@@ -161,14 +161,8 @@ const promises = [
     requiredStopIndex: 3,
     parallels: [
       {
-        ref: "Ephesians 6:2-3",
-        note: "Often invoked as a New Testament promise of long life tied to obedience.",
-        verse:
-          "Honour thy father and mother; (which is the first commandment with promise;) That it may be well with thee, and thou mayest live long on the earth.",
-      },
-      {
         ref: "1 Timothy 4:8",
-        note: "Often invoked as a promise that godliness brings present-life benefits as well as future ones.",
+        note: "Promises benefits of godliness in this life and the next. A claim of extra earthly years requires an additional interpretation; the verse does not explicitly promise a longer lifespan.",
         verse:
           "For bodily exercise profiteth little: but godliness is profitable unto all things, having promise of the life that now is, and of that which is to come.",
       },
@@ -197,12 +191,6 @@ const promises = [
         note: "Often invoked as a promise of healing after prayer by elders.",
         verse:
           "Is any sick among you? let him call for the elders of the church; and let them pray over him, anointing him with oil in the name of the Lord: And the prayer of faith shall save the sick, and the Lord shall raise him up; and if he have committed sins, they shall be forgiven him.",
-      },
-      {
-        ref: "1 Peter 2:24",
-        note: "Often invoked as a promise of physical healing through Christ's suffering.",
-        verse:
-          "Who his own self bare our sins in his own body on the tree, that we, being dead to sins, should live unto righteousness: by whose stripes ye were healed.",
       },
     ],
   },
@@ -295,12 +283,6 @@ const promises = [
     requiredStopIndex: 3,
     parallels: [
       {
-        ref: "Acts 2:17",
-        note: "Often invoked as a promise of prophecy and revelatory speech among believers.",
-        verse:
-          "And it shall come to pass in the last days, saith God, I will pour out of my Spirit upon all flesh: and your sons and your daughters shall prophesy, and your young men shall see visions, and your old men shall dream dreams:",
-      },
-      {
         ref: "John 16:13",
         note: "Often invoked as guidance into truth and what is to come.",
         verse:
@@ -369,12 +351,6 @@ const promises = [
         note: "Often invoked as a promise that believers should prosper and be in health.",
         verse:
           "Beloved, I wish above all things that thou mayest prosper and be in health, even as thy soul prospereth.",
-      },
-      {
-        ref: "Matthew 8:17",
-        note: "Often invoked as a promise that Christ bears believers' sicknesses and infirmities.",
-        verse:
-          "That it might be fulfilled which was spoken by Esaias the prophet, saying, Himself took our infirmities, and bare our sicknesses.",
       },
     ],
   },

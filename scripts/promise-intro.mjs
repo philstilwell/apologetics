@@ -1,6 +1,6 @@
-import { EVIDENCE_OPTIONS, EXCEPTIONS, TEST_GUIDANCE, emptyTest, testGaps, testTensions, testReport, exceptionReport, testSnapshot } from "./promise-testing.mjs?v=20261007-six-promises";
-import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, bibleLink, interpretationOptions } from "./promise-catalog.mjs?v=20261007-six-promises";
-import { STORAGE_KEY, emptyAnswer, isEarthly, requiredCommitments, loadSavedRecord, previousReport, assess, reportText, canCommit, isCommitted, needsFailureStandard, commitmentSnapshot, hasRevision, hasTestRevision, recordStatus } from "./promise-model.mjs?v=20261007-six-promises";
+import { EVIDENCE_OPTIONS, EXCEPTIONS, TEST_GUIDANCE, emptyTest, testGaps, testTensions, testReport, exceptionReport, testSnapshot } from "./promise-testing.mjs?v=20261007-clear-life";
+import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, bibleLink, interpretationOptions } from "./promise-catalog.mjs?v=20261007-clear-life";
+import { STORAGE_KEY, emptyAnswer, isEarthly, requiredCommitments, loadSavedRecord, previousReport, assess, reportText, canCommit, isCommitted, needsFailureStandard, commitmentSnapshot, hasRevision, hasTestRevision, recordStatus } from "./promise-model.mjs?v=20261007-clear-life";
 
 const $ = (selector) => document.querySelector(selector);
 const escape = (text) => String(text).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -22,7 +22,7 @@ const activeAnswer = () => answers[activeId] ||= emptyAnswer();
 
 function persist() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, answers, previousAnswers }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 3, answers, previousAnswers }));
     storageAvailable = true;
   } catch { storageAvailable = false; }
   $("#storage-status").textContent = storageAvailable
@@ -46,7 +46,7 @@ function updateOverview() {
   $("#reading-list").innerHTML = PROMISES.map((promise) => {
     const answer = answers[promise.id];
     return `<div class="reading-row">
-      <div><strong>${escape(promise.name)}</strong><small>${escape(promise.ref)} · KJV</small></div>
+      <div><strong>${escape(promise.name)}</strong><small>${escape((promise.passages || [promise]).map(p => p.ref).join(" · "))} · KJV</small></div>
       <span class="reading-result">${escape(recordStatus(answer))}${isCommitted(answer) ? ` · ${escape(assess(answer).label)}` : ""}</span>
       <button class="text-button" data-review="${promise.id}" type="button" aria-label="Review ${escape(promise.name)}">${isCommitted(answer) ? "Review" : "Resolve"} ↗</button>
       ${answer?.claim ? `<p class="record-claim">${isCommitted(answer) ? "I affirm:" : "Draft:"} ${escape(answer.claim)}</p>` : ""}
@@ -97,19 +97,20 @@ function claimField(promise, answer) {
 
 function previousRecord() {
   const text = previousReport(previousAnswers);
-  return text ? `<details class="previous-record"><summary>Earlier healing, protection, health, and long-life answers</summary><p>These are preserved records from the separate categories. The combined long-life category needs a new commitment.</p><pre class="test-transcript">${escape(text)}</pre></details>` : "";
+  return text ? `<details class="previous-record"><summary>Earlier healing, protection, health, and long-life answers</summary><p>These are preserved records from the earlier questions. Read the current passages and make a new commitment.</p><pre class="test-transcript">${escape(text)}</pre></details>` : "";
 }
 
 function relatedPassages(promise) {
   if (!promise.passages) return "";
-  return `<section class="combined-passages" aria-label="Healing, protection, and health passages"><h3>One category. Read each claim.</h3><p class="field-hint">Use these New Testament passages alongside the long-life verse above. State which ones support your belief and which do not; they need not all make the same promise.</p>${promise.passages.map((passage) => `<details class="combined-passage" id="passage-${passage.id}"><summary><img src="./assets/promises/${passage.id}.webp" width="40" height="40" alt=""><span><strong>${escape(passage.name)}</strong><small>${escape(passage.ref)} · KJV</small></span></summary><blockquote class="verse-block">“${escape(passage.verse)}”<cite>${escape(passage.ref)} · King James Version</cite></blockquote><p>${escape(passage.context)}</p><a href="${bibleLink(passage.contextRef)}" target="_blank" rel="noopener noreferrer">Read the surrounding passage ↗</a></details>`).join("")}</section>`;
+  return `<section class="combined-passages" aria-label="Healing, protection, and health passages"><h3>Healing, protection, and health</h3><p>${escape(promise.context)}</p><p class="field-hint">Open each reading. They need not all make the same promise.</p>${promise.passages.map((passage) => `<details class="combined-passage" id="passage-${passage.id}"><summary><img src="./assets/promises/${passage.id}.webp" width="40" height="40" alt=""><span><strong>${escape(passage.name)}</strong><small>${escape(passage.ref)} · KJV</small></span></summary><blockquote class="verse-block">“${escape(passage.verse)}”<cite>${escape(passage.ref)} · King James Version</cite></blockquote><p>${escape(passage.context)}</p><a href="${bibleLink(passage.contextRef)}" target="_blank" rel="noopener noreferrer">Read the surrounding passage ↗</a></details>`).join("")}</section>`;
 }
 
 function renderInterpretation(promise, answer) {
   return `${heading(promise, "01 / READ THE PROMISE")}
-    <blockquote class="verse-block">“${escape(promise.verse)}”<cite>${escape(promise.ref)} · King James Version</cite></blockquote>
+    ${answer.needsSourceReview ? `<p class="test-proposal" role="status">The passages in this category have changed. Your earlier words and testing terms are preserved as a draft. Read the current passages, revise your claim if needed, and affirm it again.</p>` : ""}
+    ${promise.passages ? relatedPassages(promise) : `<blockquote class="verse-block">“${escape(promise.verse)}”<cite>${escape(promise.ref)} · King James Version</cite></blockquote>
     <details class="context-details"><summary>Read the context before deciding</summary><p>${escape(promise.context)}</p><a href="${bibleLink(promise.contextRef)}" target="_blank" rel="noopener noreferrer">Read the surrounding passage ↗</a><p class="related-verses">Related passages: ${promise.related.map((ref) => `<a href="${bibleLink(ref)}" target="_blank" rel="noopener noreferrer">${escape(ref)}</a>`).join(" · ")}. These may call for different interpretations.</p></details>
-    ${relatedPassages(promise)}
+    `}
     ${promise.id === "longevity" ? previousRecord() : ""}
     <fieldset><legend>${escape(promise.question)}</legend><p class="field-hint">Choose what you actually believe ${promise.passages ? "these passages commit" : "this passage commits"} God to doing. If you affirm both an earthly and a spiritual promise, choose the earthly claim and describe both. No answer is selected for you.</p>${radios("interpretation", interpretationOptions(promise), answer.interpretation)}</fieldset>
     <div id="claim-field">${claimField(promise, answer)}</div>
@@ -274,6 +275,7 @@ function finishReading() {
   answer.complete = !unresolved;
   answer.reviewed = true;
   if (!unresolved) {
+    answer.needsSourceReview = false;
     answer.claim = answer.claim.trim();
     answer.firstInterpretation ||= answer.interpretation;
     answer.firstCommitment ||= commitmentSnapshot(answer);

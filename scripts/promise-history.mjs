@@ -61,7 +61,8 @@ export const PREVIOUS_PROMISES = [
   {
     "id": "longevity",
     "name": "Long life",
-    "ref": "Ephesians 6:2–3",
+    "ref": "Retired long-life reading",
+    "retired": true,
     "guaranteed": {
       "label": "Everyone who honors their parents as required will reach old age.",
       "detail": "God guarantees a long earthly life to each qualifying person today. What counts as old age must be settled before checking lifespans."

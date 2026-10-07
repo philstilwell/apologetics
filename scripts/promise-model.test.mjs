@@ -144,9 +144,10 @@ test("six categories use New Testament references and keep the three combined pa
   for (const p of PROMISES) for (const ref of [p.ref, p.contextRef, ...p.related, ...(p.passages || []).flatMap(x => [x.ref, x.contextRef])]) {
     assert(nt.has(ref.replace(/\s+\d.*$/, "")), `Non-New-Testament reference: ${ref}`);
   }
+  assert.doesNotMatch(JSON.stringify(PROMISES), /Ephesians 6|Acts 2:17|Honour thy father|pour out of my Spirit/);
   const life = PROMISES.find(p => p.id === "longevity");
   assert.deepEqual(life.passages.map(p => p.ref), ["James 5:14–15", "Matthew 10:29–31", "Matthew 6:28–30"]);
-  assert.match(life.passages[1].context, /does not say they never die/);
+  assert.match(life.passages[1].context, /does not say it cannot die/);
   assert.match(life.passages[2].context, /clothing/);
 });
 
@@ -160,7 +161,7 @@ test("previous separate commitments survive without being assigned to the combin
   assert(isCommitted(loaded.previousAnswers.healing));
   assert.equal(loaded.previousAnswers.longevity.claim, "My original lifespan claim");
   assert.match(previousReport(loaded.previousAnswers), /do not count as a commitment to the new combined category/);
-  const restored = loadSavedRecord(JSON.parse(JSON.stringify({ version: 2, ...loaded, answers: { ...loaded.answers, longevity: { ...old, claim: "My new combined claim" } } })));
+  const restored = loadSavedRecord(JSON.parse(JSON.stringify({ version: 3, ...loaded, answers: { ...loaded.answers, longevity: { ...old, claim: "My new combined claim" } } })));
   assert.equal(restored.answers.longevity.claim, "My new combined claim");
   assert.equal(restored.previousAnswers.longevity.claim, "My original lifespan claim");
   const report = reportText(restored.answers, restored.previousAnswers);
@@ -168,4 +169,29 @@ test("previous separate commitments survive without being assigned to the combin
   assert.match(report, /My original healing claim/);
   assert.match(report, /My new combined claim/);
   assert.deepEqual(loadSavedRecord(null), { answers: {}, previousAnswers: {} });
+});
+
+
+test("changed source passages require fresh affirmation without losing earlier claims or tests", () => {
+  const old = { ...fullCommitment, affirmed: true, complete: true, reviewed: true };
+  const saved = { version: 2, answers: { prayer: old, prophecy: old, longevity: old } };
+  const loaded = loadSavedRecord(saved);
+  assert(isCommitted(loaded.answers.prayer));
+  for (const id of ["prophecy", "longevity"]) {
+    const a = loaded.answers[id];
+    assert(!isCommitted(a));
+    assert.equal(a.reviewed, false);
+    assert.equal(a.needsSourceReview, true);
+    assert.equal(a.claim, old.claim);
+    assert.deepEqual(a.test, old.test);
+    assert.deepEqual(a.firstCommitment, commitmentSnapshot(old));
+    assert.deepEqual(a.firstTest, testSnapshot(old.test));
+  }
+  assert.match(reportText(loaded.answers), /source passages have changed/);
+  const reloaded = loadSavedRecord({ version: 3, ...loaded });
+  assert.equal(reloaded.answers.longevity.needsSourceReview, true);
+  assert(!isCommitted(reloaded.answers.longevity));
+  const confirmed = { ...reloaded.answers.longevity, needsSourceReview: false, affirmed: true, complete: true };
+  assert(isCommitted(loadSavedRecord({ version: 3, answers: { longevity: confirmed } }).answers.longevity));
+  assert(!isCommitted(sanitizeAnswers({ longevity: { ...confirmed, needsSourceReview: true } }).longevity));
 });

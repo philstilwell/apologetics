@@ -92,3 +92,14 @@ Healing, protection, and health are now grouped with Long life, leaving six land
 Saved format version 2 preserves v1 answers for the four former categories in a read-only record and in downloads. No prior answer is automatically affirmed as the combined claim. The other five categories retain their commitments. Old healing/protection/health links open their corresponding reading in Long life.
 
 Validation: root checks and 14 promise-model tests passed, including New Testament reference coverage and migration. All 14 pages passed desktop/phone startup checks. Browser journeys covered six categories, expanded passages on phones, old deep links, saved-record migration, fresh affirmation, reloads, downloads, and existing test rules and previous-version compatibility. The separate Theism Gradient checks also passed.
+
+
+## October 7, 2026 — Clearer Long life readings; no Old Testament quotations
+
+Removed the parent-honoring quotation from Long life and from Promising Gods Mirror. Long life now opens with a plain question about recovery, safety, health, or lifespan, followed by the three readings on healing, sparrows, and lilies. Each keeps its own context. Choices distinguish a guaranteed result, an average advantage, spiritual care only, a past-only promise, no promise, another claim, and uncertainty. Testing prompts distinguish one failed guarantee from a failed prediction about group averages.
+
+Prophecy now uses John 16:13 instead of the Pentecost quotation of Joel. The Mirror also removes the repeated Joel quotation and two healing readings that repeat Isaiah. Its remaining longevity parallel states explicitly that a lifespan prediction is an additional interpretation. An audit of the published text sources and the extracted text of all 26 PDFs found no further matching Old Testament citations or these repeated quotations; no PDFs needed regeneration.
+
+Saved format v3 keeps all previous words and test terms. Earlier Long life and Prophecy answers require review and fresh affirmation because the readings have changed; unchanged categories retain their commitments. First affirmed claims and tests remain available through revisions.
+
+Validation passed: all 15 promise-model checks; all 14 pages at desktop and phone sizes; six-category journeys; revised reading displays; migration and fresh affirmation of v2 answers; first-claim and test preservation; downloads, keyboard access, and previous-version compatibility; and the separate Theism Gradient checks.

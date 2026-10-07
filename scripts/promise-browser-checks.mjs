@@ -17,11 +17,12 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     wisdom: "God grants inward spiritual understanding to those who ask in faith; I claim no externally measurable improvement in judgment.",
     prophecy: "God promises inspired spiritual speech to believers today, without promising foreknowledge of future events.",
     character: "Within one year, people identified as in Christ before observation show less dishonest conduct than they did before conversion.",
-    health: "I read the sparrows and lilies as encouragement to trust, without a divine guarantee of health or safety. I do not read the healing and long-life passages as divine guarantees either.",
-    longevity: "Those who honor their parents by my stated criteria have an average lifespan at least two years longer than otherwise comparable people.",
+    health: "I read the sparrows and lilies as encouragement to trust, without a divine guarantee of health or safety. I do not read the healing passage as a divine guarantee either.",
+    longevity: "Every sick believer who receives the elders’ prayer of faith and anointing will recover from the named illness within one year. This does not promise a particular age at death.",
   };
   const choose = async (id, interpretation, failure = null, commitments = false) => {
     await page.locator(`[data-promise="${id}"]`).click();
+    if (id === "longevity") await page.screenshot({ path: ".local/redesign/long-life-clear-desktop.png" });
     assert.equal(await page.locator('input[name="interpretation"]:checked').count(), 0, "Do not preselect a reading");
     assert.equal(await page.locator("#next-step").isDisabled(), true);
     await page.locator(`input[name="interpretation"][value="${interpretation}"]`).check();
@@ -160,6 +161,9 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     await page.locator("#promise-dialog[open]").waitFor();
     assert.equal(new URL(page.url()).hash, "#promise-longevity", "Old category links lead to the combined category");
     assert.equal(await page.locator(".combined-passage").count(), 3);
+    assert.equal(await page.locator(".exercise-body > .verse-block").count(), 0, "The combined category has only its three source readings");
+    assert.doesNotMatch(await page.locator("#exercise-content").textContent(), /Honour thy father|long-life verse above|Ephesians/);
+    assert.match(await page.locator("#exercise-content").textContent(), /What do you believe these passages promise people today/);
     assert(await page.locator("#passage-health").getAttribute("open") !== null);
     assert.match(await page.locator("#passage-health").innerText(), /Consider the lilies/);
     for (const id of ["healing", "protection"]) {
@@ -223,6 +227,7 @@ export async function verifyPromiseJourneys(baseUrl, browser) {
     assert(await tab.locator("#next-step").isDisabled(), "Legacy completed readings require a specific claim and new affirmation");
   } finally { await legacy.close(); }
   await verifyMergedRecords(baseUrl, browser);
+  await verifyChangedSources(baseUrl, browser);
 }
 
 async function fillTest(page) {
@@ -348,7 +353,43 @@ async function verifyMergedRecords(baseUrl, browser) {
     for (const name of ["healing", "protection", "health", "lifespan"]) assert(text.includes(`My earlier ${name} commitment`));
     assert.match(text, /2 of 6 committed/);
     const stored = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
-    assert.equal(stored.version, 2);
+    assert.equal(stored.version, 3);
     assert.equal(Object.keys(stored.previousAnswers).length, 4);
+  } finally { await context.close(); }
+}
+
+
+async function verifyChangedSources(baseUrl, browser) {
+  const context = await browser.newContext();
+  try {
+    await context.addInitScript(key => {
+      if (localStorage.getItem(key)) return;
+      const a = { interpretation: "guarantee", failure: "yes", claim: "My previously affirmed claim", affirmed: true, complete: true, reviewed: true, commitments: [], test: { plan: "My earlier evidence plan" } };
+      localStorage.setItem(key, JSON.stringify({ version: 2, answers: { prayer: a, prophecy: a, longevity: a } }));
+    }, STORAGE_KEY);
+    const page = await context.newPage();
+    await page.goto(`${baseUrl}/#promise-longevity`);
+    assert.equal(await page.locator("#progress-label").textContent(), "1 / 6 committed");
+    assert.match(await page.locator("#exercise-content [role=status]").innerText(), /passages in this category have changed/);
+    assert.equal(await page.locator("#belief-statement").inputValue(), "My previously affirmed claim");
+    await page.locator('input[name="interpretation"][value="spiritual"]').check();
+    await page.locator("#belief-statement").fill("I believe these passages promise spiritual care today but no physical advantage.");
+    await page.locator("#next-step").click();
+    await page.locator("#see-result").click();
+    await page.reload();
+    assert.equal(await page.locator("#progress-label").textContent(), "2 / 6 committed");
+    assert.match(await page.locator("#exercise-content").textContent(), /My previously affirmed claim/);
+    const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
+    assert.equal(saved.version, 3);
+    assert.equal(saved.answers.longevity.needsSourceReview, false);
+    assert.equal(saved.answers.longevity.firstTest.plan, "My earlier evidence plan");
+    assert.equal(saved.answers.prophecy.needsSourceReview, true);
+    await page.locator("#close-exercise").click();
+    await page.locator('[data-promise="prophecy"]').click();
+    assert.match(await page.locator(".verse-block").textContent(), /John 16:13/);
+    assert.doesNotMatch(await page.locator(".verse-block").textContent(), /pour out of my Spirit/);
+    await page.goto(`${baseUrl}/apps/promising-gods-mirror/`);
+    assert.doesNotMatch(await page.locator("body").textContent(), /Honour thy father|Acts 2:17|by whose stripes|Esaias the prophet/);
+    assert.match(await page.locator("body").textContent(), /1 Timothy 4:8/);
   } finally { await context.close(); }
 }

@@ -517,7 +517,7 @@ function renderPromiseCards() {
               <div class="promise-card-copy"><span class="card-index">${String(index + 1).padStart(2, "0")} / ${escapeHtml(promise.cardRef || promise.ref)}</span><h3>${escapeHtml(promise.name)}</h3><span class="card-tagline">${escapeHtml(promise.short)}</span><span class="card-status"></span></div><span class="card-arrow" aria-hidden="true">↗</span>
             </a>
             <div class="tip-wrap"><button class="tip-button" type="button" aria-label="About ${escapeHtml(promise.name)}" aria-expanded="false" aria-controls="tip-${promise.id}" aria-describedby="tip-${promise.id}">i</button><div class="tip-content" role="tooltip" id="tip-${promise.id}"><strong>YOUR COMMITMENT</strong>${escapeHtml(promise.hint)}</div></div>
-            <noscript><p>${escapeHtml(promise.verse)} <a href="https://www.biblegateway.com/passage/?search=${encodeURIComponent(promise.contextRef)}&amp;version=KJV">Read in context</a>.</p></noscript>
+            <noscript>${(promise.passages || [promise]).map(passage => `<p>${escapeHtml(passage.verse)} <a href="https://www.biblegateway.com/passage/?search=${encodeURIComponent(passage.contextRef)}&amp;version=KJV">${escapeHtml(passage.ref)}: read in context</a>.</p>`).join("")}</noscript>
           </article>`).join("\n");
 }
 

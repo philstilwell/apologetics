@@ -1,6 +1,6 @@
-import { PREVIOUS_PROMISES } from "./promise-history.mjs?v=20261007-six-promises";
-import { cleanTest, emptyTest, testGaps, testTensions, testReport, testSnapshot } from "./promise-testing.mjs?v=20261007-six-promises";
-import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, interpretationOptions } from "./promise-catalog.mjs?v=20261007-six-promises";
+import { PREVIOUS_PROMISES } from "./promise-history.mjs?v=20261007-clear-life";
+import { cleanTest, emptyTest, testGaps, testTensions, testReport, testSnapshot } from "./promise-testing.mjs?v=20261007-clear-life";
+import { PROMISES, COMMITMENTS, FAILURE_OPTIONS, interpretationOptions } from "./promise-catalog.mjs?v=20261007-clear-life";
 
 export const STORAGE_KEY = "crosshairs.promise-intro.v1";
 export const emptyAnswer = () => ({ interpretation: "", failure: "", commitments: [], claim: "", note: "", affirmed: false, reviewed: false, complete: false, firstInterpretation: "", firstCommitment: null, test: emptyTest(), firstTest: null });
@@ -39,7 +39,8 @@ export function sanitizeAnswers(raw, catalog = PROMISES) {
     answer.firstInterpretation = options.includes(source.firstInterpretation) ? source.firstInterpretation : "";
     // Earlier versions saved exploratory selections as complete. Keep those choices as drafts;
     // only the visitor's new, explicit affirmation can turn one into a commitment.
-    answer.affirmed = source.affirmed === true && canCommit(answer);
+    answer.needsSourceReview = source.needsSourceReview === true;
+    answer.affirmed = source.affirmed === true && !answer.needsSourceReview && canCommit(answer);
     answer.complete = source.complete === true && answer.affirmed;
     answer.reviewed = source.reviewed === true && Boolean(answer.interpretation);
     if (source.firstCommitment && typeof source.firstCommitment === "object") {
@@ -53,8 +54,22 @@ export function sanitizeAnswers(raw, catalog = PROMISES) {
 }
 
 export function loadSavedRecord(saved) {
-  if (!saved || ![1, 2].includes(saved.version)) return { answers: {}, previousAnswers: {} };
+  if (!saved || ![1, 2, 3].includes(saved.version)) return { answers: {}, previousAnswers: {} };
   const answers = sanitizeAnswers(saved.answers);
+  if (saved.version < 3) {
+    // Replacing the source passages must not silently affirm a belief about new texts.
+    // Retain the visitor's words, first commitments, and test terms for review.
+    for (const id of ["prophecy", "longevity"]) {
+      const answer = answers[id];
+      if (!answer?.interpretation) continue;
+      if (isCommitted(answer)) {
+        answer.firstCommitment ||= commitmentSnapshot(answer);
+        if (needsFailureStandard(answer)) answer.firstTest ||= testSnapshot(answer.test);
+      }
+      answer.needsSourceReview = true;
+      answer.affirmed = answer.complete = answer.reviewed = false;
+    }
+  }
   if (saved.version === 1) {
     // The combined category has different passages and scope. Never silently affirm it
     // using a belief about one of the four previous, separate categories.
@@ -107,9 +122,9 @@ function answerReport(promise, answer = emptyAnswer()) {
   const firstReading = first && options.find((item) => item.id === first.interpretation);
   const legacy = options.find((item) => item.id === answer.firstInterpretation);
   return [
-    `${promise.name} — ${promise.ref} (KJV)`,
-    promise.passages ? `Other passages in this category: ${promise.passages.map(p => `${p.name}: ${p.ref} (KJV)`).join("; ")}` : "",
+    `${promise.name} — ${promise.retired ? "previous question" : (promise.passages || [promise]).map(p => p.ref).join("; ") + " (KJV)"}`,
     `Status: ${recordStatus(answer)}`,
+    answer.needsSourceReview ? "The source passages have changed. This earlier answer needs review and fresh affirmation." : "",
     current ? `${isCommitted(answer) ? "I affirm" : "Unconfirmed selection"}: ${current.label} ${current.detail}` : "No belief has been stated for this passage.",
     answer.claim ? `My specific claim: ${answer.claim}` : "",
     answer.interpretation ? `Implication of this selection: ${assess(answer).body}` : "",
