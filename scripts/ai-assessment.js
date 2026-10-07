@@ -165,14 +165,15 @@ END ASSESSMENT RECORD`;
   function progressElement() {
     const node = document.createElement('div');
     node.className = 'ai-readiness-progress';
-    node.innerHTML = '<div class="ai-progress-heading"><strong>Ready for AI review</strong><span class="ai-percent"></span></div><progress max="100" value="0" aria-label="Required information completed for AI review"></progress><p class="ai-progress-note"></p>';
+    node.innerHTML = '<div class="ai-progress-heading"><strong>AI prompt locked</strong><span class="ai-percent"></span></div><progress max="100" value="0" aria-label="Required information completed for AI review"></progress><p class="ai-progress-note"></p>';
     return node;
   }
   function updateProgress(node, result) {
-    node.querySelector('.ai-percent').textContent = `${result.percent}%`;
+    node.querySelector('.ai-progress-heading strong').textContent = result.ready ? 'AI prompt ready' : 'AI prompt locked';
+    node.querySelector('.ai-percent').textContent = `${result.percent}% complete`;
     node.querySelector('progress').value = result.percent;
     node.dataset.ready = String(result.ready);
-    node.querySelector('.ai-progress-note').textContent = result.ready ? 'Information complete. This does not certify the reasoning or evidence.' : `${result.completed} of ${result.total} requirements complete. Finish the missing answers to unlock the prompt.`;
+    node.querySelector('.ai-progress-note').textContent = result.ready ? `All ${result.total} requirements are complete. You can now review, copy, or download your prompt.` : `${result.completed} of ${result.total} requirements complete. Complete the remaining items, including confirmation, to unlock your AI prompt.`;
   }
   function listenForChanges(node, refresh) {
     const controller = new AbortController();
