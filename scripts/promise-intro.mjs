@@ -481,7 +481,7 @@ $("#reset-readings").addEventListener("click", () => {
 });
 
 const allPromiseAi = window.CrosshairsAI.createPanel({ id: 'promises', getData: () => promiseAiData(),
-  description: 'Includes all six categories, your written answers, testing terms, revisions, and earlier saved records. Unfinished answers stay identified as unfinished.' });
+  description: 'Complete and confirm all six categories to unlock one combined AI prompt. You can use an individual category’s prompt as soon as that category is ready. The combined prompt includes your written answers, testing terms, revisions, and earlier saved records.' });
 $('#readings .record-footer').before(allPromiseAi);
 updateOverview();
 const openFromHash = () => {

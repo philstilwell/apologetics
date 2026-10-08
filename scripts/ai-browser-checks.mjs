@@ -110,11 +110,21 @@ export async function verifyAiPrompts(baseUrl, browser) {
 
     const draft = { ...emptyAnswer(), interpretation: 'tendency', failure: 'conditions', claim: 'Prayer requires willingness to obey.', test: { ...emptyAnswer().test, method: 'comparison', plan: 'ascadsad akj asdh' } };
     await page.goto(baseUrl);
-    await page.evaluate(({ key, draft }) => localStorage.setItem(key, JSON.stringify({ version: 3, answers: { prayer: draft }, previousAnswers: {} })), { key: STORAGE_KEY, draft });
+    await page.evaluate(({ key, draft }) => localStorage.setItem(key, JSON.stringify({ version: 3, answers: { prayer: draft, provision: { interpretation: 'spiritual' } }, previousAnswers: {} })), { key: STORAGE_KEY, draft });
     await page.reload();
     const allPanel = page.locator('#readings [data-ai-assessment]');
     assert(await allPanel.locator('[data-ai-action=copy]').isDisabled());
-    await page.locator('#promise-prayer .promise-card-link').click();
+    await allPanel.locator('summary').click();
+    assert.match(await allPanel.locator('[data-ai-review=prayer]').innerText(), /1 of 13 required items complete \(8%\)/);
+    assert.match(await allPanel.locator('[data-ai-review=provision]').innerText(), /0 of 6 required items complete \(0%\)[\s\S]*Continue/, 'A saved reading with no completed requirements still offers Continue');
+    assert.match(await allPanel.locator('[data-ai-review=wisdom]').innerText(), /Start/);
+    for (const width of [1360, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Category progress fits the screen');
+      await allPanel.locator('.ai-readiness-checklist').screenshot({ path: `.local/redesign/ai/category-progress-${width}.png` });
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await allPanel.locator('[data-ai-review=prayer]').click();
     assert(await page.locator('#promise-dialog progress').isVisible(), 'Progress is visible from the first step');
     await page.locator('#next-step').click();
     await page.locator('#see-result').click();
@@ -142,6 +152,7 @@ export async function verifyAiPrompts(baseUrl, browser) {
     assert.match(promisePrompt, /six months/);
     await page.locator('#close-exercise').click();
     assert(await allPanel.locator('[data-ai-action=copy]').isDisabled(), 'A partial set cannot unlock the full-record prompt');
+    assert.match(await allPanel.locator('[data-ai-review=prayer]').innerText(), /13 of 13 required items complete \(100%\)[\s\S]*Review/);
     // Other readings need interpretive reasons, not irrelevant physical experiments.
     await page.evaluate(({ key, ids }) => {
       const saved = JSON.parse(localStorage.getItem(key));

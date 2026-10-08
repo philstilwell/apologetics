@@ -30,6 +30,13 @@
 .ai-readiness-checklist li{margin:8px 0;font:400 14px/1.45 Barlow,Arial,sans-serif;color:#69552e}
 .ai-readiness-checklist li[data-complete=true]{color:#3a6048}
 .ai-readiness-checklist button{display:block;width:100%;margin:8px 0;text-align:left}
+.ai-readiness-checklist .ai-category-heading{margin-bottom:8px;font-weight:600;color:#28342d}
+.ai-readiness-checklist .ai-category-help{font-size:14px}
+.ai-readiness-checklist [data-ai-review]{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
+.ai-category-content{display:grid;gap:5px}
+.ai-category-count{font-size:14px;font-weight:400;font-variant-numeric:tabular-nums;color:#4c594f}
+.ai-category-action{white-space:nowrap}
+.ai-readiness-checklist [data-ready=true]{border-color:#3a6048;background:#edf1e8}
 .ai-assessment .ai-field-hint{display:block;margin-top:5px;font:400 13px/1.5 Barlow,Arial,sans-serif;color:#4c594f}
 .ai-assessment .ai-confirmation{display:flex;align-items:flex-start;gap:12px;margin:18px 0}
 .ai-confirmation input{appearance:auto;flex:0 0 20px;width:20px;height:20px;min-height:20px;margin:3px 0;accent-color:#395c44}

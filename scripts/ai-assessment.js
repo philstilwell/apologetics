@@ -169,9 +169,11 @@ END ASSESSMENT RECORD`;
     return node;
   }
   function updateProgress(node, result) {
-    node.querySelector('.ai-progress-heading strong').textContent = result.ready ? 'AI prompt ready' : 'AI prompt locked';
+    const prompt = result.categories.length ? 'Combined AI prompt' : 'AI prompt';
+    node.querySelector('.ai-progress-heading strong').textContent = `${prompt} ${result.ready ? 'ready' : 'locked'}`;
     node.querySelector('.ai-percent').textContent = `${result.percent}% complete`;
     node.querySelector('progress').value = result.percent;
+    node.querySelector('progress').setAttribute('aria-valuetext', `${result.completed} of ${result.total} required items complete`);
     node.dataset.ready = String(result.ready);
     node.querySelector('.ai-progress-note').textContent = result.ready ? `All ${result.total} requirements are complete. You can now review, copy, or download your prompt.` : `${result.completed} of ${result.total} requirements complete. Complete the remaining items, including confirmation, to unlock your AI prompt.`;
   }
@@ -236,9 +238,26 @@ END ASSESSMENT RECORD`;
         updateProgress(progress, result);
         const list = panel.querySelector('.ai-readiness-checklist'); list.replaceChildren();
         if (result.categories.length) {
+          const heading = document.createElement('p'); heading.className = 'ai-category-heading';
+          heading.textContent = `${result.categories.filter(c => c.ready).length} of ${result.categories.length} categories ready for AI review`;
+          const help = document.createElement('p'); help.className = 'ai-category-help';
+          help.textContent = 'Each percentage is the share of required items completed: your answers and final confirmation. It does not rate the strength or truth of your belief. The number of required items can change with your reading and testing choices.';
+          list.append(heading, help);
           for (const category of result.categories) {
+            const answer = data.inputs.answers[category.id] || {};
+            const started = category.completed > 0 || Boolean(answer.interpretation || answer.claim?.trim() || answer.note?.trim()
+              || Object.values(answer.test || {}).some(value => typeof value === 'string' && value.trim())
+              || Object.values(getReview('promises', category.id).fields).some(value => String(value || '').trim())
+              || getExplanation('promises', category.id).trim());
             const button = document.createElement('button'); button.type = 'button'; button.dataset.aiReview = category.id;
-            button.textContent = `${category.ready ? '✓' : '○'} ${category.label} — ${category.percent}% · ${category.ready ? 'Review' : 'Finish'} →`;
+            button.dataset.ready = String(category.ready);
+            const content = document.createElement('span'); content.className = 'ai-category-content';
+            const title = document.createElement('strong'); title.textContent = category.label;
+            const count = document.createElement('span'); count.className = 'ai-category-count';
+            count.textContent = `${category.completed} of ${category.total} required items complete (${category.percent}%)`;
+            const action = document.createElement('span'); action.className = 'ai-category-action';
+            action.textContent = `${category.ready ? 'Review' : started ? 'Continue' : 'Start'} →`;
+            content.append(title, count); button.append(content, action);
             list.append(button);
           }
         } else {

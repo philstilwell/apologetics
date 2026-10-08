@@ -478,7 +478,7 @@ function applyPage(page) {
   if (page.kind === "home" || MODULES[tool?.id] || page.file === "apps/falsifiability-field/legacy.html") {
     const prefix = page.kind === "home" ? "./" : "../../";
     html = html.replace(/\s*<link[^>]*data-ai-style[^>]*>/g, "").replace(/\s*<script[^>]*data-ai-script[^>]*><\/script>/g, "");
-    html = html.replace(/  <\/head>/, `    <link rel="stylesheet" href="${prefix}assets/ai-assessment.css?v=20261007-ready" data-ai-style>\n    <script src="${prefix}scripts/ai-assessment.js?v=20261007-ready-copy" data-ai-script></script>\n  </head>`);
+    html = html.replace(/  <\/head>/, `    <link rel="stylesheet" href="${prefix}assets/ai-assessment.css?v=20261007-progress-counts" data-ai-style>\n    <script src="${prefix}scripts/ai-assessment.js?v=20261007-progress-counts" data-ai-script></script>\n  </head>`);
   }
   write(page.file, html);
 }
